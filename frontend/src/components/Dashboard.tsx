@@ -35,6 +35,22 @@ export const Dashboard: React.FC<DashboardProps> = ({
   // View Mode: 'grid' | 'table' | 'compact'
   const [viewMode, setViewMode] = useState<'grid' | 'table' | 'compact'>('grid');
 
+  // Sort state
+  type SortKey = 'name' | 'provider' | 'tier' | 'context' | 'input_price' | 'output_price' | 'arena_elo' | 'rpm';
+  const [sortKey, setSortKey] = useState<SortKey>('name');
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
+
+  const handleSort = (key: SortKey) => {
+    if (sortKey === key) {
+      setSortDir(d => d === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortKey(key);
+      setSortDir('asc');
+    }
+  };
+
+  const TIER_ORDER: Record<string, number> = { Frontier: 4, Mid: 3, Small: 2, Micro: 1 };
+
   const effectiveCompareIds = selectedCompareIds.length > 0 ? selectedCompareIds : selectedModelIds;
   const handleToggle = (id: string) => {
     if (onToggleCompare) {
@@ -87,6 +103,31 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
     return matchesSearch && matchesProvider && matchesTier && matchesLicense;
   });
+
+  const sortedModels = [...filteredModels].sort((a, b) => {
+    let av: number | string = 0;
+    let bv: number | string = 0;
+    switch (sortKey) {
+      case 'name':      av = a.name; bv = b.name; break;
+      case 'provider':  av = a.provider_name; bv = b.provider_name; break;
+      case 'tier':      av = TIER_ORDER[a.tier] ?? 0; bv = TIER_ORDER[b.tier] ?? 0; break;
+      case 'context':   av = a.context_window; bv = b.context_window; break;
+      case 'input_price': av = a.api_pricing.input_price_per_1m; bv = b.api_pricing.input_price_per_1m; break;
+      case 'output_price': av = a.api_pricing.output_price_per_1m; bv = b.api_pricing.output_price_per_1m; break;
+      case 'arena_elo': av = a.benchmarks.arena_elo ?? -1; bv = b.benchmarks.arena_elo ?? -1; break;
+      case 'rpm':       av = a.quota?.rpm ?? 0; bv = b.quota?.rpm ?? 0; break;
+    }
+    if (typeof av === 'string' && typeof bv === 'string') {
+      return sortDir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+    }
+    return sortDir === 'asc' ? (av as number) - (bv as number) : (bv as number) - (av as number);
+  });
+
+  // Sort indicator icon
+  const SortIcon = ({ col }: { col: SortKey }) => {
+    if (sortKey !== col) return <span className="ml-1 text-slate-600">⇅</span>;
+    return <span className="ml-1 text-cyan-400">{sortDir === 'asc' ? '↑' : '↓'}</span>;
+  };
 
   const getTierBadge = (tier: string) => {
     switch (tier) {
@@ -231,20 +272,41 @@ export const Dashboard: React.FC<DashboardProps> = ({
         </div>
       </div>
 
-      {/* Model Count info */}
-      <div className="flex items-center justify-between text-xs sm:text-sm text-slate-400 px-2">
+      {/* Model Count info + Sort Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm text-slate-400 px-2">
         <div>
-          <span className="font-bold text-cyan-400">{filteredModels.length}</span> {t.dashboard.modelsFound}
+          <span className="font-bold text-cyan-400">{sortedModels.length}</span> {t.dashboard.modelsFound}
         </div>
-        <div className="text-slate-500 italic">
-          Showing Official API Specs, Rate Limit Quotas & Official Docs Source Links
+        <div className="flex items-center gap-2">
+          <span className="text-slate-500 text-xs">정렬:</span>
+          <select
+            value={sortKey}
+            onChange={e => setSortKey(e.target.value as SortKey)}
+            className="bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-xs text-slate-300 focus:outline-none focus:border-cyan-500"
+          >
+            <option value="name">모델명</option>
+            <option value="provider">프로바이더</option>
+            <option value="tier">티어</option>
+            <option value="context">컨텍스트</option>
+            <option value="input_price">입력가격</option>
+            <option value="output_price">출력가격</option>
+            <option value="arena_elo">Arena ELO</option>
+            <option value="rpm">RPM 할당량</option>
+          </select>
+          <button
+            onClick={() => setSortDir(d => d === 'asc' ? 'desc' : 'asc')}
+            className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1 text-xs text-slate-300 hover:border-cyan-500 hover:text-cyan-400 transition-colors"
+            title={sortDir === 'asc' ? '오름차순' : '내림차순'}
+          >
+            {sortDir === 'asc' ? '↑ 오름' : '↓ 내림'}
+          </button>
         </div>
       </div>
 
       {/* VIEW 1: Grid Mode */}
       {viewMode === 'grid' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredModels.map((model) => {
+          {sortedModels.map((model) => {
             const isSelected = effectiveCompareIds.includes(model.id);
             return (
               <div
@@ -369,18 +431,44 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <table className="w-full text-left border-collapse text-xs sm:text-sm">
               <thead>
                 <tr className="bg-slate-950 text-slate-400 border-b border-slate-800 text-[11px] uppercase tracking-wider">
-                  <th className="py-3.5 px-4 font-semibold">Model</th>
-                  <th className="py-3.5 px-4 font-semibold">Provider</th>
-                  <th className="py-3.5 px-4 font-semibold">Tier</th>
-                  <th className="py-3.5 px-4 font-semibold">Context</th>
-                  <th className="py-3.5 px-4 font-semibold">API Input / Output</th>
-                  <th className="py-3.5 px-4 font-semibold">Quota (RPM / TPM)</th>
-                  <th className="py-3.5 px-4 font-semibold">Official Source</th>
+                  <th
+                    className="py-3.5 px-4 font-semibold cursor-pointer hover:text-cyan-400 select-none transition-colors"
+                    onClick={() => handleSort('name')}
+                  >Model<SortIcon col="name" /></th>
+                  <th
+                    className="py-3.5 px-4 font-semibold cursor-pointer hover:text-cyan-400 select-none transition-colors"
+                    onClick={() => handleSort('provider')}
+                  >Provider<SortIcon col="provider" /></th>
+                  <th
+                    className="py-3.5 px-4 font-semibold cursor-pointer hover:text-cyan-400 select-none transition-colors"
+                    onClick={() => handleSort('tier')}
+                  >Tier<SortIcon col="tier" /></th>
+                  <th
+                    className="py-3.5 px-4 font-semibold cursor-pointer hover:text-cyan-400 select-none transition-colors"
+                    onClick={() => handleSort('context')}
+                  >Context<SortIcon col="context" /></th>
+                  <th
+                    className="py-3.5 px-4 font-semibold cursor-pointer hover:text-cyan-400 select-none transition-colors"
+                    onClick={() => handleSort('input_price')}
+                  >Input Price<SortIcon col="input_price" /></th>
+                  <th
+                    className="py-3.5 px-4 font-semibold cursor-pointer hover:text-cyan-400 select-none transition-colors"
+                    onClick={() => handleSort('output_price')}
+                  >Output Price<SortIcon col="output_price" /></th>
+                  <th
+                    className="py-3.5 px-4 font-semibold cursor-pointer hover:text-cyan-400 select-none transition-colors"
+                    onClick={() => handleSort('rpm')}
+                  >Quota RPM<SortIcon col="rpm" /></th>
+                  <th
+                    className="py-3.5 px-4 font-semibold cursor-pointer hover:text-cyan-400 select-none transition-colors"
+                    onClick={() => handleSort('arena_elo')}
+                  >ELO<SortIcon col="arena_elo" /></th>
+                  <th className="py-3.5 px-4 font-semibold">Docs</th>
                   <th className="py-3.5 px-4 font-semibold">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/60 text-slate-200">
-                {filteredModels.map((model) => {
+                {sortedModels.map((model) => {
                   const isSelected = effectiveCompareIds.includes(model.id);
                   return (
                     <tr key={model.id} className="hover:bg-slate-800/40 transition-colors">
@@ -394,13 +482,19 @@ export const Dashboard: React.FC<DashboardProps> = ({
                         </span>
                       </td>
                       <td className="py-3 px-4 font-mono text-slate-300">
-                        {(model.context_window / 1000).toLocaleString()}k
+                        {model.context_window > 0 ? `${(model.context_window / 1000).toLocaleString()}k` : '-'}
                       </td>
                       <td className="py-3 px-4 font-mono text-emerald-400">
-                        ${model.api_pricing.input_price_per_1m.toFixed(2)} / ${model.api_pricing.output_price_per_1m.toFixed(2)}
+                        ${model.api_pricing.input_price_per_1m.toFixed(3)}
+                      </td>
+                      <td className="py-3 px-4 font-mono text-emerald-300">
+                        ${model.api_pricing.output_price_per_1m.toFixed(3)}
                       </td>
                       <td className="py-3 px-4 font-mono text-cyan-300 text-xs">
-                        {model.quota ? `${model.quota.rpm.toLocaleString()} RPM | ${(model.quota.tpm / 1000).toLocaleString()}k TPM` : '-'}
+                        {model.quota ? `${model.quota.rpm.toLocaleString()}` : '-'}
+                      </td>
+                      <td className="py-3 px-4 font-mono text-amber-400 text-xs">
+                        {model.benchmarks.arena_elo ?? '-'}
                       </td>
                       <td className="py-3 px-4">
                         <a
@@ -436,7 +530,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
       {/* VIEW 3: Compact Mode */}
       {viewMode === 'compact' && (
         <div className="space-y-2">
-          {filteredModels.map((model) => {
+          {sortedModels.map((model) => {
             const isSelected = effectiveCompareIds.includes(model.id);
             return (
               <div
