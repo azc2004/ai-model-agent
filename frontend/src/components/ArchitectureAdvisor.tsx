@@ -4,6 +4,7 @@ import {
   Server, Zap, CheckCircle2, ChevronRight, Layers, FileText, X
 } from 'lucide-react';
 import type { RecommendationRequest, ArchitectureRecommendationResult, TrendingTemplate } from '../types';
+import { API_BASE_URL } from '../api';
 
 export const ArchitectureAdvisor: React.FC = () => {
   const [trending, setTrending] = useState<TrendingTemplate[]>([]);
@@ -24,7 +25,7 @@ export const ArchitectureAdvisor: React.FC = () => {
 
   // 1. Fetch Trending Templates
   useEffect(() => {
-    fetch('http://localhost:8000/api/v1/recommend/trending')
+    fetch(`${API_BASE_URL}/recommend/trending`)
       .then(res => res.json())
       .then((data: TrendingTemplate[]) => {
         setTrending(data);
@@ -58,7 +59,7 @@ export const ArchitectureAdvisor: React.FC = () => {
       custom_prompt: customPrompt
     };
 
-    fetch('http://localhost:8000/api/v1/recommend/architecture', {
+    fetch(`${API_BASE_URL}/recommend/architecture`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)

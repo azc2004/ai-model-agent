@@ -1,6 +1,8 @@
 import type { ModelSpec, Provider, GPUSpec, TCOInput, TCOComparisonResult } from './types';
 
-const API_BASE_URL = 'http://localhost:8000/api/v1';
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL 
+  ? `${import.meta.env.VITE_API_BASE_URL}/api/v1` 
+  : 'http://localhost:8000/api/v1';
 
 export async function fetchProviders(): Promise<Provider[]> {
   const res = await fetch(`${API_BASE_URL}/providers`);

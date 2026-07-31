@@ -1,5 +1,5 @@
 services:
-  # 백엔드 FastAPI 서비스
+  # 백엔드 FastAPI 서비스 (Web Service)
   - type: web
     name: llm-compass-backend
     env: python
@@ -10,13 +10,19 @@ services:
       - key: GEMINI_API_KEY
         sync: false
 
-  # 프론트엔드 정적 사이트
+  # 프론트엔드 정적 사이트 (Static Site)
   - type: web
     name: llm-compass-frontend
     env: static
     region: singapore
     buildCommand: "cd frontend && npm install && npm run build"
     staticPublishPath: "./frontend/dist"
+    envVars:
+      - key: VITE_API_BASE_URL
+        fromService:
+          type: web
+          name: llm-compass-backend
+          property: url
     routes:
       - type: rewrite
         source: "/*"

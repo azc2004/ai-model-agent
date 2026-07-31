@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { ModelSpec, Provider } from '../types';
 import { useLanguage } from '../context/LanguageContext';
+import { API_BASE_URL } from '../api';
 
 interface DashboardProps {
   onCompareSelect?: (modelId: string) => void;
@@ -74,8 +75,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
     const fetchData = async () => {
       try {
         const [modelsRes, providersRes] = await Promise.all([
-          fetch('http://localhost:8000/api/v1/models'),
-          fetch('http://localhost:8000/api/v1/providers')
+          fetch(`${API_BASE_URL}/models`),
+          fetch(`${API_BASE_URL}/providers`)
         ]);
         const modelsData = await modelsRes.json();
         const providersData = await providersRes.json();
