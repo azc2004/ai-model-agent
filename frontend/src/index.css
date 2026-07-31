@@ -16,46 +16,73 @@
   box-sizing: border-box;
 }
 
+/* Theme Rules: Dark Mode Default */
+html.dark-mode body,
 body {
-  background-color: var(--bg-dark);
-  color: #f3f4f6;
-  font-family: var(--font-main);
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  min-height: 100vh;
-  overflow-x: hidden;
-  background-image: 
-    radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 85% 85%, rgba(168, 85, 247, 0.08) 0%, transparent 40%);
-  background-attachment: fixed;
+  background-color: #090d16 !important;
+  color: #f8fafc !important;
 }
 
-/* Light Mode Universal High Contrast Theme Rules */
+html.dark-mode header,
+html.dark-mode footer {
+  background-color: rgba(9, 13, 22, 0.92) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+html.dark-mode header h1 {
+  color: #ffffff !important;
+}
+
+/* Theme Rules: Light Mode Overrides */
 html.light-mode body {
-  background-color: #f8fafc !important;
+  background-color: #f1f5f9 !important;
   color: #0f172a !important;
   background-image: 
-    radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.05) 0%, transparent 40%),
-    radial-gradient(circle at 85% 85%, rgba(59, 130, 246, 0.05) 0%, transparent 40%) !important;
+    radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(59, 130, 246, 0.04) 0%, transparent 40%) !important;
+}
+
+html.light-mode header,
+html.light-mode footer {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) !important;
+  color: #0f172a !important;
+}
+
+html.light-mode header h1 {
+  color: #0f172a !important;
+}
+
+html.light-mode header nav button {
+  color: #334155 !important;
+}
+
+html.light-mode header nav button:hover {
+  background-color: #e2e8f0 !important;
+  color: #0f172a !important;
 }
 
 html.light-mode .glass-card,
 html.light-mode .glass-panel {
   background: #ffffff !important;
   border-color: #cbd5e1 !important;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04) !important;
   color: #0f172a !important;
 }
 
-html.light-mode [class*="bg-slate-9"],
-html.light-mode [class*="bg-slate-8"],
-html.light-mode [class*="bg-slate-950"],
-html.light-mode [class*="bg-slate-900"] {
-  background-color: #f8fafc !important;
+/* Force light background on all slate background boxes */
+html.light-mode div[class*="bg-slate-"],
+html.light-mode section[class*="bg-slate-"],
+html.light-mode input[class*="bg-slate-"],
+html.light-mode select[class*="bg-slate-"],
+html.light-mode textarea[class*="bg-slate-"] {
+  background-color: #ffffff !important;
   color: #0f172a !important;
-  border-color: #e2e8f0 !important;
+  border-color: #cbd5e1 !important;
 }
 
+/* Force dark readable text on all slate text elements */
 html.light-mode [class*="text-slate-400"],
 html.light-mode [class*="text-slate-500"],
 html.light-mode [class*="text-slate-600"] {
@@ -65,6 +92,15 @@ html.light-mode [class*="text-slate-600"] {
 html.light-mode [class*="text-slate-300"],
 html.light-mode [class*="text-slate-200"],
 html.light-mode [class*="text-slate-100"] {
+  color: #0f172a !important;
+}
+
+html.light-mode h1, 
+html.light-mode h2, 
+html.light-mode h3, 
+html.light-mode h4,
+html.light-mode p.text-white,
+html.light-mode span.text-white {
   color: #0f172a !important;
 }
 

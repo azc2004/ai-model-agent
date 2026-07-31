@@ -75,7 +75,7 @@ export const AppContent: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0b0f19] text-slate-100 font-sans">
+    <div className="min-h-screen flex flex-col font-sans transition-colors">
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
