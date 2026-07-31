@@ -172,149 +172,155 @@ export const Dashboard: React.FC<DashboardProps> = ({
       </div>
 
       {/* Filter & View Mode Controls Bar */}
-      <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-4 flex flex-col md:flex-row gap-4 items-center justify-between shadow-lg">
-        {/* Search */}
-        <div className="relative w-full md:w-80">
-          <input
-            type="text"
-            placeholder={t.dashboard.searchPlaceholder}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-10 pr-4 py-2 text-sm text-slate-200 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-colors"
-          />
-          <svg
-            className="w-4 h-4 text-slate-500 absolute left-3 top-3"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+      <div className="glass-panel p-5 space-y-4 shadow-xl border border-slate-700/60 rounded-2xl">
+        {/* Upper Row: Search, Dropdown Selectors, View Mode Switcher */}
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
+          {/* Search Box */}
+          <div className="relative w-full lg:w-72 shrink-0">
+            <input
+              type="text"
+              placeholder={t.dashboard.searchPlaceholder}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full bg-slate-900/90 border border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm font-medium focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all shadow-inner"
             />
-          </svg>
-        </div>
-
-        {/* Dropdowns */}
-        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
-          <select
-            value={selectedProvider}
-            onChange={(e) => setSelectedProvider(e.target.value)}
-            className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-slate-300 focus:outline-none focus:border-cyan-500"
-          >
-            <option value="all">{t.dashboard.allProviders}</option>
-            {providers.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.name}
-              </option>
-            ))}
-          </select>
-
-          <select
-            value={selectedTier}
-            onChange={(e) => setSelectedTier(e.target.value)}
-            className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-slate-300 focus:outline-none focus:border-cyan-500"
-          >
-            <option value="all">{t.dashboard.allTiers}</option>
-            <option value="Frontier">Frontier</option>
-            <option value="Mid">Mid</option>
-            <option value="Small">Small</option>
-            <option value="Micro">Micro</option>
-          </select>
-
-          <select
-            value={selectedLicense}
-            onChange={(e) => setSelectedLicense(e.target.value)}
-            className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-slate-300 focus:outline-none focus:border-cyan-500"
-          >
-            <option value="all">{t.dashboard.allLicenses}</option>
-            <option value="open">{t.dashboard.openWeight}</option>
-            <option value="proprietary">{t.dashboard.proprietary}</option>
-          </select>
-
-          {/* View Mode Switcher */}
-          <div className="flex items-center bg-slate-950 p-1 border border-slate-800 rounded-lg ml-auto md:ml-2">
-            <button
-              onClick={() => setViewMode('grid')}
-              className={`px-3 py-1 rounded text-xs font-semibold flex items-center gap-1.5 transition-colors ${
-                viewMode === 'grid'
-                  ? 'bg-cyan-600 text-white shadow'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
+            <svg
+              className="w-4 h-4 text-cyan-400 absolute left-3.5 top-3.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
             >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-              </svg>
-              {t.viewMode.grid}
-            </button>
-            <button
-              onClick={() => setViewMode('table')}
-              className={`px-3 py-1 rounded text-xs font-semibold flex items-center gap-1.5 transition-colors ${
-                viewMode === 'table'
-                  ? 'bg-cyan-600 text-white shadow'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
+
+          {/* Filter Dropdowns */}
+          <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
+            <select
+              value={selectedProvider}
+              onChange={(e) => setSelectedProvider(e.target.value)}
+              className="bg-slate-900/90 border border-slate-700 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:border-cyan-500 cursor-pointer shadow-sm"
             >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              {t.viewMode.table}
-            </button>
-            <button
-              onClick={() => setViewMode('compact')}
-              className={`px-3 py-1 rounded text-xs font-semibold flex items-center gap-1.5 transition-colors ${
-                viewMode === 'compact'
-                  ? 'bg-cyan-600 text-white shadow'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
+              <option value="all">{t.dashboard.allProviders}</option>
+              {providers.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={selectedTier}
+              onChange={(e) => setSelectedTier(e.target.value)}
+              className="bg-slate-900/90 border border-slate-700 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:border-cyan-500 cursor-pointer shadow-sm"
             >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-              {t.viewMode.compact}
-            </button>
+              <option value="all">{t.dashboard.allTiers}</option>
+              <option value="Frontier">Frontier</option>
+              <option value="Mid">Mid</option>
+              <option value="Small">Small</option>
+              <option value="Micro">Micro</option>
+            </select>
+
+            <select
+              value={selectedLicense}
+              onChange={(e) => setSelectedLicense(e.target.value)}
+              className="bg-slate-900/90 border border-slate-700 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:border-cyan-500 cursor-pointer shadow-sm"
+            >
+              <option value="all">{t.dashboard.allLicenses}</option>
+              <option value="open">{t.dashboard.openWeight}</option>
+              <option value="proprietary">{t.dashboard.proprietary}</option>
+            </select>
+
+            {/* View Mode Switcher */}
+            <div className="flex items-center bg-slate-950/80 p-1 border border-slate-700/80 rounded-xl ml-auto">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all whitespace-nowrap ${
+                  viewMode === 'grid'
+                    ? 'bg-cyan-500 text-slate-950 shadow-md font-extrabold'
+                    : 'text-slate-400 hover:text-slate-100'
+                }`}
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+                {t.viewMode.grid}
+              </button>
+              <button
+                onClick={() => setViewMode('table')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all whitespace-nowrap ${
+                  viewMode === 'table'
+                    ? 'bg-cyan-500 text-slate-950 shadow-md font-extrabold'
+                    : 'text-slate-400 hover:text-slate-100'
+                }`}
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                {t.viewMode.table}
+              </button>
+              <button
+                onClick={() => setViewMode('compact')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all whitespace-nowrap ${
+                  viewMode === 'compact'
+                    ? 'bg-cyan-500 text-slate-950 shadow-md font-extrabold'
+                    : 'text-slate-400 hover:text-slate-100'
+                }`}
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                {t.viewMode.compact}
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Quick Feature Filter Chips */}
-        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-800/80 w-full text-xs">
-          <span className="text-slate-400 font-semibold mr-1">특수 기능 필터:</span>
+        {/* Lower Row: Quick Feature Filter Chips */}
+        <div className="pt-3 border-t border-slate-700/60 flex flex-wrap items-center gap-2.5 text-xs font-medium">
+          <span className="text-slate-400 font-bold mr-1 shrink-0">⚡ 특수 기능 필터:</span>
+
           <button
             onClick={() => setReasoningOnly(!reasoningOnly)}
-            className={`px-3 py-1 rounded-full border transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-full border transition-all flex items-center gap-1.5 font-bold shadow-sm whitespace-nowrap ${
               reasoningOnly
-                ? 'bg-purple-500/20 text-purple-300 border-purple-500/50 shadow-sm'
-                : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-slate-200'
+                ? 'bg-purple-600 text-white border-purple-400 shadow-purple-500/20'
+                : 'bg-purple-950/40 text-purple-300 border-purple-800/80 hover:bg-purple-900/50'
             }`}
           >
-            🧠 Reasoning (추론/CoT) 지원만
+            <span>🧠</span> Reasoning (추론/CoT) 지원만
           </button>
+
           <button
             onClick={() => setWebSearchOnly(!webSearchOnly)}
-            className={`px-3 py-1 rounded-full border transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-full border transition-all flex items-center gap-1.5 font-bold shadow-sm whitespace-nowrap ${
               webSearchOnly
-                ? 'bg-blue-500/20 text-blue-300 border-blue-500/50 shadow-sm'
-                : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-slate-200'
+                ? 'bg-blue-600 text-white border-blue-400 shadow-blue-500/20'
+                : 'bg-blue-950/40 text-blue-300 border-blue-800/80 hover:bg-blue-900/50'
             }`}
           >
-            🌐 실시간 Web Search 지원만
+            <span>🌐</span> 실시간 Web Search 지원만
           </button>
+
           <button
             onClick={() => setVerifiedOnly(!verifiedOnly)}
-            className={`px-3 py-1 rounded-full border transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-full border transition-all flex items-center gap-1.5 font-bold shadow-sm whitespace-nowrap ${
               verifiedOnly
-                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50 shadow-sm'
-                : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-slate-200'
+                ? 'bg-emerald-600 text-white border-emerald-400 shadow-emerald-500/20'
+                : 'bg-emerald-950/40 text-emerald-300 border-emerald-800/80 hover:bg-emerald-900/50'
             }`}
           >
-            🛡️ LiteLLM 검증 모델만
+            <span>🛡️</span> LiteLLM 검증 모델만
           </button>
           {(reasoningOnly || webSearchOnly || verifiedOnly) && (
             <button
               onClick={() => { setReasoningOnly(false); setWebSearchOnly(false); setVerifiedOnly(false); }}
-              className="text-slate-500 hover:text-slate-300 underline ml-2"
+              className="text-slate-400 hover:text-slate-200 underline ml-2 text-xs font-semibold"
             >
               필터 초기화
             </button>

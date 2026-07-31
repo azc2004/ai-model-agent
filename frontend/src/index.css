@@ -82,6 +82,40 @@ html.light-mode textarea[class*="bg-slate-"] {
   border-color: #cbd5e1 !important;
 }
 
+/* Special Feature Filter Chips Light Mode Overrides */
+html.light-mode button[class*="bg-purple-950"] {
+  background-color: #f3e8ff !important;
+  color: #6b21a8 !important;
+  border-color: #d8b4fe !important;
+}
+html.light-mode button[class*="bg-purple-600"] {
+  background-color: #9333ea !important;
+  color: #ffffff !important;
+  border-color: #a855f7 !important;
+}
+
+html.light-mode button[class*="bg-blue-950"] {
+  background-color: #dbeafe !important;
+  color: #1e40af !important;
+  border-color: #93c5fd !important;
+}
+html.light-mode button[class*="bg-blue-600"] {
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+  border-color: #3b82f6 !important;
+}
+
+html.light-mode button[class*="bg-emerald-950"] {
+  background-color: #d1fae5 !important;
+  color: #065f46 !important;
+  border-color: #6ee7b7 !important;
+}
+html.light-mode button[class*="bg-emerald-600"] {
+  background-color: #059669 !important;
+  color: #ffffff !important;
+  border-color: #10b981 !important;
+}
+
 /* Force dark readable text on all slate text elements */
 html.light-mode [class*="text-slate-400"],
 html.light-mode [class*="text-slate-500"],
