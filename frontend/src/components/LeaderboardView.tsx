@@ -119,10 +119,22 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ models }) => {
           <tbody className="divide-y divide-slate-800/60 text-sm">
             {rankedModels.map((model, index) => {
               let scoreDisplay = '-';
-              if (activeBenchmark === 'arena') scoreDisplay = `${model.benchmarks.arena_elo}`;
-              if (activeBenchmark === 'swe') scoreDisplay = `${model.benchmarks.swe_bench}%`;
-              if (activeBenchmark === 'mmlu') scoreDisplay = `${model.benchmarks.mmlu_pro}%`;
-              if (activeBenchmark === 'gpqa') scoreDisplay = `${model.benchmarks.gpqa}%`;
+              let scoreRatio = 0; // 0 to 100%
+
+              if (activeBenchmark === 'arena' && model.benchmarks.arena_elo) {
+                scoreDisplay = `${model.benchmarks.arena_elo}`;
+                // Arena ELO range ~1100 to 1400
+                scoreRatio = Math.min(100, Math.max(10, ((model.benchmarks.arena_elo - 1100) / 300) * 100));
+              } else if (activeBenchmark === 'swe' && model.benchmarks.swe_bench) {
+                scoreDisplay = `${model.benchmarks.swe_bench}%`;
+                scoreRatio = model.benchmarks.swe_bench;
+              } else if (activeBenchmark === 'mmlu' && model.benchmarks.mmlu_pro) {
+                scoreDisplay = `${model.benchmarks.mmlu_pro}%`;
+                scoreRatio = model.benchmarks.mmlu_pro;
+              } else if (activeBenchmark === 'gpqa' && model.benchmarks.gpqa) {
+                scoreDisplay = `${model.benchmarks.gpqa}%`;
+                scoreRatio = model.benchmarks.gpqa;
+              }
 
               return (
                 <tr
@@ -139,8 +151,13 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ models }) => {
                   </td>
                   <td className="p-4 font-bold text-white flex items-center gap-2">
                     {model.name}
-                    {model.is_open_weight && (
+                    {model.supports_reasoning && (
                       <span className="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30 font-normal">
+                        🧠 Reasoning
+                      </span>
+                    )}
+                    {model.is_open_weight && (
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-normal">
                         Open
                       </span>
                     )}
@@ -151,8 +168,22 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ models }) => {
                       {model.tier}
                     </span>
                   </td>
-                  <td className="p-4 text-right font-mono font-extrabold text-cyan-400 text-base">
-                    {scoreDisplay}
+                  <td className="p-4 text-right">
+                    <div className="flex flex-col items-end gap-1">
+                      <span className="font-mono font-extrabold text-cyan-400 text-base">
+                        {scoreDisplay}
+                      </span>
+                      {scoreRatio > 0 && (
+                        <div className="w-24 bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                          <div
+                            className={`h-full rounded-full ${
+                              index === 0 ? 'bg-amber-400' : index === 1 ? 'bg-slate-300' : index === 2 ? 'bg-amber-600' : 'bg-cyan-500'
+                            }`}
+                            style={{ width: `${scoreRatio}%` }}
+                          />
+                        </div>
+                      )}
+                    </div>
                   </td>
                 </tr>
               );

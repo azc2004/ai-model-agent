@@ -31,6 +31,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const [selectedProvider, setSelectedProvider] = useState<string>('all');
   const [selectedTier, setSelectedTier] = useState<string>('all');
   const [selectedLicense, setSelectedLicense] = useState<string>('all');
+  const [reasoningOnly, setReasoningOnly] = useState<boolean>(false);
+  const [webSearchOnly, setWebSearchOnly] = useState<boolean>(false);
+  const [verifiedOnly, setVerifiedOnly] = useState<boolean>(false);
 
   // View Mode: 'grid' | 'table' | 'compact'
   const [viewMode, setViewMode] = useState<'grid' | 'table' | 'compact'>('grid');
@@ -101,7 +104,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
       selectedLicense === 'all' ||
       (selectedLicense === 'open' ? model.is_open_weight : !model.is_open_weight);
 
-    return matchesSearch && matchesProvider && matchesTier && matchesLicense;
+    const matchesReasoning = !reasoningOnly || model.supports_reasoning;
+    const matchesWebSearch = !webSearchOnly || model.supports_web_search;
+    const matchesVerified = !verifiedOnly || model.is_verified;
+
+    return matchesSearch && matchesProvider && matchesTier && matchesLicense && matchesReasoning && matchesWebSearch && matchesVerified;
   });
 
   const sortedModels = [...filteredModels].sort((a, b) => {
@@ -270,6 +277,49 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </button>
           </div>
         </div>
+
+        {/* Quick Feature Filter Chips */}
+        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-800/80 w-full text-xs">
+          <span className="text-slate-400 font-semibold mr-1">특수 기능 필터:</span>
+          <button
+            onClick={() => setReasoningOnly(!reasoningOnly)}
+            className={`px-3 py-1 rounded-full border transition-all flex items-center gap-1.5 ${
+              reasoningOnly
+                ? 'bg-purple-500/20 text-purple-300 border-purple-500/50 shadow-sm'
+                : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-slate-200'
+            }`}
+          >
+            🧠 Reasoning (추론/CoT) 지원만
+          </button>
+          <button
+            onClick={() => setWebSearchOnly(!webSearchOnly)}
+            className={`px-3 py-1 rounded-full border transition-all flex items-center gap-1.5 ${
+              webSearchOnly
+                ? 'bg-blue-500/20 text-blue-300 border-blue-500/50 shadow-sm'
+                : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-slate-200'
+            }`}
+          >
+            🌐 실시간 Web Search 지원만
+          </button>
+          <button
+            onClick={() => setVerifiedOnly(!verifiedOnly)}
+            className={`px-3 py-1 rounded-full border transition-all flex items-center gap-1.5 ${
+              verifiedOnly
+                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50 shadow-sm'
+                : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-slate-200'
+            }`}
+          >
+            🛡️ LiteLLM 검증 모델만
+          </button>
+          {(reasoningOnly || webSearchOnly || verifiedOnly) && (
+            <button
+              onClick={() => { setReasoningOnly(false); setWebSearchOnly(false); setVerifiedOnly(false); }}
+              className="text-slate-500 hover:text-slate-300 underline ml-2"
+            >
+              필터 초기화
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Model Count info + Sort Bar */}
@@ -319,7 +369,17 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
                       {model.provider_name}
                     </span>
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-1.5 flex-wrap justify-end">
+                      {model.supports_reasoning && (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/40 font-semibold" title="Reasoning / CoT 지원">
+                          🧠 Reasoning
+                        </span>
+                      )}
+                      {model.supports_web_search && (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/40 font-semibold" title="실시간 웹 검색 통합">
+                          🌐 Web Search
+                        </span>
+                      )}
                       <span
                         className={`text-[10px] px-2 py-0.5 rounded-full font-medium border ${getTierBadge(
                           model.tier
