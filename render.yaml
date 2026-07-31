@@ -14,15 +14,11 @@ services:
   - type: web
     name: llm-compass-frontend
     env: static
-    region: singapore
     buildCommand: "cd frontend && npm install && npm run build"
     staticPublishPath: "./frontend/dist"
     envVars:
       - key: VITE_API_BASE_URL
-        fromService:
-          type: web
-          name: llm-compass-backend
-          property: url
+        value: https://llm-compass-backend.onrender.com
     routes:
       - type: rewrite
         source: "/*"
