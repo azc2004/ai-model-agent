@@ -1,5 +1,8 @@
 import os
 import logging
+from dotenv import load_dotenv
+
+load_dotenv()
 from typing import List
 from app.schemas import (
     RecommendationRequest,
@@ -21,14 +24,14 @@ try:
     if _api_key:
         genai.configure(api_key=_api_key)
         _gemini_model = genai.GenerativeModel(
-            model_name="gemini-2.0-flash",
+            model_name="gemini-2.5-flash",
             generation_config={
                 "temperature": 0.4,
                 "top_p": 0.95,
                 "max_output_tokens": 8192,
             }
         )
-        logger.info("✅ Gemini 2.0 Flash 마크다운 생성 모드 활성화")
+        logger.info("✅ Gemini 2.5 Flash 마크다운 생성 모드 활성화")
     else:
         logger.warning("⚠️  GEMINI_API_KEY 미설정 → 정적 템플릿 폴백 모드")
 except ImportError:
@@ -319,12 +322,12 @@ def generate_markdown_spec(
                 best_combo=best_combo,
                 hosting=hosting,
             )
-            # Free Tier 안전을 위해 timeout 30s 적용
+            # Free Tier 안정성을 위해 timeout 60s 적용
             response = _gemini_model.generate_content(
                 contents=[
                     {"role": "user", "parts": [SYSTEM_PROMPT + "\n\n---\n\n" + user_prompt]}
                 ],
-                request_options={"timeout": 30}
+                request_options={"timeout": 60}
             )
             generated_text = response.text.strip()
             if generated_text and len(generated_text) > 500:
