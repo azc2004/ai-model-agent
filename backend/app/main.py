@@ -1,0 +1,93 @@
+from typing import List, Optional
+from fastapi import FastAPI, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
+
+from app.schemas import Provider, ModelSpec, GPUSpec, TCOInput, TCOComparisonResult
+from app.seed_data import PROVIDERS, MODELS, GPU_SPECS
+from app.tco_calculator import calculate_tco
+
+app = FastAPI(
+    title="LLM Compass API",
+    description="전세계 AI LLM 모델 비용, 스펙, 벤치마크 비교 및 API vs 셀프호스팅 TCO 시뮬레이터 API",
+    version="1.0.0"
+)
+
+# CORS 설정
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/")
+def read_root():
+    return {
+        "service": "LLM Compass API",
+        "version": "1.0.0",
+        "status": "online",
+        "total_models": len(MODELS),
+        "total_providers": len(PROVIDERS)
+    }
+
+@app.get("/api/v1/providers", response_model=List[Provider])
+def get_providers():
+    """LLM 프로바이더 목록을 반환합니다."""
+    return PROVIDERS
+
+@app.get("/api/v1/models", response_model=List[ModelSpec])
+def get_models(
+    provider_id: Optional[str] = None,
+    tier: Optional[str] = None,
+    is_open_weight: Optional[bool] = None,
+    search: Optional[str] = None
+):
+    """LLM 모델 목록 조회 (필터링 지원)"""
+    results = MODELS
+
+    if provider_id:
+        results = [m for m in results if m.provider_id.lower() == provider_id.lower()]
+
+    if tier:
+        results = [m for m in results if m.tier.lower() == tier.lower()]
+
+    if is_open_weight is not None:
+        results = [m for m in results if m.is_open_weight == is_open_weight]
+
+    if search:
+        query = search.lower()
+        results = [
+            m for m in results 
+            if query in m.name.lower() or query in m.provider_name.lower() or query in m.description.lower()
+        ]
+
+    return results
+
+@app.get("/api/v1/models/{model_id}", response_model=ModelSpec)
+def get_model_detail(model_id: str):
+    """특정 모델의 상세 정보를 반환합니다."""
+    model = next((m for m in MODELS if m.id.lower() == model_id.lower()), None)
+    if not model:
+        raise HTTPException(status_code=404, detail="Model not found")
+    return model
+
+@app.get("/api/v1/compare", response_model=List[ModelSpec])
+def compare_models(ids: str = Query(..., description="콤마로 구분된 모델 ID 목록 (예: gpt-5.6-sol,claude-opus-5)")):
+    """여러 모델을 나란히 비교하기 위한 모델 상세 목록 반환"""
+    id_list = [i.strip().lower() for i in ids.split(",") if i.strip()]
+    results = [m for m in MODELS if m.id.lower() in id_list]
+    return results
+
+@app.get("/api/v1/gpus", response_model=List[GPUSpec])
+def get_gpu_specs():
+    """GPU 하드웨어 스펙 및 클라우드/온프레미스 단가 목록 조회"""
+    return GPU_SPECS
+
+@app.post("/api/v1/simulate/tco", response_model=TCOComparisonResult)
+def simulate_tco(tco_input: TCOInput):
+    """API 이용 비용 vs 셀프호스팅 (클라우드/온프레미스 GPU) TCO 손익분기점 계산"""
+    try:
+        return calculate_tco(tco_input)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
