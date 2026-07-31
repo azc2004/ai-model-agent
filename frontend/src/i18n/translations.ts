@@ -1,4 +1,4 @@
-export type Language = 'ko' | 'en' | 'ja' | 'zh';
+export type Language = 'ko' | 'en' | 'ja' | 'zh' | 'es' | 'de' | 'fr';
 
 export interface TranslationDictionary {
   nav: {
@@ -395,6 +395,213 @@ export const translations: Record<Language, TranslationDictionary> = {
       purchasePrice: "官方指导价",
       cloudOnDemand: "云端 On-Demand",
       cloudSpot: "云端 Spot 实例"
+    }
+  },
+  es: {
+    nav: {
+      brandSubtitle: "Comparativa Global de Costes y Especificaciones de Modelos AI",
+      catalog: "Catálogo de Modelos",
+      compare: "Comparar Modelos",
+      tco: "API vs TCO Autoalojado",
+      advisor: "Recomendador de Arquitectura",
+      leaderboard: "Tabla de Clasificación",
+      gpus: "Precios y Especificaciones GPU"
+    },
+    viewMode: { grid: "Cuadrícula", table: "Tabla", compact: "Compacto" },
+    quota: { title: "Límites de Tarifa", rpm: "RPM", tpm: "TPM", rpd: "RPD", concurrency: "Concurrencia" },
+    dashboard: {
+      title: "Explorador de Especificaciones y Precios de Modelos LLM",
+      subtitle: "Compare precios API, ventana de contexto, benchmarks de rendimiento y especificaciones de más de 50 modelos LLM globales.",
+      searchPlaceholder: "Buscar por nombre de modelo, proveedor...",
+      allProviders: "Todos los Proveedores",
+      allTiers: "Todos los Niveles",
+      allLicenses: "Todas las Licencias",
+      modelsFound: "modelos encontrados",
+      openWeight: "Open Weight",
+      proprietary: "Propietario",
+      contextWindow: "Ventana de Contexto",
+      inputPrice: "Precio Entrada / 1M",
+      outputPrice: "Precio Salida / 1M",
+      compareButton: "Comparar",
+      compared: "En Comparación",
+      officialDocs: "Docs Oficiales"
+    },
+    tco: {
+      title: "Simulador TCO: API SaaS vs GPU Autoalojada",
+      subtitle: "Calcule el punto de equilibrio financiero entre el pago por uso de API y el autoalojamiento con instancias Cloud GPU u On-Premise.",
+      selectModel: "Seleccionar Modelo Objetivo",
+      inputTokens: "Tokens de Entrada Mensuales (Millones)",
+      outputTokens: "Tokens de Salida Mensuales (Millones)",
+      quantization: "Cuantización Objetivo",
+      recommendedOption: "Opción Recomendada",
+      cheapest: "La Más Económica",
+      apiCostMonthly: "Coste API Mensual",
+      cloudGpuCostMonthly: "Coste Mensual Cloud GPU",
+      onPremCostMonthly: "Amortización Mensual On-Premise",
+      powerCostEst: "Coste Eléctrico Estimado",
+      chartTitle: "Comparativa Mensual por Arquitectura ($)",
+      breakEvenPoint: "Punto de Equilibrio de Tokens",
+      breakEvenDesc: "Superado este volumen, el autoalojamiento (Cloud GPU / On-Premise) resulta más rentable que las llamadas a la API SaaS."
+    },
+    leaderboard: {
+      title: "Clasificación Mundial de Rendimiento de Modelos AI",
+      subtitle: "Basado en LMSYS Chatbot Arena Elo, SWE-bench, MMLU-Pro y GPQA.",
+      tabArenaElo: "LMSYS Arena Elo",
+      tabSweBench: "SWE-bench (Código)",
+      tabMmluPro: "MMLU-Pro (Conocimiento)",
+      tabGpqa: "GPQA (Razonamiento)",
+      rank: "Rango",
+      model: "Nombre del Modelo",
+      provider: "Proveedor",
+      tier: "Nivel",
+      score: "Puntuación"
+    },
+    gpu: {
+      title: "Especificaciones GPU y Precios de Alquiler en la Nube",
+      subtitle: "VRAM, ancho de banda de memoria, MSRP y precios de alquiler por hora en la nube para GPUs NVIDIA.",
+      vram: "VRAM",
+      bandwidth: "Ancho de Banda",
+      purchasePrice: "Precio MSRP",
+      cloudOnDemand: "Cloud Bajo Demanda",
+      cloudSpot: "Cloud Spot"
+    }
+  },
+  de: {
+    nav: {
+      brandSubtitle: "Globaler KI-Modell Kosten- & Spezifikationsvergleich",
+      catalog: "Modellkatalog",
+      compare: "Modellvergleich",
+      tco: "API vs Self-Host TCO",
+      advisor: "Architektur-Empfehlungen",
+      leaderboard: "Bestenliste",
+      gpus: "GPU Preise & Specs"
+    },
+    viewMode: { grid: "Raster", table: "Tabelle", compact: "Kompakt" },
+    quota: { title: "Ratenlimits", rpm: "RPM", tpm: "TPM", rpd: "RPD", concurrency: "Nebenläufigkeit" },
+    dashboard: {
+      title: "LLM Modell Spezifikationen & Preis-Explorer",
+      subtitle: "Vergleichen Sie API-Preise, Kontextfenster, Performance-Benchmarks und Spezifikationen von über 50 globalen LLM-Modellen.",
+      searchPlaceholder: "Nach Modellnamen, Anbieter suchen...",
+      allProviders: "Alle Anbieter",
+      allTiers: "Alle Stufen",
+      allLicenses: "Alle Lizenzen",
+      modelsFound: "Modelle gefunden",
+      openWeight: "Open Weight",
+      proprietary: "Proprietär",
+      contextWindow: "Kontextfenster",
+      inputPrice: "Input Preis / 1M",
+      outputPrice: "Output Preis / 1M",
+      compareButton: "Vergleichen",
+      compared: "Im Vergleich",
+      officialDocs: "Offizielle Doku"
+    },
+    tco: {
+      title: "TCO Simulator: SaaS API vs. Self-Hosted GPU",
+      subtitle: "Berechnen Sie den Break-Even-Point zwischen API Pay-as-you-go und Self-Hosting auf Cloud-GPUs oder On-Premise-Hardware.",
+      selectModel: "Zielmodell auswählen",
+      inputTokens: "Monatliche Input-Tokens (Mio.)",
+      outputTokens: "Monatliche Output-Tokens (Mio.)",
+      quantization: "Ziel-Quantisierung",
+      recommendedOption: "Empfohlene Option",
+      cheapest: "Günstigste Option",
+      apiCostMonthly: "Monatliche API-Kosten",
+      cloudGpuCostMonthly: "Monatliche Cloud GPU-Kosten",
+      onPremCostMonthly: "Monatliche On-Prem Abschreibung",
+      powerCostEst: "Geschätzte Stromkosten",
+      chartTitle: "Monatlicher Kostenvergleich nach Architektur ($)",
+      breakEvenPoint: "Token Break-Even-Point",
+      breakEvenDesc: "Ab diesem Volumen ist Self-Hosting (Cloud GPU / On-Premise) kostengünstiger als SaaS API-Aufrufe."
+    },
+    leaderboard: {
+      title: "Globale KI-Modell Performance Bestenliste",
+      subtitle: "Basierend auf LMSYS Chatbot Arena Elo, SWE-bench, MMLU-Pro und GPQA.",
+      tabArenaElo: "LMSYS Arena Elo",
+      tabSweBench: "SWE-bench (Code)",
+      tabMmluPro: "MMLU-Pro (Wissen)",
+      tabGpqa: "GPQA (Logik)",
+      rank: "Rang",
+      model: "Modellname",
+      provider: "Anbieter",
+      tier: "Stufe",
+      score: "Score"
+    },
+    gpu: {
+      title: "KI-Inferenz GPU Specs & Cloud-Mietpreise",
+      subtitle: "VRAM, Speicherbandbreite, UVP und stündliche Cloud-Mietpreise für NVIDIA GPUs.",
+      vram: "VRAM",
+      bandwidth: "Speicherbandbreite",
+      purchasePrice: "UVP Preis",
+      cloudOnDemand: "Cloud On-Demand",
+      cloudSpot: "Cloud Spot"
+    }
+  },
+  fr: {
+    nav: {
+      brandSubtitle: "Comparatif Global de Coûts et Spécifications des Modèles IA",
+      catalog: "Catalogue de Modèles",
+      compare: "Comparer les Modèles",
+      tco: "API vs TCO Auto-hébergé",
+      advisor: "Recommandateur d'Architecture",
+      leaderboard: "Classement Général",
+      gpus: "Spécifications & Prix GPU"
+    },
+    viewMode: { grid: "Grille", table: "Tableau", compact: "Compact" },
+    quota: { title: "Limites de Débit", rpm: "RPM", tpm: "TPM", rpd: "RPD", concurrency: "Concurrence" },
+    dashboard: {
+      title: "Explorateur de Tarifs et Spécifications des Modèles LLM",
+      subtitle: "Comparez les prix des API, la fenêtre de contexte, les benchmarks et les spécifications de plus de 50 modèles LLM mondiaux.",
+      searchPlaceholder: "Rechercher par nom de modèle, fournisseur...",
+      allProviders: "Tous les Fournisseurs",
+      allTiers: "Tous les Niveaux",
+      allLicenses: "Toutes les Licences",
+      modelsFound: "modèles trouvés",
+      openWeight: "Open Weight",
+      proprietary: "Propriétaire",
+      contextWindow: "Fenêtre de Contexte",
+      inputPrice: "Prix Entrée / 1M",
+      outputPrice: "Prix Sortie / 1M",
+      compareButton: "Comparer",
+      compared: "Comparé",
+      officialDocs: "Docs Officielles"
+    },
+    tco: {
+      title: "Simulateur TCO : API SaaS vs GPU Auto-hébergé",
+      subtitle: "Calculez le point d'équilibre financier entre la facturation API à l'usage et l'auto-hébergement sur Cloud GPU ou On-Premise.",
+      selectModel: "Sélectionner le Modèle Cible",
+      inputTokens: "Tokens d'Entrée Mensuels (Millions)",
+      outputTokens: "Tokens de Sortie Mensuels (Millions)",
+      quantization: "Quantification Cible",
+      recommendedOption: "Option Recommandée",
+      cheapest: "La Plus Économique",
+      apiCostMonthly: "Coût Mensuel API",
+      cloudGpuCostMonthly: "Coût Mensuel Cloud GPU",
+      onPremCostMonthly: "Amortissement Mensuel On-Premise",
+      powerCostEst: "Coût Électrique Estimé",
+      chartTitle: "Comparatif Mensuel des Coûts par Architecture ($)",
+      breakEvenPoint: "Seuil de Rentabilité en Tokens",
+      breakEvenDesc: "Au-delà de ce volume, l'auto-hébergement (Cloud GPU / On-Premise) est plus rentable que les appels API SaaS."
+    },
+    leaderboard: {
+      title: "Classement Mondial de Performance des Modèles IA",
+      subtitle: "Basé sur LMSYS Chatbot Arena Elo, SWE-bench, MMLU-Pro et GPQA.",
+      tabArenaElo: "LMSYS Arena Elo",
+      tabSweBench: "SWE-bench (Code)",
+      tabMmluPro: "MMLU-Pro (Savoir)",
+      tabGpqa: "GPQA (Raisonnement)",
+      rank: "Rang",
+      model: "Nom du Modèle",
+      provider: "Fournisseur",
+      tier: "Niveau",
+      score: "Score"
+    },
+    gpu: {
+      title: "Spécifications GPU et Tarifs de Location Cloud",
+      subtitle: "VRAM, bande passante mémoire, prix conseillé et tarifs de location horaire sur le Cloud pour les GPUs NVIDIA.",
+      vram: "VRAM",
+      bandwidth: "Bande Passante",
+      purchasePrice: "Prix Conseillé",
+      cloudOnDemand: "Cloud Sur Demande",
+      cloudSpot: "Cloud Spot"
     }
   }
 };

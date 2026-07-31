@@ -16,13 +16,16 @@ const STORAGE_KEY = 'llm_compass_lang';
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<Language>(() => {
     const saved = localStorage.getItem(STORAGE_KEY) as Language;
-    if (saved && ['ko', 'en', 'ja', 'zh'].includes(saved)) {
+    if (saved && ['ko', 'en', 'ja', 'zh', 'es', 'de', 'fr'].includes(saved)) {
       return saved;
     }
     const browserLang = navigator.language.toLowerCase();
     if (browserLang.startsWith('ko')) return 'ko';
     if (browserLang.startsWith('ja')) return 'ja';
     if (browserLang.startsWith('zh')) return 'zh';
+    if (browserLang.startsWith('es')) return 'es';
+    if (browserLang.startsWith('de')) return 'de';
+    if (browserLang.startsWith('fr')) return 'fr';
     return 'en';
   });
 

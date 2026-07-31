@@ -123,6 +123,7 @@ class RecommendationRequest(BaseModel):
     requires_multimodal: bool = Field(False, description="멀티모달(비전/음성) 지원 필요 여부")
     requires_coding: bool = Field(False, description="코드 생성 및 검증 능력 필요 여부")
     custom_prompt: Optional[str] = Field(None, description="고객이 직접 작성한 자연어 서비스 요구사항 텍스트")
+    language: Optional[str] = Field("ko", description="마크다운 문서 생성 대상 언어 (ko, en, ja, zh, es, de, fr)")
 
 class ModelComboItem(BaseModel):
     role: str                       # e.g., "Router/Classifier", "Primary Engine", "Fallback"

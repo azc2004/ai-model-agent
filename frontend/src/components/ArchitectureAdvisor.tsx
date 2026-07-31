@@ -5,8 +5,10 @@ import {
 } from 'lucide-react';
 import type { RecommendationRequest, ArchitectureRecommendationResult, TrendingTemplate } from '../types';
 import { API_BASE_URL } from '../api';
+import { useLanguage } from '../context/LanguageContext';
 
 export const ArchitectureAdvisor: React.FC = () => {
+  const { language } = useLanguage();
   const [trending, setTrending] = useState<TrendingTemplate[]>([]);
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>("code_agent");
   const [loading, setLoading] = useState<boolean>(false);
@@ -49,7 +51,7 @@ export const ArchitectureAdvisor: React.FC = () => {
 
   const fetchRecommendation = (req?: RecommendationRequest) => {
     setLoading(true);
-    const payload: RecommendationRequest = req || {
+    const baseReq: RecommendationRequest = req || {
       service_type: serviceType,
       monthly_requests: monthlyRequests,
       avg_input_tokens: avgInputTokens,
@@ -57,6 +59,11 @@ export const ArchitectureAdvisor: React.FC = () => {
       requires_multimodal: requiresMultimodal,
       requires_coding: requiresCoding,
       custom_prompt: customPrompt
+    };
+
+    const payload: RecommendationRequest = {
+      ...baseReq,
+      language: language
     };
 
     fetch(`${API_BASE_URL}/recommend/architecture`, {

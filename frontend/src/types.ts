@@ -117,6 +117,7 @@ export interface RecommendationRequest {
   requires_multimodal: boolean;
   requires_coding: boolean;
   custom_prompt?: string;
+  language?: string;
 }
 
 export interface ModelComboItem {

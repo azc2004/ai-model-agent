@@ -147,6 +147,9 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, compare
               <option value="en" className="bg-slate-900 text-slate-100">🇺🇸 English</option>
               <option value="ja" className="bg-slate-900 text-slate-100">🇯🇵 日本語</option>
               <option value="zh" className="bg-slate-900 text-slate-100">🇨🇳 中文</option>
+              <option value="es" className="bg-slate-900 text-slate-100">🇪🇸 Español</option>
+              <option value="de" className="bg-slate-900 text-slate-100">🇩🇪 Deutsch</option>
+              <option value="fr" className="bg-slate-900 text-slate-100">🇫🇷 Français</option>
             </select>
           </div>
         </div>
