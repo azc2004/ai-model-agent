@@ -30,6 +30,52 @@ body {
   background-attachment: fixed;
 }
 
+/* Light Mode Universal High Contrast Theme Rules */
+html.light-mode body {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+  background-image: 
+    radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(59, 130, 246, 0.05) 0%, transparent 40%) !important;
+}
+
+html.light-mode .glass-card,
+html.light-mode .glass-panel {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+  color: #0f172a !important;
+}
+
+html.light-mode [class*="bg-slate-9"],
+html.light-mode [class*="bg-slate-8"],
+html.light-mode [class*="bg-slate-950"],
+html.light-mode [class*="bg-slate-900"] {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light-mode [class*="text-slate-400"],
+html.light-mode [class*="text-slate-500"],
+html.light-mode [class*="text-slate-600"] {
+  color: #475569 !important;
+}
+
+html.light-mode [class*="text-slate-300"],
+html.light-mode [class*="text-slate-200"],
+html.light-mode [class*="text-slate-100"] {
+  color: #0f172a !important;
+}
+
+html.light-mode select,
+html.light-mode input,
+html.light-mode textarea {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

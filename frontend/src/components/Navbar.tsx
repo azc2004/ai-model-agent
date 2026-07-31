@@ -1,6 +1,7 @@
 import React from 'react';
-import { Compass, LayoutGrid, ArrowLeftRight, Calculator, Trophy, Cpu, Globe, Sparkles } from 'lucide-react';
+import { Compass, LayoutGrid, ArrowLeftRight, Calculator, Trophy, Cpu, Globe, Sparkles, Sun, Moon } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useTheme } from '../context/ThemeContext';
 import type { Language } from '../i18n/translations';
 
 interface NavbarProps {
@@ -11,6 +12,7 @@ interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, compareCount }) => {
   const { language, setLanguage, t } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <header className="sticky top-0 z-50 glass-card border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-xl">
@@ -119,8 +121,21 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, compare
         </nav>
 
 
-        {/* Language Selector Dropdown */}
+        {/* Language Selector Dropdown & Theme Toggle */}
         <div className="flex items-center gap-2">
+          {/* Theme Toggle Button */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-indigo-500/50 transition-all shadow-sm flex items-center justify-center"
+            title={theme === 'dark' ? '화사한 라이트 모드로 변경' : '다크 모드로 변경'}
+          >
+            {theme === 'dark' ? (
+              <Sun className="w-4 h-4 text-amber-400 animate-spin-slow" />
+            ) : (
+              <Moon className="w-4 h-4 text-indigo-500" />
+            )}
+          </button>
+
           <div className="relative flex items-center gap-1.5 bg-slate-900 border border-slate-800 rounded-xl px-2.5 py-1.5 text-xs text-slate-300">
             <Globe className="w-3.5 h-3.5 text-cyan-400" />
             <select
