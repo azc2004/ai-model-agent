@@ -138,33 +138,41 @@ export const ArchitectureAdvisor: React.FC = () => {
               <button
                 key={tpl.id}
                 onClick={() => applyTemplate(tpl)}
-                className={`relative group text-left p-4 rounded-2xl border transition-all duration-300 flex flex-col justify-between ${
+                className={`relative group text-left p-4 rounded-2xl border transition-all duration-300 flex flex-col justify-between shadow-md ${
                   isSelected
-                    ? 'bg-indigo-950/80 border-indigo-500 shadow-lg shadow-indigo-500/20 ring-2 ring-indigo-500/30'
-                    : 'bg-slate-900/60 border-slate-800 hover:border-slate-700 hover:bg-slate-800/50'
+                    ? 'bg-indigo-600 text-white border-indigo-400 shadow-xl shadow-indigo-500/20 ring-2 ring-indigo-400'
+                    : 'glass-card hover:border-indigo-400/60'
                 }`}
               >
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
-                      tpl.rank === 1 ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' :
-                      tpl.rank === 2 ? 'bg-slate-300/20 text-slate-200 border border-slate-400/30' :
-                      'bg-amber-700/20 text-amber-400 border border-amber-700/30'
+                    <span className={`text-xs font-extrabold px-2 py-0.5 rounded-full ${
+                      isSelected
+                        ? 'bg-white/20 text-white border border-white/30'
+                        : tpl.rank === 1 ? 'bg-amber-500/20 text-amber-500 dark:text-amber-300 border border-amber-500/40' :
+                          tpl.rank === 2 ? 'bg-slate-300/30 text-slate-800 dark:text-slate-200 border border-slate-400/40' :
+                          'bg-amber-700/20 text-amber-600 dark:text-amber-400 border border-amber-700/40'
                     }`}>
                       #{tpl.rank}위
                     </span>
                     {getTemplateIcon(tpl.icon)}
                   </div>
-                  <h3 className="font-bold text-white text-sm line-clamp-1 group-hover:text-indigo-300 transition-colors">
+                  <h3 className={`font-bold text-sm line-clamp-1 transition-colors ${
+                    isSelected ? 'text-white' : 'text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-300'
+                  }`}>
                     {tpl.title.split('(')[0]}
                   </h3>
-                  <p className="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed">
+                  <p className={`text-xs mt-1.5 line-clamp-2 leading-relaxed font-medium ${
+                    isSelected ? 'text-indigo-100' : 'text-slate-600 dark:text-slate-300'
+                  }`}>
                     {tpl.description}
                   </p>
                 </div>
-                <div className="mt-3 pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+                <div className={`mt-3 pt-2 border-t flex items-center justify-between text-xs font-bold ${
+                  isSelected ? 'border-indigo-400/40 text-indigo-100' : 'border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'
+                }`}>
                   <span>{tpl.typical_monthly_requests.toLocaleString()} req/mo</span>
-                  <ChevronRight className={`w-4 h-4 transition-transform ${isSelected ? 'translate-x-1 text-indigo-400' : 'text-slate-600'}`} />
+                  <ChevronRight className={`w-4 h-4 transition-transform ${isSelected ? 'translate-x-1 text-white' : 'text-slate-400'}`} />
                 </div>
               </button>
             );
@@ -175,39 +183,39 @@ export const ArchitectureAdvisor: React.FC = () => {
       {/* Main Grid: Form & Result */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Form: Customizer */}
-        <div className="lg:col-span-4 bg-slate-900/80 border border-slate-800 rounded-3xl p-6 space-y-6 shadow-xl h-fit">
-          <div className="flex items-center gap-2 text-white font-bold text-lg border-b border-slate-800 pb-3">
-            <Layers className="w-5 h-5 text-indigo-400" />
+        <div className="lg:col-span-4 glass-panel p-6 space-y-6 shadow-xl h-fit border border-slate-700/60 rounded-3xl">
+          <div className="flex items-center gap-2 font-extrabold text-lg border-b border-slate-700/60 pb-3 text-slate-900 dark:text-white">
+            <Layers className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
             서비스 요구사항 직접 입력
           </div>
 
           <div className="space-y-4 text-sm">
             {/* Natural Language Prompt Input */}
             <div>
-              <label className="block text-slate-300 font-semibold mb-1.5 flex items-center justify-between">
+              <label className="block font-bold mb-1.5 flex items-center justify-between text-slate-900 dark:text-slate-200">
                 <span>💬 요구사항 자유 묘사 (자연어)</span>
-                <span className="text-[11px] text-indigo-400 font-normal">AI 자동 의도분석</span>
+                <span className="text-[11px] text-indigo-500 dark:text-indigo-400 font-bold">AI 자동 의도분석</span>
               </label>
               <textarea
                 rows={3}
                 placeholder="예: 사내 PDF 문서를 RAG로 검색하여 보안 답변을 주는 챗봇을 만들려고 합니다. 월 10만 건 정도 사용 예상됩니다."
                 value={customPrompt}
                 onChange={(e) => setCustomPrompt(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 transition-colors resize-none placeholder:text-slate-600"
+                className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-indigo-500 transition-all resize-none shadow-inner"
               />
               {/* Sample Chips */}
               <div className="flex flex-wrap gap-1.5 mt-2">
                 <button
                   type="button"
                   onClick={() => setCustomPrompt("사내 Confluence/PDF 문서를 RAG로 답변하는 보안 챗봇 구축")}
-                  className="text-[10px] bg-slate-950 border border-slate-800 hover:border-indigo-500/50 text-slate-400 hover:text-indigo-300 px-2 py-1 rounded-lg transition-colors text-left"
+                  className="text-[10px] bg-indigo-50 dark:bg-slate-950 border border-indigo-200 dark:border-slate-800 hover:border-indigo-500 text-indigo-700 dark:text-slate-300 px-2 py-1 rounded-lg transition-colors text-left font-semibold"
                 >
                   💡 사내 문서 RAG 챗봇
                 </button>
                 <button
                   type="button"
                   onClick={() => setCustomPrompt("Python/JS 버그 자동 수정 및 리팩토링 에이전트")}
-                  className="text-[10px] bg-slate-950 border border-slate-800 hover:border-indigo-500/50 text-slate-400 hover:text-indigo-300 px-2 py-1 rounded-lg transition-colors text-left"
+                  className="text-[10px] bg-indigo-50 dark:bg-slate-950 border border-indigo-200 dark:border-slate-800 hover:border-indigo-500 text-indigo-700 dark:text-slate-300 px-2 py-1 rounded-lg transition-colors text-left font-semibold"
                 >
                   💡 코드 수정 에이전트
                 </button>
@@ -215,11 +223,11 @@ export const ArchitectureAdvisor: React.FC = () => {
             </div>
             {/* Service Type */}
             <div>
-              <label className="block text-slate-300 font-medium mb-1.5">서비스 유형</label>
+              <label className="block font-bold mb-1.5 text-slate-900 dark:text-slate-200">서비스 유형</label>
               <select
                 value={serviceType}
                 onChange={(e) => setServiceType(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-indigo-500 transition-colors"
+                className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2.5 text-slate-900 dark:text-white font-bold focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer"
               >
                 <option value="code_agent">👨‍💻 자율 코딩 에이전트 (Code Agent)</option>
                 <option value="rag">📚 기업용 사내 RAG 챗봇 (Enterprise RAG)</option>
@@ -231,9 +239,9 @@ export const ArchitectureAdvisor: React.FC = () => {
 
             {/* Monthly Requests */}
             <div>
-              <div className="flex justify-between text-slate-300 font-medium mb-1.5">
+              <div className="flex justify-between font-bold mb-1.5 text-slate-900 dark:text-slate-200">
                 <span>월간 예상 요청 수</span>
-                <span className="text-indigo-400 font-bold">{monthlyRequests.toLocaleString()} 회</span>
+                <span className="text-indigo-600 dark:text-indigo-400 font-extrabold">{monthlyRequests.toLocaleString()} 회</span>
               </div>
               <input
                 type="range"
@@ -242,9 +250,9 @@ export const ArchitectureAdvisor: React.FC = () => {
                 step="10000"
                 value={monthlyRequests}
                 onChange={(e) => setMonthlyRequests(Number(e.target.value))}
-                className="w-full accent-indigo-500 bg-slate-950 rounded-lg cursor-pointer h-2"
+                className="w-full accent-indigo-600 rounded-lg cursor-pointer h-2"
               />
-              <div className="flex justify-between text-[10px] text-slate-500 mt-1">
+              <div className="flex justify-between text-[10px] text-slate-500 font-semibold mt-1">
                 <span>1만</span>
                 <span>50만</span>
                 <span>100만 회</span>
@@ -254,42 +262,42 @@ export const ArchitectureAdvisor: React.FC = () => {
             {/* Avg Tokens */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-slate-300 font-medium mb-1">평균 입력 토큰</label>
+                <label className="block font-bold mb-1 text-slate-900 dark:text-slate-200">평균 입력 토큰</label>
                 <input
                   type="number"
                   value={avgInputTokens}
                   onChange={(e) => setAvgInputTokens(Number(e.target.value))}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-900 dark:text-white font-bold focus:outline-none focus:border-indigo-500"
                 />
               </div>
               <div>
-                <label className="block text-slate-300 font-medium mb-1">평균 출력 토큰</label>
+                <label className="block font-bold mb-1 text-slate-900 dark:text-slate-200">평균 출력 토큰</label>
                 <input
                   type="number"
                   value={avgOutputTokens}
                   onChange={(e) => setAvgOutputTokens(Number(e.target.value))}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-900 dark:text-white font-bold focus:outline-none focus:border-indigo-500"
                 />
               </div>
             </div>
 
             {/* Capability Checkboxes */}
-            <div className="space-y-2 pt-2 border-t border-slate-800">
-              <label className="flex items-center gap-2 cursor-pointer text-slate-300 select-none">
+            <div className="space-y-2 pt-2 border-t border-slate-700/60">
+              <label className="flex items-center gap-2 cursor-pointer font-semibold text-slate-900 dark:text-slate-200 select-none">
                 <input
                   type="checkbox"
                   checked={requiresMultimodal}
                   onChange={(e) => setRequiresMultimodal(e.target.checked)}
-                  className="w-4 h-4 accent-indigo-500 rounded"
+                  className="w-4 h-4 accent-indigo-600 rounded"
                 />
                 <span>🖼️ 멀티모달 (비전/이미지 이해) 필요</span>
               </label>
-              <label className="flex items-center gap-2 cursor-pointer text-slate-300 select-none">
+              <label className="flex items-center gap-2 cursor-pointer font-semibold text-slate-900 dark:text-slate-200 select-none">
                 <input
                   type="checkbox"
                   checked={requiresCoding}
                   onChange={(e) => setRequiresCoding(e.target.checked)}
-                  className="w-4 h-4 accent-indigo-500 rounded"
+                  className="w-4 h-4 accent-indigo-600 rounded"
                 />
                 <span>⚡ 복잡 추론 & 코드 생성 필요</span>
               </label>
@@ -298,7 +306,7 @@ export const ArchitectureAdvisor: React.FC = () => {
             <button
               onClick={() => { setSelectedTemplateId(null); fetchRecommendation(); }}
               disabled={loading}
-              className="w-full mt-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-3 rounded-xl shadow-lg shadow-indigo-600/30 transition-all flex items-center justify-center gap-2 active:scale-98"
+              className="w-full mt-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-black py-3.5 rounded-xl shadow-lg shadow-indigo-600/30 transition-all flex items-center justify-center gap-2 active:scale-98"
             >
               {loading ? <Sparkles className="w-5 h-5 animate-spin" /> : <Zap className="w-5 h-5" />}
               추천 아키텍처 recalculate
@@ -309,27 +317,27 @@ export const ArchitectureAdvisor: React.FC = () => {
         {/* Right Results: Combos & Hosting & Markdown Spec */}
         <div className="lg:col-span-8 space-y-6">
           {loading ? (
-            <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-12 text-center space-y-4">
-              <Sparkles className="w-10 h-10 text-indigo-400 animate-spin mx-auto" />
-              <p className="text-white font-bold text-lg">최적의 모델 조합 및 비용을 계산 중입니다...</p>
+            <div className="glass-panel p-12 text-center space-y-4 rounded-3xl border border-slate-700/60 shadow-xl">
+              <Sparkles className="w-10 h-10 text-indigo-500 animate-spin mx-auto" />
+              <p className="font-extrabold text-lg text-slate-900 dark:text-white">최적의 모델 조합 및 비용을 계산 중입니다...</p>
             </div>
           ) : result ? (
             <>
               {/* Service Summary Banner */}
-              <div className="bg-slate-900/90 border border-indigo-500/30 rounded-3xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
+              <div className="glass-panel p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl border border-indigo-500/40 rounded-3xl">
                 <div>
-                  <h3 className="text-xl font-bold text-white">{result.service_name}</h3>
-                  <div className="flex flex-wrap items-center gap-3 text-xs text-slate-400 mt-1">
-                    <span>월간 요청: <strong className="text-indigo-300">{result.monthly_requests.toLocaleString()}회</strong></span>
+                  <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">{result.service_name}</h3>
+                  <div className="flex flex-wrap items-center gap-3 text-xs font-semibold text-slate-600 dark:text-slate-300 mt-1">
+                    <span>월간 요청: <strong className="text-indigo-600 dark:text-indigo-300 font-extrabold">{result.monthly_requests.toLocaleString()}회</strong></span>
                     <span>•</span>
-                    <span>월 토큰: <strong className="text-slate-200">in {result.total_monthly_input_tokens_m}M / out {result.total_monthly_output_tokens_m}M</strong></span>
+                    <span>월 토큰: <strong className="text-slate-900 dark:text-slate-100 font-extrabold">in {result.total_monthly_input_tokens_m}M / out {result.total_monthly_output_tokens_m}M</strong></span>
                   </div>
                 </div>
                 <button
                   onClick={() => setShowModal(true)}
-                  className="bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/40 text-indigo-300 font-bold px-4 py-2.5 rounded-xl transition-all flex items-center gap-2 text-sm shadow-md whitespace-nowrap"
+                  className="bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold px-5 py-3 rounded-2xl transition-all flex items-center gap-2 text-sm shadow-lg shadow-indigo-600/30 whitespace-nowrap"
                 >
-                  <FileText className="w-4 h-4 text-indigo-400" />
+                  <FileText className="w-4 h-4 text-white" />
                   Markdown 명세서 보기 & 다운로드
                 </button>
               </div>
@@ -341,32 +349,54 @@ export const ArchitectureAdvisor: React.FC = () => {
                   return (
                     <div
                       key={combo.id}
-                      className={`relative rounded-3xl p-5 border flex flex-col justify-between transition-all ${
+                      className={`relative rounded-3xl p-5 border flex flex-col justify-between transition-all shadow-xl ${
                         isRecommended
-                          ? 'bg-gradient-to-b from-indigo-950/90 via-slate-900/90 to-slate-900 border-indigo-500 shadow-xl ring-2 ring-indigo-500/30'
-                          : 'bg-slate-900/70 border-slate-800'
+                          ? 'bg-slate-900 text-white border-indigo-500 shadow-indigo-500/20 ring-2 ring-indigo-500'
+                          : 'glass-panel border-slate-300 dark:border-slate-800'
                       }`}
                     >
                       {isRecommended && (
-                        <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-bold text-[11px] px-3 py-0.5 rounded-full shadow-md">
+                        <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-[11px] px-3.5 py-1 rounded-full shadow-lg border border-amber-300 whitespace-nowrap">
                           ⭐ 추천 아키텍처 (Best ROI)
                         </span>
                       )}
 
                       <div>
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">{combo.tag}</span>
-                          <span className="text-xs font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-800 px-2 py-0.5 rounded-full">
+                          <span className={`text-xs font-black uppercase tracking-wider ${
+                            isRecommended ? 'text-indigo-300' : 'text-slate-600 dark:text-slate-400'
+                          }`}>
+                            {combo.tag}
+                          </span>
+                          <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 px-2 py-0.5 rounded-full">
                             {combo.avg_arena_elo.toFixed(0)} ELO
                           </span>
                         </div>
-                        <h4 className="text-base font-bold text-white mb-2">{combo.name}</h4>
-                        <p className="text-xs text-slate-400 mb-4 leading-relaxed line-clamp-3">{combo.description}</p>
+                        <h4 className={`text-base font-extrabold mb-2 ${
+                          isRecommended ? 'text-white' : 'text-slate-900 dark:text-white'
+                        }`}>
+                          {combo.name}
+                        </h4>
+                        <p className={`text-xs mb-4 leading-relaxed line-clamp-3 font-medium ${
+                          isRecommended ? 'text-slate-200' : 'text-slate-600 dark:text-slate-300'
+                        }`}>
+                          {combo.description}
+                        </p>
 
                         {/* Cost Display */}
-                        <div className="bg-slate-950/80 border border-slate-800/80 rounded-2xl p-3 mb-4">
-                          <span className="text-[11px] text-slate-400">월간 예상 API 비용</span>
-                          <div className="text-2xl font-black text-white mt-0.5">
+                        <div className={`rounded-2xl p-3.5 mb-4 border ${
+                          isRecommended 
+                            ? 'bg-slate-950/90 border-slate-700' 
+                            : 'bg-slate-100 dark:bg-slate-950/80 border-slate-200 dark:border-slate-800'
+                        }`}>
+                          <span className={`text-[11px] font-bold ${
+                            isRecommended ? 'text-slate-300' : 'text-slate-600 dark:text-slate-400'
+                          }`}>
+                            월간 예상 API 비용
+                          </span>
+                          <div className={`text-2xl font-black mt-0.5 ${
+                            isRecommended ? 'text-amber-300' : 'text-slate-900 dark:text-white'
+                          }`}>
                             ${combo.total_monthly_cost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             <span className="text-xs font-normal text-slate-400"> /월</span>
                           </div>
@@ -374,15 +404,30 @@ export const ArchitectureAdvisor: React.FC = () => {
 
                         {/* Pipeline Items */}
                         <div className="space-y-2 mb-4">
-                          <span className="text-[11px] font-bold text-slate-300 block">라우팅 파이프라인 구성:</span>
+                          <span className={`text-[11px] font-bold block ${
+                            isRecommended ? 'text-slate-200' : 'text-slate-700 dark:text-slate-300'
+                          }`}>
+                            라우팅 파이프라인 구성:
+                          </span>
                           {combo.items.map((item, idx) => (
-                            <div key={idx} className="bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs">
-                              <div className="flex justify-between text-slate-300 font-medium">
-                                <span className="text-indigo-300 font-semibold">{item.role}</span>
+                            <div 
+                              key={idx} 
+                              className={`rounded-xl p-2.5 text-xs border ${
+                                isRecommended 
+                                  ? 'bg-slate-950/80 border-slate-800 text-slate-100' 
+                                  : 'bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100'
+                              }`}
+                            >
+                              <div className="flex justify-between font-bold">
+                                <span className={isRecommended ? 'text-indigo-300' : 'text-indigo-600 dark:text-indigo-400'}>
+                                  {item.role}
+                                </span>
                                 <span>{item.allocation_percent}%</span>
                               </div>
-                              <div className="text-slate-400 text-[11px] mt-0.5 line-clamp-1">
-                                {item.model_name} <span className="text-slate-600">(${item.monthly_estimated_cost.toFixed(2)})</span>
+                              <div className={`text-[11px] mt-0.5 line-clamp-1 font-medium ${
+                                isRecommended ? 'text-slate-300' : 'text-slate-600 dark:text-slate-400'
+                              }`}>
+                                {item.model_name} <span className="opacity-70">(${item.monthly_estimated_cost.toFixed(2)})</span>
                               </div>
                             </div>
                           ))}
@@ -390,10 +435,12 @@ export const ArchitectureAdvisor: React.FC = () => {
                       </div>
 
                       {/* Advantages */}
-                      <div className="space-y-1.5 pt-3 border-t border-slate-800 text-xs">
+                      <div className={`space-y-1.5 pt-3 border-t text-xs font-semibold ${
+                        isRecommended ? 'border-slate-800 text-slate-200' : 'border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'
+                      }`}>
                         {combo.key_advantages.map((adv, idx) => (
-                          <div key={idx} className="flex items-center gap-1.5 text-slate-300">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                          <div key={idx} className="flex items-center gap-1.5">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
                             <span className="line-clamp-1">{adv}</span>
                           </div>
                         ))}
@@ -404,27 +451,27 @@ export const ArchitectureAdvisor: React.FC = () => {
               </div>
 
               {/* Hosting Recommendations */}
-              <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 space-y-4 shadow-xl">
-                <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                  <h4 className="text-lg font-bold text-white flex items-center gap-2">
-                    <Server className="w-5 h-5 text-indigo-400" />
+              <div className="glass-panel p-6 space-y-4 shadow-xl border border-slate-300 dark:border-slate-800 rounded-3xl">
+                <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+                  <h4 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <Server className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
                     추천 호스팅 & 클라우드 인프라 (Hosting Options)
                   </h4>
-                  <span className="text-xs text-slate-400">서버 인프라 가이드</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold">서버 인프라 가이드</span>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {result.hosting_options.map((h, idx) => (
-                    <div key={idx} className="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-4 space-y-2">
+                    <div key={idx} className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-4 space-y-2 shadow-sm">
                       <div className="flex justify-between items-start">
-                        <span className="text-xs font-bold px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
+                        <span className="text-xs font-extrabold px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 border border-indigo-500/20">
                           {h.category}
                         </span>
-                        <span className="text-sm font-bold text-white">${h.estimated_monthly_cost}/월</span>
+                        <span className="text-sm font-extrabold text-slate-900 dark:text-white">${h.estimated_monthly_cost}/월</span>
                       </div>
-                      <h5 className="font-bold text-white text-sm">{h.provider}</h5>
-                      <p className="text-xs text-slate-400 leading-relaxed">{h.description}</p>
-                      <div className="text-[11px] text-indigo-400 font-medium pt-1">
+                      <h5 className="font-extrabold text-slate-900 dark:text-white text-sm">{h.provider}</h5>
+                      <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-medium">{h.description}</p>
+                      <div className="text-[11px] text-indigo-600 dark:text-indigo-400 font-bold pt-1">
                         👉 추천 대상: {h.recommended_for}
                       </div>
                     </div>
