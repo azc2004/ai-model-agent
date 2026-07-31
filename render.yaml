@@ -1,0 +1,23 @@
+services:
+  # 백엔드 FastAPI 서비스
+  - type: web
+    name: llm-compass-backend
+    env: python
+    region: singapore
+    buildCommand: "cd backend && pip install -r requirements.txt"
+    startCommand: "cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+
+  # 프론트엔드 정적 사이트
+  - type: web
+    name: llm-compass-frontend
+    env: static
+    region: singapore
+    buildCommand: "cd frontend && npm install && npm run build"
+    staticPublishPath: "./frontend/dist"
+    routes:
+      - type: rewrite
+        source: "/*"
+        destination: "/index.html"
