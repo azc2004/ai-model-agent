@@ -1,3 +1,5 @@
+import os
+import logging
 from typing import List
 from app.schemas import (
     RecommendationRequest,
@@ -8,6 +10,29 @@ from app.schemas import (
     TrendingTemplate
 )
 from app.seed_data import MODELS
+
+logger = logging.getLogger(__name__)
+
+# Gemini API 초기화 (GEMINI_API_KEY 환경변수 필요)
+_gemini_model = None
+try:
+    import google.generativeai as genai
+    _api_key = os.getenv("GEMINI_API_KEY", "")
+    if _api_key:
+        genai.configure(api_key=_api_key)
+        _gemini_model = genai.GenerativeModel(
+            model_name="gemini-2.0-flash",
+            generation_config={
+                "temperature": 0.4,
+                "top_p": 0.95,
+                "max_output_tokens": 8192,
+            }
+        )
+        logger.info("✅ Gemini 2.0 Flash 마크다운 생성 모드 활성화")
+    else:
+        logger.warning("⚠️  GEMINI_API_KEY 미설정 → 정적 템플릿 폴백 모드")
+except ImportError:
+    logger.warning("⚠️  google-generativeai 미설치 → pip install google-generativeai")
 
 # Helper to find model by id or fallback
 def get_model(model_id: str):
@@ -119,6 +144,146 @@ def calculate_item_cost(model_id: str, input_m: float, output_m: float, alloc_ra
     out_cost = output_m * alloc_ratio * m.api_pricing.output_price_per_1m
     return round(in_cost + out_cost, 2)
 
+# ──────────────────────────────────────────────────────────────────────────────
+# Gemini 기반 마크다운 생성 시스템
+# ──────────────────────────────────────────────────────────────────────────────
+
+SYSTEM_PROMPT = """You are a **Senior AI Solutions Architect** with 12+ years of experience in:
+- Production LLM system design (Google Cloud, AWS, Azure)
+- Multi-model routing architectures and cost optimization
+- MLOps, DevSecOps, and enterprise-grade AI deployment
+- Security guardrails, prompt engineering, and observability
+
+Your task: Generate a **comprehensive, production-ready AI System Architecture Specification** in Korean Markdown.
+
+Mandatory requirements:
+1. **실용성 최우선**: Cursor IDE, Claude Code 등 AI 코딩 도구가 즉시 구현 가능한 수준의 구체적 스펙 작성
+2. **전문가 견해 반영**: 모델 선택 이유, 트레이드오프, 리스크 포인트를 명확히 서술
+3. **Mermaid 다이어그램 필수**: sequenceDiagram + flowchart 2개 포함 (정확한 문법)
+4. **실행 가능한 코드**: Python async 라우터 파이프라인 핵심 코드 포함
+5. **7개 섹션 구조** 준수 (Executive Summary, Architecture, Pipeline, Code, Security, Infra, Deployment)
+6. 모든 수치(토큰, 비용, ELO, latency SLA)를 제공된 데이터에서 정확히 인용
+7. 한국어로 작성하되, 기술 용어/코드/다이어그램은 영어 유지"""
+
+
+def _build_gemini_user_prompt(
+    service_name: str,
+    req: RecommendationRequest,
+    total_input_m: float,
+    total_output_m: float,
+    smart_combo: ModelCombo,
+    best_combo: ModelCombo,
+    hosting: HostingOption
+) -> str:
+    """Gemini에 전달할 상세 컨텍스트 프롬프트 생성"""
+    combos_text = ""
+    for combo in [smart_combo, best_combo]:
+        combos_text += f"\n**{combo.name}** (${combo.total_monthly_cost:.2f}/월, ELO {combo.avg_arena_elo:.0f})"
+        for item in combo.items:
+            combos_text += f"\n  - {item.role}: {item.model_name} ({item.provider_name}) → ${item.monthly_estimated_cost:.2f}/월"
+
+    custom_desc = f'\n> **고객 자연어 요구사항**: "{req.custom_prompt}"' if req.custom_prompt else ""
+
+    return f"""아래 데이터를 바탕으로 '{service_name}'에 대한 AI 시스템 아키텍처 개발 명세서를 작성해주세요.
+{custom_desc}
+
+## 서비스 스펙
+- **서비스 타입**: {req.service_type.upper()}
+- **월간 예상 요청**: {req.monthly_requests:,}회/월
+- **요청당 토큰**: Input {req.avg_input_tokens:,}t / Output {req.avg_output_tokens:,}t
+- **월 총 토큰**: Input {total_input_m:.2f}M / Output {total_output_m:.2f}M
+- **멀티모달 필요**: {'예 (이미지/비전 처리)' if req.requires_multimodal else '아니오'}
+- **복잡 추론/코딩 필요**: {'예 (CoT/Code Generation)' if req.requires_coding else '아니오'}
+
+## 추천 모델 조합
+{combos_text}
+
+## 추천 호스팅
+- **{hosting.provider}** ({hosting.category}): ${hosting.estimated_monthly_cost:.0f}/월
+- 추천 대상: {hosting.recommended_for}
+
+## 문서 작성 지시사항
+아래 7개 섹션을 순서대로 작성하세요:
+
+1. **Executive Summary & Business Requirements** — 비즈니스 목표, SLA(latency P95, 가용성), OpEx 총합 테이블
+2. **System Architecture** — Mermaid sequenceDiagram으로 Request Flow (Gateway→Router→Primary→Fallback→Guard) 표현
+3. **Data Pipeline & Process Flow** — Mermaid flowchart로 데이터 처리 단계별 흐름도
+4. **Production Code Implementation** — Python FastAPI + async 라우터 핵심 코드 (회로 차단기 패턴 포함)
+5. **Security & Guardrails** — Prompt Injection 방어, PII 필터, Output Validation 구체 사양
+6. **Infra & Environment Setup** — 필수 환경변수(.env), 폴더 구조, Dockerfile 스펙
+7. **Deployment Checklist** — CI/CD 체크리스트, 모니터링(Prometheus/Grafana) 설정 포인트
+
+각 섹션에 **전문가 코멘트 박스** (`> 💡 아키텍트 노트: ...`)를 추가하여 설계 결정 이유와 트레이드오프를 명확히 서술하세요."""
+
+
+def _fallback_markdown_spec(
+    service_name: str,
+    req: RecommendationRequest,
+    total_input_m: float,
+    total_output_m: float,
+    smart_combo: ModelCombo,
+    best_combo: ModelCombo,
+    hosting: HostingOption
+) -> str:
+    """Gemini API 미설정 또는 장애 시 정적 f-string 폴백 템플릿"""
+    router_item = smart_combo.items[0] if smart_combo.items else None
+    primary_item = smart_combo.items[1] if len(smart_combo.items) > 1 else smart_combo.items[0]
+    router_name = router_item.model_name if router_item else "Fast Router"
+    primary_name = primary_item.model_name if primary_item else "Primary Engine"
+    user_req = f'"{req.custom_prompt}"' if req.custom_prompt else f"{service_name} 구축"
+    total_opex = smart_combo.total_monthly_cost + hosting.estimated_monthly_cost
+
+    return f"""# 📑 {service_name} — AI 아키텍처 개발 명세서
+
+> ⚠️ **Static Template Mode** (Gemini API 키 미설정 시 기본 템플릿이 생성됩니다)
+> 더 정교한 맞춤형 문서를 원하시면 `GEMINI_API_KEY` 환경변수를 설정하세요.
+
+---
+
+## 1. Executive Summary
+
+- **목표**: {user_req}
+- **서비스 유형**: `{req.service_type.upper()}`
+- **가용성 목표**: 99.9% Uptime
+
+| 항목 | 수치 |
+|---|---|
+| 월간 요청 수 | {req.monthly_requests:,}회/월 |
+| 월 총 Input 토큰 | {total_input_m:.2f}M |
+| 월 총 Output 토큰 | {total_output_m:.2f}M |
+| 추천 API 비용 | ${smart_combo.total_monthly_cost:,.2f}/월 |
+| 추천 호스팅 비용 | ${hosting.estimated_monthly_cost:,.2f}/월 |
+| **총 예상 월 OpEx** | **${total_opex:,.2f}/월** |
+
+---
+
+## 2. System Architecture
+
+```mermaid
+sequenceDiagram
+    actor Client as 👤 Client
+    participant GW as 🌐 API Gateway
+    participant Router as ⚡ Router ({router_name})
+    participant Primary as 🧠 Primary ({primary_name})
+    participant Fallback as 🛡️ Fallback
+
+    Client->>GW: POST /api/v1/generate
+    GW->>Router: Classify Query Complexity
+    alt Simple Task (70%)
+        Router-->>GW: Fast Response
+    else Complex Task (30%)
+        GW->>Primary: Full Inference
+        Primary-->>GW: Result
+    end
+    GW-->>Client: 200 OK
+```
+
+---
+
+*Generated by LLM Compass — GEMINI_API_KEY를 설정하면 맞춤형 전문가 문서가 생성됩니다.*
+"""
+
+
 def generate_markdown_spec(
     service_name: str,
     req: RecommendationRequest,
@@ -128,356 +293,58 @@ def generate_markdown_spec(
     smart_combo: ModelCombo,
     hosting: HostingOption
 ) -> str:
-    router_item = smart_combo.items[0] if len(smart_combo.items) > 0 else None
-    primary_item = smart_combo.items[1] if len(smart_combo.items) > 1 else smart_combo.items[0]
+    """Gemini 2.0 Flash 기반 동적 마크다운 생성 (폴백: 정적 f-string 템플릿)
 
-    router_model_name = router_item.model_name if router_item else "Groq Llama 3.3 70B"
-    primary_model_name = primary_item.model_name if primary_item else "DeepSeek-V3"
+    Args:
+        service_name: 서비스 제목
+        req: 사용자 요구사항 (custom_prompt 포함)
+        total_input_m: 월 총 Input 토큰 (백만 단위)
+        total_output_m: 월 총 Output 토큰 (백만 단위)
+        best_combo: 최고품질 모델 조합
+        smart_combo: 스마트 밸런스드 모델 조합 (추천)
+        hosting: 호스팅 옵션
 
-    router_id = router_item.model_id if router_item else "groq-llama-3-3-70b"
-    primary_id = primary_item.model_id if primary_item else "deepseek-chat"
-    primary_provider_name = primary_item.provider_name.lower().split()[0] if primary_item else "deepseek"
-    router_provider_name = router_item.provider_name.lower().split()[0] if router_item else "groq"
-
-    user_req_summary = f"\"{req.custom_prompt}\"" if req.custom_prompt else f"{service_name} 구축"
-
-    python_code_snippet = f'''import os
-import time
-import asyncio
-import logging
-from typing import Dict, Any, Optional
-from pydantic import BaseModel, Field
-import httpx
-
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
-logger = logging.getLogger("AIRouterPipeline")
-
-class GenerateRequest(BaseModel):
-    user_query: str = Field(..., description="사용자 질문 또는 프롬프트")
-    user_id: Optional[str] = "anonymous"
-    max_tokens: Optional[int] = 1000
-
-class GenerateResponse(BaseModel):
-    status: str
-    response_text: str
-    engine_used: str
-    latency_ms: float
-    estimated_cost_usd: float
-
-class ProductionAIRouter:
-    def __init__(self):
-        self.groq_api_key = os.getenv("GROQ_API_KEY", "")
-        self.openai_api_key = os.getenv("OPENAI_API_KEY", "")
-        self.deepseek_api_key = os.getenv("DEEPSEEK_API_KEY", "")
-        
-        self.router_model = "{router_id}"
-        self.primary_model = "{primary_id}"
-        self.fallback_model = "gpt-4o-mini"
-        
-        self.circuit_open = False
-        self.failure_count = 0
-        self.max_failures = 3
-
-    async def _call_llm_api(self, provider: str, model_id: str, prompt: str, system_prompt: str, max_tokens: int) -> str:
-        start_time = time.time()
-        async with httpx.AsyncClient(timeout=15.0) as client:
-            if provider == "groq":
-                url = "https://api.groq.com/openai/v1/chat/completions"
-                headers = {{"Authorization": f"Bearer {{self.groq_api_key}}", "Content-Type": "application/json"}}
-            elif provider == "deepseek":
-                url = "https://api.deepseek.com/v1/chat/completions"
-                headers = {{"Authorization": f"Bearer {{self.deepseek_api_key}}", "Content-Type": "application/json"}}
-            else:
-                url = "https://api.openai.com/v1/chat/completions"
-                headers = {{"Authorization": f"Bearer {{self.openai_api_key}}", "Content-Type": "application/json"}}
-
-            payload = {{
-                "model": model_id,
-                "messages": [
-                    {{"role": "system", "content": system_prompt}},
-                    {{"role": "user", "content": prompt}}
-                ],
-                "max_tokens": max_tokens,
-                "temperature": 0.2
-            }}
-            
-            res = await client.post(url, headers=headers, json=payload)
-            res.raise_for_status()
-            data = res.json()
-            return data["choices"][0]["message"]["content"]
-
-    async def route_and_execute(self, request: GenerateRequest) -> GenerateResponse:
-        start_time = time.time()
-        query = request.user_query.strip()
-        
-        if not query:
-            raise ValueError("Query cannot be empty")
-            
-        is_complex = False
-        coding_keywords = ["code", "코드", "python", "bug", "에이전트", "rag", "문서", "추론", "분석"]
-        if any(kw in query.lower() for kw in coding_keywords) or len(query) > 300:
-            is_complex = True
-
-        selected_engine = self.primary_model if is_complex else self.router_model
-        provider = "{primary_provider_name}" if is_complex else "{router_provider_name}"
-
-        response_text = ""
+    Returns:
+        전문가 수준 마크다운 설계 문서 문자열
+    """
+    # Gemini API 사용 가능 시 동적 생성
+    if _gemini_model is not None:
         try:
-            system_prompt = "You are a professional AI Assistant. Answer accurately and concisely."
-            response_text = await self._call_llm_api(
-                provider=provider,
-                model_id=selected_engine,
-                prompt=query,
-                system_prompt=system_prompt,
-                max_tokens=request.max_tokens
+            user_prompt = _build_gemini_user_prompt(
+                service_name=service_name,
+                req=req,
+                total_input_m=total_input_m,
+                total_output_m=total_output_m,
+                smart_combo=smart_combo,
+                best_combo=best_combo,
+                hosting=hosting,
             )
-            self.failure_count = 0
+            # Free Tier 안전을 위해 timeout 30s 적용
+            response = _gemini_model.generate_content(
+                contents=[
+                    {"role": "user", "parts": [SYSTEM_PROMPT + "\n\n---\n\n" + user_prompt]}
+                ],
+                request_options={"timeout": 30}
+            )
+            generated_text = response.text.strip()
+            if generated_text and len(generated_text) > 500:
+                logger.info(f"✅ Gemini 마크다운 생성 완료 ({len(generated_text)} chars)")
+                return generated_text
+            else:
+                logger.warning("⚠️  Gemini 응답이 너무 짧음 → 폴백 템플릿 사용")
         except Exception as e:
-            logger.error(f"Primary model {{selected_engine}} failed: {{str(e)}}. Triggering Circuit Breaker Fallback...")
-            self.failure_count += 1
-            
-            try:
-                selected_engine = f"{{self.fallback_model}} (Fallback)"
-                response_text = await self._call_llm_api(
-                    provider="openai",
-                    model_id=self.fallback_model,
-                    prompt=query,
-                    system_prompt="You are a reliable fallback assistant. Provide a helpful answer.",
-                    max_tokens=request.max_tokens
-                )
-            except Exception as fb_err:
-                logger.critical(f"Fallback model also failed: {{str(fb_err)}}")
-                response_text = "서비스 요청 처리가 일시적으로 지연되고 있습니다. 잠시 후 다시 시도해주세요."
+            logger.error(f"❌ Gemini API 오류: {e} → 폴백 템플릿으로 전환")
 
-        latency_ms = round((time.time() - start_time) * 1000, 2)
-        
-        return GenerateResponse(
-            status="success",
-            response_text=response_text,
-            engine_used=selected_engine,
-            latency_ms=latency_ms,
-            estimated_cost_usd=0.002
-        )
-
-if __name__ == "__main__":
-    import uvicorn
-    from fastapi import FastAPI
-    
-    app = FastAPI(title="{service_name} API Engine")
-    router_pipeline = ProductionAIRouter()
-
-    @app.post("/api/v1/generate", response_model=GenerateResponse)
-    async def generate(req: GenerateRequest):
-        return await router_pipeline.route_and_execute(req)
-
-    print("🚀 {service_name} Engine Pipeline Ready on Port 8080")'''
-
-    md = f"""# 📑 [Production System Specification] {service_name} AI 아키텍처 및 시스템 개발 명세서
-
-> **Document Version**: v2.4 (Production Specification)  
-> **Target Execution Engines**: Cursor IDE, Claude Code, GitHub Copilot, OpenAI Agent Core  
-> **System Architecture Standard**: Smart Orchestrated Multi-Model Routing & Circuit Breaker Pattern
-
----
-
-## 1. 📌 Executive Summary & System Requirements
-
-### 1.1 프로젝트 목표 및 비즈니스 요구사항
-- **요구사항 개요**: {user_req_summary}
-- **서비스 타겟 워크로드**: `{req.service_type.upper()}`
-- **서비스 가용성(Availability) 목표**: `99.9% Uptime` (Exponential Backoff Fallback 적용)
-- **응답 레이턴시 목표 (SLA)**: 
-  - 일반 분류/초기 응답: `P95 < 400ms` (LPU Router 엔진 활용)
-  - 고난도 복잡 추론: `P95 < 2.5s` (Primary Reasoning 엔진 활용)
-
-### 1.2 토큰 워크로드 및 예상 운영 비용 (OpEx)
-| 항목 | 사양 / 수치 | 비고 |
-|---|---|---|
-| **월간 예상 요청 수 (Requests)** | `{req.monthly_requests:,} 회/월` | peak 3x 버스트 허용 |
-| **요청당 평균 토큰** | Input `{req.avg_input_tokens:,}t` / Output `{req.avg_output_tokens:,}t` | 총 `{req.avg_input_tokens + req.avg_output_tokens:,}t` / req |
-| **월간 총 토큰 볼륨** | Input `{total_input_m:.2f}M` / Output `{total_output_m:.2f}M` | 백만(M) 토큰 단위 |
-| **추천 라우터 월 API 비용** | `${smart_combo.total_monthly_cost:,.2f} USD / 월` | SaaS API 믹스 기준 |
-| **권장 호스팅 인프라 비용** | `${hosting.estimated_monthly_cost:,.2f} USD / 월` | `{hosting.provider}` 기준 |
-| **총 예상 월간 OpEx** | **`${smart_combo.total_monthly_cost + hosting.estimated_monthly_cost:,.2f} USD / 월`** | 모델 API + 서버 합산 |
-
----
-
-## 2. 🏗️ End-to-End System Architecture (Mermaid Flow)
-
-본 시스템은 **2단계 인텔리전트 멀티 모델 라우팅(Smart Router)** 구조로 작동합니다.  
-사용자 요청이 유입되면 먼저 초고속 분류 모델이 쿼리 난이도를 판별하고, 결과에 따라 경량 엔진 또는 고성능 플래그십 엔진으로 동적 라우팅됩니다.
-
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Client as 👤 Client / Frontend
-    participant Gateway as 🌐 API Gateway (FastAPI)
-    participant Router as ⚡ Router Classifier ({router_model_name})
-    participant Primary as 🧠 Primary Engine ({primary_model_name})
-    participant Fallback as 🛡️ Circuit Breaker Fallback
-    participant Guard as 🔒 Guardrail Validator
-
-    Client->>Gateway: POST /api/v1/generate (User Query)
-    Gateway->>Guard: Input Sanitization & Safety Filter
-    alt 안전성 검증 실패 (Prompt Injection 등)
-        Guard-->>Client: 400 Bad Request (Safety Error)
-    else 안전성 검증 통과
-        Gateway->>Router: Classify Query Complexity (Easy vs Complex)
-        alt 쿼리 난이도: Easy / Simple Task (70%)
-            Router->>Gateway: Direct Lightweight Response
-        else 쿼리 난이도: Hard / Complex Task (30%)
-            Gateway->>Primary: Execute Complex CoT Inference
-            alt Primary API 호출 성공
-                Primary-->>Gateway: High Quality Inference Result
-            else Primary API Failure / Timeout (Circuit Open)
-                Gateway->>Fallback: Route to Backup Engine (Exponential Retry)
-                Fallback-->>Gateway: Fallback Response
-            end
-        end
-        Gateway->>Guard: Validate Output Format & JSON Schema
-        Guard-->>Client: 200 OK (Stream / JSON Response)
-    end
-```
-
----
-
-## 3. 🔄 데이터 처리 & 프로세스 흐름도 (Process Pipeline Specification)
-
-```mermaid
-flowchart TD
-    A[Incoming User Request] --> B{{Token Counter & Rate Limiter}}
-    B -- Exceeded Limit --> C[429 Rate Limit Exceeded]
-    B -- Normal Limit --> D[Input Guardrail: Sanitization]
-    D --> E{{Complexity Classifier: LPU Router}}
-    
-    E -- Easy/Simple (Classification, Q&A) --> F[Fast LPU Serving: Low Cost Engine]
-    E -- Hard/Complex (Reasoning, Code, Math) --> G[Primary Engine: DeepSeek-R1 / Claude Sonnet]
-    
-    F --> H{{Success?}}
-    G --> I{{Success?}}
-    
-    H -- Yes --> J[Output Guardrail & Format Checking]
-    I -- Yes --> J
-    
-    H -- No (Timeout/Error) --> K[Circuit Breaker Failure Counter++]
-    I -- No (Timeout/Error) --> K
-    
-    K --> L[Fallback Backup Model Route]
-    L --> J
-    
-    J --> M[Log Token Usage & Cost Analytics]
-    M --> N[Return Final Response to Client]
-```
-
----
-
-## 4. 💻 Complete Executable Production Implementation Code
-
-아래 코드는 바로 실행 가능한 **Production-Ready Python 라우터 파이프라인 (FastAPI + Async Retry + Circuit Breaker)** 전체 구현 코드입니다.  
-`app/main_pipeline.py`로 저장하여 즉시 구동할 수 있습니다.
-
-```python
-{python_code_snippet}
-```
-
----
-
-## 5. 🎯 Production System Prompt & Safety Guardrails
-
-### 5.1 최적화된 시스템 프롬프트 (System Prompt Template)
-```text
-[SYSTEM ROLE]
-You are an elite, highly reliable AI Assistant specialized in {req.service_type.upper()}.
-Your primary directive is to provide highly accurate, structured, and factual answers without hallucinations.
-
-[OPERATIONAL RULES]
-1. CONCISENESS: Provide a clear summary first, followed by logical details.
-2. ACCURACY: If you are uncertain about a factual claim, state your confidence level explicitly.
-3. FORMATTING: Use Markdown headings, bullet points, and code blocks for technical details.
-4. CODE QUALITY: Write production-ready, clean, well-commented code with exception handling.
-```
-
-### 5.2 보안 가드레일 (Safety Guardrail Specification)
-- **Prompt Injection 방어**: `ignore previous instructions`, `system prompt override` 패턴 자동 감지 및 차단
-- **PII(개인정보) 필터**: 전화번호, 이메일, 주민등록번호 정규식 기반 마스킹(`***-****-****`)
-- **JSON Schema Output Validation**: 백엔드 파싱 오류 방지를 위한 Pydantic Validator 강제 적용
-
----
-
-## 6. 📁 Directory Structure & Environment Variables (`.env.example`)
-
-### 6.1 권장 프로덕션 폴더 구조
-```text
-my-ai-service/
-├── app/
-│   ├── __init__.py
-│   ├── main.py              # FastAPI 서버 엔드포인트
-│   ├── router.py            # AIRouterPipeline (Multi-Model Routing)
-│   ├── guardrails.py        # Safety & Sanitization Filter
-│   └── config.py            # 환경 변수 및 Settings
-├── Dockerfile               # Production Container Build
-├── docker-compose.yml       # Local Dev Setup
-├── requirements.txt         # Dependencies
-└── .env.example             # Environment Variables Template
-```
-
-### 6.2 필수 환경 변수 명세 (`.env.example`)
-```env
-# Server Config
-PORT=8080
-ENV=production
-LOG_LEVEL=INFO
-
-# AI Provider API Keys
-GROQ_API_KEY=gsk_your_groq_api_key_here
-DEEPSEEK_API_KEY=sk-your_deepseek_api_key_here
-OPENAI_API_KEY=sk-proj-your_openai_api_key_here
-ANTHROPIC_API_KEY=sk-ant-your_anthropic_api_key_here
-
-# Performance & Security
-MAX_RETRY_COUNT=3
-TIMEOUT_SECONDS=15
-REDIS_URL=redis://localhost:6379/0
-```
-
----
-
-## 7. 🐳 Production Deployment & CI/CD Specification
-
-### 7.1 Dockerfile 명세
-```dockerfile
-FROM python:3.11-slim
-
-WORKDIR /app
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
-
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-COPY . .
-
-EXPOSE 8080
-
-CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
-```
-
-### 7.2 배포 체크리스트 (Deployment Checklist)
-- [x] Multi-Model Router API Key 발급 및 Vault 저장
-- [x] API Gateway Level Rate Limiting (`100 req/min/ip`) 설정
-- [x] Prometheus / Grafana 기반 Latency 및 API 비용 모니터링 대시보드 구축
-- [x] 백엔드 장애 시 자동 복구를 위한 Health Check (`/healthz`) 구현
-
----
-*Generated by LLM Compass AI Architecture Spec Generator v2.4*
-"""
-    return md
-
-
+    # 폴백: 정적 f-string 템플릿
+    return _fallback_markdown_spec(
+        service_name=service_name,
+        req=req,
+        total_input_m=total_input_m,
+        total_output_m=total_output_m,
+        smart_combo=smart_combo,
+        best_combo=best_combo,
+        hosting=hosting,
+    )
 def recommend_architecture(req: RecommendationRequest) -> ArchitectureRecommendationResult:
     # 0. 고객이 직접 입력한 자연어 요구사항(custom_prompt)이 있는 경우 의도(Intent) 자동 분석
     service_title = {
