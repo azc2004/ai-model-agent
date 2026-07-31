@@ -11,11 +11,10 @@ services:
       - key: GEMINI_API_KEY
         sync: false
 
-  # 프론트엔드 정적 사이트 (Free Static Site)
+  # 프론트엔드 정적 사이트 (Static Site - Always Free)
   - type: web
     name: llm-compass-frontend
     env: static
-    plan: free
     buildCommand: "cd frontend && npm install && npm run build"
     staticPublishPath: "./frontend/dist"
     envVars:
