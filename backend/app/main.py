@@ -2,9 +2,13 @@ from typing import List, Optional
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.schemas import Provider, ModelSpec, GPUSpec, TCOInput, TCOComparisonResult
+from app.schemas import (
+    Provider, ModelSpec, GPUSpec, TCOInput, TCOComparisonResult,
+    RecommendationRequest, ArchitectureRecommendationResult, TrendingTemplate
+)
 from app.seed_data import PROVIDERS, MODELS, GPU_SPECS
 from app.tco_calculator import calculate_tco
+from app.recommender import TRENDING_TEMPLATES, recommend_architecture
 
 app = FastAPI(
     title="LLM Compass API",
@@ -91,3 +95,13 @@ def simulate_tco(tco_input: TCOInput):
         return calculate_tco(tco_input)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/api/v1/recommend/trending", response_model=List[TrendingTemplate])
+def get_trending_templates():
+    """사람들이 가장 많이 구현하는 인기 AI 서비스 Top 5 템플릿 반환"""
+    return TRENDING_TEMPLATES
+
+@app.post("/api/v1/recommend/architecture", response_model=ArchitectureRecommendationResult)
+def get_recommended_architecture(req: RecommendationRequest):
+    """사용자의 서비스 조건에 최적화된 3가지 AI 모델 조합, 호스팅 추천, Markdown 개발 명세서 반환"""
+    return recommend_architecture(req)

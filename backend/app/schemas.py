@@ -110,3 +110,59 @@ class TCOComparisonResult(BaseModel):
     recommendation: str
 
 TCOCalculationResult = TCOComparisonResult
+
+
+# --- AI 아키텍처 추천 & 랭킹 스키마 ---
+
+class RecommendationRequest(BaseModel):
+    service_type: str = Field(..., description="서비스 유형 (e.g. chatbot, rag, code_agent, multimodal, translation)")
+    monthly_requests: int = Field(100000, description="월간 예상 요청 수")
+    avg_input_tokens: int = Field(1000, description="요청 당 평균 입력 토큰 수")
+    avg_output_tokens: int = Field(500, description="요청 당 평균 출력 토큰 수")
+    primary_priority: Optional[str] = Field("balanced", description="최우선 목표 (quality, balanced, cost)")
+    requires_multimodal: bool = Field(False, description="멀티모달(비전/음성) 지원 필요 여부")
+    requires_coding: bool = Field(False, description="코드 생성 및 검증 능력 필요 여부")
+
+class ModelComboItem(BaseModel):
+    role: str                       # e.g., "Router/Classifier", "Primary Engine", "Fallback"
+    model_id: str
+    model_name: str
+    provider_name: str
+    allocation_percent: float       # 트래픽 비중 %
+    monthly_estimated_cost: float   # 해당 모델 할당 월간 비용 ($)
+
+class ModelCombo(BaseModel):
+    id: str                         # "best_quality", "smart_balanced", "ultra_budget"
+    name: str
+    tag: str                        # "Frontier Quality", "Smart Balanced (Recommended)", "Ultra Budget"
+    description: str
+    items: List[ModelComboItem]
+    total_monthly_cost: float
+    avg_arena_elo: float
+    key_advantages: List[str]
+
+class HostingOption(BaseModel):
+    provider: str                   # e.g., "Vercel + Railway", "AWS (ECS + Bedrock)", "RunPod / Modal"
+    category: str                   # "Serverless / PaaS", "Cloud Native (AWS/GCP)", "GPU Self-Hosting"
+    estimated_monthly_cost: float
+    description: str
+    recommended_for: str
+
+class ArchitectureRecommendationResult(BaseModel):
+    service_name: str
+    monthly_requests: int
+    total_monthly_input_tokens_m: float
+    total_monthly_output_tokens_m: float
+    combos: List[ModelCombo]
+    hosting_options: List[HostingOption]
+    markdown_spec: str
+
+class TrendingTemplate(BaseModel):
+    rank: int
+    id: str
+    title: str
+    category: str
+    description: str
+    icon: str
+    typical_monthly_requests: int
+    request: RecommendationRequest

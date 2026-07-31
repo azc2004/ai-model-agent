@@ -6,6 +6,7 @@ export interface TranslationDictionary {
     catalog: string;
     compare: string;
     tco: string;
+    advisor: string;
     leaderboard: string;
     gpus: string;
   };
@@ -84,8 +85,9 @@ export const translations: Record<Language, TranslationDictionary> = {
     nav: {
       brandSubtitle: "전세계 AI 모델 비용 & 스펙 비교",
       catalog: "모델 카탈로그",
-      compare: "맞춤 비교",
-      tco: "TCO 시뮬레이터",
+      compare: "모델 비교",
+      tco: "API vs 셀프호스팅 TCO",
+      advisor: "🏆 AI 아키텍처 추천기",
       leaderboard: "리더보드",
       gpus: "GPU 스펙 & 비용"
     },
@@ -164,6 +166,7 @@ export const translations: Record<Language, TranslationDictionary> = {
       catalog: "Model Catalog",
       compare: "Compare",
       tco: "TCO Simulator",
+      advisor: "🏆 Architecture Advisor",
       leaderboard: "Leaderboard",
       gpus: "GPU Specs & Costs"
     },
@@ -242,6 +245,7 @@ export const translations: Record<Language, TranslationDictionary> = {
       catalog: "모델カタログ",
       compare: "カスタム比較",
       tco: "TCOシミュレーター",
+      advisor: "🏆 AIアーキテクチャ推薦",
       leaderboard: "リーダーボード",
       gpus: "GPUスペック・コスト"
     },
@@ -320,6 +324,7 @@ export const translations: Record<Language, TranslationDictionary> = {
       catalog: "模型目录",
       compare: "自定义对比",
       tco: "TCO 模拟器",
+      advisor: "🏆 AI 架构推荐器",
       leaderboard: "排行榜",
       gpus: "GPU 规格与成本"
     },

@@ -107,3 +107,62 @@ export interface TCOCalculationResult {
 }
 
 export type TCOComparisonResult = TCOCalculationResult;
+
+export interface RecommendationRequest {
+  service_type: string;
+  monthly_requests: number;
+  avg_input_tokens: number;
+  avg_output_tokens: number;
+  primary_priority?: string;
+  requires_multimodal: boolean;
+  requires_coding: boolean;
+}
+
+export interface ModelComboItem {
+  role: string;
+  model_id: string;
+  model_name: string;
+  provider_name: string;
+  allocation_percent: number;
+  monthly_estimated_cost: number;
+}
+
+export interface ModelCombo {
+  id: string;
+  name: string;
+  tag: string;
+  description: string;
+  items: ModelComboItem[];
+  total_monthly_cost: number;
+  avg_arena_elo: number;
+  key_advantages: string[];
+}
+
+export interface HostingOption {
+  provider: string;
+  category: string;
+  estimated_monthly_cost: number;
+  description: string;
+  recommended_for: string;
+}
+
+export interface ArchitectureRecommendationResult {
+  service_name: string;
+  monthly_requests: number;
+  total_monthly_input_tokens_m: number;
+  total_monthly_output_tokens_m: number;
+  combos: ModelCombo[];
+  hosting_options: HostingOption[];
+  markdown_spec: string;
+}
+
+export interface TrendingTemplate {
+  rank: number;
+  id: string;
+  title: string;
+  category: string;
+  description: string;
+  icon: string;
+  typical_monthly_requests: number;
+  request: RecommendationRequest;
+}

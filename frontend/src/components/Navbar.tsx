@@ -1,5 +1,5 @@
 import React from 'react';
-import { Compass, LayoutGrid, ArrowLeftRight, Calculator, Trophy, Cpu, Globe } from 'lucide-react';
+import { Compass, LayoutGrid, ArrowLeftRight, Calculator, Trophy, Cpu, Globe, Sparkles } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import type { Language } from '../i18n/translations';
 
@@ -82,6 +82,18 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, compare
           </button>
 
           <button
+            onClick={() => setActiveTab('advisor')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all ${
+              activeTab === 'advisor'
+                ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 shadow-lg shadow-indigo-500/10 ring-1 ring-indigo-500/30'
+                : 'text-slate-400 hover:text-white hover:bg-slate-900/60'
+            }`}
+          >
+            <Sparkles className="w-4 h-4 text-indigo-400" />
+            <span className="hidden md:inline">{t.nav.advisor}</span>
+          </button>
+
+          <button
             onClick={() => setActiveTab('leaderboard')}
             className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all ${
               activeTab === 'leaderboard'
@@ -105,6 +117,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, compare
             <span className="hidden md:inline">{t.nav.gpus}</span>
           </button>
         </nav>
+
 
         {/* Language Selector Dropdown */}
         <div className="flex items-center gap-2">
