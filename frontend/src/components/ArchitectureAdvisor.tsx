@@ -14,6 +14,7 @@ export const ArchitectureAdvisor: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
 
   // Form State
+  const [customPrompt, setCustomPrompt] = useState<string>('');
   const [serviceType, setServiceType] = useState<string>('code_agent');
   const [monthlyRequests, setMonthlyRequests] = useState<number>(100000);
   const [avgInputTokens, setAvgInputTokens] = useState<number>(2000);
@@ -53,7 +54,8 @@ export const ArchitectureAdvisor: React.FC = () => {
       avg_input_tokens: avgInputTokens,
       avg_output_tokens: avgOutputTokens,
       requires_multimodal: requiresMultimodal,
-      requires_coding: requiresCoding
+      requires_coding: requiresCoding,
+      custom_prompt: customPrompt
     };
 
     fetch('http://localhost:8000/api/v1/recommend/architecture', {
@@ -176,10 +178,41 @@ export const ArchitectureAdvisor: React.FC = () => {
         <div className="lg:col-span-4 bg-slate-900/80 border border-slate-800 rounded-3xl p-6 space-y-6 shadow-xl h-fit">
           <div className="flex items-center gap-2 text-white font-bold text-lg border-b border-slate-800 pb-3">
             <Layers className="w-5 h-5 text-indigo-400" />
-            세부 요구사항 커스텀
+            서비스 요구사항 직접 입력
           </div>
 
           <div className="space-y-4 text-sm">
+            {/* Natural Language Prompt Input */}
+            <div>
+              <label className="block text-slate-300 font-semibold mb-1.5 flex items-center justify-between">
+                <span>💬 요구사항 자유 묘사 (자연어)</span>
+                <span className="text-[11px] text-indigo-400 font-normal">AI 자동 의도분석</span>
+              </label>
+              <textarea
+                rows={3}
+                placeholder="예: 사내 PDF 문서를 RAG로 검색하여 보안 답변을 주는 챗봇을 만들려고 합니다. 월 10만 건 정도 사용 예상됩니다."
+                value={customPrompt}
+                onChange={(e) => setCustomPrompt(e.target.value)}
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 transition-colors resize-none placeholder:text-slate-600"
+              />
+              {/* Sample Chips */}
+              <div className="flex flex-wrap gap-1.5 mt-2">
+                <button
+                  type="button"
+                  onClick={() => setCustomPrompt("사내 Confluence/PDF 문서를 RAG로 답변하는 보안 챗봇 구축")}
+                  className="text-[10px] bg-slate-950 border border-slate-800 hover:border-indigo-500/50 text-slate-400 hover:text-indigo-300 px-2 py-1 rounded-lg transition-colors text-left"
+                >
+                  💡 사내 문서 RAG 챗봇
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCustomPrompt("Python/JS 버그 자동 수정 및 리팩토링 에이전트")}
+                  className="text-[10px] bg-slate-950 border border-slate-800 hover:border-indigo-500/50 text-slate-400 hover:text-indigo-300 px-2 py-1 rounded-lg transition-colors text-left"
+                >
+                  💡 코드 수정 에이전트
+                </button>
+              </div>
+            </div>
             {/* Service Type */}
             <div>
               <label className="block text-slate-300 font-medium mb-1.5">서비스 유형</label>

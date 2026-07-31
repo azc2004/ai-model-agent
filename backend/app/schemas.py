@@ -115,13 +115,14 @@ TCOCalculationResult = TCOComparisonResult
 # --- AI 아키텍처 추천 & 랭킹 스키마 ---
 
 class RecommendationRequest(BaseModel):
-    service_type: str = Field(..., description="서비스 유형 (e.g. chatbot, rag, code_agent, multimodal, translation)")
+    service_type: str = Field("custom", description="서비스 유형 (e.g. chatbot, rag, code_agent, multimodal, translation, custom)")
     monthly_requests: int = Field(100000, description="월간 예상 요청 수")
     avg_input_tokens: int = Field(1000, description="요청 당 평균 입력 토큰 수")
     avg_output_tokens: int = Field(500, description="요청 당 평균 출력 토큰 수")
     primary_priority: Optional[str] = Field("balanced", description="최우선 목표 (quality, balanced, cost)")
     requires_multimodal: bool = Field(False, description="멀티모달(비전/음성) 지원 필요 여부")
     requires_coding: bool = Field(False, description="코드 생성 및 검증 능력 필요 여부")
+    custom_prompt: Optional[str] = Field(None, description="고객이 직접 작성한 자연어 서비스 요구사항 텍스트")
 
 class ModelComboItem(BaseModel):
     role: str                       # e.g., "Router/Classifier", "Primary Engine", "Fallback"

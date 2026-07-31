@@ -116,6 +116,7 @@ export interface RecommendationRequest {
   primary_priority?: string;
   requires_multimodal: boolean;
   requires_coding: boolean;
+  custom_prompt?: string;
 }
 
 export interface ModelComboItem {

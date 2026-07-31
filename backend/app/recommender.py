@@ -240,17 +240,38 @@ class AIRouterPipeline:
     return md
 
 def recommend_architecture(req: RecommendationRequest) -> ArchitectureRecommendationResult:
-    # 1. 월간 총 토큰 계산
-    total_input_m = (req.monthly_requests * req.avg_input_tokens) / 1_000_000
-    total_output_m = (req.monthly_requests * req.avg_output_tokens) / 1_000_000
-
+    # 0. 고객이 직접 입력한 자연어 요구사항(custom_prompt)이 있는 경우 의도(Intent) 자동 분석
     service_title = {
         "code_agent": "자율 코딩 에이전트 서비스",
         "rag": "기업용 RAG 챗봇 시스템",
         "multimodal": "멀티모달 고객지원 CS 봇",
         "translation": "글로벌 실시간 번역 API",
         "content_creation": "마케팅 콘텐츠 생성 코파일럿"
-    }.get(req.service_type, "맞춤형 AI 애플리케이션")
+    }.get(req.service_type, "고객 맞춤형 AI 서비스")
+
+    if req.custom_prompt and req.custom_prompt.strip():
+        prompt = req.custom_prompt.lower()
+        if any(w in prompt for w in ["코드", "코딩", "리팩토링", "개발", "에이전트", "python", "javascript", "bug"]):
+            req.requires_coding = True
+            if req.service_type in ["custom", "chatbot"]:
+                req.service_type = "code_agent"
+        if any(w in prompt for w in ["이미지", "비전", "캡처", "영수증", "사진", "pdf 이미지", "음성", "multimodal"]):
+            req.requires_multimodal = True
+            if req.service_type in ["custom", "chatbot"]:
+                req.service_type = "multimodal"
+        if any(w in prompt for w in ["rag", "문서", "지식", "검색", "pdf", "confluence", "notion", "사내"]):
+            if req.service_type in ["custom", "chatbot"]:
+                req.service_type = "rag"
+        if any(w in prompt for w in ["번역", "다국어", "영한", "한영", "translate"]):
+            if req.service_type in ["custom", "chatbot"]:
+                req.service_type = "translation"
+        
+        display_text = req.custom_prompt[:30] + ("..." if len(req.custom_prompt) > 30 else "")
+        service_title = f"맞춤 분석: \"{display_text}\""
+
+    # 1. 월간 총 토큰 계산
+    total_input_m = (req.monthly_requests * req.avg_input_tokens) / 1_000_000
+    total_output_m = (req.monthly_requests * req.avg_output_tokens) / 1_000_000
 
     # --- 1) Best Performance Combo ---
     if req.requires_coding:
