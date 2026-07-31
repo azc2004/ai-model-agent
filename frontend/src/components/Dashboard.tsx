@@ -334,11 +334,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
           <span className="font-bold text-cyan-400">{sortedModels.length}</span> {t.dashboard.modelsFound}
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-slate-500 text-xs">정렬:</span>
+          <span className="text-slate-600 dark:text-slate-400 text-xs font-bold">정렬:</span>
           <select
             value={sortKey}
             onChange={e => setSortKey(e.target.value as SortKey)}
-            className="bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-xs text-slate-300 focus:outline-none focus:border-cyan-500"
+            className="bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 dark:text-slate-100 font-bold focus:outline-none focus:border-cyan-500 shadow-sm cursor-pointer"
           >
             <option value="name">모델명</option>
             <option value="provider">프로바이더</option>
@@ -351,7 +351,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           </select>
           <button
             onClick={() => setSortDir(d => d === 'asc' ? 'desc' : 'asc')}
-            className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1 text-xs text-slate-300 hover:border-cyan-500 hover:text-cyan-400 transition-colors"
+            className="bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-900 dark:text-slate-100 font-black hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors shadow-sm cursor-pointer"
             title={sortDir === 'asc' ? '오름차순' : '내림차순'}
           >
             {sortDir === 'asc' ? '↑ 오름' : '↓ 내림'}
@@ -367,37 +367,37 @@ export const Dashboard: React.FC<DashboardProps> = ({
             return (
               <div
                 key={model.id}
-                className="bg-slate-900/60 border border-slate-800 hover:border-cyan-500/50 rounded-xl p-5 flex flex-col justify-between transition-all duration-200 hover:shadow-lg hover:shadow-cyan-950/30 group"
+                className="glass-card hover:border-cyan-500/60 rounded-2xl p-5 flex flex-col justify-between transition-all duration-200 shadow-md group border"
               >
                 <div>
                   {/* Top Bar: Provider & Badges */}
                   <div className="flex items-center justify-between gap-2 mb-3">
-                    <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    <span className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider">
                       {model.provider_name}
                     </span>
                     <div className="flex items-center gap-1.5 flex-wrap justify-end">
                       {model.supports_reasoning && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/40 font-semibold" title="Reasoning / CoT 지원">
+                        <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-500/40 font-bold" title="Reasoning / CoT 지원">
                           🧠 Reasoning
                         </span>
                       )}
                       {model.supports_web_search && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/40 font-semibold" title="실시간 웹 검색 통합">
+                        <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-500/40 font-bold" title="실시간 웹 검색 통합">
                           🌐 Web Search
                         </span>
                       )}
                       <span
-                        className={`text-[10px] px-2 py-0.5 rounded-full font-medium border ${getTierBadge(
+                        className={`text-[10px] px-2 py-0.5 rounded-full font-bold border ${getTierBadge(
                           model.tier
                         )}`}
                       >
                         {model.tier}
                       </span>
                       <span
-                        className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
+                        className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
                           model.is_open_weight
-                            ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
-                            : 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/30'
+                            ? 'bg-emerald-100 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-500/30'
+                            : 'bg-indigo-100 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border border-indigo-300 dark:border-indigo-500/30'
                         }`}
                       >
                         {model.is_open_weight ? t.dashboard.openWeight : t.dashboard.proprietary}
@@ -406,57 +406,57 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   </div>
 
                   {/* Model Title */}
-                  <h3 className="text-lg font-bold text-slate-100 group-hover:text-cyan-400 transition-colors mb-2">
+                  <h3 className="text-lg font-black text-slate-900 dark:text-slate-100 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors mb-2">
                     {model.name}
                   </h3>
 
-                  <p className="text-xs text-slate-400 line-clamp-2 mb-4 leading-relaxed">
+                  <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 mb-4 leading-relaxed font-medium">
                     {model.description}
                   </p>
 
                   {/* Quota Information Box */}
                   {model.quota && (
-                    <div className="bg-slate-950/70 border border-cyan-900/30 rounded-lg p-2.5 mb-4 text-xs">
-                      <div className="text-[11px] font-semibold text-cyan-400 mb-1 flex items-center gap-1">
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="bg-slate-50 dark:bg-slate-950/70 border border-cyan-200 dark:border-cyan-900/40 rounded-xl p-2.5 mb-4 text-xs shadow-inner">
+                      <div className="text-[11px] font-extrabold text-cyan-700 dark:text-cyan-400 mb-1 flex items-center gap-1">
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
                         API Rate Limits & Quotas
                       </div>
-                      <div className="grid grid-cols-2 gap-1 text-[11px] text-slate-300">
+                      <div className="grid grid-cols-2 gap-1 text-[11px] text-slate-900 dark:text-slate-200 font-bold">
                         <div>
-                          <span className="text-slate-500">RPM:</span> {model.quota.rpm.toLocaleString()}
+                          <span className="text-slate-500 font-medium">RPM:</span> {model.quota.rpm.toLocaleString()}
                         </div>
                         <div>
-                          <span className="text-slate-500">TPM:</span> {(model.quota.tpm / 1000).toLocaleString()}k
+                          <span className="text-slate-500 font-medium">TPM:</span> {(model.quota.tpm / 1000).toLocaleString()}k
                         </div>
                       </div>
                     </div>
                   )}
 
                   {/* Key Metrics Grid */}
-                  <div className="grid grid-cols-2 gap-2 bg-slate-950/50 p-3 rounded-lg border border-slate-800/80 mb-4 text-xs">
+                  <div className="grid grid-cols-2 gap-2 bg-slate-50 dark:bg-slate-950/60 p-3 rounded-xl border border-slate-200 dark:border-slate-800/80 mb-4 text-xs shadow-inner">
                     <div>
-                      <span className="text-slate-500 block text-[10px]">{t.dashboard.contextWindow}</span>
-                      <span className="font-semibold text-slate-200">
+                      <span className="text-slate-500 block text-[10px] font-medium">{t.dashboard.contextWindow}</span>
+                      <span className="font-bold text-slate-900 dark:text-slate-100">
                         {(model.context_window / 1000).toLocaleString()}k tokens
                       </span>
                     </div>
                     <div>
-                      <span className="text-slate-500 block text-[10px]">Arena ELO</span>
-                      <span className="font-semibold text-amber-400">
+                      <span className="text-slate-500 block text-[10px] font-medium">Arena ELO</span>
+                      <span className="font-extrabold text-amber-600 dark:text-amber-400">
                         {model.benchmarks.arena_elo || 'N/A'}
                       </span>
                     </div>
                     <div>
-                      <span className="text-slate-500 block text-[10px]">{t.dashboard.inputPrice}</span>
-                      <span className="font-semibold text-emerald-400">
+                      <span className="text-slate-500 block text-[10px] font-medium">{t.dashboard.inputPrice}</span>
+                      <span className="font-extrabold text-emerald-600 dark:text-emerald-400">
                         ${model.api_pricing.input_price_per_1m.toFixed(2)}
                       </span>
                     </div>
                     <div>
-                      <span className="text-slate-500 block text-[10px]">{t.dashboard.outputPrice}</span>
-                      <span className="font-semibold text-emerald-400">
+                      <span className="text-slate-500 block text-[10px] font-medium">{t.dashboard.outputPrice}</span>
+                      <span className="font-extrabold text-emerald-600 dark:text-emerald-400">
                         ${model.api_pricing.output_price_per_1m.toFixed(2)}
                       </span>
                     </div>
@@ -464,21 +464,21 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 </div>
 
                 {/* Footer Buttons: Official Docs & Compare */}
-                <div className="flex items-center gap-2 pt-2 border-t border-slate-800/60">
+                <div className="flex items-center gap-2 pt-3 border-t border-slate-200 dark:border-slate-800">
                   <a
                     href={model.source_docs_url || model.official_url}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex-1 text-center py-2 px-3 rounded-lg text-xs font-semibold bg-slate-800/80 hover:bg-slate-700 text-slate-300 transition-colors border border-slate-700/60"
+                    className="flex-1 text-center py-2.5 px-3 rounded-xl text-xs font-black bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-900 dark:text-slate-100 transition-all border border-slate-300 dark:border-slate-700 shadow-sm"
                   >
                     {t.dashboard.officialDocs}
                   </a>
                   <button
                     onClick={() => handleToggle(model.id)}
-                    className={`flex-1 py-2 px-3 rounded-lg text-xs font-semibold transition-all ${
+                    className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-black transition-all shadow-md ${
                       isSelected
-                        ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/50'
-                        : 'bg-cyan-600 hover:bg-cyan-500 text-white shadow-md shadow-cyan-900/20'
+                        ? 'bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-400 shadow-emerald-600/30'
+                        : 'bg-cyan-600 hover:bg-cyan-500 text-white shadow-cyan-600/30'
                     }`}
                   >
                     {isSelected ? t.dashboard.compared : t.dashboard.compareButton}
