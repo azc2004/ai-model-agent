@@ -11,11 +11,28 @@ interface TCOSimulatorViewProps {
 
 export const TCOSimulatorView: React.FC<TCOSimulatorViewProps> = ({ models }) => {
   const { t } = useLanguage();
-  const [selectedModelId, setSelectedModelId] = useState<string>('deepseek-v4-pro');
+  const [selectedProvider, setSelectedProvider] = useState<string>('ALL');
+  const [selectedModelId, setSelectedModelId] = useState<string>('deepseek-chat');
   const [inputTokensMillions, setInputTokensMillions] = useState<number>(100);
   const [outputTokensMillions, setOutputTokensMillions] = useState<number>(20);
   const [quantization, setQuantization] = useState<string>('Q4_K_M');
   const [result, setResult] = useState<TCOComparisonResult | null>(null);
+
+  // 프로바이더 목록 (중복 제거 및 정렬)
+  const providersList = Array.from(new Set(models.map((m) => m.provider_name))).sort();
+
+  // 선택된 프로바이더에 속한 모델만 필터링
+  const filteredModels = selectedProvider === 'ALL'
+    ? models
+    : models.filter((m) => m.provider_name === selectedProvider);
+
+  const handleProviderChange = (prov: string) => {
+    setSelectedProvider(prov);
+    const matched = prov === 'ALL' ? models : models.filter((m) => m.provider_name === prov);
+    if (matched.length > 0) {
+      setSelectedModelId(matched[0].id);
+    }
+  };
 
   useEffect(() => {
     const runSimulation = async () => {
@@ -79,19 +96,43 @@ export const TCOSimulatorView: React.FC<TCOSimulatorViewProps> = ({ models }) =>
             {t.tco.title}
           </h3>
 
-          {/* Model Selector */}
+          {/* 1단계: 프로바이더 (공급자) 선택 */}
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-2">
-              {t.tco.selectModel}
+            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              1단계: 프로바이더 (공급자) 선택
             </label>
+            <select
+              value={selectedProvider}
+              onChange={(e) => handleProviderChange(e.target.value)}
+              className="w-full bg-slate-950 border border-slate-700/80 rounded-lg px-3 py-2 text-sm text-white font-medium focus:outline-none focus:border-cyan-500"
+            >
+              <option value="ALL">🌐 전체 프로바이더 ({providersList.length}개)</option>
+              {providersList.map((p) => (
+                <option key={p} value={p}>
+                  {p} ({models.filter((m) => m.provider_name === p).length}개 모델)
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* 2단계: AI 모델 선택 */}
+          <div>
+            <div className="flex justify-between items-center mb-1.5">
+              <label className="block text-xs font-semibold text-slate-300">
+                2단계: AI 모델 선택
+              </label>
+              <span className="text-[11px] text-cyan-400 font-mono">
+                {filteredModels.length}개 모델 검색됨
+              </span>
+            </div>
             <select
               value={selectedModelId}
               onChange={(e) => setSelectedModelId(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-700/80 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-cyan-500"
+              className="w-full bg-slate-950 border border-slate-700/80 rounded-lg px-3 py-2 text-sm text-cyan-300 font-bold focus:outline-none focus:border-cyan-500"
             >
-              {models.map((m) => (
+              {filteredModels.map((m) => (
                 <option key={m.id} value={m.id}>
-                  {m.name} ({m.provider_name})
+                  {m.name} ({m.tier})
                 </option>
               ))}
             </select>
