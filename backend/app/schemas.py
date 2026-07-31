@@ -58,6 +58,12 @@ class ModelSpec(BaseModel):
     quota: Optional[QuotaInfo] = None
     benchmarks: BenchmarkScores
     hardware_requirements: Optional[List[HardwareRequirement]] = []
+    # LiteLLM 검증 필드
+    is_verified: bool = True          # LiteLLM 기반 실제 사용 가능 검증 여부
+    litellm_id: Optional[str] = None  # LiteLLM 모델 ID (호출용)
+    supports_reasoning: bool = False  # 추론(CoT/thinking) 모드 지원
+    supports_web_search: bool = False # 실시간 웹 검색 지원
+    is_deprecated: bool = False       # 서비스 종료 예정/완료
 
 class GPUSpec(BaseModel):
     id: str

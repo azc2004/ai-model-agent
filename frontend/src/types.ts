@@ -49,6 +49,12 @@ export interface ModelSpec {
   api_pricing: APIPricing;
   quota?: QuotaInfo;
   benchmarks: BenchmarkScores;
+  // LiteLLM 검증 필드
+  is_verified: boolean;
+  litellm_id?: string;
+  supports_reasoning: boolean;
+  supports_web_search: boolean;
+  is_deprecated: boolean;
 }
 
 export interface GPUSpec {
