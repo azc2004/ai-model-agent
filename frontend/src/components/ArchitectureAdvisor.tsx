@@ -456,32 +456,20 @@ export const ArchitectureAdvisor: React.FC = () => {
         {/* Right Results: Combos & Hosting & Markdown Spec */}
         <div className="lg:col-span-8 space-y-6">
           {loading ? (
-            <div className="glass-panel p-6 sm:p-8 space-y-6 rounded-3xl border border-indigo-500/40 shadow-2xl bg-slate-900/90 text-left relative overflow-hidden">
+            <div className="bg-white dark:bg-slate-900/90 p-6 sm:p-8 space-y-6 rounded-3xl border border-indigo-200 dark:border-indigo-500/40 shadow-2xl text-left relative overflow-hidden">
               {/* Top Progress Header */}
-              <div className="flex items-center justify-between gap-4 border-b border-slate-800 pb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center text-indigo-400 shrink-0">
-                    <Sparkles className="w-5 h-5 animate-spin text-indigo-400" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-extrabold text-white flex items-center gap-2">
-                      {t.researchProgress.title}
-                    </h3>
-                    <p className="text-xs text-slate-400 font-medium">
-                      {t.researchProgress.subtitle}
-                    </p>
-                  </div>
-                </div>
-                <div className="text-right shrink-0">
-                  <span className="text-2xl font-black text-indigo-400 font-mono tracking-tight">{researchProgress}%</span>
-                  <p className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Analyzing</p>
-                </div>
+              <div className="flex items-center justify-between text-xs font-black text-slate-800 dark:text-slate-100">
+                <span className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400 animate-spin" />
+                  고객 요구사항을 바탕으로 최적의 LLM 조합과 OpEx 호스팅 인프라 비용을 산출하고 있습니다...
+                </span>
+                <span className="text-indigo-600 dark:text-indigo-400 font-black text-base">{researchProgress}% ANALYZING</span>
               </div>
 
               {/* Dynamic Animated Progress Bar */}
-              <div className="w-full bg-slate-950 rounded-full h-2.5 overflow-hidden border border-slate-800 p-0.5">
+              <div className="w-full bg-slate-200 dark:bg-slate-950 rounded-full h-3 overflow-hidden border border-slate-300 dark:border-slate-800 p-0.5 shadow-inner">
                 <div 
-                  className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-full rounded-full transition-all duration-500 shadow-sm shadow-indigo-500/50"
+                  className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-full rounded-full transition-all duration-500 shadow-md shadow-indigo-500/50"
                   style={{ width: `${researchProgress}%` }}
                 ></div>
               </div>
@@ -500,24 +488,24 @@ export const ArchitectureAdvisor: React.FC = () => {
                   return (
                     <div 
                       key={idx}
-                      className={`flex items-center gap-3 p-3 rounded-2xl border transition-all duration-300 ${
+                      className={`flex items-center gap-3 p-3.5 rounded-2xl border transition-all duration-300 ${
                         isDone 
-                          ? 'bg-emerald-950/20 border-emerald-500/30 text-emerald-300' 
+                          ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-500/40 text-emerald-950 dark:text-emerald-200 font-extrabold shadow-sm' 
                           : isCurrent 
-                          ? 'bg-indigo-950/50 border-indigo-500/50 text-indigo-200 ring-1 ring-indigo-500/30 animate-pulse' 
-                          : 'bg-slate-950/40 border-slate-800/60 text-slate-500'
+                          ? 'bg-indigo-50 dark:bg-indigo-950/60 border-indigo-400 dark:border-indigo-500/50 text-indigo-950 dark:text-indigo-100 ring-2 ring-indigo-400/50 dark:ring-indigo-500/40 animate-pulse font-black shadow-md'
+                          : 'bg-slate-50 dark:bg-slate-950/50 border-slate-200 dark:border-slate-800/60 text-slate-500 dark:text-slate-400 font-bold'
                       }`}
                     >
                       <div className="shrink-0">
                         {isDone ? (
-                          <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                          <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                         ) : isCurrent ? (
-                          <Loader2 className="w-5 h-5 text-indigo-400 animate-spin" />
+                          <Loader2 className="w-5 h-5 text-indigo-600 dark:text-indigo-400 animate-spin" />
                         ) : (
-                          <Clock className="w-5 h-5 text-slate-600" />
+                          <Clock className="w-5 h-5 text-slate-400 dark:text-slate-600" />
                         )}
                       </div>
-                      <span className="text-xs font-bold leading-snug">{stepText}</span>
+                      <span className="text-xs sm:text-sm font-black leading-snug">{stepText}</span>
                     </div>
                   );
                 })}
