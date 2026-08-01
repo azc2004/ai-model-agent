@@ -1,20 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Sparkles, Code, Database, Headset, Globe, Cpu, Check, Copy, Download, 
-  Server, Zap, CheckCircle2, ChevronRight, Layers, FileText, X
+  Server, Zap, CheckCircle2, ChevronRight, Layers, FileText, X, Clock, Terminal, Loader2
 } from 'lucide-react';
 import type { RecommendationRequest, ArchitectureRecommendationResult, TrendingTemplate } from '../types';
 import { API_BASE_URL } from '../api';
 import { useLanguage } from '../context/LanguageContext';
 
 export const ArchitectureAdvisor: React.FC = () => {
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   const [trending, setTrending] = useState<TrendingTemplate[]>([]);
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>("code_agent");
   const [loading, setLoading] = useState<boolean>(false);
   const [result, setResult] = useState<ArchitectureRecommendationResult | null>(null);
   const [copied, setCopied] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
+
+  // Deep Research Thinking Progress State
+  const [researchStep, setResearchStep] = useState<number>(0);
+  const [researchProgress, setResearchProgress] = useState<number>(15);
+  const [researchLogs, setResearchLogs] = useState<string[]>([]);
 
   // Form State
   const [customPrompt, setCustomPrompt] = useState<string>('');
@@ -51,6 +56,39 @@ export const ArchitectureAdvisor: React.FC = () => {
 
   const fetchRecommendation = (req?: RecommendationRequest) => {
     setLoading(true);
+    setResearchStep(0);
+    setResearchProgress(20);
+    const initLogs = [
+      `[00:00.1] > Initialized Agent pipeline: Language=${language.toUpperCase()}, Requests=${monthlyRequests.toLocaleString()}/mo`,
+      `[00:00.3] > ${t.researchProgress.step1}`
+    ];
+    setResearchLogs(initLogs);
+
+    // Step Progress Interval Timers
+    const timer1 = setTimeout(() => {
+      setResearchStep(1);
+      setResearchProgress(45);
+      setResearchLogs(prev => [...prev, `[00:00.7] > ${t.researchProgress.step2}`, `[00:00.9] > Scanning Arena Elo: GPT-4o, Claude 3.5 Sonnet, DeepSeek V3`]);
+    }, 700);
+
+    const timer2 = setTimeout(() => {
+      setResearchStep(2);
+      setResearchProgress(68);
+      setResearchLogs(prev => [...prev, `[00:01.5] > ${t.researchProgress.step3}`, `[00:01.8] > Calculated Token Volume: In=${((monthlyRequests * avgInputTokens)/1e6).toFixed(1)}M / Out=${((monthlyRequests * avgOutputTokens)/1e6).toFixed(1)}M`]);
+    }, 1500);
+
+    const timer3 = setTimeout(() => {
+      setResearchStep(3);
+      setResearchProgress(88);
+      setResearchLogs(prev => [...prev, `[00:02.4] > ${t.researchProgress.step4}`, `[00:02.7] > Evaluating Hosting: Vercel CDN + Render FastAPI vs Cloud GPU`]);
+    }, 2400);
+
+    const timer4 = setTimeout(() => {
+      setResearchStep(4);
+      setResearchProgress(98);
+      setResearchLogs(prev => [...prev, `[00:03.2] > ${t.researchProgress.step5}`, `[00:03.5] > Calling Gemini 2.5 Flash for 7-Section Architecture & Mermaid Spec`]);
+    }, 3200);
+
     const baseReq: RecommendationRequest = req || {
       service_type: serviceType,
       monthly_requests: monthlyRequests,
@@ -73,11 +111,21 @@ export const ArchitectureAdvisor: React.FC = () => {
     })
       .then(res => res.json())
       .then((data: ArchitectureRecommendationResult) => {
+        clearTimeout(timer1);
+        clearTimeout(timer2);
+        clearTimeout(timer3);
+        clearTimeout(timer4);
+        setResearchProgress(100);
+        setResearchStep(4);
         setResult(data);
         setLoading(false);
       })
       .catch(err => {
-        console.error("Failed to calculate recommendation", err);
+        clearTimeout(timer1);
+        clearTimeout(timer2);
+        clearTimeout(timer3);
+        clearTimeout(timer4);
+        console.error("Failed to fetch recommendation", err);
         setLoading(false);
       });
   };
@@ -325,9 +373,91 @@ export const ArchitectureAdvisor: React.FC = () => {
         {/* Right Results: Combos & Hosting & Markdown Spec */}
         <div className="lg:col-span-8 space-y-6">
           {loading ? (
-            <div className="glass-panel p-12 text-center space-y-4 rounded-3xl border border-slate-700/60 shadow-xl">
-              <Sparkles className="w-10 h-10 text-indigo-500 animate-spin mx-auto" />
-              <p className="font-extrabold text-lg text-slate-900 dark:text-white">최적의 모델 조합 및 비용을 계산 중입니다...</p>
+            <div className="glass-panel p-6 sm:p-8 space-y-6 rounded-3xl border border-indigo-500/40 shadow-2xl bg-slate-900/90 text-left relative overflow-hidden">
+              {/* Top Progress Header */}
+              <div className="flex items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center text-indigo-400 shrink-0">
+                    <Sparkles className="w-5 h-5 animate-spin text-indigo-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-extrabold text-white flex items-center gap-2">
+                      {t.researchProgress.title}
+                    </h3>
+                    <p className="text-xs text-slate-400 font-medium">
+                      {t.researchProgress.subtitle}
+                    </p>
+                  </div>
+                </div>
+                <div className="text-right shrink-0">
+                  <span className="text-2xl font-black text-indigo-400 font-mono tracking-tight">{researchProgress}%</span>
+                  <p className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Analyzing</p>
+                </div>
+              </div>
+
+              {/* Dynamic Animated Progress Bar */}
+              <div className="w-full bg-slate-950 rounded-full h-2.5 overflow-hidden border border-slate-800 p-0.5">
+                <div 
+                  className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-full rounded-full transition-all duration-500 shadow-sm shadow-indigo-500/50"
+                  style={{ width: `${researchProgress}%` }}
+                ></div>
+              </div>
+
+              {/* Step-by-Step Thinking Pipeline Indicators */}
+              <div className="space-y-3 pt-2">
+                {[
+                  t.researchProgress.step1,
+                  t.researchProgress.step2,
+                  t.researchProgress.step3,
+                  t.researchProgress.step4,
+                  t.researchProgress.step5
+                ].map((stepText, idx) => {
+                  const isDone = idx < researchStep;
+                  const isCurrent = idx === researchStep;
+                  return (
+                    <div 
+                      key={idx}
+                      className={`flex items-center gap-3 p-3 rounded-2xl border transition-all duration-300 ${
+                        isDone 
+                          ? 'bg-emerald-950/20 border-emerald-500/30 text-emerald-300' 
+                          : isCurrent 
+                          ? 'bg-indigo-950/50 border-indigo-500/50 text-indigo-200 ring-1 ring-indigo-500/30 animate-pulse' 
+                          : 'bg-slate-950/40 border-slate-800/60 text-slate-500'
+                      }`}
+                    >
+                      <div className="shrink-0">
+                        {isDone ? (
+                          <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                        ) : isCurrent ? (
+                          <Loader2 className="w-5 h-5 text-indigo-400 animate-spin" />
+                        ) : (
+                          <Clock className="w-5 h-5 text-slate-600" />
+                        )}
+                      </div>
+                      <span className="text-xs font-bold leading-snug">{stepText}</span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Live Terminal Output Console */}
+              <div className="rounded-2xl bg-slate-950 border border-slate-800 p-4 font-mono text-xs text-slate-300 space-y-1.5 shadow-inner max-h-40 overflow-y-auto">
+                <div className="flex items-center justify-between text-[10px] text-slate-500 border-b border-slate-800/80 pb-1 mb-2">
+                  <span className="flex items-center gap-1 font-bold text-slate-400">
+                    <Terminal className="w-3.5 h-3.5 text-cyan-400" /> AGENT DEEP RESEARCH LOG STREAM
+                  </span>
+                  <span className="animate-pulse text-emerald-400">● LIVE</span>
+                </div>
+                {researchLogs.map((log, i) => (
+                  <div key={i} className="leading-relaxed opacity-90">
+                    <span className="text-cyan-400 font-semibold">{log.split('>')[0]}</span>
+                    <span className="text-slate-200">&gt; {log.split('>')[1]}</span>
+                  </div>
+                ))}
+                <div className="flex items-center gap-1 text-indigo-400 animate-pulse pt-1">
+                  <span>_</span>
+                </div>
+              </div>
             </div>
           ) : result ? (
             <>

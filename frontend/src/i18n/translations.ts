@@ -22,6 +22,15 @@ export interface TranslationDictionary {
     rpd: string;
     concurrency: string;
   };
+  researchProgress: {
+    title: string;
+    subtitle: string;
+    step1: string;
+    step2: string;
+    step3: string;
+    step4: string;
+    step5: string;
+  };
   dashboard: {
     title: string;
     subtitle: string;
@@ -103,6 +112,15 @@ export const translations: Record<Language, TranslationDictionary> = {
       rpd: "RPD (일일 요청)",
       concurrency: "동시 요청 수"
     },
+    researchProgress: {
+      title: "AI 솔루션 아키텍트 실시간 심층 분석 중",
+      subtitle: "고객 요구사항을 바탕으로 최적의 LLM 조합과 OpEx 호스팅 인프라 비용을 산출하고 있습니다...",
+      step1: "고객 자연어 요구사항 및 워크로드 스펙 분석 (Intent & SLA)",
+      step2: "50+ 글로벌 LLM 모델 데이터베이스 & Arena Elo 벤치마크 스캔",
+      step3: "3가지 라우팅 모델 조합 (Best, Smart, Budget) 트래픽 시뮬레이션",
+      step4: "Vercel, Railway, Cloud GPU 월간 OpEx 호스팅 인프라 비용 산출",
+      step5: "Gemini 2.5 Flash 기반 7대 섹션 아키텍처 및 Mermaid 다이어그램 명세서 작성"
+    },
     dashboard: {
       title: "글로벌 LLM 모델 카탈로그",
       subtitle: "OpenAI, Anthropic, Google, AWS Bedrock, DeepSeek, Meta 등 142+ AI 전체 모델 공식 출처(Official Docs) 기반 스펙, 비용, 할당량 및 벤치마크 비교",
@@ -181,6 +199,15 @@ export const translations: Record<Language, TranslationDictionary> = {
       tpm: "TPM (Tok/Min)",
       rpd: "RPD (Req/Day)",
       concurrency: "Concurrency"
+    },
+    researchProgress: {
+      title: "AI Solutions Architect Live Deep Analysis",
+      subtitle: "Calculating optimal LLM combos and OpEx hosting costs based on your requirements...",
+      step1: "Analyzing Natural Language Requirements & Workload Specifications",
+      step2: "Scanning 50+ Global LLM Model Database & Arena Elo Benchmarks",
+      step3: "Simulating Traffic for 3 Model Combos (Best, Smart, Budget)",
+      step4: "Calculating Monthly OpEx Infrastructure Costs (Vercel, Railway, Cloud GPU)",
+      step5: "Synthesizing 7-Section Architecture & Mermaid Spec with Gemini 2.5 Flash"
     },
     dashboard: {
       title: "Global LLM Model Catalog",
@@ -261,6 +288,15 @@ export const translations: Record<Language, TranslationDictionary> = {
       rpd: "RPD (日間リクエスト)",
       concurrency: "同時実行数"
     },
+    researchProgress: {
+      title: "AIソリューションアーキテクトリアルタイム深層分析中",
+      subtitle: "ご要件に基づき最適LLM構成とOpExホスティングコストを算出しています...",
+      step1: "自然言語要件およびワークロードスペックの分析 (Intent & SLA)",
+      step2: "50+ グローバルLLMモデルDB & Arena Eloベンチマークのスキャン",
+      step3: "3つのルーティングモデル組合せ（Best, Smart, Budget）シミュレーション",
+      step4: "Vercel, Railway, Cloud GPU 月額OpExインフラ費用算出",
+      step5: "Gemini 2.5 Flashによる7セクションアーキテクチャ＆Mermaid仕様書生成"
+    },
     dashboard: {
       title: "グローバルLLMモデルカタログ",
       subtitle: "OpenAI、Anthropic、Google、AWS Bedrockなど142以上のLLM公式ドキュメント（Official Docs）に基づく全数比較",
@@ -340,6 +376,15 @@ export const translations: Record<Language, TranslationDictionary> = {
       rpd: "RPD (每日请求)",
       concurrency: "并发限制"
     },
+    researchProgress: {
+      title: "AI 解决方案架构师实时深度分析中",
+      subtitle: "正在根据您的需求计算最佳 LLM 组合与 OpEx 托管成本...",
+      step1: "分析自然语言需求与工作负载 S specifications (Intent & SLA)",
+      step2: "扫描 50+ 全球 LLM 模型数据库及 Arena Elo 跑分",
+      step3: "模拟 3 种路由模型组合 (Best, Smart, Budget) 流量",
+      step4: "计算 Vercel, Railway, Cloud GPU 月度 OpEx 基础设施成本",
+      step5: "通过 Gemini 2.5 Flash 生成 7 大章节架构及 Mermaid 规范"
+    },
     dashboard: {
       title: "全球大语言模型目录",
       subtitle: "基于官方文档 (Official Docs) 权威出处对比 OpenAI、Anthropic、Google 等 142+ 全部模型规格与价格",
@@ -409,6 +454,15 @@ export const translations: Record<Language, TranslationDictionary> = {
     },
     viewMode: { grid: "Cuadrícula", table: "Tabla", compact: "Compacto" },
     quota: { title: "Límites de Tarifa", rpm: "RPM", tpm: "TPM", rpd: "RPD", concurrency: "Concurrencia" },
+    researchProgress: {
+      title: "Análisis Profundo en Vivo del Arquitecto AI",
+      subtitle: "Calculando la combinación óptima de LLM y costes OpEx de alojamiento...",
+      step1: "Analizando requisitos en lenguaje natural y especificaciones (Intent & SLA)",
+      step2: "Escaneando base de datos de 50+ modelos LLM y benchmarks Arena Elo",
+      step3: "Simulando tráfico para 3 combinaciones de modelos (Best, Smart, Budget)",
+      step4: "Calculando costes OpEx mensuales de infraestructura (Vercel, Railway, Cloud GPU)",
+      step5: "Sintetizando arquitectura de 7 secciones y Mermaid con Gemini 2.5 Flash"
+    },
     dashboard: {
       title: "Explorador de Especificaciones y Precios de Modelos LLM",
       subtitle: "Compare precios API, ventana de contexto, benchmarks de rendimiento y especificaciones de más de 50 modelos LLM globales.",
@@ -478,6 +532,15 @@ export const translations: Record<Language, TranslationDictionary> = {
     },
     viewMode: { grid: "Raster", table: "Tabelle", compact: "Kompakt" },
     quota: { title: "Ratenlimits", rpm: "RPM", tpm: "TPM", rpd: "RPD", concurrency: "Nebenläufigkeit" },
+    researchProgress: {
+      title: "AI Solution Architect Live-Tiefenanalyse",
+      subtitle: "Berechnung der optimalen LLM-Kombinationen und OpEx-Hosting-Kosten...",
+      step1: "Analyse der Anforderungsspezifikationen in natürlicher Sprache (Intent & SLA)",
+      step2: "Scannen von 50+ globalen LLM-Datenbanken & Arena Elo Benchmarks",
+      step3: "Simulation für 3 Modellkombinationen (Best, Smart, Budget)",
+      step4: "Berechnung monatlicher OpEx-Infrastrukturkosten (Vercel, Railway, Cloud GPU)",
+      step5: "Erstellung der 7-Kapitel-Architektur & Mermaid-Spezifikation mit Gemini 2.5 Flash"
+    },
     dashboard: {
       title: "LLM Modell Spezifikationen & Preis-Explorer",
       subtitle: "Vergleichen Sie API-Preise, Kontextfenster, Performance-Benchmarks und Spezifikationen von über 50 globalen LLM-Modellen.",
@@ -547,6 +610,15 @@ export const translations: Record<Language, TranslationDictionary> = {
     },
     viewMode: { grid: "Grille", table: "Tableau", compact: "Compact" },
     quota: { title: "Limites de Débit", rpm: "RPM", tpm: "TPM", rpd: "RPD", concurrency: "Concurrence" },
+    researchProgress: {
+      title: "Analyse Approfondie en Direct par l'Architecte IA",
+      subtitle: "Calcul des combinaisons LLM optimales et des coûts d'hébergement OpEx...",
+      step1: "Analyse des exigences en langage naturel et des spécifications (Intent & SLA)",
+      step2: "Balayage de la base de données de 50+ modèles LLM et benchmarks Arena Elo",
+      step3: "Simulation de trafic pour 3 combinaisons de modèles (Best, Smart, Budget)",
+      step4: "Calcul des coûts d'infrastructure OpEx mensuels (Vercel, Railway, Cloud GPU)",
+      step5: "Synthèse de l'architecture en 7 sections et Mermaid avec Gemini 2.5 Flash"
+    },
     dashboard: {
       title: "Explorateur de Tarifs et Spécifications des Modèles LLM",
       subtitle: "Comparez les prix des API, la fenêtre de contexte, les benchmarks et les spécifications de plus de 50 modèles LLM mondiaux.",
