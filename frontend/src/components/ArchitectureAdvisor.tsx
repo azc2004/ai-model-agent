@@ -776,32 +776,28 @@ const SpecBundleModal: React.FC<{
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-      <div className="bg-slate-900 border border-slate-700/80 rounded-3xl max-w-5xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-5xl h-[85vh] flex flex-col shadow-2xl overflow-hidden">
         {/* Modal Header */}
-        <div className="p-5 border-b border-slate-800 bg-slate-950 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-950">
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                BigTech Spec Package
-              </span>
-              <span className="text-slate-400 text-xs font-semibold">| AI 사전 참고 표준 설계 문서</span>
-            </div>
-            <h3 className="text-lg sm:text-xl font-extrabold text-white flex items-center gap-2">
-              <FileText className="w-5 h-5 text-indigo-400" />
-              {result.service_name} — AI 사전 참고 아티팩트 설계 명세서
+            <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+              <span>🚀 BigTech Standard AI Coding Agent Spec Package</span>
             </h3>
+            <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold mt-0.5">
+              실리콘밸리 AI 파이프라인 규격 5대 Markdown 설계 아티팩트 명세서
+            </p>
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white p-2 rounded-xl hover:bg-slate-800 transition-colors self-end sm:self-center"
+            className="p-2 rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* 5-Artifact Tab Selector */}
-        <div className="bg-slate-950 border-b border-slate-800 px-4 pt-2 flex items-center gap-1.5 overflow-x-auto scrollbar-none">
+        <div className="bg-slate-100 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 px-4 pt-2 flex items-center gap-1.5 overflow-x-auto scrollbar-none">
           {[
             { id: 'agents', name: '🤖 AGENTS.md', desc: 'AI 지시서 & 규칙' },
             { id: 'arch', name: '🏗️ ARCHITECTURE.md', desc: '시스템 설계 & Sequence' },
@@ -815,36 +811,36 @@ const SpecBundleModal: React.FC<{
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`px-3.5 py-2.5 rounded-t-2xl text-xs font-bold transition-all whitespace-nowrap flex flex-col items-start gap-0.5 ${
+                className={`px-3.5 py-2.5 rounded-t-2xl text-xs font-black transition-all whitespace-nowrap flex flex-col items-start gap-0.5 ${
                   isActive 
-                    ? 'bg-slate-900 text-indigo-300 border-t-2 border-x border-indigo-500 border-x-slate-800 shadow-md' 
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/50'
+                    ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-300 border-t-2 border-x border-indigo-500 border-x-slate-200 dark:border-x-slate-800 shadow-sm' 
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-900/50'
                 }`}
               >
                 <span>{tab.name}</span>
-                <span className={`text-[10px] ${isActive ? 'text-indigo-400/80 font-normal' : 'text-slate-500'}`}>{tab.desc}</span>
+                <span className={`text-[10px] ${isActive ? 'text-indigo-600 dark:text-indigo-400 font-bold' : 'text-slate-500'}`}>{tab.desc}</span>
               </button>
             );
           })}
         </div>
 
         {/* Modal Body: Active Tab Document Code Preview */}
-        <div className="p-6 overflow-y-auto bg-slate-950/90 font-mono text-xs text-slate-200 space-y-4 flex-1">
-          <div className="flex items-center justify-between text-[11px] text-slate-400 border-b border-slate-800/80 pb-2">
-            <span className="font-bold text-indigo-400 flex items-center gap-1.5">
-              <Code className="w-4 h-4 text-indigo-400" /> {activeData.filename}
+        <div className="p-6 overflow-y-auto bg-slate-50 dark:bg-slate-950 font-mono text-xs text-slate-900 dark:text-slate-200 space-y-4 flex-1">
+          <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span className="font-black text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
+              <Code className="w-4 h-4 text-indigo-600 dark:text-indigo-400" /> {activeData.filename}
             </span>
-            <span className="text-slate-500">Lines: {activeData.content.split('\n').length} | Chars: {activeData.content.length.toLocaleString()}</span>
+            <span className="text-slate-500 font-bold">Lines: {activeData.content.split('\n').length} | Chars: {activeData.content.length.toLocaleString()}</span>
           </div>
-          <pre className="whitespace-pre-wrap leading-relaxed select-all">
+          <pre className="whitespace-pre-wrap leading-relaxed select-all font-semibold">
             {activeData.content}
           </pre>
         </div>
 
         {/* Modal Footer */}
-        <div className="p-4 border-t border-slate-800 bg-slate-950 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="text-xs text-slate-400 font-medium hidden sm:block">
-            💡 <strong className="text-white">Cursor / Claude Code 활용법</strong>: <span className="text-slate-300">`AGENTS.md`와 `TASKS.md`를 프로젝트 루트에 복사하면 AI가 자동 개발합니다.</span>
+        <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="text-xs text-slate-600 dark:text-slate-400 font-bold hidden sm:block">
+            💡 <strong className="text-slate-900 dark:text-white">Cursor / Claude Code 활용법</strong>: <span>`AGENTS.md`와 `TASKS.md`를 프로젝트 루트에 복사하면 AI가 자동 개발합니다.</span>
           </div>
 
           <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
