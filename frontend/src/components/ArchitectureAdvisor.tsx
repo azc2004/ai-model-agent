@@ -322,7 +322,7 @@ export const ArchitectureAdvisor: React.FC = () => {
       {/* Main Grid: Form & Result */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Form: Customizer */}
-        <div className="lg:col-span-4 glass-panel p-6 space-y-6 shadow-xl h-fit border border-slate-700/60 rounded-3xl">
+        <div className="lg:col-span-4 bg-white dark:bg-slate-900 p-6 space-y-6 shadow-md h-fit border border-slate-200 dark:border-slate-800 rounded-3xl">
           <div className="flex items-center gap-2 font-extrabold text-lg border-b border-slate-700/60 pb-3 text-slate-900 dark:text-white">
             <Layers className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
             서비스 요구사항 직접 입력
@@ -533,13 +533,13 @@ export const ArchitectureAdvisor: React.FC = () => {
           ) : result ? (
             <>
               {/* Service Summary Banner */}
-              <div className="glass-panel p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl border border-indigo-500/40 rounded-3xl">
+              <div className="bg-white dark:bg-slate-900 p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-md border border-indigo-200 dark:border-indigo-500/40 rounded-3xl">
                 <div>
                   <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">{result.service_name}</h3>
-                  <div className="flex flex-wrap items-center gap-3 text-xs font-semibold text-slate-600 dark:text-slate-300 mt-1">
-                    <span>월간 요청: <strong className="text-indigo-600 dark:text-indigo-300 font-extrabold">{result.monthly_requests.toLocaleString()}회</strong></span>
+                  <div className="flex flex-wrap items-center gap-3 text-xs font-bold text-slate-700 dark:text-slate-200 mt-1">
+                    <span>월간 요청: <strong className="text-indigo-600 dark:text-indigo-300 font-black">{result.monthly_requests.toLocaleString()}회</strong></span>
                     <span>•</span>
-                    <span>월 토큰: <strong className="text-slate-900 dark:text-slate-100 font-extrabold">in {result.total_monthly_input_tokens_m}M / out {result.total_monthly_output_tokens_m}M</strong></span>
+                    <span>월 토큰: <strong className="text-slate-900 dark:text-slate-100 font-black">in {result.total_monthly_input_tokens_m}M / out {result.total_monthly_output_tokens_m}M</strong></span>
                   </div>
                 </div>
                 <button
@@ -561,7 +561,7 @@ export const ArchitectureAdvisor: React.FC = () => {
                       className={`relative rounded-3xl p-5 border flex flex-col justify-between transition-all shadow-xl ${
                         isRecommended
                           ? 'bg-slate-900 text-white border-indigo-500 shadow-indigo-500/20 ring-2 ring-indigo-500'
-                          : 'glass-panel border-slate-300 dark:border-slate-800'
+                          : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800'
                       }`}
                     >
                       {isRecommended && (

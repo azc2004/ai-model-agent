@@ -245,19 +245,19 @@ export const TCOSimulatorView: React.FC<TCOSimulatorViewProps> = ({ models }) =>
               </div>
 
               {/* Recommendation Banner */}
-              <div className="p-5 rounded-2xl bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-300 dark:border-cyan-500/40 flex items-center justify-between shadow-md">
+              <div className="p-5 rounded-2xl bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-300 dark:border-cyan-500/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
                 <div className="flex items-center gap-3">
                   <CheckCircle className="w-6 h-6 text-cyan-600 dark:text-cyan-400 shrink-0" />
                   <div>
                     <div className="text-xs text-slate-600 dark:text-slate-400 font-extrabold">{t.tco.recommendedOption}</div>
-                    <div className="text-base font-black text-slate-900 dark:text-white">
+                    <div className="text-sm sm:text-base font-black text-slate-900 dark:text-white leading-relaxed">
                       {result.recommendation}
                     </div>
                   </div>
                 </div>
 
-                <div className="text-right">
-                  <span className="px-3.5 py-1 rounded-full text-xs font-black bg-cyan-500 text-slate-950 shadow-sm">
+                <div className="shrink-0 self-start sm:self-center">
+                  <span className="px-4 py-1.5 rounded-full text-xs font-black bg-cyan-500 text-slate-950 shadow-sm whitespace-nowrap inline-block">
                     {t.tco.cheapest}
                   </span>
                 </div>
