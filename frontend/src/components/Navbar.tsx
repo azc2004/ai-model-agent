@@ -1,5 +1,5 @@
 import React from 'react';
-import { Compass, LayoutGrid, ArrowLeftRight, Calculator, Trophy, Cpu, Globe, Sparkles, Sun, Moon } from 'lucide-react';
+import { Compass, LayoutGrid, ArrowLeftRight, Calculator, Trophy, Cpu, Globe, Sparkles, Sun, Moon, BookOpen } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import type { Language } from '../i18n/translations';
@@ -95,6 +95,18 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, compare
           >
             <Sparkles className="w-4 h-4 shrink-0" />
             <span className="whitespace-nowrap">{t.nav.advisor}</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('tutorial')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all whitespace-nowrap shrink-0 ${
+              activeTab === 'tutorial'
+                ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-black shadow-md shadow-purple-500/30'
+                : 'text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900/60'
+            }`}
+          >
+            <BookOpen className="w-4 h-4 shrink-0 text-purple-400" />
+            <span className="whitespace-nowrap">🎓 튜토리얼</span>
           </button>
 
           <button

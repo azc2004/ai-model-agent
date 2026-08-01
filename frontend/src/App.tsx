@@ -10,6 +10,7 @@ import { CompareView } from './components/CompareView';
 import { LeaderboardView } from './components/LeaderboardView';
 import { GPUListView } from './components/GPUListView';
 import { ArchitectureAdvisor } from './components/ArchitectureAdvisor';
+import { TutorialView } from './components/TutorialView';
 
 export const AppContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('dashboard');
@@ -106,6 +107,8 @@ export const AppContent: React.FC = () => {
         {activeTab === 'tco' && <TCOSimulatorView models={models} />}
 
         {activeTab === 'advisor' && <ArchitectureAdvisor />}
+
+        {activeTab === 'tutorial' && <TutorialView />}
 
         {activeTab === 'leaderboard' && <LeaderboardView models={models} />}
 
