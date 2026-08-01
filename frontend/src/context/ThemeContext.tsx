@@ -20,9 +20,9 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const root = document.documentElement;
     if (theme === 'light') {
       root.classList.add('light-mode');
-      root.classList.remove('dark-mode');
+      root.classList.remove('dark', 'dark-mode');
     } else {
-      root.classList.add('dark-mode');
+      root.classList.add('dark', 'dark-mode');
       root.classList.remove('light-mode');
     }
   }, [theme]);
