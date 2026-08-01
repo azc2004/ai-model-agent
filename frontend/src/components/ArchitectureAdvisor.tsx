@@ -106,8 +106,8 @@ const INITIAL_SAMPLE_RESULT: ArchitectureRecommendationResult = {
   spec_bundle: {
     agents_md: `# 🤖 [AGENTS.md] AI Coding Agent Directive & Execution Rules\n\n> **Target Agent**: Cursor IDE, Claude Code, GitHub Copilot Workspace, Devin\n> **Service**: 자율 코딩 에이전트 서비스 (CODE_AGENT)\n\n---\n\n## 1. 📌 Primary Directives & Architecture Pattern\n- **Routing Pattern**: Smart 2-Tier Multi-Model Routing (Llama 3.3 70B (Groq LPU) + DeepSeek R1 (Reasoning))\n- **Circuit Breaker**: Implement automatic fallback to secondary model on timeout (>15s) or HTTP 5xx.\n- **Async Non-Blocking**: All I/O operations MUST use \`async/await\` with \`httpx.AsyncClient\`.\n\n## 2. 🛡️ Coding Guidelines & Safety Rules\n1. **No Superfluous Dependencies**: Use standard library or \`fastapi\`, \`httpx\`, \`pydantic\`, \`python-dotenv\`.\n2. **Type Hinting**: All functions MUST have PEP 484 type annotations and Google-style docstrings.\n3. **Guardrails**: Validate input prompts for length (<500 chars) and sanitization before calling LLM APIs.\n4. **Environment Variables**: Load secrets exclusively via \`.env\` (Never hardcode API keys).\n`,
     architecture_md: `# 🏗️ [ARCHITECTURE.md] System Design & Flow Specifications\n\n> **System**: 자율 코딩 에이전트 서비스\n> **Target SLA**: Latency P95 < 400ms (Simple) / < 2.5s (Complex), Availability 99.9%\n\n---\n\n## 1. Sequence Diagram (Request Flow)\n\n\`\`\`mermaid\nsequenceDiagram\n    autonumber\n    actor Client as 👤 Client / Frontend\n    participant GW as 🌐 API Gateway (FastAPI)\n    participant Router as ⚡ Router (Groq LPU)\n    participant Primary as 🧠 Primary (DeepSeek R1)\n    participant Fallback as 🛡️ Fallback Backup\n\n    Client->>GW: POST /api/v1/generate\n    GW->>Router: Classify Query Complexity (Simple vs Complex)\n    alt Simple Query (70% traffic)\n        Router-->>GW: Direct Fast Response\n    else Complex Query (30% traffic)\n        GW->>Primary: Execute Reasoning Inference\n        alt Primary Success\n            Primary-->>GW: High Quality Result\n        else Primary Timeout / Failure\n            GW->>Fallback: Route to Backup Engine\n            Fallback-->>GW: Fallback Result\n        end\n    end\n    GW-->>Client: 200 OK (Response)\n\`\`\`\n`,
+    database_schema_md: `# 🗄️ [DATABASE_SCHEMA.md] Database ERD & DDL Specification\n\n> **Target DB**: PostgreSQL / MariaDB + Redis Cache\n> **Domain**: 자율 코딩 에이전트 서비스 (CODE_AGENT)\n\n---\n\n## 1. Entity Relationship Diagram (Mermaid ERD)\n\n\`\`\`mermaid\nerDiagram\n    USERS ||--o{ REQUEST_LOGS : "executes"\n    USERS ||--o{ API_KEYS : "owns"\n    REQUEST_LOGS }|--|| MODEL_ROUTING_EVENTS : "triggers"\n\`\`\`\n\n## 2. PostgreSQL DDL Schemas\n\`\`\`sql\nCREATE TABLE users (id UUID PRIMARY KEY, email VARCHAR(255) UNIQUE);\nCREATE TABLE request_logs (id UUID PRIMARY KEY, latency_ms NUMERIC(8,2));\n\`\`\`\n`,
     tasks_md: `# 📝 [TASKS.md] Step-by-Step Agent Implementation Checklist\n\nExecute the following tasks sequentially. Check off items as they pass automated verification.\n\n---\n\n### Phase 1: Environment & Guardrails Setup\n- [ ] **Task 1.1**: Create \`requirements.txt\` with \`fastapi\`, \`uvicorn\`, \`httpx\`, \`pydantic\`, \`python-dotenv\`.\n- [ ] **Task 1.2**: Create \`.env.example\` with API keys template (\`GROQ_API_KEY\`, \`OPENAI_API_KEY\`, \`DEEPSEEK_API_KEY\`).\n- [ ] **Task 1.3**: Implement \`app/guardrails.py\` for Prompt Injection & Off-Topic regex filtering.\n\n### Phase 2: Multi-Model Router Pipeline Implementation\n- [ ] **Task 2.1**: Build \`GenerateRequest\` and \`GenerateResponse\` Pydantic schemas.\n- [ ] **Task 2.2**: Implement \`ProductionAIRouter\` class with Async HTTP Client and Circuit Breaker pattern.\n- [ ] **Task 2.3**: Wire primary model (\`DeepSeek R1\`) and router model (\`Groq LPU\`) fallback routes.\n\n### Phase 3: Verification & Deployment\n- [ ] **Task 3.1**: Write FastAPI \`/api/v1/generate\` POST endpoint in \`app/main.py\`.\n- [ ] **Task 3.2**: Create production \`Dockerfile\` and \`docker-compose.yml\`.\n- [ ] **Task 3.3**: Run \`pytest\` or curl verification script to ensure < 400ms latency on simple queries.\n`,
-    pipeline_code_py: `import os\nimport time\nimport asyncio\nimport logging\nfrom typing import Optional\nfrom pydantic import BaseModel, Field\nimport httpx\nfrom fastapi import FastAPI, HTTPException\n\nlogging.basicConfig(level=logging.INFO)\nlogger = logging.getLogger("Code_Agent_Router")\n\nclass GenerateRequest(BaseModel):\n    user_query: str = Field(..., description="User query or prompt")\n    max_tokens: Optional[int] = 1000\n\nclass GenerateResponse(BaseModel):\n    status: str\n    response_text: str\n    engine_used: str\n    latency_ms: float\n\nclass AIRouterPipeline:\n    def __init__(self):\n        self.router_model = "groq-llama-3.3-70b"\n        self.primary_model = "deepseek-r1"\n        self.fallback_model = "gpt-4o-mini"\n\n    async def execute(self, req: GenerateRequest) -> GenerateResponse:\n        start_time = time.time()\n        is_complex = len(req.user_query) > 200 or any(kw in req.user_query.lower() for kw in ["code", "reason", "분석", "코드"])\n        selected_model = self.primary_model if is_complex else self.router_model\n        latency = round((time.time() - start_time) * 1000, 2)\n        return GenerateResponse(\n            status="success",\n            response_text=f"Processed query via {selected_model}",\n            engine_used=selected_model,\n            latency_ms=latency\n        )\n\napp = FastAPI(title="Code Agent API")\npipeline = AIRouterPipeline()\n\n@app.post("/api/v1/generate", response_model=GenerateResponse)\nasync def generate(req: GenerateRequest):\n    return await pipeline.execute(req)\n`,
     deployment_md: `# 🐳 [DEPLOYMENT.md] Infrastructure & Deployment Specification\n\n> **Hosting**: Vercel + Render.com (Serverless & PaaS)\n> **Est. Monthly OpEx**: $20.00/mo\n\n---\n\n## 1. Environment Variables (\`.env.example\`)\n\`\`\`env\nPORT=8080\nENV=production\nGROQ_API_KEY=gsk_your_groq_api_key\nDEEPSEEK_API_KEY=sk_your_deepseek_api_key\nOPENAI_API_KEY=sk-proj-your_openai_api_key\n\`\`\`\n\n## 2. Production Dockerfile\n\`\`\`dockerfile\nFROM python:3.11-slim\nWORKDIR /app\nCOPY requirements.txt .\nRUN pip install --no-cache-dir -r requirements.txt\nCOPY . .\nEXPOSE 8080\nCMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]\n\`\`\`\n`
   }
 };
@@ -720,14 +720,14 @@ const SpecBundleModal: React.FC<{
   result: ArchitectureRecommendationResult;
   onClose: () => void;
 }> = ({ result, onClose }) => {
-  const [activeTab, setActiveTab] = useState<'agents' | 'arch' | 'tasks' | 'code' | 'deploy' | 'full'>('agents');
+  const [activeTab, setActiveTab] = useState<'agents' | 'arch' | 'db_schema' | 'tasks' | 'deploy' | 'full'>('agents');
   const [copied, setCopied] = useState<boolean>(false);
 
   const bundle = result.spec_bundle || {
     agents_md: `# AGENTS.md Directive\n${result.markdown_spec.slice(0, 500)}`,
     architecture_md: `# ARCHITECTURE.md Specification\n${result.markdown_spec}`,
+    database_schema_md: `# DATABASE_SCHEMA.md Specification\n# DB ERD & DDL Schemas`,
     tasks_md: `# TASKS.md Checklist\n- [ ] Task 1: Environment Setup\n- [ ] Task 2: AI Pipeline Implementation`,
-    pipeline_code_py: `# main_pipeline.py\n# Production Router Pipeline`,
     deployment_md: `# DEPLOYMENT.md Specification\n# Docker & .env Setup`
   };
 
@@ -735,8 +735,8 @@ const SpecBundleModal: React.FC<{
     switch (activeTab) {
       case 'agents': return { filename: 'AGENTS.md', content: bundle.agents_md };
       case 'arch': return { filename: 'ARCHITECTURE.md', content: bundle.architecture_md };
+      case 'db_schema': return { filename: 'DATABASE_SCHEMA.md', content: bundle.database_schema_md };
       case 'tasks': return { filename: 'TASKS.md', content: bundle.tasks_md };
-      case 'code': return { filename: 'main_pipeline.py', content: bundle.pipeline_code_py };
       case 'deploy': return { filename: 'DEPLOYMENT.md', content: bundle.deployment_md };
       case 'full': return { filename: 'architecture_full_spec.md', content: result.markdown_spec };
       default: return { filename: 'AGENTS.md', content: bundle.agents_md };
@@ -767,8 +767,8 @@ const SpecBundleModal: React.FC<{
     const files = [
       { name: 'AGENTS.md', content: bundle.agents_md },
       { name: 'ARCHITECTURE.md', content: bundle.architecture_md },
+      { name: 'DATABASE_SCHEMA.md', content: bundle.database_schema_md },
       { name: 'TASKS.md', content: bundle.tasks_md },
-      { name: 'main_pipeline.py', content: bundle.pipeline_code_py },
       { name: 'DEPLOYMENT.md', content: bundle.deployment_md }
     ];
 
@@ -795,13 +795,13 @@ const SpecBundleModal: React.FC<{
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                BigTech 5-in-1 Spec Package
+                BigTech Spec Package
               </span>
-              <span className="text-slate-400 text-xs font-semibold">| Cursor & Claude Agent Ready</span>
+              <span className="text-slate-400 text-xs font-semibold">| AI 사전 참고 표준 설계 문서</span>
             </div>
             <h3 className="text-lg sm:text-xl font-extrabold text-white flex items-center gap-2">
               <FileText className="w-5 h-5 text-indigo-400" />
-              {result.service_name} — AI 코딩 에이전트 전용 아티팩트 명세서
+              {result.service_name} — AI 사전 참고 아티팩트 설계 명세서
             </h3>
           </div>
           <button
@@ -816,9 +816,9 @@ const SpecBundleModal: React.FC<{
         <div className="bg-slate-950 border-b border-slate-800 px-4 pt-2 flex items-center gap-1.5 overflow-x-auto scrollbar-none">
           {[
             { id: 'agents', name: '🤖 AGENTS.md', desc: 'AI 지시서 & 규칙' },
-            { id: 'arch', name: '🏗️ ARCHITECTURE.md', desc: '시스템 설계 & Mermaid' },
+            { id: 'arch', name: '🏗️ ARCHITECTURE.md', desc: '시스템 설계 & Sequence' },
+            { id: 'db_schema', name: '🗄️ DATABASE_SCHEMA.md', desc: 'DB ERD & DDL 스키마' },
             { id: 'tasks', name: '📝 TASKS.md', desc: '구현 WBS 체크리스트' },
-            { id: 'code', name: '💻 main_pipeline.py', desc: 'FastAPI 라우터 소스' },
             { id: 'deploy', name: '🐳 DEPLOYMENT.md', desc: 'Docker & .env 스펙' },
             { id: 'full', name: '📄 FULL_SPEC.md', desc: '통합 전체 명세서' }
           ].map((tab) => {

@@ -697,59 +697,86 @@ Execute the following tasks sequentially. Check off items as they pass automated
 - [ ] **Task 3.3**: Run `pytest` or curl verification script to ensure < 400ms latency on simple queries.
 """
 
-    # 4. main_pipeline.py (Python Source Code)
-    pipeline_code_py = f"""import os
-import time
-import asyncio
-import logging
-from typing import Optional
-from pydantic import BaseModel, Field
-import httpx
-from fastapi import FastAPI, HTTPException
+    # 3. DATABASE_SCHEMA.md (Database ERD & DDL Specification)
+    database_schema_md = f"""# 🗄️ [DATABASE_SCHEMA.md] Database ERD & DDL Specification
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("{service_name.replace(' ', '_')}_Router")
+> **Target DB**: PostgreSQL / MariaDB + Redis Cache
+> **Domain**: {service_name} ({req.service_type.upper()})
 
-class GenerateRequest(BaseModel):
-    user_query: str = Field(..., description="User query or prompt")
-    max_tokens: Optional[int] = 1000
+---
 
-class GenerateResponse(BaseModel):
-    status: str
-    response_text: str
-    engine_used: str
-    latency_ms: float
+## 1. Entity Relationship Diagram (Mermaid ERD)
 
-class AIRouterPipeline:
-    def __init__(self):
-        self.router_model = "{router_name}"
-        self.primary_model = "{primary_name}"
-        self.fallback_model = "gpt-4o-mini"
+```mermaid
+erDiagram
+    USERS ||--o{{ REQUEST_LOGS : "executes"
+    USERS ||--o{{ API_KEYS : "owns"
+    REQUEST_LOGS }}|--|| MODEL_ROUTING_EVENTS : "triggers"
 
-    async def execute(self, req: GenerateRequest) -> GenerateResponse:
-        start_time = time.time()
-        # Intent classification & routing logic
-        is_complex = len(req.user_query) > 200 or any(kw in req.user_query.lower() for kw in ["code", "reason", "분석", "코드"])
-        selected_model = self.primary_model if is_complex else self.router_model
+    USERS {{
+        uuid id PK
+        string email UK
+        string plan_tier
+        datetime created_at
+    }}
 
-        # Execution stub
-        latency = round((time.time() - start_time) * 1000, 2)
-        return GenerateResponse(
-            status="success",
-            response_text=f"Processed query via {{selected_model}}",
-            engine_used=selected_model,
-            latency_ms=latency
-        )
+    API_KEYS {{
+        uuid id PK
+        uuid user_id FK
+        string key_hash UK
+        boolean is_active
+    }}
 
-app = FastAPI(title="{service_name} API")
-pipeline = AIRouterPipeline()
+    REQUEST_LOGS {{
+        uuid id PK
+        uuid user_id FK
+        string endpoint
+        int prompt_tokens
+        int completion_tokens
+        float latency_ms
+        datetime created_at
+    }}
 
-@app.post("/api/v1/generate", response_model=GenerateResponse)
-async def generate(req: GenerateRequest):
-    return await pipeline.execute(req)
+    MODEL_ROUTING_EVENTS {{
+        uuid id PK
+        uuid request_id FK
+        string selected_engine
+        string routing_reason
+        float cost_usd
+    }}
+```
+
+## 2. PostgreSQL Table DDL Schemas
+
+```sql
+-- 1. Users Table
+CREATE TABLE users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email VARCHAR(255) NOT NULL UNIQUE,
+    plan_tier VARCHAR(50) NOT NULL DEFAULT 'free',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 2. Request Logs Table (Partitioned by Monthly)
+CREATE TABLE request_logs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    prompt_tokens INT NOT NULL DEFAULT 0,
+    completion_tokens INT NOT NULL DEFAULT 0,
+    total_cost_usd NUMERIC(10, 6) NOT NULL DEFAULT 0.0,
+    latency_ms NUMERIC(8, 2) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_request_logs_user_date ON request_logs(user_id, created_at DESC);
+
+-- 3. Redis Caching & Rate Limiting Spec
+-- Cache Key Pattern: "ratelimit:{{user_id}}:{{minute_timestamp}}" (TTL: 60s)
+-- Response Cache Pattern: "cache:query:{{sha256_hash}}" (TTL: 3600s)
+```
 """
 
-    # 5. DEPLOYMENT.md (Infra & Docker Specs)
+    # 4. DEPLOYMENT.md (Infra & Docker Specs)
     deployment_md = f"""# 🐳 [DEPLOYMENT.md] Infrastructure & Deployment Specification
 
 > **Hosting**: {hosting.provider} ({hosting.category})  
@@ -781,7 +808,7 @@ CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
     return SpecBundle(
         agents_md=agents_md,
         architecture_md=architecture_md,
+        database_schema_md=database_schema_md,
         tasks_md=tasks_md,
-        pipeline_code_py=pipeline_code_py,
         deployment_md=deployment_md
     )

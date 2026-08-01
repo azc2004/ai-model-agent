@@ -151,8 +151,8 @@ export interface HostingOption {
 export interface SpecBundle {
   agents_md: string;
   architecture_md: string;
+  database_schema_md: string;
   tasks_md: string;
-  pipeline_code_py: string;
   deployment_md: string;
 }
 
