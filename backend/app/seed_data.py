@@ -431,3 +431,6 @@ for model_def in RAW_MODELS_DATA:
             benchmarks=model_def[16]
         )
     )
+
+# 최신 대표 인기 모델(LMSYS Arena Elo high)이 상단에 우선 노출되도록 정렬
+MODELS.sort(key=lambda m: (m.benchmarks.arena_elo if (m.benchmarks and m.benchmarks.arena_elo is not None) else 0), reverse=True)

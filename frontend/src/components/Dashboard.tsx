@@ -39,10 +39,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
   // View Mode: 'grid' | 'table' | 'compact'
   const [viewMode, setViewMode] = useState<'grid' | 'table' | 'compact'>('grid');
 
-  // Sort state
+  // Sort state: 기본값 최신 인기 대표 모델(Arena Elo high) 우선 정렬
   type SortKey = 'name' | 'provider' | 'tier' | 'context' | 'input_price' | 'output_price' | 'arena_elo' | 'rpm';
-  const [sortKey, setSortKey] = useState<SortKey>('name');
-  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
+  const [sortKey, setSortKey] = useState<SortKey>('arena_elo');
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
 
   const handleSort = (key: SortKey) => {
     if (sortKey === key) {
@@ -200,12 +200,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </svg>
           </div>
 
-          {/* Filter Dropdowns */}
+          {/* Filter Dropdowns & Quick Sort Chips */}
           <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
             <select
               value={selectedProvider}
               onChange={(e) => setSelectedProvider(e.target.value)}
-              className="bg-slate-900/90 border border-slate-700 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:border-cyan-500 cursor-pointer shadow-sm"
+              className="bg-slate-900 text-slate-100 border border-slate-700 focus:border-cyan-400 rounded-xl px-3 py-2.5 text-xs font-bold cursor-pointer shadow-md"
             >
               <option value="all">{t.dashboard.allProviders}</option>
               {providers.map((p) => (
@@ -218,7 +218,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <select
               value={selectedTier}
               onChange={(e) => setSelectedTier(e.target.value)}
-              className="bg-slate-900/90 border border-slate-700 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:border-cyan-500 cursor-pointer shadow-sm"
+              className="bg-slate-900 text-slate-100 border border-slate-700 focus:border-cyan-400 rounded-xl px-3 py-2.5 text-xs font-bold cursor-pointer shadow-md"
             >
               <option value="all">{t.dashboard.allTiers}</option>
               <option value="Frontier">Frontier</option>
@@ -230,12 +230,36 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <select
               value={selectedLicense}
               onChange={(e) => setSelectedLicense(e.target.value)}
-              className="bg-slate-900/90 border border-slate-700 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:border-cyan-500 cursor-pointer shadow-sm"
+              className="bg-slate-900 text-slate-100 border border-slate-700 focus:border-cyan-400 rounded-xl px-3 py-2.5 text-xs font-bold cursor-pointer shadow-md"
             >
               <option value="all">{t.dashboard.allLicenses}</option>
               <option value="open">{t.dashboard.openWeight}</option>
               <option value="proprietary">{t.dashboard.proprietary}</option>
             </select>
+
+            {/* Quick Sort Chips */}
+            <div className="flex items-center gap-1.5 border-l border-slate-700/80 pl-2.5">
+              <button
+                onClick={() => { setSortKey('arena_elo'); setSortDir('desc'); }}
+                className={`px-3 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-1 border shadow-sm ${
+                  sortKey === 'arena_elo'
+                    ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 border-amber-300 shadow-amber-500/20 ring-1 ring-amber-300'
+                    : 'bg-slate-900 text-slate-200 border-slate-700 hover:border-slate-500 hover:text-white'
+                }`}
+              >
+                🏆 Elo 랭킹순
+              </button>
+              <button
+                onClick={() => { setSortKey('input_price'); setSortDir('asc'); }}
+                className={`px-3 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-1 border shadow-sm ${
+                  sortKey === 'input_price'
+                    ? 'bg-cyan-500 text-slate-950 border-cyan-300 shadow-cyan-500/20 ring-1 ring-cyan-300'
+                    : 'bg-slate-900 text-slate-200 border-slate-700 hover:border-slate-500 hover:text-white'
+                }`}
+              >
+                💰 최저 비용순
+              </button>
+            </div>
 
             {/* View Mode Switcher */}
             <div className="flex items-center bg-slate-950/80 p-1 border border-slate-700/80 rounded-xl ml-auto">
@@ -335,27 +359,26 @@ export const Dashboard: React.FC<DashboardProps> = ({
           <span className="font-bold text-cyan-400">{sortedModels.length}</span> {t.dashboard.modelsFound}
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-slate-600 dark:text-slate-400 text-xs font-bold">정렬:</span>
+          <span className="text-slate-300 dark:text-slate-300 text-xs font-black">정렬 기준:</span>
           <select
             value={sortKey}
             onChange={e => setSortKey(e.target.value as SortKey)}
-            className="bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 dark:text-slate-100 font-bold focus:outline-none focus:border-cyan-500 shadow-sm cursor-pointer"
+            className="bg-slate-900 text-white border border-slate-700 focus:border-cyan-400 rounded-xl px-3 py-1.5 text-xs font-black shadow-md cursor-pointer"
           >
-            <option value="name">모델명</option>
-            <option value="provider">프로바이더</option>
-            <option value="tier">티어</option>
-            <option value="context">컨텍스트</option>
-            <option value="input_price">입력가격</option>
-            <option value="output_price">출력가격</option>
-            <option value="arena_elo">Arena ELO</option>
-            <option value="rpm">RPM 할당량</option>
+            <option value="arena_elo">🏆 LMSYS Arena Elo 랭킹</option>
+            <option value="name">🔤 모델명</option>
+            <option value="provider">🏢 프로바이더</option>
+            <option value="tier">🎯 티어 (Tier)</option>
+            <option value="context">📚 컨텍스트 윈도우</option>
+            <option value="input_price">💰 입력 비용 (1M Token)</option>
+            <option value="output_price">💸 출력 비용 (1M Token)</option>
           </select>
           <button
             onClick={() => setSortDir(d => d === 'asc' ? 'desc' : 'asc')}
-            className="bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-900 dark:text-slate-100 font-black hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors shadow-sm cursor-pointer"
+            className="px-3 py-1.5 bg-slate-900 border border-slate-700 hover:border-cyan-400 text-cyan-300 font-extrabold text-xs rounded-xl transition-all shadow-md flex items-center gap-1"
             title={sortDir === 'asc' ? '오름차순' : '내림차순'}
           >
-            {sortDir === 'asc' ? '↑ 오름' : '↓ 내림'}
+            {sortDir === 'asc' ? '▲ 오름차순' : '▼ 내림차순'}
           </button>
         </div>
       </div>
@@ -407,59 +430,59 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   </div>
 
                   {/* Model Title */}
-                  <h3 className="text-lg font-black text-slate-900 dark:text-slate-100 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors mb-2">
+                  <h3 className="text-lg font-black text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors mb-1.5">
                     {model.name}
                   </h3>
 
-                  <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 mb-4 leading-relaxed font-medium">
+                  <p className="text-xs text-slate-700 dark:text-slate-200 line-clamp-2 mb-4 leading-relaxed font-semibold">
                     {model.description}
                   </p>
 
                   {/* Quota Information Box */}
                   {model.quota && (
-                    <div className="bg-slate-50 dark:bg-slate-950/70 border border-cyan-200 dark:border-cyan-900/40 rounded-xl p-2.5 mb-4 text-xs shadow-inner">
-                      <div className="text-[11px] font-extrabold text-cyan-700 dark:text-cyan-400 mb-1 flex items-center gap-1">
-                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="bg-cyan-500/10 dark:bg-cyan-950/60 border border-cyan-500/30 rounded-xl p-2.5 mb-4 text-xs shadow-inner">
+                      <div className="text-[11px] font-black text-cyan-700 dark:text-cyan-300 mb-1 flex items-center gap-1">
+                        <svg className="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
                         API Rate Limits & Quotas
                       </div>
-                      <div className="grid grid-cols-2 gap-1 text-[11px] text-slate-900 dark:text-slate-200 font-bold">
+                      <div className="grid grid-cols-2 gap-1 text-[11px] text-slate-900 dark:text-slate-100 font-extrabold">
                         <div>
-                          <span className="text-slate-500 font-medium">RPM:</span> {model.quota.rpm.toLocaleString()}
+                          <span className="text-slate-500 dark:text-slate-400 font-bold">RPM:</span> {model.quota.rpm.toLocaleString()}
                         </div>
                         <div>
-                          <span className="text-slate-500 font-medium">TPM:</span> {(model.quota.tpm / 1000).toLocaleString()}k
+                          <span className="text-slate-500 dark:text-slate-400 font-bold">TPM:</span> {(model.quota.tpm / 1000).toLocaleString()}k
                         </div>
                       </div>
                     </div>
                   )}
 
                   {/* Key Metrics Grid */}
-                  <div className="grid grid-cols-2 gap-2 bg-slate-50 dark:bg-slate-950/60 p-3 rounded-xl border border-slate-200 dark:border-slate-800/80 mb-4 text-xs shadow-inner">
+                  <div className="grid grid-cols-2 gap-2 bg-slate-100 dark:bg-slate-950/80 p-3 rounded-xl border border-slate-200 dark:border-slate-800 mb-4 text-xs shadow-inner">
                     <div>
-                      <span className="text-slate-500 block text-[10px] font-medium">{t.dashboard.contextWindow}</span>
-                      <span className="font-bold text-slate-900 dark:text-slate-100">
+                      <span className="text-slate-600 dark:text-slate-400 block text-[10px] font-bold">{t.dashboard.contextWindow}</span>
+                      <span className="font-black text-slate-900 dark:text-white">
                         {(model.context_window / 1000).toLocaleString()}k tokens
                       </span>
                     </div>
                     <div>
-                      <span className="text-slate-500 block text-[10px] font-medium">Arena ELO</span>
-                      <span className="font-extrabold text-amber-600 dark:text-amber-400">
-                        {model.benchmarks.arena_elo || 'N/A'}
+                      <span className="text-slate-600 dark:text-slate-400 block text-[10px] font-bold">Arena ELO 랭킹</span>
+                      <span className="font-black text-amber-600 dark:text-amber-300 flex items-center gap-1">
+                        🏆 {model.benchmarks.arena_elo ? model.benchmarks.arena_elo.toFixed(0) : 'N/A'}
                       </span>
                     </div>
+                  </div>
+
+                  {/* Pricing Info */}
+                  <div className="flex items-center justify-between text-xs pt-3 border-t border-slate-200 dark:border-slate-800 mb-4">
                     <div>
-                      <span className="text-slate-500 block text-[10px] font-medium">{t.dashboard.inputPrice}</span>
-                      <span className="font-extrabold text-emerald-600 dark:text-emerald-400">
-                        ${model.api_pricing.input_price_per_1m.toFixed(2)}
-                      </span>
+                      <span className="text-slate-600 dark:text-slate-400 text-[10px] block font-bold">{t.dashboard.inputPrice}</span>
+                      <span className="font-black text-slate-900 dark:text-slate-100">${model.api_pricing.input_price_per_1m.toFixed(2)}</span>
                     </div>
-                    <div>
-                      <span className="text-slate-500 block text-[10px] font-medium">{t.dashboard.outputPrice}</span>
-                      <span className="font-extrabold text-emerald-600 dark:text-emerald-400">
-                        ${model.api_pricing.output_price_per_1m.toFixed(2)}
-                      </span>
+                    <div className="text-right">
+                      <span className="text-slate-600 dark:text-slate-400 text-[10px] block font-bold">{t.dashboard.outputPrice}</span>
+                      <span className="font-black text-slate-900 dark:text-slate-100">${model.api_pricing.output_price_per_1m.toFixed(2)}</span>
                     </div>
                   </div>
                 </div>
