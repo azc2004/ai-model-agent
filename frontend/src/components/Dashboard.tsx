@@ -163,17 +163,17 @@ export const Dashboard: React.FC<DashboardProps> = ({
   return (
     <div className="space-y-8 pb-16">
       {/* Title Header */}
-      <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 sm:p-8 backdrop-blur-md shadow-xl">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 mb-3">
+      <div className="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-md backdrop-blur-md">
+        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">
           {t.dashboard.title}
         </h1>
-        <p className="text-slate-400 text-sm sm:text-base max-w-3xl leading-relaxed">
+        <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base max-w-3xl leading-relaxed font-semibold">
           {t.dashboard.subtitle}
         </p>
       </div>
 
       {/* Filter & View Mode Controls Bar */}
-      <div className="glass-panel p-5 space-y-4 shadow-xl border border-slate-700/60 rounded-2xl">
+      <div className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-5 space-y-4 rounded-2xl shadow-md">
         {/* Upper Row: Search, Dropdown Selectors, View Mode Switcher */}
         <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
           {/* Search Box */}
@@ -183,10 +183,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
               placeholder={t.dashboard.searchPlaceholder}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-slate-900/90 border border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm font-medium focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all shadow-inner"
+              className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-400 font-bold rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all shadow-inner"
             />
             <svg
-              className="w-4 h-4 text-cyan-400 absolute left-3.5 top-3.5"
+              className="w-4 h-4 text-cyan-500 dark:text-cyan-400 absolute left-3.5 top-3.5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -205,7 +205,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <select
               value={selectedProvider}
               onChange={(e) => setSelectedProvider(e.target.value)}
-              className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl px-3 py-2 text-xs font-bold cursor-pointer shadow-sm"
+              className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl px-3 py-2 text-xs font-extrabold cursor-pointer shadow-sm"
             >
               <option value="all">{t.dashboard.allProviders}</option>
               {providers.map((p) => (
@@ -218,7 +218,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <select
               value={selectedTier}
               onChange={(e) => setSelectedTier(e.target.value)}
-              className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl px-3 py-2 text-xs font-bold cursor-pointer shadow-sm"
+              className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl px-3 py-2 text-xs font-extrabold cursor-pointer shadow-sm"
             >
               <option value="all">{t.dashboard.allTiers}</option>
               <option value="Frontier">Frontier</option>
@@ -230,7 +230,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <select
               value={selectedLicense}
               onChange={(e) => setSelectedLicense(e.target.value)}
-              className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl px-3 py-2 text-xs font-bold cursor-pointer shadow-sm"
+              className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl px-3 py-2 text-xs font-extrabold cursor-pointer shadow-sm"
             >
               <option value="all">{t.dashboard.allLicenses}</option>
               <option value="open">{t.dashboard.openWeight}</option>
@@ -238,13 +238,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </select>
 
             {/* Quick Sort Chips */}
-            <div className="inline-flex items-center gap-2 border-l border-slate-300 dark:border-slate-700/80 pl-2.5 shrink-0">
+            <div className="inline-flex items-center gap-2 border-l border-slate-200 dark:border-slate-700/80 pl-2.5 shrink-0">
               <button
                 onClick={() => { setSortKey('arena_elo'); setSortDir('desc'); }}
                 className={`px-3 py-2 rounded-xl text-xs font-black transition-all inline-flex items-center gap-1.5 border whitespace-nowrap shrink-0 ${
                   sortKey === 'arena_elo'
                     ? 'bg-amber-400 text-slate-950 border-amber-500 shadow-md font-black ring-1 ring-amber-400'
-                    : 'bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:border-amber-400'
+                    : 'bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:border-amber-400'
                 }`}
               >
                 🏆 Elo 랭킹순
@@ -254,7 +254,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 className={`px-3 py-2 rounded-xl text-xs font-black transition-all inline-flex items-center gap-1.5 border whitespace-nowrap shrink-0 ${
                   sortKey === 'input_price'
                     ? 'bg-cyan-500 text-slate-950 border-cyan-400 shadow-md font-black ring-1 ring-cyan-400'
-                    : 'bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:border-cyan-400'
+                    : 'bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:border-cyan-400'
                 }`}
               >
                 💰 최저 비용순
@@ -262,13 +262,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </div>
 
             {/* View Mode Switcher */}
-            <div className="flex items-center bg-slate-950/80 p-1 border border-slate-700/80 rounded-xl ml-auto">
+            <div className="flex items-center bg-slate-100 dark:bg-slate-950 p-1 border border-slate-200 dark:border-slate-800 rounded-xl ml-auto">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all whitespace-nowrap ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1.5 transition-all whitespace-nowrap ${
                   viewMode === 'grid'
-                    ? 'bg-cyan-500 text-slate-950 shadow-md font-extrabold'
-                    : 'text-slate-400 hover:text-slate-100'
+                    ? 'bg-cyan-500 text-slate-950 shadow-md font-black'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -278,10 +278,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
               </button>
               <button
                 onClick={() => setViewMode('table')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all whitespace-nowrap ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1.5 transition-all whitespace-nowrap ${
                   viewMode === 'table'
-                    ? 'bg-cyan-500 text-slate-950 shadow-md font-extrabold'
-                    : 'text-slate-400 hover:text-slate-100'
+                    ? 'bg-cyan-500 text-slate-950 shadow-md font-black'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -291,10 +291,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
               </button>
               <button
                 onClick={() => setViewMode('compact')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all whitespace-nowrap ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1.5 transition-all whitespace-nowrap ${
                   viewMode === 'compact'
-                    ? 'bg-cyan-500 text-slate-950 shadow-md font-extrabold'
-                    : 'text-slate-400 hover:text-slate-100'
+                    ? 'bg-cyan-500 text-slate-950 shadow-md font-black'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -307,15 +307,15 @@ export const Dashboard: React.FC<DashboardProps> = ({
         </div>
 
         {/* Lower Row: Quick Feature Filter Chips */}
-        <div className="pt-3 border-t border-slate-700/60 flex flex-wrap items-center gap-2.5 text-xs font-medium">
-          <span className="text-slate-400 font-bold mr-1 shrink-0">⚡ 특수 기능 필터:</span>
+        <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center gap-2.5 text-xs font-medium">
+          <span className="text-slate-600 dark:text-slate-400 font-extrabold mr-1 shrink-0">⚡ 특수 기능 필터:</span>
 
           <button
             onClick={() => setReasoningOnly(!reasoningOnly)}
-            className={`px-3 py-1.5 rounded-full border transition-all flex items-center gap-1.5 font-bold shadow-sm whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded-full border transition-all flex items-center gap-1.5 font-extrabold shadow-sm whitespace-nowrap ${
               reasoningOnly
-                ? 'bg-purple-600 text-white border-purple-400 shadow-purple-500/20'
-                : 'bg-purple-950/40 text-purple-300 border-purple-800/80 hover:bg-purple-900/50'
+                ? 'bg-purple-600 text-white border-purple-500 shadow-purple-500/20'
+                : 'bg-purple-100 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300 border-purple-300 dark:border-purple-600 hover:bg-purple-200'
             }`}
           >
             <span>🧠</span> Reasoning (추론/CoT) 지원만
@@ -323,10 +323,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
           <button
             onClick={() => setWebSearchOnly(!webSearchOnly)}
-            className={`px-3 py-1.5 rounded-full border transition-all flex items-center gap-1.5 font-bold shadow-sm whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded-full border transition-all flex items-center gap-1.5 font-extrabold shadow-sm whitespace-nowrap ${
               webSearchOnly
-                ? 'bg-blue-600 text-white border-blue-400 shadow-blue-500/20'
-                : 'bg-blue-950/40 text-blue-300 border-blue-800/80 hover:bg-blue-900/50'
+                ? 'bg-blue-600 text-white border-blue-500 shadow-blue-500/20'
+                : 'bg-blue-100 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border-blue-300 dark:border-blue-600 hover:bg-blue-200'
             }`}
           >
             <span>🌐</span> 실시간 Web Search 지원만
@@ -334,10 +334,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
           <button
             onClick={() => setVerifiedOnly(!verifiedOnly)}
-            className={`px-3 py-1.5 rounded-full border transition-all flex items-center gap-1.5 font-bold shadow-sm whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded-full border transition-all flex items-center gap-1.5 font-extrabold shadow-sm whitespace-nowrap ${
               verifiedOnly
-                ? 'bg-emerald-600 text-white border-emerald-400 shadow-emerald-500/20'
-                : 'bg-emerald-950/40 text-emerald-300 border-emerald-800/80 hover:bg-emerald-900/50'
+                ? 'bg-emerald-600 text-white border-emerald-500 shadow-emerald-500/20'
+                : 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-600 hover:bg-emerald-200'
             }`}
           >
             <span>🛡️</span> LiteLLM 검증 모델만
@@ -345,7 +345,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           {(reasoningOnly || webSearchOnly || verifiedOnly) && (
             <button
               onClick={() => { setReasoningOnly(false); setWebSearchOnly(false); setVerifiedOnly(false); }}
-              className="text-slate-400 hover:text-slate-200 underline ml-2 text-xs font-semibold"
+              className="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 underline ml-2 text-xs font-bold"
             >
               필터 초기화
             </button>
@@ -354,16 +354,16 @@ export const Dashboard: React.FC<DashboardProps> = ({
       </div>
 
       {/* Model Count info + Sort Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm text-slate-400 px-2">
+      <div className="flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm text-slate-600 dark:text-slate-400 px-2 font-bold">
         <div>
-          <span className="font-bold text-cyan-400">{sortedModels.length}</span> {t.dashboard.modelsFound}
+          <span className="font-black text-cyan-600 dark:text-cyan-400 text-base">{sortedModels.length}</span> {t.dashboard.modelsFound}
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-slate-300 dark:text-slate-300 text-xs font-black">정렬 기준:</span>
+          <span className="text-slate-700 dark:text-slate-300 text-xs font-black">정렬 기준:</span>
           <select
             value={sortKey}
             onChange={e => setSortKey(e.target.value as SortKey)}
-            className="bg-slate-900 text-white border border-slate-700 focus:border-cyan-400 rounded-xl px-3 py-1.5 text-xs font-black shadow-md cursor-pointer"
+            className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl px-3 py-1.5 text-xs font-extrabold shadow-sm cursor-pointer"
           >
             <option value="arena_elo">🏆 LMSYS Arena Elo 랭킹</option>
             <option value="name">🔤 모델명</option>
@@ -375,7 +375,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           </select>
           <button
             onClick={() => setSortDir(d => d === 'asc' ? 'desc' : 'asc')}
-            className="px-3 py-1.5 bg-slate-900 border border-slate-700 hover:border-cyan-400 text-cyan-300 font-extrabold text-xs rounded-xl transition-all shadow-md flex items-center gap-1"
+            className="px-3 py-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:border-cyan-500 text-slate-900 dark:text-cyan-300 font-extrabold text-xs rounded-xl transition-all shadow-sm flex items-center gap-1"
             title={sortDir === 'asc' ? '오름차순' : '내림차순'}
           >
             {sortDir === 'asc' ? '▲ 오름차순' : '▼ 내림차순'}
@@ -391,7 +391,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             return (
               <div
                 key={model.id}
-                className="glass-card hover:border-cyan-500/60 rounded-2xl p-5 flex flex-col justify-between transition-all duration-200 shadow-md group border"
+                className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-cyan-500 rounded-2xl p-5 flex flex-col justify-between transition-all duration-200 shadow-md hover:shadow-xl group"
               >
                 <div>
                   {/* Top Bar: Provider & Badges */}
