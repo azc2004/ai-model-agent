@@ -7,12 +7,117 @@ import type { RecommendationRequest, ArchitectureRecommendationResult, TrendingT
 import { API_BASE_URL } from '../api';
 import { useLanguage } from '../context/LanguageContext';
 
+const INITIAL_SAMPLE_RESULT: ArchitectureRecommendationResult = {
+  service_name: "자율 코딩 에이전트 서비스 (미리 준비된 샘플)",
+  monthly_requests: 100000,
+  total_monthly_input_tokens_m: 200.0,
+  total_monthly_output_tokens_m: 100.0,
+  combos: [
+    {
+      id: "smart_balanced",
+      name: "Smart Orchestrated Router (스마트 최적 추천)",
+      tag: "RECOMMENDED",
+      description: "Groq/Llama-3.3 70B 분류기 + DeepSeek-R1 메인 엔진 조합으로 비용을 60% 절감하면서도 플래그십 95% 성능 구현",
+      items: [
+        {
+          role: "Router & Classifier (70% traffic)",
+          model_id: "groq-llama-3.3-70b",
+          model_name: "Llama 3.3 70B (Groq LPU)",
+          provider_name: "Groq",
+          allocation_percent: 70.0,
+          monthly_estimated_cost: 82.60
+        },
+        {
+          role: "Primary Reasoning Engine (30% traffic)",
+          model_id: "deepseek-r1",
+          model_name: "DeepSeek R1 (Reasoning)",
+          provider_name: "DeepSeek",
+          allocation_percent: 30.0,
+          monthly_estimated_cost: 65.70
+        }
+      ],
+      total_monthly_cost: 148.30,
+      avg_arena_elo: 1358,
+      key_advantages: ["API 비용 60% 절감", "평균 응답 속도 P95 < 400ms", "Circuit Breaker 자동 장애 복구"]
+    },
+    {
+      id: "best_quality",
+      name: "Frontier Premier Quality (최고 품질)",
+      tag: "FRONTIER",
+      description: "복잡한 추론과 정확도가 최우선인 미션 크리티컬 서비스용 최상위 플래그십 조합",
+      items: [
+        {
+          role: "Frontier Single Engine (100% traffic)",
+          model_id: "claude-3-5-sonnet",
+          model_name: "Claude 3.5 Sonnet",
+          provider_name: "Anthropic",
+          allocation_percent: 100.0,
+          monthly_estimated_cost: 2100.00
+        }
+      ],
+      total_monthly_cost: 2100.00,
+      avg_arena_elo: 1365,
+      key_advantages: ["최상위 추론/코딩 성능", "단일 API로 단순한 구조", "최고 수치 Elo 랭킹"]
+    },
+    {
+      id: "ultra_budget",
+      name: "Open-Weight Ultra Budget (극가성비)",
+      tag: "BUDGET",
+      description: "오픈웨이트 모델 및 저비용 서버리스 API 위주의 구성으로 대량 쿼리 처리 시 극단의 비용 절감 달성",
+      items: [
+        {
+          role: "Open-Weight Engine (100% traffic)",
+          model_id: "deepseek-v3",
+          model_name: "DeepSeek V3",
+          provider_name: "DeepSeek",
+          allocation_percent: 100.0,
+          monthly_estimated_cost: 41.40
+        }
+      ],
+      total_monthly_cost: 41.40,
+      avg_arena_elo: 1320,
+      key_advantages: ["극단의 API 비용 절감", "대용량 처리 최적화", "Open-Weight 유연성"]
+    }
+  ],
+  hosting_options: [
+    {
+      provider: "Vercel + Render.com (Serverless & PaaS)",
+      category: "Serverless PaaS",
+      estimated_monthly_cost: 20.0,
+      description: "프론트엔드는 Vercel CDN, 백엔드는 Render.com Python PaaS에 자동 배포. 100% 무료 시작 가능.",
+      recommended_for: "초기 스타트업, MVP 검증 및 빠른 프로덕션 배포"
+    },
+    {
+      provider: "AWS ECS Fargate + Amazon Bedrock",
+      category: "Cloud Native (Enterprise)",
+      estimated_monthly_cost: 80.0,
+      description: "보안 및 프라이빗 VPC 내에 백엔드 컨테이너 구축. 엔터프라이즈 IAM 권한 및 오토스케일링 적용.",
+      recommended_for: "보안 규정이 엄격한 기업 및 대규모 프로덕션"
+    },
+    {
+      provider: "RunPod / Modal GPU Instance (Self-Hosted)",
+      category: "GPU Serverless / Self-Hosted",
+      estimated_monthly_cost: 120.0,
+      description: "Llama/Qwen 등 오픈웨이트 모델을 독립 GPU(NVIDIA A10G/L40S) 서버리스로 직접 서빙.",
+      recommended_for: "자체 데이터 보안 및 오픈웨이트 직접 파인튜닝 서비스"
+    }
+  ],
+  markdown_spec: `# 🚀 자율 코딩 에이전트 서비스 AI 시스템 개발 명세서 (Sample)\n\n## 1. Executive Summary\n본 아키텍처는 월 100,000건의 자율 코딩 요구사항을 처리하기 위한 최적의 2-Tier 라우터 구조입니다.\n`,
+  spec_bundle: {
+    agents_md: `# 🤖 [AGENTS.md] AI Coding Agent Directive & Execution Rules\n\n> **Target Agent**: Cursor IDE, Claude Code, GitHub Copilot Workspace, Devin\n> **Service**: 자율 코딩 에이전트 서비스 (CODE_AGENT)\n\n---\n\n## 1. 📌 Primary Directives & Architecture Pattern\n- **Routing Pattern**: Smart 2-Tier Multi-Model Routing (Llama 3.3 70B (Groq LPU) + DeepSeek R1 (Reasoning))\n- **Circuit Breaker**: Implement automatic fallback to secondary model on timeout (>15s) or HTTP 5xx.\n- **Async Non-Blocking**: All I/O operations MUST use \`async/await\` with \`httpx.AsyncClient\`.\n\n## 2. 🛡️ Coding Guidelines & Safety Rules\n1. **No Superfluous Dependencies**: Use standard library or \`fastapi\`, \`httpx\`, \`pydantic\`, \`python-dotenv\`.\n2. **Type Hinting**: All functions MUST have PEP 484 type annotations and Google-style docstrings.\n3. **Guardrails**: Validate input prompts for length (<500 chars) and sanitization before calling LLM APIs.\n4. **Environment Variables**: Load secrets exclusively via \`.env\` (Never hardcode API keys).\n`,
+    architecture_md: `# 🏗️ [ARCHITECTURE.md] System Design & Flow Specifications\n\n> **System**: 자율 코딩 에이전트 서비스\n> **Target SLA**: Latency P95 < 400ms (Simple) / < 2.5s (Complex), Availability 99.9%\n\n---\n\n## 1. Sequence Diagram (Request Flow)\n\n\`\`\`mermaid\nsequenceDiagram\n    autonumber\n    actor Client as 👤 Client / Frontend\n    participant GW as 🌐 API Gateway (FastAPI)\n    participant Router as ⚡ Router (Groq LPU)\n    participant Primary as 🧠 Primary (DeepSeek R1)\n    participant Fallback as 🛡️ Fallback Backup\n\n    Client->>GW: POST /api/v1/generate\n    GW->>Router: Classify Query Complexity (Simple vs Complex)\n    alt Simple Query (70% traffic)\n        Router-->>GW: Direct Fast Response\n    else Complex Query (30% traffic)\n        GW->>Primary: Execute Reasoning Inference\n        alt Primary Success\n            Primary-->>GW: High Quality Result\n        else Primary Timeout / Failure\n            GW->>Fallback: Route to Backup Engine\n            Fallback-->>GW: Fallback Result\n        end\n    end\n    GW-->>Client: 200 OK (Response)\n\`\`\`\n`,
+    tasks_md: `# 📝 [TASKS.md] Step-by-Step Agent Implementation Checklist\n\nExecute the following tasks sequentially. Check off items as they pass automated verification.\n\n---\n\n### Phase 1: Environment & Guardrails Setup\n- [ ] **Task 1.1**: Create \`requirements.txt\` with \`fastapi\`, \`uvicorn\`, \`httpx\`, \`pydantic\`, \`python-dotenv\`.\n- [ ] **Task 1.2**: Create \`.env.example\` with API keys template (\`GROQ_API_KEY\`, \`OPENAI_API_KEY\`, \`DEEPSEEK_API_KEY\`).\n- [ ] **Task 1.3**: Implement \`app/guardrails.py\` for Prompt Injection & Off-Topic regex filtering.\n\n### Phase 2: Multi-Model Router Pipeline Implementation\n- [ ] **Task 2.1**: Build \`GenerateRequest\` and \`GenerateResponse\` Pydantic schemas.\n- [ ] **Task 2.2**: Implement \`ProductionAIRouter\` class with Async HTTP Client and Circuit Breaker pattern.\n- [ ] **Task 2.3**: Wire primary model (\`DeepSeek R1\`) and router model (\`Groq LPU\`) fallback routes.\n\n### Phase 3: Verification & Deployment\n- [ ] **Task 3.1**: Write FastAPI \`/api/v1/generate\` POST endpoint in \`app/main.py\`.\n- [ ] **Task 3.2**: Create production \`Dockerfile\` and \`docker-compose.yml\`.\n- [ ] **Task 3.3**: Run \`pytest\` or curl verification script to ensure < 400ms latency on simple queries.\n`,
+    pipeline_code_py: `import os\nimport time\nimport asyncio\nimport logging\nfrom typing import Optional\nfrom pydantic import BaseModel, Field\nimport httpx\nfrom fastapi import FastAPI, HTTPException\n\nlogging.basicConfig(level=logging.INFO)\nlogger = logging.getLogger("Code_Agent_Router")\n\nclass GenerateRequest(BaseModel):\n    user_query: str = Field(..., description="User query or prompt")\n    max_tokens: Optional[int] = 1000\n\nclass GenerateResponse(BaseModel):\n    status: str\n    response_text: str\n    engine_used: str\n    latency_ms: float\n\nclass AIRouterPipeline:\n    def __init__(self):\n        self.router_model = "groq-llama-3.3-70b"\n        self.primary_model = "deepseek-r1"\n        self.fallback_model = "gpt-4o-mini"\n\n    async def execute(self, req: GenerateRequest) -> GenerateResponse:\n        start_time = time.time()\n        is_complex = len(req.user_query) > 200 or any(kw in req.user_query.lower() for kw in ["code", "reason", "분석", "코드"])\n        selected_model = self.primary_model if is_complex else self.router_model\n        latency = round((time.time() - start_time) * 1000, 2)\n        return GenerateResponse(\n            status="success",\n            response_text=f"Processed query via {selected_model}",\n            engine_used=selected_model,\n            latency_ms=latency\n        )\n\napp = FastAPI(title="Code Agent API")\npipeline = AIRouterPipeline()\n\n@app.post("/api/v1/generate", response_model=GenerateResponse)\nasync def generate(req: GenerateRequest):\n    return await pipeline.execute(req)\n`,
+    deployment_md: `# 🐳 [DEPLOYMENT.md] Infrastructure & Deployment Specification\n\n> **Hosting**: Vercel + Render.com (Serverless & PaaS)\n> **Est. Monthly OpEx**: $20.00/mo\n\n---\n\n## 1. Environment Variables (\`.env.example\`)\n\`\`\`env\nPORT=8080\nENV=production\nGROQ_API_KEY=gsk_your_groq_api_key\nDEEPSEEK_API_KEY=sk_your_deepseek_api_key\nOPENAI_API_KEY=sk-proj-your_openai_api_key\n\`\`\`\n\n## 2. Production Dockerfile\n\`\`\`dockerfile\nFROM python:3.11-slim\nWORKDIR /app\nCOPY requirements.txt .\nRUN pip install --no-cache-dir -r requirements.txt\nCOPY . .\nEXPOSE 8080\nCMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]\n\`\`\`\n`
+  }
+};
+
 export const ArchitectureAdvisor: React.FC = () => {
   const { language, t } = useLanguage();
   const [trending, setTrending] = useState<TrendingTemplate[]>([]);
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>("code_agent");
   const [loading, setLoading] = useState<boolean>(false);
-  const [result, setResult] = useState<ArchitectureRecommendationResult | null>(null);
+  const [result, setResult] = useState<ArchitectureRecommendationResult | null>(INITIAL_SAMPLE_RESULT);
   const [showModal, setShowModal] = useState<boolean>(false);
 
   // Deep Research Thinking Progress State
@@ -29,15 +134,12 @@ export const ArchitectureAdvisor: React.FC = () => {
   const [requiresMultimodal, setRequiresMultimodal] = useState<boolean>(false);
   const [requiresCoding, setRequiresCoding] = useState<boolean>(true);
 
-  // 1. Fetch Trending Templates
+  // 1. Fetch Trending Templates (Do NOT auto-trigger loading fetch, load preset sample instead)
   useEffect(() => {
     fetch(`${API_BASE_URL}/recommend/trending`)
       .then(res => res.json())
       .then((data: TrendingTemplate[]) => {
         setTrending(data);
-        if (data.length > 0) {
-          applyTemplate(data[0]);
-        }
       })
       .catch(err => console.error("Failed to load trending templates", err));
   }, []);
