@@ -148,6 +148,14 @@ export interface HostingOption {
   recommended_for: string;
 }
 
+export interface SpecBundle {
+  agents_md: string;
+  architecture_md: string;
+  tasks_md: string;
+  pipeline_code_py: string;
+  deployment_md: string;
+}
+
 export interface ArchitectureRecommendationResult {
   service_name: string;
   monthly_requests: number;
@@ -156,6 +164,7 @@ export interface ArchitectureRecommendationResult {
   combos: ModelCombo[];
   hosting_options: HostingOption[];
   markdown_spec: string;
+  spec_bundle?: SpecBundle;
 }
 
 export interface TrendingTemplate {

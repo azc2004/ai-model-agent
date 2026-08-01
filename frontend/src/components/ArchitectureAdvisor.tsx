@@ -13,7 +13,6 @@ export const ArchitectureAdvisor: React.FC = () => {
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>("code_agent");
   const [loading, setLoading] = useState<boolean>(false);
   const [result, setResult] = useState<ArchitectureRecommendationResult | null>(null);
-  const [copied, setCopied] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
 
   // Deep Research Thinking Progress State
@@ -128,24 +127,6 @@ export const ArchitectureAdvisor: React.FC = () => {
         console.error("Failed to fetch recommendation", err);
         setLoading(false);
       });
-  };
-
-  const handleCopyMarkdown = () => {
-    if (!result?.markdown_spec) return;
-    navigator.clipboard.writeText(result.markdown_spec);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
-  };
-
-  const handleDownloadMarkdown = () => {
-    if (!result?.markdown_spec) return;
-    const blob = new Blob([result.markdown_spec], { type: 'text/markdown;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `architecture_spec_${result.service_name.replace(/\s+/g, '_')}.md`;
-    a.click();
-    URL.revokeObjectURL(url);
   };
 
   const getTemplateIcon = (iconName: string) => {
@@ -621,54 +602,188 @@ export const ArchitectureAdvisor: React.FC = () => {
         </div>
       </div>
 
-      {/* Markdown Spec Modal */}
+      {/* BigTech 5-in-1 Multi-Artifact Spec Modal */}
       {showModal && result && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-4xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
-            {/* Modal Header */}
-            <div className="p-6 border-b border-slate-800 flex items-center justify-between bg-slate-950">
-              <div>
-                <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-indigo-400" />
-                  AI 시스템 개발 명세서 (architecture_spec.md)
-                </h3>
-                <p className="text-xs text-slate-400 mt-1">Cursor IDE, Claude, 개발팀에 전달 가능한 마크다운 명세서입니다.</p>
-              </div>
-              <button
-                onClick={() => setShowModal(false)}
-                className="text-slate-400 hover:text-white p-2 rounded-xl hover:bg-slate-800 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
+        <SpecBundleModal 
+          result={result} 
+          onClose={() => setShowModal(false)} 
+        />
+      )}
+    </div>
+  );
+};
 
-            {/* Modal Body: Code Preview */}
-            <div className="p-6 overflow-y-auto bg-slate-950/90 font-mono text-xs text-slate-300 space-y-4">
-              <pre className="whitespace-pre-wrap leading-relaxed select-all">
-                {result.markdown_spec}
-              </pre>
-            </div>
+// --- Sub-component: BigTech 5-in-1 Multi-Artifact Spec Modal ---
+const SpecBundleModal: React.FC<{
+  result: ArchitectureRecommendationResult;
+  onClose: () => void;
+}> = ({ result, onClose }) => {
+  const [activeTab, setActiveTab] = useState<'agents' | 'arch' | 'tasks' | 'code' | 'deploy' | 'full'>('agents');
+  const [copied, setCopied] = useState<boolean>(false);
 
-            {/* Modal Footer */}
-            <div className="p-4 border-t border-slate-800 bg-slate-950 flex items-center justify-end gap-3">
-              <button
-                onClick={handleCopyMarkdown}
-                className="px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm transition-all flex items-center gap-2"
-              >
-                {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-                {copied ? '클립보드 복사 완료!' : '복사하기 (Copy)'}
-              </button>
-              <button
-                onClick={handleDownloadMarkdown}
-                className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-lg shadow-indigo-600/30 transition-all flex items-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                명세서 파일 다운로드 (.md)
-              </button>
+  const bundle = result.spec_bundle || {
+    agents_md: `# AGENTS.md Directive\n${result.markdown_spec.slice(0, 500)}`,
+    architecture_md: `# ARCHITECTURE.md Specification\n${result.markdown_spec}`,
+    tasks_md: `# TASKS.md Checklist\n- [ ] Task 1: Environment Setup\n- [ ] Task 2: AI Pipeline Implementation`,
+    pipeline_code_py: `# main_pipeline.py\n# Production Router Pipeline`,
+    deployment_md: `# DEPLOYMENT.md Specification\n# Docker & .env Setup`
+  };
+
+  const getActiveContent = () => {
+    switch (activeTab) {
+      case 'agents': return { filename: 'AGENTS.md', content: bundle.agents_md };
+      case 'arch': return { filename: 'ARCHITECTURE.md', content: bundle.architecture_md };
+      case 'tasks': return { filename: 'TASKS.md', content: bundle.tasks_md };
+      case 'code': return { filename: 'main_pipeline.py', content: bundle.pipeline_code_py };
+      case 'deploy': return { filename: 'DEPLOYMENT.md', content: bundle.deployment_md };
+      case 'full': return { filename: 'architecture_full_spec.md', content: result.markdown_spec };
+      default: return { filename: 'AGENTS.md', content: bundle.agents_md };
+    }
+  };
+
+  const activeData = getActiveContent();
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(activeData.content);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleDownloadSingle = () => {
+    const blob = new Blob([activeData.content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = activeData.filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleDownloadAllBundle = () => {
+    const files = [
+      { name: 'AGENTS.md', content: bundle.agents_md },
+      { name: 'ARCHITECTURE.md', content: bundle.architecture_md },
+      { name: 'TASKS.md', content: bundle.tasks_md },
+      { name: 'main_pipeline.py', content: bundle.pipeline_code_py },
+      { name: 'DEPLOYMENT.md', content: bundle.deployment_md }
+    ];
+
+    files.forEach((f, i) => {
+      setTimeout(() => {
+        const blob = new Blob([f.content], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = f.name;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }, i * 300);
+    });
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+      <div className="bg-slate-900 border border-slate-700/80 rounded-3xl max-w-5xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+        {/* Modal Header */}
+        <div className="p-5 border-b border-slate-800 bg-slate-950 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                BigTech 5-in-1 Spec Package
+              </span>
+              <span className="text-slate-400 text-xs font-semibold">| Cursor & Claude Agent Ready</span>
             </div>
+            <h3 className="text-lg sm:text-xl font-extrabold text-white flex items-center gap-2">
+              <FileText className="w-5 h-5 text-indigo-400" />
+              {result.service_name} — AI 코딩 에이전트 전용 아티팩트 명세서
+            </h3>
+          </div>
+          <button
+            onClick={onClose}
+            className="text-slate-400 hover:text-white p-2 rounded-xl hover:bg-slate-800 transition-colors self-end sm:self-center"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* 5-Artifact Tab Selector */}
+        <div className="bg-slate-950 border-b border-slate-800 px-4 pt-2 flex items-center gap-1.5 overflow-x-auto scrollbar-none">
+          {[
+            { id: 'agents', name: '🤖 AGENTS.md', desc: 'AI 지시서 & 규칙' },
+            { id: 'arch', name: '🏗️ ARCHITECTURE.md', desc: '시스템 설계 & Mermaid' },
+            { id: 'tasks', name: '📝 TASKS.md', desc: '구현 WBS 체크리스트' },
+            { id: 'code', name: '💻 main_pipeline.py', desc: 'FastAPI 라우터 소스' },
+            { id: 'deploy', name: '🐳 DEPLOYMENT.md', desc: 'Docker & .env 스펙' },
+            { id: 'full', name: '📄 FULL_SPEC.md', desc: '통합 전체 명세서' }
+          ].map((tab) => {
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
+                className={`px-3.5 py-2.5 rounded-t-2xl text-xs font-bold transition-all whitespace-nowrap flex flex-col items-start gap-0.5 ${
+                  isActive 
+                    ? 'bg-slate-900 text-indigo-300 border-t-2 border-x border-indigo-500 border-x-slate-800 shadow-md' 
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/50'
+                }`}
+              >
+                <span>{tab.name}</span>
+                <span className={`text-[10px] ${isActive ? 'text-indigo-400/80 font-normal' : 'text-slate-500'}`}>{tab.desc}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Modal Body: Active Tab Document Code Preview */}
+        <div className="p-6 overflow-y-auto bg-slate-950/90 font-mono text-xs text-slate-200 space-y-4 flex-1">
+          <div className="flex items-center justify-between text-[11px] text-slate-400 border-b border-slate-800/80 pb-2">
+            <span className="font-bold text-indigo-400 flex items-center gap-1.5">
+              <Code className="w-4 h-4 text-indigo-400" /> {activeData.filename}
+            </span>
+            <span className="text-slate-500">Lines: {activeData.content.split('\n').length} | Chars: {activeData.content.length.toLocaleString()}</span>
+          </div>
+          <pre className="whitespace-pre-wrap leading-relaxed select-all">
+            {activeData.content}
+          </pre>
+        </div>
+
+        {/* Modal Footer */}
+        <div className="p-4 border-t border-slate-800 bg-slate-950 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="text-xs text-slate-400 font-medium hidden sm:block">
+            💡 <strong className="text-white">Cursor / Claude Code 활용법</strong>: <span className="text-slate-300">`AGENTS.md`와 `TASKS.md`를 프로젝트 루트에 복사하면 AI가 자동 개발합니다.</span>
+          </div>
+
+          <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+            <button
+              onClick={handleCopy}
+              className="px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition-all flex items-center gap-1.5"
+            >
+              {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4 text-slate-300" />}
+              {copied ? '복사 완료!' : `${activeData.filename} 복사`}
+            </button>
+
+            <button
+              onClick={handleDownloadSingle}
+              className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 shadow-md transition-all flex items-center gap-1.5"
+            >
+              <Download className="w-4 h-4 text-indigo-400" />
+              {activeData.filename} 저장
+            </button>
+
+            <button
+              onClick={handleDownloadAllBundle}
+              className="px-4.5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-extrabold text-xs shadow-lg shadow-indigo-600/30 transition-all flex items-center gap-2"
+            >
+              <Download className="w-4 h-4 text-white" />
+              📦 5개 아티팩트 전체 저장
+            </button>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };

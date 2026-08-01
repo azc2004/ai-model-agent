@@ -10,6 +10,7 @@ from app.schemas import (
     ModelCombo,
     HostingOption,
     ArchitectureRecommendationResult,
+    SpecBundle,
     TrendingTemplate
 )
 from app.seed_data import MODELS
@@ -566,6 +567,15 @@ def recommend_architecture(req: RecommendationRequest) -> ArchitectureRecommenda
         hosting=selected_hosting
     )
 
+    # 5-in-1 BigTech Spec Bundle 자동 구축
+    bundle = build_spec_bundle(
+        service_name=service_title,
+        req=req,
+        smart_combo=smart_combo,
+        hosting=selected_hosting,
+        full_markdown=md_spec
+    )
+
     return ArchitectureRecommendationResult(
         service_name=service_title,
         monthly_requests=req.monthly_requests,
@@ -573,5 +583,205 @@ def recommend_architecture(req: RecommendationRequest) -> ArchitectureRecommenda
         total_monthly_output_tokens_m=round(total_output_m, 2),
         combos=[smart_combo, best_combo, budget_combo],
         hosting_options=hosting_options,
-        markdown_spec=md_spec
+        markdown_spec=md_spec,
+        spec_bundle=bundle
+    )
+
+
+def build_spec_bundle(
+    service_name: str,
+    req: RecommendationRequest,
+    smart_combo: ModelCombo,
+    hosting: HostingOption,
+    full_markdown: str
+) -> SpecBundle:
+    """BigTech 표준: 5-in-1 Multi-Artifact Spec Bundle 생성
+
+    AI 에이전트(Cursor, Claude Code)가 토큰 낭비 없이 최고 정확도로 코딩을 수행할 수 있도록
+    AGENTS.md, ARCHITECTURE.md, TASKS.md, main_pipeline.py, DEPLOYMENT.md로 분리 구성합니다.
+    """
+    router_item = smart_combo.items[0] if smart_combo.items else None
+    primary_item = smart_combo.items[1] if len(smart_combo.items) > 1 else smart_combo.items[0]
+    router_name = router_item.model_name if router_item else "Fast Router"
+    primary_name = primary_item.model_name if primary_item else "Primary Engine"
+
+    # 1. AGENTS.md (Agent Instruction & Coding Rules)
+    agents_md = f"""# 🤖 [AGENTS.md] AI Coding Agent Directive & Execution Rules
+
+> **Target Agent**: Cursor IDE, Claude Code, GitHub Copilot Workspace, Devin
+> **Service**: {service_name} ({req.service_type.upper()})
+
+---
+
+## 1. 📌 Primary Directives & Architecture Pattern
+- **Routing Pattern**: Smart 2-Tier Multi-Model Routing ({router_name} + {primary_name})
+- **Circuit Breaker**: Implement automatic fallback to secondary model on timeout (>15s) or HTTP 5xx.
+- **Async Non-Blocking**: All I/O operations MUST use `async/await` with `httpx.AsyncClient`.
+
+## 2. 🛡️ Coding Guidelines & Safety Rules
+1. **No Superfluous Dependencies**: Use standard library or `fastapi`, `httpx`, `pydantic`, `python-dotenv`.
+2. **Type Hinting**: All functions MUST have PEP 484 type annotations and Google-style docstrings.
+3. **Guardrails**: Validate input prompts for length (<500 chars) and sanitization before calling LLM APIs.
+4. **Environment Variables**: Load secrets exclusively via `.env` (Never hardcode API keys).
+"""
+
+    # 2. ARCHITECTURE.md (System Design & Mermaid)
+    architecture_md = f"""# 🏗️ [ARCHITECTURE.md] System Design & Flow Specifications
+
+> **System**: {service_name}
+> **Target SLA**: Latency P95 < 400ms (Simple) / < 2.5s (Complex), Availability 99.9%
+
+---
+
+## 1. Sequence Diagram (Request Flow)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Client as 👤 Client / Frontend
+    participant GW as 🌐 API Gateway (FastAPI)
+    participant Router as ⚡ Router ({router_name})
+    participant Primary as 🧠 Primary ({primary_name})
+    participant Fallback as 🛡️ Fallback Backup
+
+    Client->>GW: POST /api/v1/generate
+    GW->>Router: Classify Query Complexity (Simple vs Complex)
+    alt Simple Query (70% traffic)
+        Router-->>GW: Direct Fast Response
+    else Complex Query (30% traffic)
+        GW->>Primary: Execute Reasoning Inference
+        alt Primary Success
+            Primary-->>GW: High Quality Result
+        else Primary Timeout / Failure
+            GW->>Fallback: Route to Backup Engine
+            Fallback-->>GW: Fallback Result
+        end
+    end
+    GW-->>Client: 200 OK (Response)
+```
+
+## 2. Data Processing Flowchart
+
+```mermaid
+flowchart TD
+    A[Incoming Request] --> B[Token & Rate Limiter Guard]
+    B --> C{{Complexity Classifier: {router_name}}}
+    C -- Simple --> D[Fast LPU Serving]
+    C -- Complex --> E[Flagship Engine: {primary_name}]
+    D --> F[Response Sanitizer]
+    E --> F
+    F --> G[Client Output]
+```
+"""
+
+    # 3. TASKS.md (Execution WBS Checklist for Agents)
+    tasks_md = f"""# 📝 [TASKS.md] Step-by-Step Agent Implementation Checklist
+
+Execute the following tasks sequentially. Check off items as they pass automated verification.
+
+---
+
+### Phase 1: Environment & Guardrails Setup
+- [ ] **Task 1.1**: Create `requirements.txt` with `fastapi`, `uvicorn`, `httpx`, `pydantic`, `python-dotenv`.
+- [ ] **Task 1.2**: Create `.env.example` with API keys template (`GROQ_API_KEY`, `OPENAI_API_KEY`, `DEEPSEEK_API_KEY`).
+- [ ] **Task 1.3**: Implement `app/guardrails.py` for Prompt Injection & Off-Topic regex filtering.
+
+### Phase 2: Multi-Model Router Pipeline Implementation
+- [ ] **Task 2.1**: Build `GenerateRequest` and `GenerateResponse` Pydantic schemas.
+- [ ] **Task 2.2**: Implement `ProductionAIRouter` class with Async HTTP Client and Circuit Breaker pattern.
+- [ ] **Task 2.3**: Wire primary model (`{primary_name}`) and router model (`{router_name}`) fallback routes.
+
+### Phase 3: Verification & Deployment
+- [ ] **Task 3.1**: Write FastAPI `/api/v1/generate` POST endpoint in `app/main.py`.
+- [ ] **Task 3.2**: Create production `Dockerfile` and `docker-compose.yml`.
+- [ ] **Task 3.3**: Run `pytest` or curl verification script to ensure < 400ms latency on simple queries.
+"""
+
+    # 4. main_pipeline.py (Python Source Code)
+    pipeline_code_py = f"""import os
+import time
+import asyncio
+import logging
+from typing import Optional
+from pydantic import BaseModel, Field
+import httpx
+from fastapi import FastAPI, HTTPException
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("{service_name.replace(' ', '_')}_Router")
+
+class GenerateRequest(BaseModel):
+    user_query: str = Field(..., description="User query or prompt")
+    max_tokens: Optional[int] = 1000
+
+class GenerateResponse(BaseModel):
+    status: str
+    response_text: str
+    engine_used: str
+    latency_ms: float
+
+class AIRouterPipeline:
+    def __init__(self):
+        self.router_model = "{router_name}"
+        self.primary_model = "{primary_name}"
+        self.fallback_model = "gpt-4o-mini"
+
+    async def execute(self, req: GenerateRequest) -> GenerateResponse:
+        start_time = time.time()
+        # Intent classification & routing logic
+        is_complex = len(req.user_query) > 200 or any(kw in req.user_query.lower() for kw in ["code", "reason", "분석", "코드"])
+        selected_model = self.primary_model if is_complex else self.router_model
+
+        # Execution stub
+        latency = round((time.time() - start_time) * 1000, 2)
+        return GenerateResponse(
+            status="success",
+            response_text=f"Processed query via {{selected_model}}",
+            engine_used=selected_model,
+            latency_ms=latency
+        )
+
+app = FastAPI(title="{service_name} API")
+pipeline = AIRouterPipeline()
+
+@app.post("/api/v1/generate", response_model=GenerateResponse)
+async def generate(req: GenerateRequest):
+    return await pipeline.execute(req)
+"""
+
+    # 5. DEPLOYMENT.md (Infra & Docker Specs)
+    deployment_md = f"""# 🐳 [DEPLOYMENT.md] Infrastructure & Deployment Specification
+
+> **Hosting**: {hosting.provider} ({hosting.category})  
+> **Est. Monthly OpEx**: ${hosting.estimated_monthly_cost:.2f}/mo
+
+---
+
+## 1. Environment Variables (`.env.example`)
+```env
+PORT=8080
+ENV=production
+GROQ_API_KEY=gsk_your_groq_api_key
+DEEPSEEK_API_KEY=sk_your_deepseek_api_key
+OPENAI_API_KEY=sk-proj-your_openai_api_key
+```
+
+## 2. Production Dockerfile
+```dockerfile
+FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+EXPOSE 8080
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
+```
+"""
+
+    return SpecBundle(
+        agents_md=agents_md,
+        architecture_md=architecture_md,
+        tasks_md=tasks_md,
+        pipeline_code_py=pipeline_code_py,
+        deployment_md=deployment_md
     )

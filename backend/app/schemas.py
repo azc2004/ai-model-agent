@@ -150,6 +150,13 @@ class HostingOption(BaseModel):
     description: str
     recommended_for: str
 
+class SpecBundle(BaseModel):
+    agents_md: str           # AGENTS.md (AI 에이전트 전용 시스템 코딩 규칙 및 보안 프롬프트)
+    architecture_md: str     # ARCHITECTURE.md (전체 시스템 구조 및 Mermaid 다이어그램)
+    tasks_md: str            # TASKS.md (AI 에이전트용 단계별 구현 체크리스트 WBS)
+    pipeline_code_py: str    # main_pipeline.py (실행 가능한 Production Python FastAPI 소스)
+    deployment_md: str       # DEPLOYMENT.md (.env, Dockerfile 및 CI/CD 인프라 명세)
+
 class ArchitectureRecommendationResult(BaseModel):
     service_name: str
     monthly_requests: int
@@ -158,6 +165,7 @@ class ArchitectureRecommendationResult(BaseModel):
     combos: List[ModelCombo]
     hosting_options: List[HostingOption]
     markdown_spec: str
+    spec_bundle: Optional[SpecBundle] = None
 
 class TrendingTemplate(BaseModel):
     rank: int
