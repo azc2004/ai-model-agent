@@ -134,7 +134,7 @@ description: 런타임 로그 파싱 및 원천 코드 정밀 수술
       <div className="flex bg-slate-100 dark:bg-slate-900/80 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-x-auto scrollbar-none gap-1">
         {[
           { id: 'beginner', title: '🌱 Step 1: 에이전트 코딩 입문', desc: '바이브코딩 개념 & 3단계 작동원리' },
-          { id: 'tools', title: '🛠️ Step 2: Top 10 도구별 가이드', desc: 'Google Antigravity / AWS Kiro / Cursor' },
+          { id: 'tools', title: '🛠️ Step 2: Top 10 도구별 가이드', desc: 'Google Antigravity / AWS Kiro / Cursor / Bolt / v0' },
           { id: 'artifacts', title: '📦 Step 3: 생성 마크다운 적용법', desc: 'AGENTS.md & TASKS.md 프로젝트 배치' },
           { id: 'skills', title: '🧠 Step 4: 빅테크 인기 스킬 (Skills Pack)', desc: 'deploy, review, db_migration 스킬' },
           { id: 'customrules', title: '⚙️ Step 5: 도구별 Custom Rules 템플릿', desc: '.cursorrules, directives.yaml 설정' }
@@ -198,7 +198,7 @@ description: 런타임 로그 파싱 및 원천 코드 정밀 수술
         </div>
       )}
 
-      {/* Tab 2: Top 10 Tools Guide */}
+      {/* Tab 2: Top 10 Tools Detailed Guide */}
       {activeTab === 'tools' && (
         <div className="space-y-6">
           <div className="flex gap-2 border-b border-slate-200 dark:border-slate-800 pb-3 overflow-x-auto scrollbar-none">
@@ -220,107 +220,388 @@ description: 런타임 로그 파싱 및 원천 코드 정밀 수술
             ))}
           </div>
 
-          {/* Antigravity Guide */}
+          {/* 1. Antigravity */}
           {activeTool === 'antigravity' && (
             <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-md space-y-5">
-              <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
-                <div>
-                  <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
-                    <span>🌌 Google Antigravity 연동 & 사용 가이드</span>
-                  </h3>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold mt-1">
-                    Google DeepMind의 최신 에이전틱 코딩 AI 파이프라인.
-                  </p>
-                </div>
+              <div className="border-b border-slate-200 dark:border-slate-800 pb-4">
+                <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+                  <span>🌌 Google Antigravity 4단계 완벽 가이드</span>
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold mt-1">
+                  Google DeepMind의 차세대 에이전틱 AI 코딩 파이프라인.
+                </p>
               </div>
 
-              <div className="space-y-3 font-semibold text-xs text-slate-700 dark:text-slate-300">
+              <div className="space-y-4 font-semibold text-xs text-slate-700 dark:text-slate-300">
                 <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
-                  <h4 className="font-black text-sm text-slate-900 dark:text-white flex items-center gap-2">
-                    <span className="w-5 h-5 rounded-full bg-indigo-600 text-white text-xs flex items-center justify-center font-black">1</span>
-                    `AGENTS.md` 및 `ARCHITECTURE.md`를 에이전트 드래그 앤 드롭
-                  </h4>
-                  <p>프로젝트 폴더의 `./AGENTS.md` 지시서를 Antigravity 컨텍스트 창에 주입합니다.</p>
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 1. 안티그라비티 인터페이스 접속 및 멀티모달 셋팅</h4>
+                  <p>구글 대시보드에서 Antigravity 에이전트를 초기화하고 프로젝트 워크스페이스를 지정합니다.</p>
                 </div>
-
                 <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
-                  <h4 className="font-black text-sm text-slate-900 dark:text-white flex items-center gap-2">
-                    <span className="w-5 h-5 rounded-full bg-indigo-600 text-white text-xs flex items-center justify-center font-black">2</span>
-                    실행 프롬프트 입력
-                  </h4>
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 2. AGENTS.md 및 ARCHITECTURE.md 드래그 앤 드롭</h4>
+                  <p>본 서비스에서 다운로드한 `AGENTS.md`와 `ARCHITECTURE.md`를 에이전트 Context 입력창에 드래그하여 주입합니다.</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 3. 자율 지시 프롬프트 입력</h4>
                   <div className="bg-slate-900 text-indigo-300 p-3 rounded-xl font-mono flex items-center justify-between">
-                    <span>"AGENTS.md 시스템 규칙에 맞춰 아키텍처를 구성하고 TASKS.md 1단계 과제를 시작해줘"</span>
-                    <button
-                      onClick={() => handleCopy("AGENTS.md 시스템 규칙에 맞춰 아키텍처를 구성하고 TASKS.md 1단계 과제를 시작해줘", "antigravity_prompt")}
-                      className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white transition-colors"
-                    >
+                    <span>"AGENTS.md 규칙에 따라 프로젝트 구조를 구성하고 TASKS.md 1단계 개발을 시작해줘"</span>
+                    <button onClick={() => handleCopy("AGENTS.md 규칙에 따라 프로젝트 구조를 구성하고 TASKS.md 1단계 개발을 시작해줘", "antigravity_prompt")} className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white">
                       {copiedId === "antigravity_prompt" ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                     </button>
                   </div>
                 </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 4. 결과 검수 & 자율 배포 수락</h4>
+                  <p>에이전트가 백그라운드에서 멀티파일 코드를 생성하고 테스트를 자율 통과하는 것을 감상합니다.</p>
+                </div>
               </div>
             </div>
           )}
 
-          {/* AWS Kiro Guide */}
+          {/* 2. AWS Kiro */}
           {activeTool === 'aws_kiro' && (
             <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-md space-y-5">
-              <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
-                <div>
-                  <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
-                    <span>☁️ AWS Q / Kiro Agent 셋팅 가이드</span>
-                  </h3>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold mt-1">
-                    AWS 클라우드 인프라 오토스케일링 및 Fargate 서버리스 에이전트.
-                  </p>
-                </div>
+              <div className="border-b border-slate-200 dark:border-slate-800 pb-4">
+                <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+                  <span>☁️ AWS Q / Kiro Agent 4단계 완벽 가이드</span>
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold mt-1">
+                  AWS ECS Fargate & Amazon Bedrock 클라우드 자율 프로비저닝 에이전트.
+                </p>
               </div>
 
-              <div className="bg-slate-900 text-slate-200 p-4 rounded-2xl font-mono text-xs space-y-3">
-                <div className="text-slate-400 font-bold"># AWS Kiro 초기화 & DEPLOYMENT.md 실행</div>
-                <div className="flex items-center justify-between bg-slate-950 p-2.5 rounded-xl border border-slate-800 text-emerald-400">
-                  <span>kiro init && kiro apply DEPLOYMENT.md</span>
-                  <button
-                    onClick={() => handleCopy("kiro init && kiro apply DEPLOYMENT.md", "kiro_cmd")}
-                    className="p-1.5 rounded-lg bg-slate-800 text-white hover:bg-slate-700"
-                  >
-                    {copiedId === "kiro_cmd" ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                  </button>
+              <div className="space-y-4 font-semibold text-xs text-slate-700 dark:text-slate-300">
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 1. Kiro Agent CLI 초기화</h4>
+                  <div className="bg-slate-900 text-emerald-400 p-3 rounded-xl font-mono flex items-center justify-between">
+                    <span>kiro init && kiro auth aws-sso</span>
+                    <button onClick={() => handleCopy("kiro init && kiro auth aws-sso", "kiro_init")} className="p-1.5 rounded-lg bg-slate-800 text-white">
+                      {copiedId === "kiro_init" ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 2. DEPLOYMENT.md 및 DATABASE_SCHEMA.md 등록</h4>
+                  <p>AWS 인프라 스펙이 적힌 `DEPLOYMENT.md` 환경 변수와 PostgreSQL DDL 스키마를 Kiro 컨텍스트에 추가합니다.</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 3. Cloud 프로비저닝 실행 명령</h4>
+                  <div className="bg-slate-900 text-indigo-300 p-3 rounded-xl font-mono flex items-center justify-between">
+                    <span>kiro apply --spec DEPLOYMENT.md --auto-approve</span>
+                    <button onClick={() => handleCopy("kiro apply --spec DEPLOYMENT.md --auto-approve", "kiro_apply")} className="p-1.5 rounded-lg bg-slate-800 text-white">
+                      {copiedId === "kiro_apply" ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 4. AWS CloudWatch 헬스체크 검증</h4>
+                  <p>AWS ECS Fargate 컨테이너 오토스케일링 및 데이터베이스 연결 상태를 자동으로 파악합니다.</p>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Claude Code Guide */}
+          {/* 3. Claude Code */}
           {activeTool === 'claude_code' && (
             <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-md space-y-5">
-              <h3 className="text-lg font-black text-slate-900 dark:text-white">
-                🤖 Claude Code CLI 셋팅 가이드
-              </h3>
-              <div className="bg-slate-900 text-slate-200 p-4 rounded-2xl font-mono text-xs space-y-2">
-                <div className="text-slate-400 font-bold"># 글로벌 설치 & 실행</div>
-                <div className="flex items-center justify-between bg-slate-950 p-2.5 rounded-xl border border-slate-800 text-emerald-400">
-                  <span>npm install -g @anthropic-ai/claude-code && claude</span>
-                  <button
-                    onClick={() => handleCopy("npm install -g @anthropic-ai/claude-code && claude", "claude_cmd")}
-                    className="p-1.5 rounded-lg bg-slate-800 text-white hover:bg-slate-700"
-                  >
-                    {copiedId === "claude_cmd" ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                  </button>
+              <div className="border-b border-slate-200 dark:border-slate-800 pb-4">
+                <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+                  <span>🤖 Claude Code (Anthropic CLI Agent) 4단계 완벽 가이드</span>
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold mt-1">
+                  터미널 환경에서 자율적으로 파일 탐색, 테스트 실행, Git 커밋까지 스스로 완수하는 에이전트.
+                </p>
+              </div>
+
+              <div className="space-y-4 font-semibold text-xs text-slate-700 dark:text-slate-300">
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 1. Claude Code CLI 글로벌 설치</h4>
+                  <div className="bg-slate-900 text-emerald-400 p-3 rounded-xl font-mono flex items-center justify-between">
+                    <span>npm install -g @anthropic-ai/claude-code</span>
+                    <button onClick={() => handleCopy("npm install -g @anthropic-ai/claude-code", "install_claude")} className="p-1.5 rounded-lg bg-slate-800 text-white">
+                      {copiedId === "install_claude" ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 2. 내 프로젝트 루트에 AGENTS.md 및 TASKS.md 저장</h4>
+                  <p>본 서비스에서 다운로드한 5대 마크다운 아티팩트를 폴더 루트 디렉토리에 복사해 둡니다.</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 3. 터미널에서 `claude` 실행 후 과제 지시</h4>
+                  <div className="bg-slate-900 text-indigo-300 p-3 rounded-xl font-mono flex items-center justify-between">
+                    <span>"AGENTS.md 규칙과 TASKS.md의 과제를 읽고 1.1 과제부터 코딩해줘"</span>
+                    <button onClick={() => handleCopy("AGENTS.md 규칙과 TASKS.md의 과제를 읽고 1.1 과제부터 코딩해줘", "claude_run_prompt")} className="p-1.5 rounded-lg bg-slate-800 text-white">
+                      {copiedId === "claude_run_prompt" ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 4. 실시간 수정 및 테스트 자동 통과 확인</h4>
+                  <p>Claude Code가 스스로 파일 수정, pytest/npm test 실행, 에러 자동 수술을 완료하는 과정을 지켜봅니다.</p>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Cursor Guide */}
+          {/* 4. Cursor */}
           {activeTool === 'cursor' && (
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-md space-y-4">
-              <h3 className="text-lg font-black text-slate-900 dark:text-white">
-                💻 Cursor IDE 셋팅 가이드
-              </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold leading-relaxed">
-                Cmd + I (Composer)를 누르고 "AGENTS.md와 TASKS.md의 지침을 읽고 1단계부터 구현해줘"를 전송하세요.
-              </p>
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-md space-y-5">
+              <div className="border-b border-slate-200 dark:border-slate-800 pb-4">
+                <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+                  <span>💻 Cursor IDE 4단계 완벽 가이드</span>
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold mt-1">
+                  VS Code 기반의 직관적인 AI 코드 에디터 (Cmd+I Composer 연동).
+                </p>
+              </div>
+
+              <div className="space-y-4 font-semibold text-xs text-slate-700 dark:text-slate-300">
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 1. Cursor.com 설치 및 실행</h4>
+                  <p>Cursor IDE를 다운로드 받아 설치한 후, 코딩할 프로젝트 작업 폴더를 엽니다.</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 2. 폴더 루트에 AGENTS.md 저장</h4>
+                  <p>본 플랫폼의 'AI 아키텍처 추천기'에서 추출한 `AGENTS.md`와 `TASKS.md`를 폴더 맨 위에 저장합니다.</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 3. Composer 열기 (Cmd + I 또는 Ctrl + I) 및 지시</h4>
+                  <div className="bg-slate-900 text-indigo-300 p-3 rounded-xl font-mono flex items-center justify-between">
+                    <span>"AGENTS.md와 TASKS.md 지침을 확인하고 Phase 1부터 순서대로 개발해줘"</span>
+                    <button onClick={() => handleCopy("AGENTS.md와 TASKS.md 지침을 확인하고 Phase 1부터 순서대로 개발해줘", "cursor_prompt")} className="p-1.5 rounded-lg bg-slate-800 text-white">
+                      {copiedId === "cursor_prompt" ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 4. Accept All 누르고 로컬 웹 실행</h4>
+                  <p>AI가 작성한 코드를 `Accept All` 버튼으로 수락한 후, 터미널 `npm run dev`로 브라우저에서 서비스 작동을 확인합니다.</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 5. Bolt.new */}
+          {activeTool === 'bolt' && (
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-md space-y-5">
+              <div className="border-b border-slate-200 dark:border-slate-800 pb-4">
+                <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+                  <span>⚡ Bolt.new (StackBlitz) 4단계 완벽 가이드</span>
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold mt-1">
+                  설치 필요 없이 웹 브라우저에서 1초 만에 풀스택 앱을 자동 생성하는 에이전트.
+                </p>
+              </div>
+
+              <div className="space-y-4 font-semibold text-xs text-slate-700 dark:text-slate-300">
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 1. 웹 브라우저에서 bolt.new 접속</h4>
+                  <p>별도의 설치 과정 없이 브라우저 주소창에 `bolt.new`를 입력하여 접속합니다.</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 2. 본 플랫폼의 AGENTS.md 전체 내용 복사</h4>
+                  <p>아키텍처 추천기에서 생성된 `AGENTS.md` 전체 텍스트를 복사합니다.</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 3. Bolt 프롬프트 창에 붙여넣고 시작</h4>
+                  <div className="bg-slate-900 text-indigo-300 p-3 rounded-xl font-mono flex items-center justify-between">
+                    <span>"아래 AGENTS.md 설계 명세서에 맞춰 풀스택 웹 애플리케이션을 완성해줘: [복사한 내용 붙여넣기]"</span>
+                    <button onClick={() => handleCopy("아래 AGENTS.md 설계 명세서에 맞춰 풀스택 웹 애플리케이션을 완성해줘:", "bolt_prompt")} className="p-1.5 rounded-lg bg-slate-800 text-white">
+                      {copiedId === "bolt_prompt" ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 4. 우측 라이브 프리뷰(Preview) 및 Netlify 원클릭 배포</h4>
+                  <p>브라우저 우측에 실시간으로 작성되는 앱 뷰어를 확인하고 상단 `Deploy` 버튼으로 라이브 사이트를 배포합니다.</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 6. v0.dev */}
+          {activeTool === 'v0' && (
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-md space-y-5">
+              <div className="border-b border-slate-200 dark:border-slate-800 pb-4">
+                <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+                  <span>🎨 v0.dev (Vercel) 4단계 완벽 가이드</span>
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold mt-1">
+                  Vercel의 럭셔리 UI 컴포넌트 & 프론트엔드 자동 디자인 생성기.
+                </p>
+              </div>
+
+              <div className="space-y-4 font-semibold text-xs text-slate-700 dark:text-slate-300">
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 1. v0.dev 접속 및 프롬프트 창 열기</h4>
+                  <p>Vercel의 `v0.dev` 사이트에 접속합니다.</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 2. ARCHITECTURE.md의 UI 스펙 입력</h4>
+                  <div className="bg-slate-900 text-indigo-300 p-3 rounded-xl font-mono flex items-center justify-between">
+                    <span>"Tailwind CSS와 React 기반의 반응형 대시보드 UI 컴포넌트를 고화질 다크모드로 생성해줘"</span>
+                    <button onClick={() => handleCopy("Tailwind CSS와 React 기반의 반응형 대시보드 UI 컴포넌트를 고화질 다크모드로 생성해줘", "v0_prompt")} className="p-1.5 rounded-lg bg-slate-800 text-white">
+                      {copiedId === "v0_prompt" ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 3. npx 커맨드로 내 코드에 다운로드</h4>
+                  <div className="bg-slate-900 text-emerald-400 p-3 rounded-xl font-mono flex items-center justify-between">
+                    <span>npx v0 add [generated-component-id]</span>
+                    <button onClick={() => handleCopy("npx v0 add component-id", "v0_cmd")} className="p-1.5 rounded-lg bg-slate-800 text-white">
+                      {copiedId === "v0_cmd" ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 4. 프론트엔드 프로젝트에 즉시 적용</h4>
+                  <p>내 React/Next.js 프로젝트 `./components` 폴더에 생성된 UI 컴포넌트를 즉시 사용합니다.</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 7. Copilot Workspace */}
+          {activeTool === 'copilot' && (
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-md space-y-5">
+              <div className="border-b border-slate-200 dark:border-slate-800 pb-4">
+                <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+                  <span>🐙 GitHub Copilot Workspace 4단계 완벽 가이드</span>
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold mt-1">
+                  GitHub Issue ➔ 코드 작성 ➔ Pull Request 자율 완성 에이전트.
+                </p>
+              </div>
+
+              <div className="space-y-4 font-semibold text-xs text-slate-700 dark:text-slate-300">
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 1. GitHub Repository 생성 후 Issue 등록</h4>
+                  <p>GitHub 내 리포지토리에 본 시스템의 `TASKS.md` 내용을 신규 Issue로 생성합니다.</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 2. "Open in Copilot Workspace" 버튼 클릭</h4>
+                  <p>Issue 오른쪽 상단의 Copilot Workspace 버튼을 누르면 브라우저 에이전트 환경이 실행됩니다.</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 3. Spec ➔ Plan ➔ Code 자율 세분화 검수</h4>
+                  <p>Copilot이 명세서와 구현 계획, 세부 수정 코드를 단계별로 생성하는 것을 확인합니다.</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 4. 원클릭 "Create Pull Request" 수락</h4>
+                  <p>작성된 코드를 `Create PR` 버튼으로 클릭하여 메인 코드베이스로 안전하게 병합합니다.</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 8. Windsurf */}
+          {activeTool === 'windsurf' && (
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-md space-y-5">
+              <div className="border-b border-slate-200 dark:border-slate-800 pb-4">
+                <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+                  <span>🏄 Windsurf Cascade 4단계 완벽 가이드</span>
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold mt-1">
+                  Codeium의 코드베이스 딥 서핑 & 멀티파일 실시간 추적 에디터.
+                </p>
+              </div>
+
+              <div className="space-y-4 font-semibold text-xs text-slate-700 dark:text-slate-300">
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 1. Windsurf 에디터 설치 및 프로젝트 로드</h4>
+                  <p>Windsurf IDE를 다운로드 받아 설치한 후 내 프로젝트를 엽니다.</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 2. `.windsurfrules`에 AGENTS.md 내용 등록</h4>
+                  <p>프로젝트 루트에 `.windsurfrules` 파일을 만들고 본 시스템의 `AGENTS.md` 지침을 복사합니다.</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 3. Cascade Chat (`Cmd + L`) 지시</h4>
+                  <div className="bg-slate-900 text-indigo-300 p-3 rounded-xl font-mono flex items-center justify-between">
+                    <span>"TASKS.md의 과제를 기반으로 백엔드 API와 DB 연결 코드를 수정해줘"</span>
+                    <button onClick={() => handleCopy("TASKS.md의 과제를 기반으로 백엔드 API와 DB 연결 코드를 수정해줘", "wind_prompt")} className="p-1.5 rounded-lg bg-slate-800 text-white">
+                      {copiedId === "wind_prompt" ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 4. 실시간 멀티파일 Diff 렌더링 확인</h4>
+                  <p>Windsurf가 여러 파일 간 종속성을 실시간 파악하며 코드를 변경하는 것을 수락합니다.</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 9. Replit */}
+          {activeTool === 'replit' && (
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-md space-y-5">
+              <div className="border-b border-slate-200 dark:border-slate-800 pb-4">
+                <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+                  <span>🚀 Replit Agent 4단계 완벽 가이드</span>
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold mt-1">
+                  아이디어 입력부터 DB 생성, 배포까지 웹에서 원클릭으로 완수하는 에이전트.
+                </p>
+              </div>
+
+              <div className="space-y-4 font-semibold text-xs text-slate-700 dark:text-slate-300">
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 1. Replit.com ➔ Create Repl (Replit Agent)</h4>
+                  <p>Replit에 접속하여 에이전트 모드로 새 Repl 프로젝트를 생성합니다.</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 2. AGENTS.md & DATABASE_SCHEMA.md 입력</h4>
+                  <div className="bg-slate-900 text-indigo-300 p-3 rounded-xl font-mono flex items-center justify-between">
+                    <span>"DATABASE_SCHEMA.md의 테이블 구조로 PostgreSQL을 셋팅하고 서비스를 완성해줘"</span>
+                    <button onClick={() => handleCopy("DATABASE_SCHEMA.md의 테이블 구조로 PostgreSQL을 셋팅하고 서비스를 완성해줘", "replit_prompt")} className="p-1.5 rounded-lg bg-slate-800 text-white">
+                      {copiedId === "replit_prompt" ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 3. Agent의 DB 및 서버 자동 구성 과정 감상</h4>
+                  <p>Replit Agent가 데이터베이스를 프로비저닝하고 백엔드 서버를 띄우는 과정을 확인합니다.</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 4. Publish 버튼으로 원클릭 라이브 호스팅 배포</h4>
+                  <p>상단의 `Publish` 버튼으로 실제 사용 가능한 도메인 URL을 1초 만에 얻습니다.</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 10. Devin / Cline */}
+          {activeTool === 'devin' && (
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-md space-y-5">
+              <div className="border-b border-slate-200 dark:border-slate-800 pb-4">
+                <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+                  <span>🤖 Devin / Cline (Roo Code) 4단계 완벽 가이드</span>
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold mt-1">
+                  VS Code 확장 및 자율 소프트웨어 엔지니어링 에이전트.
+                </p>
+              </div>
+
+              <div className="space-y-4 font-semibold text-xs text-slate-700 dark:text-slate-300">
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 1. VS Code Extension에서 Cline / Roo Code 설치</h4>
+                  <p>VS Code 마켓플레이스에서 `Cline` 또는 `Roo Code` 확장을 설치합니다.</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 2. API Key (Anthropic/OpenAI) 또는 로컬 Ollama 바인딩</h4>
+                  <p>에이전트가 사용할 LLM 모델의 API Key를 등록합니다.</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 3. Custom System Prompt에 AGENTS.md 바인딩</h4>
+                  <p>설정 메뉴에서 본 서비스의 `AGENTS.md` 텍스트를 시스템 커스텀 지시문으로 지정합니다.</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">Step 4. Auto-Approve 설정 후 파일 자율 개발 완료</h4>
+                  <p>에이전트가 내 컴퓨터 파일 시스템에서 자율적으로 프로젝트를 구현하도록 합니다.</p>
+                </div>
+              </div>
             </div>
           )}
         </div>
