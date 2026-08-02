@@ -176,3 +176,17 @@ class TrendingTemplate(BaseModel):
     icon: str
     typical_monthly_requests: int
     request: RecommendationRequest
+
+class CustomMarkdownRequest(BaseModel):
+    user_request: str
+    context: Optional[dict[str, str]] = None
+    ask_when_missing: bool = True
+    run_critique: bool = True
+
+class CustomMarkdownResponse(BaseModel):
+    case: str
+    markdown: str
+    passed: bool
+    retries_used: int
+    issues: List[dict[str, str]] = Field(default_factory=list)
+    needs_user_input: List[str] = Field(default_factory=list)

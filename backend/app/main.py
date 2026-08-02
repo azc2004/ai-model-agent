@@ -8,11 +8,13 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.schemas import (
     Provider, ModelSpec, GPUSpec, TCOInput, TCOComparisonResult,
-    RecommendationRequest, ArchitectureRecommendationResult, TrendingTemplate
+    RecommendationRequest, ArchitectureRecommendationResult, TrendingTemplate,
+    CustomMarkdownRequest, CustomMarkdownResponse
 )
 from app.seed_data import PROVIDERS, MODELS, GPU_SPECS
 from app.tco_calculator import calculate_tco
 from app.recommender import TRENDING_TEMPLATES, recommend_architecture
+from app.markdown_generator import create_markdown
 
 app = FastAPI(
     title="LLM Compass API",
@@ -109,3 +111,27 @@ def get_trending_templates():
 def get_recommended_architecture(req: RecommendationRequest):
     """사용자의 서비스 조건에 최적화된 3가지 AI 모델 조합, 호스팅 추천, Markdown 개발 명세서 반환"""
     return recommend_architecture(req)
+
+@app.post("/api/v1/generate/markdown", response_model=CustomMarkdownResponse)
+def generate_custom_markdown(req: CustomMarkdownRequest):
+    """
+    Router → Generator → Critique → Deterministic Validator 5단계 파이프라인으로 
+    검증 통과 및 환각 방지 마크다운 명세서(AGENTS.md, SKILL.md, spec.md, tasks.md, planning.md) 생성
+    """
+    try:
+        res = create_markdown(
+            user_request=req.user_request,
+            context=req.context,
+            ask_when_missing=req.ask_when_missing,
+            run_critique=req.run_critique
+        )
+        return CustomMarkdownResponse(
+            case=res.case.value,
+            markdown=res.markdown,
+            passed=res.validation.passed,
+            retries_used=res.retries_used,
+            issues=[{"rule": i.rule, "detail": i.detail} for i in res.validation.issues],
+            needs_user_input=res.needs_user_input
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"마크다운 생성 중 오류가 발생했습니다: {str(e)}")
