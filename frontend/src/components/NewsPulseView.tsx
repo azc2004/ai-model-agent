@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Newspaper, Users, Lightbulb, Briefcase, Microscope, ExternalLink, Activity, Hash, Clock, RefreshCw } from 'lucide-react';
+import { API_BASE_URL } from '../api';
 
 interface ActionableInsight {
   developer?: string;
@@ -47,8 +48,8 @@ export default function NewsPulseView() {
     setError(null);
     try {
       const url = lens === 'all' 
-        ? `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/v1/news/pulse`
-        : `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/v1/news/pulse?lens=${lens}`;
+        ? `${API_BASE_URL}/news/pulse`
+        : `${API_BASE_URL}/news/pulse?lens=${lens}`;
       
       const res = await fetch(url);
       if (!res.ok) throw new Error('뉴스 데이터를 불러오는데 실패했습니다.');
