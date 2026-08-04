@@ -1,8 +1,9 @@
 import type { ModelSpec, Provider, GPUSpec, TCOInput, TCOComparisonResult } from './types';
 
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL 
-  ? `${import.meta.env.VITE_API_BASE_URL}/api/v1` 
-  : 'http://localhost:8000/api/v1';
+const rawBase = import.meta.env.VITE_API_BASE_URL || 'https://llm-compass-backend.onrender.com';
+export const API_BASE_URL = rawBase.endsWith('/api/v1') 
+  ? rawBase 
+  : `${rawBase.replace(/\/$/, '')}/api/v1`;
 
 export async function fetchProviders(): Promise<Provider[]> {
   const res = await fetch(`${API_BASE_URL}/providers`);
