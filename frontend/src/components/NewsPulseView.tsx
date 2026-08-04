@@ -150,10 +150,10 @@ export default function NewsPulseView() {
 
       {/* Content Area */}
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-20 text-gray-500">
-          <RefreshCw className="w-8 h-8 animate-spin mb-4 text-blue-600" />
-          <p>AI 엔진이 글로벌 뉴스를 수집하고 실전 팁을 생성하고 있습니다...</p>
-          <p className="text-xs mt-2 text-gray-400">RSS 파싱 및 LLM 요약에는 약 10~20초가 소요될 수 있습니다.</p>
+        <div className="flex flex-col items-center justify-center py-16 text-gray-500">
+          <RefreshCw className="w-8 h-8 animate-spin mb-3 text-blue-600" />
+          <p className="font-bold text-gray-700 dark:text-gray-300">실시간 AI 뉴스 펄스를 불러오는 중입니다...</p>
+          <p className="text-xs mt-1 text-gray-400">24시간 정기 배치로 준비된 캐시 피드로 즉시 전환됩니다.</p>
         </div>
       ) : error ? (
         <div className="bg-red-50 text-red-600 p-4 rounded-xl text-center border border-red-200">

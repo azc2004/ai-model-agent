@@ -10,10 +10,79 @@ from typing import List, Dict, Any
 from app.schemas import NewsArticle, ActionableInsight, NewsPulseResponse
 from app.markdown_generator import client, GENERATOR_MODEL
 
-# In-memory 캐시 (일반적으로는 Redis/DB를 사용하나 MVP로 메모리에 저장)
+FALLBACK_ARTICLES = [
+    NewsArticle(
+        id="fallback-1",
+        title="OpenAI, 차세대 멀티모달 프런티어 모델 및 Fine-Tuning API 정식 출시",
+        source_name="OpenAI Blog",
+        source_url="https://openai.com/news/",
+        published_at=datetime.now(timezone.utc).isoformat(),
+        category="빅테크 공식",
+        summary_bullets=[
+            "OpenAI가 저비용 고효율 파인튜닝과 추론 성능을 극대화한 신규 엔드포인트를 공식 개방함.",
+            "기업 도메인에 특화된 사용자 맞춤형 커스텀 모델 생성을 60% 이상 저렴한 비용으로 제공.",
+            "개발자 콘솔을 통한 추론 지연 시간(Latency) 35% 단축 및 9월 말까지 파인튜닝 토큰 혜택 부여."
+        ],
+        actionable_insight=ActionableInsight(
+            developer="기존 RAG 파이프라인에서 복잡한 전처리 대신 커스텀 모델 파인튜닝을 도입해 API 호스트 비용을 60% 절감하세요.",
+            pm="사용자 도메인 특화 챗봇의 응답 일관성을 끌어올려 UX 이탈률을 감소시킬 시점입니다.",
+            business="엔터프라이즈 사내 지식 기반 도메인을 고성능 소형 파인튜닝 모델로 대체하여 TCO를 최적화하세요.",
+            researcher="도메인 특화 데이터셋을 활용한 Fine-tuning 성능과 RAG 결합 방식의 정확도를 벤치마킹하세요."
+        ),
+        impact_score=98,
+        tags=["#OpenAI", "#FineTuning", "#GPT4o", "#TCO최적화"],
+        matched_lenses=["developer", "pm", "business", "researcher"]
+    ),
+    NewsArticle(
+        id="fallback-2",
+        title="Google DeepMind, 복잡한 코드 리팩토링 및 런타임 버그 수술용 자율 코딩 에이전트 공개",
+        source_name="Google DeepMind",
+        source_url="https://deepmind.google/blog/",
+        published_at=datetime.now(timezone.utc).isoformat(),
+        category="빅테크 공식",
+        summary_bullets=[
+            "구글 딥마인드가 멀티모달 화면 뷰어와 지식 그래프를 연동한 자율 개발 에이전트 엔진을 공개함.",
+            "SWE-bench 파이프라인 벤치마크에서 기존 LLM 대비 코드 수정 및 자동 테스트 성공률 42% 상회.",
+            "개발자가 작성한 요구사항 명세서만으로 전체 프론트엔드/백엔드 모듈 빌드 자동 완성."
+        ],
+        actionable_insight=ActionableInsight(
+            developer="codebase-memory-mcp와 결합하여 레거시 코드베이스 리팩토링 작업을 에이전트에 위임해 개발 속도를 3배 높이세요.",
+            pm="새로운 모듈 기획 시 스펙 문서(spec.md)의 EARS 구문을 정밀화하여 에이전트 자동 구현 성공률을 높이세요.",
+            business="개발팀의 단순 유지보수 공수를 40% 절감하고 고가치 코어 아키텍처 설계에 인력을 집중 배치하세요.",
+            researcher="멀티모달 뷰어와 에이전트 지식 그래프 추론 파이프라인의 SOTA 벤치마크 메커니즘을 분석하세요."
+        ),
+        impact_score=95,
+        tags=["#GoogleDeepMind", "#AgenticAI", "#SWEbench", "#VibeCoding"],
+        matched_lenses=["developer", "pm", "business", "researcher"]
+    ),
+    NewsArticle(
+        id="fallback-3",
+        title="Anthropic, Claude 3.5 Sonnet Artifacts 기능 및 엔터프라이즈 지식 통합 가이드 발표",
+        source_name="Anthropic News",
+        source_url="https://www.anthropic.com/news",
+        published_at=datetime.now(timezone.utc).isoformat(),
+        category="빅테크 공식",
+        summary_bullets=[
+            "Anthropic이 실시간 웹 앱 및 렌더링 아티팩트 창을 지식 파일 파이프라인과 통합 발표.",
+            "코드 실행 워크스페이스 내에서 백엔드 및 UI 컴포넌트를 즉각 미리보기 가능한 차세대 워크플로우.",
+            "엔터프라이즈 보안 가이드라인 준수를 위한 IAM Role 및 미세 조정 가드레일 제공."
+        ],
+        actionable_insight=ActionableInsight(
+            developer="Claude 3.5 Sonnet의 System Prompt 매개변수 분리 기능을 활용하여 프롬프트 주입 공격을 철저히 차단하세요.",
+            pm="인터랙티브 아티팩트 뷰어를 활용해 프로토타입 UI 제작 시간을 기존 3일에서 1시간으로 단축하세요.",
+            business="사내 민감 정보 유출 방지를 위한 프로필 기반 접속 통제 보안 정책을 도입하세요.",
+            researcher="프런티어 모델의 추론 스트리밍 시 컴포넌트 실시간 렌더링 최적화 기술을 검토하세요."
+        ),
+        impact_score=92,
+        tags=["#Anthropic", "#Claude35", "#Artifacts", "#보안가드레일"],
+        matched_lenses=["developer", "pm", "business", "researcher"]
+    )
+]
+
+# In-memory 캐시 (서버 구동 즉시 0초 노출을 위해 기본 피드 선적재)
 _news_cache: Dict[str, Any] = {
-    "last_updated": 0,
-    "articles": []
+    "last_updated": time.time(),
+    "articles": FALLBACK_ARTICLES
 }
 
 CACHE_TTL = 3600 * 24  # 하루에 1번 수집/갱신 (24시간)
@@ -152,75 +221,6 @@ Content: {raw['summary']}
             tags=[],
             matched_lenses=[]
         )
-
-FALLBACK_ARTICLES = [
-    NewsArticle(
-        id="fallback-1",
-        title="OpenAI, 차세대 멀티모달 프런티어 모델 및 Fine-Tuning API 정식 출시",
-        source_name="OpenAI Blog",
-        source_url="https://openai.com/news/",
-        published_at=datetime.now(timezone.utc).isoformat(),
-        category="빅테크 공식",
-        summary_bullets=[
-            "OpenAI가 저비용 고효율 파인튜닝과 추론 성능을 극대화한 신규 엔드포인트를 공식 개방함.",
-            "기업 도메인에 특화된 사용자 맞춤형 커스텀 모델 생성을 60% 이상 저렴한 비용으로 제공.",
-            "개발자 콘솔을 통한 추론 지연 시간(Latency) 35% 단축 및 9월 말까지 파인튜닝 토큰 혜택 부여."
-        ],
-        actionable_insight=ActionableInsight(
-            developer="기존 RAG 파이프라인에서 복잡한 전처리 대신 커스텀 모델 파인튜닝을 도입해 API 호스트 비용을 60% 절감하세요.",
-            pm="사용자 도메인 특화 챗봇의 응답 일관성을 끌어올려 UX 이탈률을 감소시킬 시점입니다.",
-            business="엔터프라이즈 사내 지식 기반 도메인을 고성능 소형 파인튜닝 모델로 대체하여 TCO를 최적화하세요.",
-            researcher="도메인 특화 데이터셋을 활용한 Fine-tuning 성능과 RAG 결합 방식의 정확도를 벤치마킹하세요."
-        ),
-        impact_score=98,
-        tags=["#OpenAI", "#FineTuning", "#GPT4o", "#TCO최적화"],
-        matched_lenses=["developer", "pm", "business", "researcher"]
-    ),
-    NewsArticle(
-        id="fallback-2",
-        title="Google DeepMind, 복잡한 코드 리팩토링 및 런타임 버그 수술용 자율 코딩 에이전트 공개",
-        source_name="Google DeepMind",
-        source_url="https://deepmind.google/blog/",
-        published_at=datetime.now(timezone.utc).isoformat(),
-        category="빅테크 공식",
-        summary_bullets=[
-            "구글 딥마인드가 멀티모달 화면 뷰어와 지식 그래프를 연동한 자율 개발 에이전트 엔진을 공개함.",
-            "SWE-bench 파이프라인 벤치마크에서 기존 LLM 대비 코드 수정 및 자동 테스트 성공률 42% 상회.",
-            "개발자가 작성한 요구사항 명세서만으로 전체 프론트엔드/백엔드 모듈 빌드 자동 완성."
-        ],
-        actionable_insight=ActionableInsight(
-            developer="codebase-memory-mcp와 결합하여 레거시 코드베이스 리팩토링 작업을 에이전트에 위임해 개발 속도를 3배 높이세요.",
-            pm="새로운 모듈 기획 시 스펙 문서(spec.md)의 EARS 구문을 정밀화하여 에이전트 자동 구현 성공률을 높이세요.",
-            business="개발팀의 단순 유지보수 공수를 40% 절감하고 고가치 코어 아키텍처 설계에 인력을 집중 배치하세요.",
-            researcher="멀티모달 뷰어와 에이전트 지식 그래프 추론 파이프라인의 SOTA 벤치마크 메커니즘을 분석하세요."
-        ),
-        impact_score=95,
-        tags=["#GoogleDeepMind", "#AgenticAI", "#SWEbench", "#VibeCoding"],
-        matched_lenses=["developer", "pm", "business", "researcher"]
-    ),
-    NewsArticle(
-        id="fallback-3",
-        title="Anthropic, Claude 3.5 Sonnet Artifacts 기능 및 엔터프라이즈 지식 통합 가이드 발표",
-        source_name="Anthropic News",
-        source_url="https://www.anthropic.com/news",
-        published_at=datetime.now(timezone.utc).isoformat(),
-        category="빅테크 공식",
-        summary_bullets=[
-            "Anthropic이 실시간 웹 앱 및 렌더링 아티팩트 창을 지식 파일 파이프라인과 통합 발표.",
-            "코드 실행 워크스페이스 내에서 백엔드 및 UI 컴포넌트를 즉각 미리보기 가능한 차세대 워크플로우.",
-            "엔터프라이즈 보안 가이드라인 준수를 위한 IAM Role 및 미세 조정 가드레일 제공."
-        ],
-        actionable_insight=ActionableInsight(
-            developer="Claude 3.5 Sonnet의 System Prompt 매개변수 분리 기능을 활용하여 프롬프트 주입 공격을 철저히 차단하세요.",
-            pm="인터랙티브 아티팩트 뷰어를 활용해 프로토타입 UI 제작 시간을 기존 3일에서 1시간으로 단축하세요.",
-            business="사내 민감 정보 유출 방지를 위한 프로필 기반 접속 통제 보안 정책을 도입하세요.",
-            researcher="프런티어 모델의 추론 스트리밍 시 컴포넌트 실시간 렌더링 최적화 기술을 검토하세요."
-        ),
-        impact_score=92,
-        tags=["#Anthropic", "#Claude35", "#Artifacts", "#보안가드레일"],
-        matched_lenses=["developer", "pm", "business", "researcher"]
-    )
-]
 
 async def run_batch_job(force: bool = False) -> List[NewsArticle]:
     """정기 배치 또는 수동 강제 실행 시 RSS 수집 및 AI 요약 파이프라인을 실행합니다."""
