@@ -33,11 +33,17 @@ app.add_middleware(
 )
 
 @app.get("/")
-def read_root():
+@app.head("/")
+@app.get("/health")
+@app.head("/health")
+@app.get("/api/v1/health")
+@app.head("/api/v1/health")
+def health_check():
+    """UptimeRobot 및 외부 헬스체크(HEAD/GET) 핑 지원 엔드포인트"""
     return {
+        "status": "ok",
         "service": "LLM Compass API",
         "version": "1.0.0",
-        "status": "online",
         "total_models": len(MODELS),
         "total_providers": len(PROVIDERS)
     }
