@@ -190,3 +190,32 @@ class CustomMarkdownResponse(BaseModel):
     retries_used: int
     issues: List[dict[str, str]] = Field(default_factory=list)
     needs_user_input: List[str] = Field(default_factory=list)
+
+# ---------------------------------------------------------------------------
+# AI News Pulse 2.0 Models
+# ---------------------------------------------------------------------------
+class ActionableInsight(BaseModel):
+    developer: Optional[str] = Field(None, description="개발자 대상 실전 활용 팁")
+    pm: Optional[str] = Field(None, description="기획자/PM 대상 실전 활용 팁")
+    business: Optional[str] = Field(None, description="비즈니스 리더 대상 실전 활용 팁")
+    researcher: Optional[str] = Field(None, description="연구자 대상 실전 활용 팁")
+
+class NewsArticle(BaseModel):
+    id: str = Field(..., description="기사 고유 ID (URL 해시 등)")
+    title: str = Field(..., description="기사 원문 제목 (또는 번역된 제목)")
+    source_name: str = Field(..., description="매체명 (예: TechCrunch, OpenAI Blog)")
+    source_url: str = Field(..., description="기사 원문 URL")
+    published_at: str = Field(..., description="발행 시간 (ISO 포맷 또는 상대 시간)")
+    category: str = Field(..., description="수집 채널 카테고리 (빅테크 공식, IT 매체 등)")
+    
+    # AI Processed Fields
+    summary_bullets: List[str] = Field(default_factory=list, description="3줄 핵심 요약")
+    actionable_insight: Optional[ActionableInsight] = Field(None, description="직무별 실무 적용 팁")
+    impact_score: int = Field(0, description="산업적 영향도 점수 (1~100)")
+    tags: List[str] = Field(default_factory=list, description="핵심 트렌딩 키워드 태그")
+    matched_lenses: List[str] = Field(default_factory=list, description="연관된 직무 렌즈 ['developer', 'pm', 'business', 'researcher']")
+
+class NewsPulseResponse(BaseModel):
+    articles: List[NewsArticle]
+    total_count: int
+    last_updated: str

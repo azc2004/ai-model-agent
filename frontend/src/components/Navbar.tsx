@@ -110,6 +110,18 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, compare
           </button>
 
           <button
+            onClick={() => setActiveTab('news')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all whitespace-nowrap shrink-0 ${
+              activeTab === 'news'
+                ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-black shadow-md shadow-blue-500/30'
+                : 'text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900/60'
+            }`}
+          >
+            <span className="text-sm shrink-0">📰</span>
+            <span className="whitespace-nowrap">AI 실전 뉴스</span>
+          </button>
+
+          <button
             onClick={() => setActiveTab('leaderboard')}
             className={`px-3 py-1.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all whitespace-nowrap shrink-0 ${
               activeTab === 'leaderboard'

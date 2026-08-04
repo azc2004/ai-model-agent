@@ -11,6 +11,7 @@ import { LeaderboardView } from './components/LeaderboardView';
 import { GPUListView } from './components/GPUListView';
 import { ArchitectureAdvisor } from './components/ArchitectureAdvisor';
 import { TutorialView } from './components/TutorialView';
+import NewsPulseView from './components/NewsPulseView';
 
 export const AppContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('dashboard');
@@ -115,6 +116,8 @@ export const AppContent: React.FC = () => {
         {activeTab === 'gpus' && (
           <GPUListView />
         )}
+        
+        {activeTab === 'news' && <NewsPulseView />}
       </main>
 
       <footer className="border-t border-slate-800/80 bg-slate-950/60 py-6 text-center text-xs text-slate-500">

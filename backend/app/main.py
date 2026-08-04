@@ -1,4 +1,5 @@
 import os
+from datetime import datetime, timezone
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -9,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.schemas import (
     Provider, ModelSpec, GPUSpec, TCOInput, TCOComparisonResult,
     RecommendationRequest, ArchitectureRecommendationResult, TrendingTemplate,
-    CustomMarkdownRequest, CustomMarkdownResponse
+    CustomMarkdownRequest, CustomMarkdownResponse, NewsPulseResponse
 )
 from app.seed_data import PROVIDERS, MODELS, GPU_SPECS
 from app.tco_calculator import calculate_tco
@@ -135,3 +136,27 @@ def generate_custom_markdown(req: CustomMarkdownRequest):
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"마크다운 생성 중 오류가 발생했습니다: {str(e)}")
+
+from app.news_pipeline import refresh_news_pipeline
+
+@app.get("/api/v1/news/pulse", response_model=NewsPulseResponse)
+async def get_news_pulse(lens: Optional[str] = Query(None, description="직무 렌즈 (예: developer, pm, business, researcher)")):
+    """최신 AI 뉴스와 실전 활용 팁(Actionable Insight)을 가져옵니다."""
+    articles = await refresh_news_pipeline()
+    
+    # 렌즈 필터링이 있다면 적용
+    if lens and lens != "all":
+        # matched_lenses 배열에 해당 렌즈가 포함되어 있거나, actionable_insight 필드에 값이 있는 경우만 반환
+        filtered = []
+        for a in articles:
+            if lens in a.matched_lenses:
+                filtered.append(a)
+            elif a.actionable_insight and getattr(a.actionable_insight, lens, None):
+                filtered.append(a)
+        articles = filtered
+        
+    return {
+        "articles": articles,
+        "total_count": len(articles),
+        "last_updated": datetime.now(timezone.utc).isoformat()
+    }
