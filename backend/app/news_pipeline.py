@@ -16,12 +16,25 @@ _news_cache: Dict[str, Any] = {
     "articles": []
 }
 
-CACHE_TTL = 3600 * 2  # 2시간
+CACHE_TTL = 3600 * 24  # 하루에 1번 수집/갱신 (24시간)
 
 RSS_FEEDS = [
-    {"url": "https://techcrunch.com/category/artificial-intelligence/feed/", "name": "TechCrunch AI", "category": "IT 매체"},
+    # 🏢 빅테크 공식 블로그
     {"url": "https://openai.com/blog/rss.xml", "name": "OpenAI Blog", "category": "빅테크 공식"},
     {"url": "https://www.anthropic.com/feed.xml", "name": "Anthropic News", "category": "빅테크 공식"},
+    {"url": "https://deepmind.google/blog/rss.xml", "name": "Google DeepMind", "category": "빅테크 공식"},
+    {"url": "https://ai.meta.com/blog/rss/", "name": "Meta AI Blog", "category": "빅테크 공식"},
+    {"url": "https://www.microsoft.com/en-us/research/feed/", "name": "Microsoft Research", "category": "빅테크 공식"},
+
+    # 📰 글로벌 IT/AI 전문 매체
+    {"url": "https://techcrunch.com/category/artificial-intelligence/feed/", "name": "TechCrunch AI", "category": "IT 매체"},
+    {"url": "https://venturebeat.com/category/ai/feed/", "name": "VentureBeat AI", "category": "IT 매체"},
+    {"url": "https://arstechnica.com/tag/ai/feed/", "name": "Ars Technica AI", "category": "IT 매체"},
+    {"url": "https://www.technologyreview.com/topic/artificial-intelligence/feed", "name": "MIT Tech Review", "category": "IT 매체"},
+
+    # 🔬 연구 논문 & 벤치마크
+    {"url": "https://huggingface.co/blog/feed.xml", "name": "Hugging Face Blog", "category": "연구/학계"},
+    {"url": "https://arxiv.org/rss/cs.AI", "name": "ArXiv AI Papers", "category": "연구/학계"}
 ]
 
 def clean_html(raw_html: str) -> str:
