@@ -35,6 +35,7 @@
   - *연구/학계*: Hugging Face, ArXiv AI Papers
 - **24시간 정기 배치 스케줄러 & GitHub Actions 연동**: 백엔드 자체 24시간 루프 및 **GitHub Actions Cron 워크플로우(`.github/workflows/news_batch.yml`)**가 매일 아침 백엔드 인스턴스를 자동으로 웜업(Warm-up)시키고 배치 파이프라인을 구동. (대기시간 0초 보장)
 - **5대 직무 렌즈 (Role-based Lens)**: `🔥 전체`, `👩‍💻 개발자/엔지니어`, `💡 기획/PM`, `💼 비즈니스`, `🔬 연구/학계` 선택 필터 제공.
+- **🖼️ 고화질 기사 썸네일 이미지 지원**: RSS 파서 및 HTML 기반 대표 썸네일 정밀 추출과 카테고리별 기술 이미지 폴백으로 모던한 카드 비주얼 제공.
 - **💡 실전 활용 팁 (Actionable Insight)**: 기사의 3줄 요약 외에 각 직무별 "이 기술/소식을 현업에서 어떻게 즉시 활용하거나 대비해야 하는가?" 조언 도출.
 
 ### 7. 🏆 리더보드 & 💻 GPU 사양 정보 (Leaderboard & GPU List)

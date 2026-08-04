@@ -10,6 +10,50 @@ from typing import List, Dict, Any
 from app.schemas import NewsArticle, ActionableInsight, NewsPulseResponse
 from app.markdown_generator import client, GENERATOR_MODEL
 
+DEFAULT_SOURCE_IMAGES: Dict[str, str] = {
+    "OpenAI Blog": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+    "Anthropic News": "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=800&q=80",
+    "Google DeepMind": "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80",
+    "Meta AI Blog": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&w=800&q=80",
+    "Microsoft Research": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
+    "TechCrunch AI": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80",
+    "VentureBeat AI": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80",
+    "Ars Technica AI": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80",
+    "MIT Tech Review": "https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=800&q=80",
+    "Hugging Face Blog": "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80",
+    "ArXiv AI Papers": "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80",
+}
+
+def extract_image_url(entry: Any, raw_html: str, source_name: str) -> str:
+    """RSS entry 및 HTML에서 대표 기사 썸네일 이미지 URL을 정밀 추출합니다."""
+    # 1. media_thumbnail 확인
+    if hasattr(entry, 'media_thumbnail') and entry.media_thumbnail:
+        url = entry.media_thumbnail[0].get('url')
+        if url: return url
+
+    # 2. media_content 확인
+    if hasattr(entry, 'media_content') and entry.media_content:
+        url = entry.media_content[0].get('url')
+        if url: return url
+
+    # 3. links 중 미디어 이미지 확인
+    if hasattr(entry, 'links'):
+        for link in entry.links:
+            if link.get('type', '').startswith('image/') or any(link.get('href', '').endswith(ext) for ext in ['.jpg', '.jpeg', '.png', '.webp']):
+                return link.get('href')
+
+    # 4. HTML 파싱 (<img src="..."> 첫번째 이미지 추출)
+    if raw_html:
+        soup = BeautifulSoup(raw_html, "html.parser")
+        img_tag = soup.find("img")
+        if img_tag and img_tag.get("src"):
+            src = img_tag["src"]
+            if src.startswith("http"):
+                return src
+
+    # 5. 소스별 고품질 Unsplash AI 테마 이미지 폴백
+    return DEFAULT_SOURCE_IMAGES.get(source_name, "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80")
+
 FALLBACK_ARTICLES = [
     NewsArticle(
         id="fallback-1",
@@ -18,6 +62,7 @@ FALLBACK_ARTICLES = [
         source_url="https://openai.com/news/",
         published_at=datetime.now(timezone.utc).isoformat(),
         category="빅테크 공식",
+        image_url="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
         summary_bullets=[
             "OpenAI가 저비용 고효율 파인튜닝과 추론 성능을 극대화한 신규 엔드포인트를 공식 개방함.",
             "기업 도메인에 특화된 사용자 맞춤형 커스텀 모델 생성을 60% 이상 저렴한 비용으로 제공.",
@@ -40,6 +85,7 @@ FALLBACK_ARTICLES = [
         source_url="https://deepmind.google/blog/",
         published_at=datetime.now(timezone.utc).isoformat(),
         category="빅테크 공식",
+        image_url="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80",
         summary_bullets=[
             "구글 딥마인드가 멀티모달 화면 뷰어와 지식 그래프를 연동한 자율 개발 에이전트 엔진을 공개함.",
             "SWE-bench 파이프라인 벤치마크에서 기존 LLM 대비 코드 수정 및 자동 테스트 성공률 42% 상회.",
@@ -62,6 +108,7 @@ FALLBACK_ARTICLES = [
         source_url="https://www.anthropic.com/news",
         published_at=datetime.now(timezone.utc).isoformat(),
         category="빅테크 공식",
+        image_url="https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=800&q=80",
         summary_bullets=[
             "Anthropic이 실시간 웹 앱 및 렌더링 아티팩트 창을 지식 파일 파이프라인과 통합 발표.",
             "코드 실행 워크스페이스 내에서 백엔드 및 UI 컴포넌트를 즉각 미리보기 가능한 차세대 워크플로우.",
@@ -198,6 +245,7 @@ Content: {raw['summary']}
             source_url=raw["link"],
             published_at=raw["published"],
             category=raw["category"],
+            image_url=raw.get("image_url"),
             summary_bullets=data.get("summary_bullets", []),
             actionable_insight=insight,
             impact_score=data.get("impact_score", 50),
@@ -215,6 +263,7 @@ Content: {raw['summary']}
             source_url=raw["link"],
             published_at=raw["published"],
             category=raw["category"],
+            image_url=raw.get("image_url"),
             summary_bullets=[raw["summary"][:100] + "..."],
             actionable_insight=ActionableInsight(),
             impact_score=0,

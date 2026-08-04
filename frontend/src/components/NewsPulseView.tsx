@@ -16,6 +16,7 @@ interface NewsArticle {
   source_url: string;
   published_at: string;
   category: string;
+  image_url?: string;
   summary_bullets: string[];
   actionable_insight: ActionableInsight | null;
   impact_score: number;
@@ -252,23 +253,41 @@ export default function NewsPulseView() {
       ) : (
         <div className="space-y-6">
           {newsData?.articles.map(article => (
-            <div key={article.id} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-shadow">
+            <div key={article.id} className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-xl transition-all duration-300 group">
               <div className="p-6">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2 flex-wrap">
-                      <span className="px-2.5 py-1 text-xs font-semibold rounded-md bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                <div className="flex flex-col md:flex-row items-start gap-6">
+                  {/* Thumbnail Image */}
+                  {article.image_url && (
+                    <div className="w-full md:w-56 h-40 rounded-xl overflow-hidden shrink-0 bg-slate-900 border border-slate-200 dark:border-slate-700/80 shadow-inner relative">
+                      <img
+                        src={article.image_url}
+                        alt={article.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          // Image load fallback
+                          (e.target as HTMLElement).style.display = 'none';
+                        }}
+                      />
+                      <span className="absolute bottom-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded bg-black/60 text-white backdrop-blur-md">
+                        {article.category}
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2.5 mb-2.5 flex-wrap">
+                      <span className="px-2.5 py-1 text-xs font-bold rounded-lg bg-slate-100 text-slate-800 dark:bg-slate-700/80 dark:text-slate-200">
                         🏢 {article.source_name}
                       </span>
-                      <span className={`px-2.5 py-1 text-xs font-bold rounded-md ${getImpactColor(article.impact_score)}`}>
+                      <span className={`px-2.5 py-1 text-xs font-bold rounded-lg ${getImpactColor(article.impact_score)}`}>
                         🔥 Impact Score: {article.impact_score}점
                       </span>
-                      <span className="text-xs text-gray-400 flex items-center gap-1">
-                        <Clock className="w-3 h-3" /> {formatTime(article.published_at)}
+                      <span className="text-xs text-gray-400 flex items-center gap-1 font-medium ml-auto sm:ml-0">
+                        <Clock className="w-3.5 h-3.5" /> {formatTime(article.published_at)}
                       </span>
                     </div>
                     
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white leading-tight mb-4">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white leading-snug mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                       {article.title}
                     </h3>
 

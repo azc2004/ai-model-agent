@@ -207,6 +207,7 @@ class NewsArticle(BaseModel):
     source_url: str = Field(..., description="기사 원문 URL")
     published_at: str = Field(..., description="발행 시간 (ISO 포맷 또는 상대 시간)")
     category: str = Field(..., description="수집 채널 카테고리 (빅테크 공식, IT 매체 등)")
+    image_url: Optional[str] = Field(None, description="기사 대표 썸네일 이미지 URL")
     
     # AI Processed Fields
     summary_bullets: List[str] = Field(default_factory=list, description="3줄 핵심 요약")
