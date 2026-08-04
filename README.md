@@ -29,10 +29,10 @@
 - **MCP 연동 가이드**: `codebase-memory-mcp` 등 지식 그래프 MCP 연동 명령어 가이드.
 
 ### 6. 📰 AI 실전 뉴스 펄스 2.0 (AI News Pulse)
-- **11개 글로벌 랜드마크 수집 채널**:
-  - *빅테크 공식*: OpenAI, Anthropic, Google DeepMind, Meta AI, Microsoft Research
-  - *IT 전문 매체*: TechCrunch AI, VentureBeat, Ars Technica, MIT Tech Review
-  - *연구/학계*: Hugging Face, ArXiv AI Papers
+- **22개 글로벌 랜드마크 수집 채널 (소스당 5개, 총 110개+ 기사 수집)**:
+  - *빅테크 공식 (8개)*: OpenAI, Anthropic, Google DeepMind, Meta AI, Microsoft Research, AWS ML, NVIDIA AI, Apple ML
+  - *IT 전문 매체 (9개)*: TechCrunch AI, VentureBeat, Ars Technica, MIT Tech Review, Wired, The Verge, ZDNet, IEEE Spectrum, MarkTechPost
+  - *연구/학계 (5개)*: Hugging Face, ArXiv AI, ArXiv NLP, LangChain Blog, LlamaIndex Blog
 - **24시간 정기 배치 스케줄러 & GitHub Actions 연동**: 백엔드 자체 24시간 루프 및 **GitHub Actions Cron 워크플로우(`.github/workflows/news_batch.yml`)**가 매일 아침 백엔드 인스턴스를 자동으로 웜업(Warm-up)시키고 배치 파이프라인을 구동. (대기시간 0초 보장)
 - **5대 직무 렌즈 (Role-based Lens)**: `🔥 전체`, `👩‍💻 개발자/엔지니어`, `💡 기획/PM`, `💼 비즈니스`, `🔬 연구/학계` 선택 필터 제공.
 - **🖼️ 고화질 기사 썸네일 이미지 지원**: RSS 파서 및 HTML 기반 대표 썸네일 정밀 추출과 카테고리별 기술 이미지 폴백으로 모던한 카드 비주얼 제공.

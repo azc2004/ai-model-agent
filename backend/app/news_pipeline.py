@@ -16,12 +16,25 @@ DEFAULT_SOURCE_IMAGES: Dict[str, str] = {
     "Google DeepMind": "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80",
     "Meta AI Blog": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&w=800&q=80",
     "Microsoft Research": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
+    "AWS Machine Learning": "https://images.unsplash.com/photo-1607799279861-4dd421887fb3?auto=format&fit=crop&w=800&q=80",
+    "NVIDIA AI Blog": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80",
+    "Apple Machine Learning": "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&w=800&q=80",
     "TechCrunch AI": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80",
     "VentureBeat AI": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80",
     "Ars Technica AI": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80",
     "MIT Tech Review": "https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=800&q=80",
+    "Wired AI": "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80",
+    "The Verge AI": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=800&q=80",
+    "ZDNet AI": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80",
+    "IEEE Spectrum AI": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80",
+    "InfoQ AI & ML": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
     "Hugging Face Blog": "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80",
     "ArXiv AI Papers": "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80",
+    "ArXiv NLP Papers": "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=800&q=80",
+    "Papers With Code": "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?auto=format&fit=crop&w=800&q=80",
+    "LangChain Blog": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
+    "LlamaIndex Blog": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+    "MarkTechPost AI": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80",
 }
 
 def extract_image_url(entry: Any, raw_html: str, source_name: str) -> str:
@@ -135,22 +148,33 @@ _news_cache: Dict[str, Any] = {
 CACHE_TTL = 3600 * 24  # 하루에 1번 수집/갱신 (24시간)
 
 RSS_FEEDS = [
-    # 🏢 빅테크 공식 블로그
+    # 🏢 빅테크 공식 블로그 (8개)
     {"url": "https://openai.com/blog/rss.xml", "name": "OpenAI Blog", "category": "빅테크 공식"},
     {"url": "https://www.anthropic.com/feed.xml", "name": "Anthropic News", "category": "빅테크 공식"},
     {"url": "https://deepmind.google/blog/rss.xml", "name": "Google DeepMind", "category": "빅테크 공식"},
     {"url": "https://ai.meta.com/blog/rss/", "name": "Meta AI Blog", "category": "빅테크 공식"},
     {"url": "https://www.microsoft.com/en-us/research/feed/", "name": "Microsoft Research", "category": "빅테크 공식"},
+    {"url": "https://aws.amazon.com/blogs/machine-learning/feed/", "name": "AWS Machine Learning", "category": "빅테크 공식"},
+    {"url": "https://blogs.nvidia.com/feed/", "name": "NVIDIA AI Blog", "category": "빅테크 공식"},
+    {"url": "https://machinelearning.apple.com/feed.xml", "name": "Apple Machine Learning", "category": "빅테크 공식"},
 
-    # 📰 글로벌 IT/AI 전문 매체
+    # 📰 글로벌 IT/AI 전문 매체 (9개)
     {"url": "https://techcrunch.com/category/artificial-intelligence/feed/", "name": "TechCrunch AI", "category": "IT 매체"},
     {"url": "https://venturebeat.com/category/ai/feed/", "name": "VentureBeat AI", "category": "IT 매체"},
     {"url": "https://arstechnica.com/tag/ai/feed/", "name": "Ars Technica AI", "category": "IT 매체"},
     {"url": "https://www.technologyreview.com/topic/artificial-intelligence/feed", "name": "MIT Tech Review", "category": "IT 매체"},
+    {"url": "https://www.wired.com/feed/tag/ai/latest/rss", "name": "Wired AI", "category": "IT 매체"},
+    {"url": "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml", "name": "The Verge AI", "category": "IT 매체"},
+    {"url": "https://www.zdnet.com/topic/artificial-intelligence/rss.xml", "name": "ZDNet AI", "category": "IT 매체"},
+    {"url": "https://spectrum.ieee.org/feeds/topic/artificial-intelligence.rss", "name": "IEEE Spectrum AI", "category": "IT 매체"},
+    {"url": "https://www.marktechpost.com/feed/", "name": "MarkTechPost AI", "category": "IT 매체"},
 
-    # 🔬 연구 논문 & 벤치마크
+    # 🔬 연구 논문 & 개발자 프레임워크 (5개)
     {"url": "https://huggingface.co/blog/feed.xml", "name": "Hugging Face Blog", "category": "연구/학계"},
-    {"url": "https://arxiv.org/rss/cs.AI", "name": "ArXiv AI Papers", "category": "연구/학계"}
+    {"url": "https://arxiv.org/rss/cs.AI", "name": "ArXiv AI Papers", "category": "연구/학계"},
+    {"url": "https://arxiv.org/rss/cs.CL", "name": "ArXiv NLP Papers", "category": "연구/학계"},
+    {"url": "https://blog.langchain.dev/rss/", "name": "LangChain Blog", "category": "연구/학계"},
+    {"url": "https://blog.llamaindex.ai/feed", "name": "LlamaIndex Blog", "category": "연구/학계"}
 ]
 
 def clean_html(raw_html: str) -> str:
@@ -172,14 +196,17 @@ async def fetch_rss_feeds() -> List[Dict[str, Any]]:
         if isinstance(parsed, Exception) or not hasattr(parsed, 'entries'):
             continue
             
-        for entry in parsed.entries[:3]:  # 소스당 상위 3개 최신 기사만 수집
+        for entry in parsed.entries[:5]:  # 소스당 상위 5개 최신 기사 수집 (총 최대 125개 파싱)
+            raw_html = entry.get("summary", "") or entry.get("description", "")
+            img_url = extract_image_url(entry, raw_html, feed_info["name"])
             raw_articles.append({
                 "source_name": feed_info["name"],
                 "category": feed_info["category"],
                 "title": entry.get("title", ""),
                 "link": entry.get("link", ""),
                 "published": entry.get("published", str(datetime.now(timezone.utc))),
-                "summary": clean_html(entry.get("summary", "") or entry.get("description", ""))[:2000] # LLM 컨텍스트 제한을 위해 2000자 슬라이싱
+                "image_url": img_url,
+                "summary": clean_html(raw_html)[:2000] # LLM 컨텍스트 제한을 위해 2000자 슬라이싱
             })
     return raw_articles
 
