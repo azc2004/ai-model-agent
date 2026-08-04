@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import type { ModelSpec, Provider } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import { API_BASE_URL } from '../api';
+import { CodeSnippetModal } from './CodeSnippetModal';
 
 interface DashboardProps {
   onCompareSelect?: (modelId: string) => void;
@@ -28,6 +29,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const [loading, setLoading] = useState<boolean>(propModels.length === 0);
 
   // Filter states
+  const [codeModalModel, setCodeModalModel] = useState<ModelSpec | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedProvider, setSelectedProvider] = useState<string>('all');
   const [selectedTier, setSelectedTier] = useState<string>('all');
@@ -487,19 +489,26 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   </div>
                 </div>
 
-                {/* Footer Buttons: Official Docs & Compare */}
-                <div className="flex items-center gap-2 pt-3 border-t border-slate-200 dark:border-slate-800">
+                {/* Footer Buttons: Code Snippets, Official Docs & Compare */}
+                <div className="flex items-center gap-1.5 pt-3 border-t border-slate-200 dark:border-slate-800">
+                  <button
+                    onClick={() => setCodeModalModel(model)}
+                    className="flex-1 py-2 px-2.5 rounded-xl text-xs font-black bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white transition-all shadow-md flex items-center justify-center gap-1"
+                    title="API 연동 코드 스니펫 보기"
+                  >
+                    <span>⚡</span> API 코드
+                  </button>
                   <a
                     href={model.source_docs_url || model.official_url}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex-1 text-center py-2.5 px-3 rounded-xl text-xs font-black bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-900 dark:text-slate-100 transition-all border border-slate-300 dark:border-slate-700 shadow-sm"
+                    className="flex-1 text-center py-2 px-2.5 rounded-xl text-xs font-black bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-900 dark:text-slate-100 transition-all border border-slate-300 dark:border-slate-700 shadow-sm"
                   >
                     {t.dashboard.officialDocs}
                   </a>
                   <button
                     onClick={() => handleToggle(model.id)}
-                    className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-black transition-all shadow-md ${
+                    className={`flex-1 py-2 px-2.5 rounded-xl text-xs font-black transition-all shadow-md ${
                       isSelected
                         ? 'bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-400 shadow-emerald-600/30'
                         : 'bg-cyan-600 hover:bg-cyan-500 text-white shadow-cyan-600/30'
@@ -587,14 +596,23 @@ export const Dashboard: React.FC<DashboardProps> = ({
                         {model.benchmarks.arena_elo ?? '-'}
                       </td>
                       <td className="py-3 px-4">
-                        <a
-                          href={model.source_docs_url || model.official_url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-xs text-cyan-400 hover:underline flex items-center gap-1"
-                        >
-                          Docs ↗
-                        </a>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => setCodeModalModel(model)}
+                            className="px-2 py-1 bg-purple-900/50 hover:bg-purple-800 text-purple-200 border border-purple-500/40 rounded text-xs font-bold transition-colors whitespace-nowrap"
+                            title="API 연동 코드 스니펫 보기"
+                          >
+                            ⚡ API 코드
+                          </button>
+                          <a
+                            href={model.source_docs_url || model.official_url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-xs text-slate-400 hover:text-cyan-400 transition-colors whitespace-nowrap"
+                          >
+                            Docs ↗
+                          </a>
+                        </div>
                       </td>
                       <td className="py-3 px-4">
                         <button
@@ -648,6 +666,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 </div>
 
                 <div className="flex items-center gap-3 shrink-0">
+                  <button
+                    onClick={() => setCodeModalModel(model)}
+                    className="text-xs text-purple-400 hover:text-purple-300 font-bold transition-colors"
+                  >
+                    ⚡ API 코드
+                  </button>
                   <a
                     href={model.source_docs_url || model.official_url}
                     target="_blank"
@@ -675,6 +699,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
           })}
         </div>
       )}
+
+      {/* Code Snippet Modal */}
+      <CodeSnippetModal
+        model={codeModalModel}
+        onClose={() => setCodeModalModel(null)}
+      />
     </div>
   );
 };

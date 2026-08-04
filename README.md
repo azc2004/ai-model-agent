@@ -10,6 +10,7 @@
 - **전 세계 주요 LLM 모델 스펙 DB**: OpenAI(GPT-4o, o3-mini), Anthropic(Claude 3.5 Sonnet), Google(Gemini 2.5 Flash/Pro), Meta(Llama 3.3), DeepSeek(R1, V3) 등 20여 개 핵심 모델 실시간 스펙 제공.
 - **다원화된 필터링**: 프로바이더, 티어(Frontier, Mid, Small, Micro), 오픈웨이트 여부, 검색 지원.
 - **상세 메트릭**: 토큰당 비용(Input/Output/Cached), 쿼터 한도(RPM/TPM/RPD), 벤치마크 점수(Arena ELO, MMLU-Pro, SWE-bench), 추천 GPU 사양.
+- **⚡ 모델별 원클릭 API 코드 플레이그라운드**: 각 모델 카드에서 `⚡ API 코드` 버튼 클릭 시 **Python SDK, JavaScript/Node.js, cURL, LangChain** 4대 언어/프레임워크별 100% 작동 코드 스니펫 및 1-Click 복사, 연동 실전 팁 모달 제공.
 
 ### 2. ⚖️ 모델 다자간 정밀 비교 (Compare View)
 - 최대 N개 모델을 선택하여 **입/출력 비용, 컨텍스트 윈도우, SWE-bench 개발 성능, 가성비 지표**를 1:1 표 및 그래픽 카드로 정밀 비교.
