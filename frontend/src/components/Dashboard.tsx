@@ -174,21 +174,21 @@ export const Dashboard: React.FC<DashboardProps> = ({
         </p>
       </div>
 
-      {/* Filter & View Mode Controls Bar */}
-      <div className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-5 space-y-4 rounded-2xl shadow-md">
-        {/* Upper Row: Search, Dropdown Selectors, View Mode Switcher */}
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
+      {/* Filter and Search Bar Header */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm space-y-4">
+        {/* Row 1: Search Input & Primary Dropdowns */}
+        <div className="flex flex-col lg:flex-row items-center gap-3">
           {/* Search Box */}
-          <div className="relative w-full lg:w-72 shrink-0">
+          <div className="relative flex-1 w-full">
             <input
               type="text"
-              placeholder={t.dashboard.searchPlaceholder}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-400 font-bold rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all shadow-inner"
+              placeholder="모델명, 프로바이더, 라이선스 검색..."
+              className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl text-sm font-bold placeholder-slate-400 dark:placeholder-slate-500 shadow-sm transition-all"
             />
             <svg
-              className="w-4 h-4 text-cyan-500 dark:text-cyan-400 absolute left-3.5 top-3.5"
+              className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -202,12 +202,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </svg>
           </div>
 
-          {/* Filter Dropdowns & Quick Sort Chips */}
-          <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
+          {/* Primary Dropdown Filters */}
+          <div className="flex items-center gap-2 w-full lg:w-auto shrink-0 flex-wrap sm:flex-nowrap">
             <select
               value={selectedProvider}
               onChange={(e) => setSelectedProvider(e.target.value)}
-              className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl px-3 py-2 text-xs font-extrabold cursor-pointer shadow-sm"
+              className="flex-1 sm:flex-none bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl px-3 py-2.5 text-xs font-extrabold cursor-pointer shadow-sm"
             >
               <option value="all">{t.dashboard.allProviders}</option>
               {providers.map((p) => (
@@ -220,7 +220,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <select
               value={selectedTier}
               onChange={(e) => setSelectedTier(e.target.value)}
-              className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl px-3 py-2 text-xs font-extrabold cursor-pointer shadow-sm"
+              className="flex-1 sm:flex-none bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl px-3 py-2.5 text-xs font-extrabold cursor-pointer shadow-sm"
             >
               <option value="all">{t.dashboard.allTiers}</option>
               <option value="Frontier">Frontier</option>
@@ -232,153 +232,141 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <select
               value={selectedLicense}
               onChange={(e) => setSelectedLicense(e.target.value)}
-              className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl px-3 py-2 text-xs font-extrabold cursor-pointer shadow-sm"
+              className="flex-1 sm:flex-none bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl px-3 py-2.5 text-xs font-extrabold cursor-pointer shadow-sm"
             >
               <option value="all">{t.dashboard.allLicenses}</option>
               <option value="open">{t.dashboard.openWeight}</option>
               <option value="proprietary">{t.dashboard.proprietary}</option>
             </select>
-
-            {/* Quick Sort Chips */}
-            <div className="inline-flex items-center gap-2 border-l border-slate-200 dark:border-slate-700/80 pl-2.5 shrink-0">
-              <button
-                onClick={() => { setSortKey('arena_elo'); setSortDir('desc'); }}
-                className={`px-3 py-2 rounded-xl text-xs font-black transition-all inline-flex items-center gap-1.5 border whitespace-nowrap shrink-0 ${
-                  sortKey === 'arena_elo'
-                    ? 'bg-amber-400 text-slate-950 border-amber-500 shadow-md font-black ring-1 ring-amber-400'
-                    : 'bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:border-amber-400'
-                }`}
-              >
-                🏆 Elo 랭킹순
-              </button>
-              <button
-                onClick={() => { setSortKey('input_price'); setSortDir('asc'); }}
-                className={`px-3 py-2 rounded-xl text-xs font-black transition-all inline-flex items-center gap-1.5 border whitespace-nowrap shrink-0 ${
-                  sortKey === 'input_price'
-                    ? 'bg-cyan-500 text-slate-950 border-cyan-400 shadow-md font-black ring-1 ring-cyan-400'
-                    : 'bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:border-cyan-400'
-                }`}
-              >
-                💰 최저 비용순
-              </button>
-            </div>
-
-            {/* View Mode Switcher */}
-            <div className="flex items-center bg-slate-100 dark:bg-slate-950 p-1 border border-slate-200 dark:border-slate-800 rounded-xl ml-auto">
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1.5 transition-all whitespace-nowrap ${
-                  viewMode === 'grid'
-                    ? 'bg-cyan-500 text-slate-950 shadow-md font-black'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
-              >
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                </svg>
-                {t.viewMode.grid}
-              </button>
-              <button
-                onClick={() => setViewMode('table')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1.5 transition-all whitespace-nowrap ${
-                  viewMode === 'table'
-                    ? 'bg-cyan-500 text-slate-950 shadow-md font-black'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
-              >
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                {t.viewMode.table}
-              </button>
-              <button
-                onClick={() => setViewMode('compact')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1.5 transition-all whitespace-nowrap ${
-                  viewMode === 'compact'
-                    ? 'bg-cyan-500 text-slate-950 shadow-md font-black'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
-              >
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-                {t.viewMode.compact}
-              </button>
-            </div>
           </div>
         </div>
 
-        {/* Lower Row: Quick Feature Filter Chips */}
-        <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center gap-2.5 text-xs font-medium">
-          <span className="text-slate-600 dark:text-slate-400 font-extrabold mr-1 shrink-0">⚡ 특수 기능 필터:</span>
+        {/* Row 2: Special Feature Chips & View Mode Switcher */}
+        <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          {/* Feature Filter Chips */}
+          <div className="flex flex-wrap items-center gap-2 text-xs font-medium">
+            <span className="text-slate-500 dark:text-slate-400 font-extrabold shrink-0 mr-1">⚡ 특수 기능 필터:</span>
 
-          <button
-            onClick={() => setReasoningOnly(!reasoningOnly)}
-            className={`px-3 py-1.5 rounded-full border transition-all flex items-center gap-1.5 font-extrabold shadow-sm whitespace-nowrap ${
-              reasoningOnly
-                ? 'bg-purple-600 text-white border-purple-500 shadow-purple-500/20'
-                : 'bg-purple-100 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300 border-purple-300 dark:border-purple-600 hover:bg-purple-200'
-            }`}
-          >
-            <span>🧠</span> Reasoning (추론/CoT) 지원만
-          </button>
-
-          <button
-            onClick={() => setWebSearchOnly(!webSearchOnly)}
-            className={`px-3 py-1.5 rounded-full border transition-all flex items-center gap-1.5 font-extrabold shadow-sm whitespace-nowrap ${
-              webSearchOnly
-                ? 'bg-blue-600 text-white border-blue-500 shadow-blue-500/20'
-                : 'bg-blue-100 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border-blue-300 dark:border-blue-600 hover:bg-blue-200'
-            }`}
-          >
-            <span>🌐</span> 실시간 Web Search 지원만
-          </button>
-
-          <button
-            onClick={() => setVerifiedOnly(!verifiedOnly)}
-            className={`px-3 py-1.5 rounded-full border transition-all flex items-center gap-1.5 font-extrabold shadow-sm whitespace-nowrap ${
-              verifiedOnly
-                ? 'bg-emerald-600 text-white border-emerald-500 shadow-emerald-500/20'
-                : 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-600 hover:bg-emerald-200'
-            }`}
-          >
-            <span>🛡️</span> LiteLLM 검증 모델만
-          </button>
-          {(reasoningOnly || webSearchOnly || verifiedOnly) && (
             <button
-              onClick={() => { setReasoningOnly(false); setWebSearchOnly(false); setVerifiedOnly(false); }}
-              className="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 underline ml-2 text-xs font-bold"
+              onClick={() => setReasoningOnly(!reasoningOnly)}
+              className={`px-3 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 font-bold shadow-sm text-xs ${
+                reasoningOnly
+                  ? 'bg-purple-600 text-white border-purple-500 shadow-purple-500/20 ring-2 ring-purple-500/30'
+                  : 'bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-purple-400'
+              }`}
             >
-              필터 초기화
+              <span>🧠</span> Reasoning (추론/CoT) 지원만
             </button>
-          )}
+
+            <button
+              onClick={() => setWebSearchOnly(!webSearchOnly)}
+              className={`px-3 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 font-bold shadow-sm text-xs ${
+                webSearchOnly
+                  ? 'bg-blue-600 text-white border-blue-500 shadow-blue-500/20 ring-2 ring-blue-500/30'
+                  : 'bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-blue-400'
+              }`}
+            >
+              <span>🌐</span> 실시간 Web Search 지원만
+            </button>
+
+            <button
+              onClick={() => setVerifiedOnly(!verifiedOnly)}
+              className={`px-3 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 font-bold shadow-sm text-xs ${
+                verifiedOnly
+                  ? 'bg-emerald-600 text-white border-emerald-500 shadow-emerald-500/20 ring-2 ring-emerald-500/30'
+                  : 'bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-emerald-400'
+              }`}
+            >
+              <span>🛡️</span> LiteLLM 검증 모델만
+            </button>
+
+            {(reasoningOnly || webSearchOnly || verifiedOnly || selectedProvider !== 'all' || selectedTier !== 'all' || selectedLicense !== 'all' || searchTerm) && (
+              <button
+                onClick={() => {
+                  setReasoningOnly(false);
+                  setWebSearchOnly(false);
+                  setVerifiedOnly(false);
+                  setSelectedProvider('all');
+                  setSelectedTier('all');
+                  setSelectedLicense('all');
+                  setSearchTerm('');
+                }}
+                className="text-red-500 hover:text-red-600 dark:text-red-400 underline text-xs font-bold ml-1"
+              >
+                필터 초기화
+              </button>
+            )}
+          </div>
+
+          {/* View Mode Switcher */}
+          <div className="flex items-center bg-slate-100 dark:bg-slate-950 p-1 border border-slate-200 dark:border-slate-800 rounded-xl shrink-0 self-end sm:self-auto">
+            <button
+              onClick={() => setViewMode('grid')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1.5 transition-all ${
+                viewMode === 'grid'
+                  ? 'bg-cyan-500 text-slate-950 shadow-md font-black'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+              </svg>
+              {t.viewMode.grid}
+            </button>
+            <button
+              onClick={() => setViewMode('table')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1.5 transition-all ${
+                viewMode === 'table'
+                  ? 'bg-cyan-500 text-slate-950 shadow-md font-black'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              {t.viewMode.table}
+            </button>
+            <button
+              onClick={() => setViewMode('compact')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1.5 transition-all ${
+                viewMode === 'compact'
+                  ? 'bg-cyan-500 text-slate-950 shadow-md font-black'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+              {t.viewMode.compact}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Model Count info + Sort Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm text-slate-600 dark:text-slate-400 px-2 font-bold">
-        <div>
+      {/* Model Count Info & Clean Integrated Sort Selector */}
+      <div className="flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm text-slate-600 dark:text-slate-400 px-1 font-bold">
+        <div className="flex items-center gap-2">
           <span className="font-black text-cyan-600 dark:text-cyan-400 text-base">{sortedModels.length}</span> {t.dashboard.modelsFound}
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-slate-700 dark:text-slate-300 text-xs font-black">정렬 기준:</span>
+          <span className="text-slate-600 dark:text-slate-400 text-xs font-extrabold">정렬 기준:</span>
           <select
             value={sortKey}
             onChange={e => setSortKey(e.target.value as SortKey)}
-            className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl px-3 py-1.5 text-xs font-extrabold shadow-sm cursor-pointer"
+            className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl px-3 py-2 text-xs font-extrabold shadow-sm cursor-pointer"
           >
-            <option value="arena_elo">🏆 LMSYS Arena Elo 랭킹</option>
-            <option value="name">🔤 모델명</option>
-            <option value="provider">🏢 프로바이더</option>
-            <option value="tier">🎯 티어 (Tier)</option>
-            <option value="context">📚 컨텍스트 윈도우</option>
-            <option value="input_price">💰 입력 비용 (1M Token)</option>
-            <option value="output_price">💸 출력 비용 (1M Token)</option>
+            <option value="arena_elo">🏆 LMSYS Arena Elo 랭킹순</option>
+            <option value="input_price">💰 입력 비용 저렴한순</option>
+            <option value="output_price">💸 출력 비용 저렴한순</option>
+            <option value="context">📚 컨텍스트 윈도우 큰순</option>
+            <option value="name">🔤 모델명 알파벳순</option>
+            <option value="provider">🏢 프로바이더순</option>
+            <option value="tier">🎯 티어 (Tier)순</option>
           </select>
           <button
             onClick={() => setSortDir(d => d === 'asc' ? 'desc' : 'asc')}
-            className="px-3 py-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:border-cyan-500 text-slate-900 dark:text-cyan-300 font-extrabold text-xs rounded-xl transition-all shadow-sm flex items-center gap-1"
-            title={sortDir === 'asc' ? '오름차순' : '내림차순'}
+            className="px-3 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:border-cyan-500 text-slate-900 dark:text-cyan-300 font-extrabold text-xs rounded-xl transition-all shadow-sm flex items-center gap-1"
+            title={sortDir === 'asc' ? '오름차순 정렬' : '내림차순 정렬'}
           >
             {sortDir === 'asc' ? '▲ 오름차순' : '▼ 내림차순'}
           </button>
