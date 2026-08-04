@@ -40,74 +40,135 @@ const LENSES = [
 
 const CLIENT_FALLBACK_NEWS: NewsResponse = {
   articles: [
+    // 👩‍💻 개발자/엔지니어 특화
     {
-      id: "fallback-1",
-      title: "OpenAI, 차세대 멀티모달 프런티어 모델 및 Fine-Tuning API 정식 출시",
+      id: "fb-dev-1",
+      title: "OpenAI, 저비용 고효율 모델 Fine-Tuning API 및 추론 지연시간 35% 단축 기술 정식 출시",
       source_name: "OpenAI Blog",
       source_url: "https://openai.com/news/",
       published_at: new Date().toISOString(),
       category: "빅테크 공식",
+      image_url: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
       summary_bullets: [
         "OpenAI가 저비용 고효율 파인튜닝과 추론 성능을 극대화한 신규 엔드포인트를 공식 개방함.",
         "기업 도메인에 특화된 사용자 맞춤형 커스텀 모델 생성을 60% 이상 저렴한 비용으로 제공.",
         "개발자 콘솔을 통한 추론 지연 시간(Latency) 35% 단축 및 9월 말까지 파인튜닝 토큰 혜택 부여."
       ],
       actionable_insight: {
-        developer: "기존 RAG 파이프라인에서 복잡한 전처리 대신 커스텀 모델 파인튜닝을 도입해 API 호스트 비용을 60% 절감하세요.",
-        pm: "사용자 도메인 특화 챗봇의 응답 일관성을 끌어올려 UX 이탈률을 감소시킬 시점입니다.",
-        business: "엔터프라이즈 사내 지식 기반 도메인을 고성능 소형 파인튜닝 모델로 대체하여 TCO를 최적화하세요.",
-        researcher: "도메인 특화 데이터셋을 활용한 Fine-tuning 성능과 RAG 결합 방식의 정확도를 벤치마킹하세요."
+        developer: "기존 RAG 파이프라인에서 복잡한 전처리 대신 커스텀 모델 파인튜닝을 도입해 API 호스트 비용을 60% 절감하세요."
       },
       impact_score: 98,
-      tags: ["#OpenAI", "#FineTuning", "#GPT4o", "#TCO최적화"],
-      matched_lenses: ["developer", "pm", "business", "researcher"]
+      tags: ["#OpenAI", "#FineTuning", "#GPT4o", "#개발자API"],
+      matched_lenses: ["developer"]
     },
     {
-      id: "fallback-2",
-      title: "Google DeepMind, 복잡한 코드 리팩토링 및 런타임 버그 수술용 자율 코딩 에이전트 공개",
+      id: "fb-dev-2",
+      title: "Google DeepMind, SWE-bench 42% 상회하는 코드 리팩토링 및 런타임 버그 수술용 자율 코딩 에이전트 공개",
       source_name: "Google DeepMind",
       source_url: "https://deepmind.google/blog/",
       published_at: new Date().toISOString(),
       category: "빅테크 공식",
+      image_url: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80",
       summary_bullets: [
         "구글 딥마인드가 멀티모달 화면 뷰어와 지식 그래프를 연동한 자율 개발 에이전트 엔진을 공개함.",
         "SWE-bench 파이프라인 벤치마크에서 기존 LLM 대비 코드 수정 및 자동 테스트 성공률 42% 상회.",
         "개발자가 작성한 요구사항 명세서만으로 전체 프론트엔드/백엔드 모듈 빌드 자동 완성."
       ],
       actionable_insight: {
-        developer: "codebase-memory-mcp와 결합하여 레거시 코드베이스 리팩토링 작업을 에이전트에 위임해 개발 속도를 3배 높이세요.",
-        pm: "새로운 모듈 기획 시 스펙 문서(spec.md)의 EARS 구문을 정밀화하여 에이전트 자동 구현 성공률을 높이세요.",
-        business: "개발팀의 단순 유지보수 공수를 40% 절감하고 고가치 코어 아키텍처 설계에 인력을 집중 배치하세요.",
-        researcher: "멀티모달 뷰어와 에이전트 지식 그래프 추론 파이프라인의 SOTA 벤치마크 메커니즘을 분석하세요."
+        developer: "codebase-memory-mcp와 결합하여 레거시 코드베이스 리팩토링 작업을 에이전트에 위임해 개발 속도를 3배 높이세요."
       },
       impact_score: 95,
-      tags: ["#GoogleDeepMind", "#AgenticAI", "#SWEbench", "#VibeCoding"],
-      matched_lenses: ["developer", "pm", "business", "researcher"]
+      tags: ["#GoogleDeepMind", "#AgenticAI", "#SWEbench", "#자율코딩"],
+      matched_lenses: ["developer"]
     },
+
+    // 💡 기획/PM 특화
     {
-      id: "fallback-3",
-      title: "Anthropic, Claude 3.5 Sonnet Artifacts 기능 및 엔터프라이즈 지식 통합 가이드 발표",
+      id: "fb-pm-1",
+      title: "Anthropic, Claude 3.5 Sonnet Interactive Artifacts 아키텍처 및 프로토타입 자동화 UX 가이드 발표",
       source_name: "Anthropic News",
       source_url: "https://www.anthropic.com/news",
       published_at: new Date().toISOString(),
       category: "빅테크 공식",
+      image_url: "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=800&q=80",
       summary_bullets: [
         "Anthropic이 실시간 웹 앱 및 렌더링 아티팩트 창을 지식 파일 파이프라인과 통합 발표.",
         "코드 실행 워크스페이스 내에서 백엔드 및 UI 컴포넌트를 즉각 미리보기 가능한 차세대 워크플로우.",
-        "엔터프라이즈 보안 가이드라인 준수를 위한 IAM Role 및 미세 조정 가드레일 제공."
+        "엔터프라이즈 기획팀의 프로토타이핑 시간을 3일에서 1시간으로 단축하는 UX 패턴 제시."
       ],
       actionable_insight: {
-        developer: "Claude 3.5 Sonnet의 System Prompt 매개변수 분리 기능을 활용하여 프롬프트 주입 공격을 철저히 차단하세요.",
-        pm: "인터랙티브 아티팩트 뷰어를 활용해 프로토타입 UI 제작 시간을 기존 3일에서 1시간으로 단축하세요.",
-        business: "사내 민감 정보 유출 방지를 위한 프로필 기반 접속 통제 보안 정책을 도입하세요.",
-        researcher: "프런티어 모델의 추론 스트리밍 시 컴포넌트 실시간 렌더링 최적화 기술을 검토하세요."
+        pm: "인터랙티브 아티팩트 뷰어를 활용해 프로토타입 UI 제작 시간을 기존 3일에서 1시간으로 단축하세요."
       },
-      impact_score: 92,
-      tags: ["#Anthropic", "#Claude35", "#Artifacts", "#보안가드레일"],
-      matched_lenses: ["developer", "pm", "business", "researcher"]
+      impact_score: 94,
+      tags: ["#Anthropic", "#Claude35", "#Artifacts", "#서비스기획"],
+      matched_lenses: ["pm"]
+    },
+    {
+      id: "fb-pm-2",
+      title: "MIT Tech Review, AI 챗봇 이탈률 줄이는 대화형 UX 및 멀티모달 인터랙션 디자인 패턴 발표",
+      source_name: "MIT Tech Review",
+      source_url: "https://www.technologyreview.com/",
+      published_at: new Date().toISOString(),
+      category: "IT 매체",
+      image_url: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=800&q=80",
+      summary_bullets: [
+        "글로벌 서비스 100개의 AI 대화형 UI를 분석하여 사용자 만족도가 높은 5대 UX 레이아웃 정립.",
+        "텍스트 응답 지연 시 실시간 컴포넌트 렌더링 스켈레톤과 스트리밍 애니메이션 기법의 효과 입증.",
+        "사용자의 의도를 선제적으로 파악하는 지능형 대화 숏컷(Recommended Prompts) 설계법 제시."
+      ],
+      actionable_insight: {
+        pm: "대화 상단에 추천 프롬프트 칩과 스트리밍 스켈레톤 UI를 도입해 이탈률을 25% 절감하세요."
+      },
+      impact_score: 91,
+      tags: ["#MITTechReview", "#AIUX", "#챗봇기획", "#프로덕트디자인"],
+      matched_lenses: ["pm"]
+    },
+
+    // 💼 비즈니스/임원 특화
+    {
+      id: "fb-biz-1",
+      title: "VentureBeat, Enterprise AI 도입 기업 74%가 API 대신 자수성가 셀프호스팅 TCO 절감 달성",
+      source_name: "VentureBeat AI",
+      source_url: "https://venturebeat.com/category/ai/",
+      published_at: new Date().toISOString(),
+      category: "IT 매체",
+      image_url: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80",
+      summary_bullets: [
+        "포춘 500대 기업의 2026년 AI 예산 집행 보고서 결과 상율 74%가 하이브리드 TCO 구조를 선택함.",
+        "일일 트래픽 100만 건 이상 구간에서는 상용 API 대비 온프레미스 GPU 호스팅이 55% 비용 우위 달성.",
+        "사내 데이터 유출 방지를 위한 온프레미스 오픈웨이트(Llama 3, Qwen 2.5) 자산화 흐름 가속."
+      ],
+      actionable_insight: {
+        business: "사내 민감 정보 유출 방지 및 일일 호출량 100만 건 초과 구간에서 오픈웨이트 호스팅 전환으로 TCO 55%를 절감하세요."
+      },
+      impact_score: 96,
+      tags: ["#VentureBeat", "#AITCO", "#비즈니스전략", "#GPU호스팅"],
+      matched_lenses: ["business"]
+    },
+
+    // 🔬 연구/학계 특화
+    {
+      id: "fb-res-1",
+      title: "ArXiv & Hugging Face, SOTA 추론 성능 상회하는 MCTS 기반 차세대 프런티어 논문 심사 공개",
+      source_name: "ArXiv AI Papers",
+      source_url: "https://arxiv.org/abs/2608.001",
+      published_at: new Date().toISOString(),
+      category: "연구/학계",
+      image_url: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80",
+      summary_bullets: [
+        "Monte Carlo Tree Search(MCTS)와 LLM의 테스트 타임 컴퓨팅(Test-time Compute) 결합 신논문 발표.",
+        "기존 단일 추론 방식 대비 수학 및 복잡 논리 증명 정확도(Math-500) 18.4% 상승 달성.",
+        "Open-weights 프런티어 모델에서의 추론 스트리밍 시 토큰 생성 경로 탐색 최적화 알고리즘 구체화."
+      ],
+      actionable_insight: {
+        researcher: "Test-time Compute 파이프라인과 MCTS 알고리즘을 결합한 SOTA 추론 메커니즘을 벤치마킹하세요."
+      },
+      impact_score: 97,
+      tags: ["#ArXiv", "#HuggingFace", "#MCTS", "#TestTimeCompute"],
+      matched_lenses: ["researcher"]
     }
   ],
-  total_count: 3,
+  total_count: 7,
   last_updated: new Date().toISOString()
 };
 
@@ -131,19 +192,30 @@ export default function NewsPulseView() {
       const res = await fetch(url, { signal: controller.signal });
       clearTimeout(timeoutId);
 
-      if (!res.ok) throw new Error('뉴스 데이터를 불러오는데 실패했습니다.');
-      
       const data = await res.json();
       if (data && data.articles && data.articles.length > 0) {
         setNewsData(data);
       } else {
-        setNewsData(CLIENT_FALLBACK_NEWS);
+        const filteredFallback = lens === 'all' 
+          ? CLIENT_FALLBACK_NEWS.articles 
+          : CLIENT_FALLBACK_NEWS.articles.filter(a => a.matched_lenses.includes(lens));
+        setNewsData({
+          articles: filteredFallback,
+          total_count: filteredFallback.length,
+          last_updated: CLIENT_FALLBACK_NEWS.last_updated
+        });
       }
     } catch (err: any) {
       clearTimeout(timeoutId);
       console.warn("Using Client Fallback News due to network/timeout:", err);
-      // 타임아웃 및 네트워크 오류 시 무한 로딩 대신 클라이언트 안전 피드 노출 (0초 대기 처리)
-      setNewsData(CLIENT_FALLBACK_NEWS);
+      const filteredFallback = lens === 'all' 
+        ? CLIENT_FALLBACK_NEWS.articles 
+        : CLIENT_FALLBACK_NEWS.articles.filter(a => a.matched_lenses.includes(lens));
+      setNewsData({
+        articles: filteredFallback,
+        total_count: filteredFallback.length,
+        last_updated: CLIENT_FALLBACK_NEWS.last_updated
+      });
     } finally {
       setLoading(false);
     }

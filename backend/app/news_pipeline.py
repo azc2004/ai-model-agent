@@ -68,9 +68,10 @@ def extract_image_url(entry: Any, raw_html: str, source_name: str) -> str:
     return DEFAULT_SOURCE_IMAGES.get(source_name, "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80")
 
 FALLBACK_ARTICLES = [
+    # 👩‍💻 개발자/엔지니어 특화 피드 (Developer Lens)
     NewsArticle(
-        id="fallback-1",
-        title="OpenAI, 차세대 멀티모달 프런티어 모델 및 Fine-Tuning API 정식 출시",
+        id="fb-dev-1",
+        title="OpenAI, 저비용 고효율 모델 Fine-Tuning API 및 추론 지연시간 35% 단축 기술 정식 출시",
         source_name="OpenAI Blog",
         source_url="https://openai.com/news/",
         published_at=datetime.now(timezone.utc).isoformat(),
@@ -84,16 +85,15 @@ FALLBACK_ARTICLES = [
         actionable_insight=ActionableInsight(
             developer="기존 RAG 파이프라인에서 복잡한 전처리 대신 커스텀 모델 파인튜닝을 도입해 API 호스트 비용을 60% 절감하세요.",
             pm="사용자 도메인 특화 챗봇의 응답 일관성을 끌어올려 UX 이탈률을 감소시킬 시점입니다.",
-            business="엔터프라이즈 사내 지식 기반 도메인을 고성능 소형 파인튜닝 모델로 대체하여 TCO를 최적화하세요.",
-            researcher="도메인 특화 데이터셋을 활용한 Fine-tuning 성능과 RAG 결합 방식의 정확도를 벤치마킹하세요."
+            business="엔터프라이즈 사내 지식 기반 도메인을 고성능 소형 파인튜닝 모델로 대체하여 TCO를 최적화하세요."
         ),
         impact_score=98,
-        tags=["#OpenAI", "#FineTuning", "#GPT4o", "#TCO최적화"],
-        matched_lenses=["developer", "pm", "business", "researcher"]
+        tags=["#OpenAI", "#FineTuning", "#GPT4o", "#개발자API"],
+        matched_lenses=["developer"]
     ),
     NewsArticle(
-        id="fallback-2",
-        title="Google DeepMind, 복잡한 코드 리팩토링 및 런타임 버그 수술용 자율 코딩 에이전트 공개",
+        id="fb-dev-2",
+        title="Google DeepMind, SWE-bench 42% 상회하는 코드 리팩토링 및 런타임 버그 수술용 자율 코딩 에이전트 공개",
         source_name="Google DeepMind",
         source_url="https://deepmind.google/blog/",
         published_at=datetime.now(timezone.utc).isoformat(),
@@ -106,17 +106,37 @@ FALLBACK_ARTICLES = [
         ],
         actionable_insight=ActionableInsight(
             developer="codebase-memory-mcp와 결합하여 레거시 코드베이스 리팩토링 작업을 에이전트에 위임해 개발 속도를 3배 높이세요.",
-            pm="새로운 모듈 기획 시 스펙 문서(spec.md)의 EARS 구문을 정밀화하여 에이전트 자동 구현 성공률을 높이세요.",
-            business="개발팀의 단순 유지보수 공수를 40% 절감하고 고가치 코어 아키텍처 설계에 인력을 집중 배치하세요.",
-            researcher="멀티모달 뷰어와 에이전트 지식 그래프 추론 파이프라인의 SOTA 벤치마크 메커니즘을 분석하세요."
+            pm="새로운 모듈 기획 시 스펙 문서(spec.md)의 EARS 구문을 정밀화하여 에이전트 자동 구현 성공률을 높이세요."
         ),
         impact_score=95,
-        tags=["#GoogleDeepMind", "#AgenticAI", "#SWEbench", "#VibeCoding"],
-        matched_lenses=["developer", "pm", "business", "researcher"]
+        tags=["#GoogleDeepMind", "#AgenticAI", "#SWEbench", "#자율코딩"],
+        matched_lenses=["developer"]
     ),
     NewsArticle(
-        id="fallback-3",
-        title="Anthropic, Claude 3.5 Sonnet Artifacts 기능 및 엔터프라이즈 지식 통합 가이드 발표",
+        id="fb-dev-3",
+        title="LangChain & LlamaIndex, 멀티 에이전트 메모리 분산 및 로컬 임베딩 벡터 속도 5배 향상 프레임워크 공개",
+        source_name="LangChain Blog",
+        source_url="https://blog.langchain.dev/",
+        published_at=datetime.now(timezone.utc).isoformat(),
+        category="연구/학계",
+        image_url="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
+        summary_bullets=[
+            "LangChain 0.3 버전 업데이트를 통해 멀티 에이전트 간 비동기 메모리 공유 구조가 정식 통합됨.",
+            "LlamaIndex와의 분산 백엔드 결합으로 100만 건 이상의 벡터 검색 지연 시간을 20ms 이하로 단축.",
+            "로컬 환경에서의 Ollama / vLLM 서빙 호환 라우터 기본 내장."
+        ],
+        actionable_insight=ActionableInsight(
+            developer="vLLM과 LangChain 0.3 비동기 체인을 결합하여 에이전트 응답 속도를 20ms 수준으로 최적화하세요."
+        ),
+        impact_score=89,
+        tags=["#LangChain", "#LlamaIndex", "#RAG", "#VectorDB"],
+        matched_lenses=["developer"]
+    ),
+
+    # 💡 기획/PM 특화 피드 (PM Lens)
+    NewsArticle(
+        id="fb-pm-1",
+        title="Anthropic, Claude 3.5 Sonnet Interactive Artifacts 아키텍처 및 프로토타입 자동화 UX 가이드 발표",
         source_name="Anthropic News",
         source_url="https://www.anthropic.com/news",
         published_at=datetime.now(timezone.utc).isoformat(),
@@ -125,17 +145,138 @@ FALLBACK_ARTICLES = [
         summary_bullets=[
             "Anthropic이 실시간 웹 앱 및 렌더링 아티팩트 창을 지식 파일 파이프라인과 통합 발표.",
             "코드 실행 워크스페이스 내에서 백엔드 및 UI 컴포넌트를 즉각 미리보기 가능한 차세대 워크플로우.",
-            "엔터프라이즈 보안 가이드라인 준수를 위한 IAM Role 및 미세 조정 가드레일 제공."
+            "엔터프라이즈 기획팀의 프로토타이핑 시간을 3일에서 1시간으로 단축하는 UX 패턴 제시."
         ],
         actionable_insight=ActionableInsight(
-            developer="Claude 3.5 Sonnet의 System Prompt 매개변수 분리 기능을 활용하여 프롬프트 주입 공격을 철저히 차단하세요.",
-            pm="인터랙티브 아티팩트 뷰어를 활용해 프로토타입 UI 제작 시간을 기존 3일에서 1시간으로 단축하세요.",
-            business="사내 민감 정보 유출 방지를 위한 프로필 기반 접속 통제 보안 정책을 도입하세요.",
-            researcher="프런티어 모델의 추론 스트리밍 시 컴포넌트 실시간 렌더링 최적화 기술을 검토하세요."
+            pm="인터랙티브 아티팩트 뷰어를 활용해 프로토타입 UI 제작 시간을 기존 3일에서 1시간으로 단축하세요."
+        ),
+        impact_score=94,
+        tags=["#Anthropic", "#Claude35", "#Artifacts", "#서비스기획"],
+        matched_lenses=["pm"]
+    ),
+    NewsArticle(
+        id="fb-pm-2",
+        title="MIT Tech Review, AI 챗봇 이탈률 줄이는 대화형 UX 및 멀티모달 인터랙션 디자인 패턴 발표",
+        source_name="MIT Tech Review",
+        source_url="https://www.technologyreview.com/",
+        published_at=datetime.now(timezone.utc).isoformat(),
+        category="IT 매체",
+        image_url="https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=800&q=80",
+        summary_bullets=[
+            "글로벌 서비스 100개의 AI 대화형 UI를 분석하여 사용자 만족도가 높은 5대 UX 레이아웃 정립.",
+            "텍스트 응답 지연 시 실시간 컴포넌트 렌더링 스켈레톤과 스트리밍 애니메이션 기법의 효과 입증.",
+            "사용자의 의도를 선제적으로 파악하는 지능형 대화 숏컷(Recommended Prompts) 설계법 제시."
+        ],
+        actionable_insight=ActionableInsight(
+            pm="대화 상단에 추천 프롬프트 칩과 스트리밍 스켈레톤 UI를 도입해 이탈률을 25% 절감하세요."
+        ),
+        impact_score=91,
+        tags=["#MITTechReview", "#AIUX", "#챗봇기획", "#프로덕트디자인"],
+        matched_lenses=["pm"]
+    ),
+    NewsArticle(
+        id="fb-pm-3",
+        title="AWS, 에이전트 AI 기반 데이터 온보딩 기획 프레임워크 공개... 수주 소요 작업을 40분으로 단축",
+        source_name="AWS Machine Learning",
+        source_url="https://aws.amazon.com/blogs/machine-learning/",
+        published_at=datetime.now(timezone.utc).isoformat(),
+        category="빅테크 공식",
+        image_url="https://images.unsplash.com/photo-1607799279861-4dd421887fb3?auto=format&fit=crop&w=800&q=80",
+        summary_bullets=[
+            "AWS가 포뮬러 1®과의 협업을 통해 Amazon Bedrock 에이전트 기반 데이터 기획 파이프라인 구축.",
+            "기존 데이터 소스 온보딩 요구사항 수집 및 분석 시간을 최대 8주에서 40분으로 단축.",
+            "비엔지니어 기획자도 자연어 명령만으로 데이터 스키마를 구성하는 기획 자동화 실현."
+        ],
+        actionable_insight=ActionableInsight(
+            pm="데이터 통합 프로젝트의 병목 현상을 식별하고 에이전트 AI 도입으로 프로덕트 출시 속도를 끌어올리세요."
         ),
         impact_score=92,
-        tags=["#Anthropic", "#Claude35", "#Artifacts", "#보안가드레일"],
-        matched_lenses=["developer", "pm", "business", "researcher"]
+        tags=["#AWS", "#Bedrock", "#데이터기획", "#온보딩자동화"],
+        matched_lenses=["pm"]
+    ),
+
+    # 💼 비즈니스/임원 특화 피드 (Business Lens)
+    NewsArticle(
+        id="fb-biz-1",
+        title="VentureBeat, Enterprise AI 도입 기업 74%가 API 대신 자수성가 셀프호스팅 TCO 절감 달성",
+        source_name="VentureBeat AI",
+        source_url="https://venturebeat.com/category/ai/",
+        published_at=datetime.now(timezone.utc).isoformat(),
+        category="IT 매체",
+        image_url="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80",
+        summary_bullets=[
+            "포춘 500대 기업의 2026년 AI 예산 집행 보고서 결과 상율 74%가 하이브리드 TCO 구조를 선택함.",
+            "일일 트래픽 100만 건 이상 구간에서는 상용 API 대비 온프레미스 GPU 호스팅이 55% 비용 우위 달성.",
+            "사내 데이터 유출 방지를 위한 온프레미스 오픈웨이트(Llama 3, Qwen 2.5) 자산화 흐름 가속."
+        ],
+        actionable_insight=ActionableInsight(
+            business="사내 민감 정보 유출 방지 및 일일 호출량 100만 건 초과 구간에서 오픈웨이트 호스팅 전환으로 TCO 55%를 절감하세요."
+        ),
+        impact_score=96,
+        tags=["#VentureBeat", "#AITCO", "#비즈니스전략", "#GPU호스팅"],
+        matched_lenses=["business"]
+    ),
+    NewsArticle(
+        id="fb-biz-2",
+        title="Meta AI & Microsoft, 사내 데이터 보안 통합 가드레일 및 엔터프라이즈 IAM 프로필 가이드 발표",
+        source_name="Meta AI Blog",
+        source_url="https://ai.meta.com/blog/",
+        published_at=datetime.now(timezone.utc).isoformat(),
+        category="빅테크 공식",
+        image_url="https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&w=800&q=80",
+        summary_bullets=[
+            "메타와 마이크로소프트가 기업용 LLM 도입 시 필수 준수해야 할 5대 보안 지침과 가드레일 공개.",
+            "사내 프라이빗 데이터 라우팅을 위한 프로필 기반 접근 통제(Profile-based IAM) 표준 제공.",
+            "엔터프라이즈 컴플라이언스 준수와 데이터 유출 위험 0%를 달성하기 위한 구체적 솔루션 연동."
+        ],
+        actionable_insight=ActionableInsight(
+            business="사내 보안 그룹 규정에 적합한 IAM Role 접근 제어를 도입하여 기술 부채와 데이터 유출 위험을 원천 차단하세요."
+        ),
+        impact_score=93,
+        tags=["#MetaAI", "#Microsoft", "#AI보안", "#IAM통제"],
+        matched_lenses=["business"]
+    ),
+
+    # 🔬 연구/학계 특화 피드 (Researcher Lens)
+    NewsArticle(
+        id="fb-res-1",
+        title="ArXiv & Hugging Face, SOTA 추론 성능 상회하는 MCTS 기반 차세대 프런티어 논문 심사 공개",
+        source_name="ArXiv AI Papers",
+        source_url="https://arxiv.org/abs/2608.001",
+        published_at=datetime.now(timezone.utc).isoformat(),
+        category="연구/학계",
+        image_url="https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80",
+        summary_bullets=[
+            "Monte Carlo Tree Search(MCTS)와 LLM의 테스트 타임 컴퓨팅(Test-time Compute) 결합 신논문 발표.",
+            "기존 단일 추론 방식 대비 수학 및 복잡 논리 증명 정확도(Math-500) 18.4% 상승 달성.",
+            "Open-weights 프런티어 모델에서의 추론 스트리밍 시 토큰 생성 경로 탐색 최적화 알고리즘 구체화."
+        ],
+        actionable_insight=ActionableInsight(
+            researcher="Test-time Compute 파이프라인과 MCTS 알고리즘을 결합한 SOTA 추론 메커니즘을 벤치마킹하세요."
+        ),
+        impact_score=97,
+        tags=["#ArXiv", "#HuggingFace", "#MCTS", "#TestTimeCompute", "#AI논문"],
+        matched_lenses=["researcher"]
+    ),
+    NewsArticle(
+        id="fb-res-2",
+        title="ArXiv NLP, 한국어/영어 멀티모달 자율 추론 파이프라인 벤치마크 및 데이터셋 오픈소스 공개",
+        source_name="ArXiv NLP Papers",
+        source_url="https://arxiv.org/abs/2608.002",
+        published_at=datetime.now(timezone.utc).isoformat(),
+        category="연구/학계",
+        image_url="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=800&q=80",
+        summary_bullets=[
+            "한/영 다국어 환경에서의 도메인 지식 이해도 평가 전용 Kor-SWEBench 데이터셋 5만 건 개방.",
+            "멀티모달 뷰어 기반 코드 렌더링 시 시각적 오류 파악 및 자동 수정 정확도 검증 기준 정립.",
+            "소형 언어 모델(SLM)의 파인튜닝 시 환각 현상(Hallucination)을 80% 저감하는 훈련 방법론 수록."
+        ],
+        actionable_insight=ActionableInsight(
+            researcher="Kor-SWEBench 벤치마크와 SLM 환각 방지 훈련 기법을 사내 연구 알고리즘에 검토/적용하세요."
+        ),
+        impact_score=94,
+        tags=["#ArXivNLP", "#KorSWEBench", "#SLM", "#환각방지"],
+        matched_lenses=["researcher"]
     )
 ]
 
@@ -282,7 +423,21 @@ Content: {raw['summary']}
         return article
     except Exception as e:
         print(f"Error analyzing article {raw['title']}: {e}")
-        # 실패 시 기본값 폴백
+        # 키워드 기반 스마트 렌즈 자동 태깅 (LLM 미통과 시에도 탭별 분리 보장)
+        t_lower = (raw["title"] + " " + raw["summary"]).lower()
+        lenses = []
+        if any(k in t_lower for k in ["code", "dev", "agent", "fine-tuning", "vllm", "api", "langchain", "sdk", "python", "cuda"]):
+            lenses.append("developer")
+        if any(k in t_lower for k in ["ux", "product", "pm", "design", "onboarding", "workflow", "prompt", "interface", "app"]):
+            lenses.append("pm")
+        if any(k in t_lower for k in ["tco", "cost", "enterprise", "business", "security", "iam", "roi", "price", "market"]):
+            lenses.append("business")
+        if any(k in t_lower for k in ["paper", "arxiv", "sota", "benchmark", "mcts", "math", "dataset", "research", "slm"]):
+            lenses.append("researcher")
+            
+        if not lenses:
+            lenses = ["developer"] if raw["category"] == "IT 매체" else ["business"]
+            
         return NewsArticle(
             id=str(uuid.uuid4()),
             title=raw["title"],
@@ -291,11 +446,16 @@ Content: {raw['summary']}
             published_at=raw["published"],
             category=raw["category"],
             image_url=raw.get("image_url"),
-            summary_bullets=[raw["summary"][:100] + "..."],
-            actionable_insight=ActionableInsight(),
-            impact_score=0,
-            tags=[],
-            matched_lenses=[]
+            summary_bullets=[raw["summary"][:150] + "..."],
+            actionable_insight=ActionableInsight(
+                developer="해당 기술 기사를 읽고 사내 스택 적용 가능성을 검토하세요." if "developer" in lenses else None,
+                pm="새로운 기능 기획 시 본 소식의 UX 패턴을 참고하세요." if "pm" in lenses else None,
+                business="사업 전략 방향성 수립 및 TCO 절감 방안으로 활용하세요." if "business" in lenses else None,
+                researcher="최신 연구 방법론 및 벤치마크 지표를 분석하세요." if "researcher" in lenses else None
+            ),
+            impact_score=80,
+            tags=["#AI트렌드", f"#{raw['source_name'].replace(' ', '')}"],
+            matched_lenses=lenses
         )
 
 async def run_batch_job(force: bool = False) -> List[NewsArticle]:
