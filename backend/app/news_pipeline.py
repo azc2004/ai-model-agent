@@ -153,27 +153,45 @@ Content: {raw['summary']}
             matched_lenses=[]
         )
 
-async def refresh_news_pipeline() -> List[NewsArticle]:
+async def run_batch_job(force: bool = False) -> List[NewsArticle]:
+    """정기 배치 또는 수동 강제 실행 시 RSS 수집 및 AI 요약 파이프라인을 실행합니다."""
     global _news_cache
     now = time.time()
     
-    if _news_cache["articles"] and (now - _news_cache["last_updated"]) < CACHE_TTL:
+    if not force and _news_cache["articles"] and (now - _news_cache["last_updated"]) < CACHE_TTL:
+        print(f"[NewsBatch] Cache is still valid. Using cached articles ({len(_news_cache['articles'])} items).")
         return _news_cache["articles"]
     
+    print("[NewsBatch] 🚀 Starting Scheduled AI News Pipeline Batch Job...")
     raw_articles = await fetch_rss_feeds()
+    print(f"[NewsBatch] Fetched {len(raw_articles)} raw entries from RSS feeds.")
     
-    # 순차적으로 처리하거나 백그라운드 태스크로 LLM 호출 (요청 분산)
     articles = []
     for raw in raw_articles:
         article = analyze_article_with_llm(raw)
-        # LLM 호출 실패 처리된 건은 목록에서 제외하거나 하단 배치
         if article.impact_score > 0:
             articles.append(article)
     
-    # Impact Score 순으로 정렬
+    # Impact Score 내림차순 정렬
     articles.sort(key=lambda x: x.impact_score, reverse=True)
     
     _news_cache["articles"] = articles
     _news_cache["last_updated"] = now
-    
+    print(f"[NewsBatch] ✅ Batch Job Completed! Cached {len(articles)} processed articles.")
     return articles
+
+async def refresh_news_pipeline() -> List[NewsArticle]:
+    return await run_batch_job(force=False)
+
+async def start_news_batch_loop():
+    """서버 구동 시 실행되는 24시간 단위 정기 배치 루프"""
+    print("[NewsBatch] Initializing 24-hour Periodic News Batch Scheduler...")
+    while True:
+        try:
+            await run_batch_job(force=True)
+        except Exception as e:
+            print(f"[NewsBatch Error] Exception during scheduled batch execution: {e}")
+        
+        # 24시간(86400초) 대기 후 다음 배치 실행
+        await asyncio.sleep(CACHE_TTL)
+

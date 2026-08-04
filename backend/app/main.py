@@ -137,7 +137,13 @@ def generate_custom_markdown(req: CustomMarkdownRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"마크다운 생성 중 오류가 발생했습니다: {str(e)}")
 
-from app.news_pipeline import refresh_news_pipeline
+import asyncio
+from app.news_pipeline import refresh_news_pipeline, start_news_batch_loop, run_batch_job
+
+@app.on_event("startup")
+async def startup_event():
+    """서버 구동 시 백그라운드 24시간 뉴스 수집 정기 배치를 시작합니다."""
+    asyncio.create_task(start_news_batch_loop())
 
 @app.get("/api/v1/news/pulse", response_model=NewsPulseResponse)
 async def get_news_pulse(lens: Optional[str] = Query(None, description="직무 렌즈 (예: developer, pm, business, researcher)")):
@@ -146,7 +152,6 @@ async def get_news_pulse(lens: Optional[str] = Query(None, description="직무 �
     
     # 렌즈 필터링이 있다면 적용
     if lens and lens != "all":
-        # matched_lenses 배열에 해당 렌즈가 포함되어 있거나, actionable_insight 필드에 값이 있는 경우만 반환
         filtered = []
         for a in articles:
             if lens in a.matched_lenses:
@@ -155,6 +160,16 @@ async def get_news_pulse(lens: Optional[str] = Query(None, description="직무 �
                 filtered.append(a)
         articles = filtered
         
+    return {
+        "articles": articles,
+        "total_count": len(articles),
+        "last_updated": datetime.now(timezone.utc).isoformat()
+    }
+
+@app.post("/api/v1/news/pulse/refresh", response_model=NewsPulseResponse)
+async def force_refresh_news_pulse():
+    """관리자/개발자 수동 강제 수집 배치 실행 엔드포인트"""
+    articles = await run_batch_job(force=True)
     return {
         "articles": articles,
         "total_count": len(articles),
