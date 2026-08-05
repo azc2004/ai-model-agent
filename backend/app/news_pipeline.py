@@ -9,6 +9,14 @@ from typing import List, Dict, Any
 
 from app.schemas import NewsArticle, ActionableInsight, NewsPulseResponse
 from app.markdown_generator import client, GENERATOR_MODEL
+from app.database import engine, SessionLocal, Base
+from app.db_models import NewsArticleDB
+
+# DB 테이블 생성 보장
+try:
+    Base.metadata.create_all(bind=engine)
+except Exception as _e:
+    print(f"[DB Notice] Metadata create_all notice: {_e}")
 
 TOPIC_IMAGE_MAP: List[Dict[str, Any]] = [
     {
@@ -902,8 +910,93 @@ Content: {raw['summary']}
             matched_lenses=lenses
         )
 
+def save_articles_to_db(articles: List[NewsArticle]):
+    """수집된 최신 기사를 Neon PostgreSQL DB에 중복 없이 영구 적재(UPSERT/INSERT)합니다."""
+    db = SessionLocal()
+    try:
+        inserted_count = 0
+        for item in articles:
+            # source_url 또는 id 기준 중복 여부 확인
+            existing = db.query(NewsArticleDB).filter(
+                (NewsArticleDB.source_url == item.source_url) | (NewsArticleDB.id == item.id)
+            ).first()
+
+            insight_dict = item.actionable_insight.dict() if item.actionable_insight else None
+
+            if not existing:
+                db_item = NewsArticleDB(
+                    id=item.id,
+                    title=item.title,
+                    source_name=item.source_name,
+                    source_url=item.source_url,
+                    published_at=item.published_at,
+                    category=item.category,
+                    image_url=item.image_url,
+                    summary_bullets=item.summary_bullets,
+                    blog_summary=item.blog_summary,
+                    actionable_insight=insight_dict,
+                    impact_score=item.impact_score,
+                    tags=item.tags,
+                    matched_lenses=item.matched_lenses
+                )
+                db.add(db_item)
+                inserted_count += 1
+            else:
+                # 기존 항목이 있다면 블로그 요약문 및 렌즈 정보 갱신
+                existing.blog_summary = item.blog_summary
+                existing.matched_lenses = item.matched_lenses
+
+        db.commit()
+        print(f"[NeonDB] ✅ Successfully persisted {inserted_count} new articles to Neon PostgreSQL!")
+    except Exception as e:
+        db.rollback()
+        print(f"[NeonDB Error] Failed to persist articles to DB: {e}")
+    finally:
+        db.close()
+
+def fetch_articles_from_db() -> List[NewsArticle]:
+    """Neon PostgreSQL DB에서 영구 보관 중인 최신 기사들을 SELECT하여 반환합니다."""
+    db = SessionLocal()
+    try:
+        db_items = db.query(NewsArticleDB).order_by(
+            NewsArticleDB.impact_score.desc(), 
+            NewsArticleDB.created_at.desc()
+        ).all()
+
+        articles = []
+        for item in db_items:
+            insight = None
+            if item.actionable_insight:
+                insight = ActionableInsight(
+                    developer=item.actionable_insight.get("developer"),
+                    pm=item.actionable_insight.get("pm"),
+                    business=item.actionable_insight.get("business"),
+                    researcher=item.actionable_insight.get("researcher")
+                )
+            articles.append(NewsArticle(
+                id=item.id,
+                title=item.title,
+                source_name=item.source_name,
+                source_url=item.source_url,
+                published_at=item.published_at,
+                category=item.category,
+                image_url=item.image_url,
+                summary_bullets=item.summary_bullets or [],
+                blog_summary=item.blog_summary,
+                actionable_insight=insight,
+                impact_score=item.impact_score,
+                tags=item.tags or [],
+                matched_lenses=item.matched_lenses or ["developer"]
+            ))
+        return articles
+    except Exception as e:
+        print(f"[NeonDB Error] Failed to fetch articles from DB: {e}")
+        return []
+    finally:
+        db.close()
+
 async def run_batch_job(force: bool = False) -> List[NewsArticle]:
-    """정기 배치 또는 수동 강제 실행 시 RSS 수집 및 AI 요약 파이프라인을 실행합니다."""
+    """정기 배치 또는 수동 강제 실행 시 RSS 수집, AI 요약 및 Neon DB 영구 적재 파이프라인을 실행합니다."""
     global _news_cache
     now = time.time()
     
@@ -911,7 +1004,7 @@ async def run_batch_job(force: bool = False) -> List[NewsArticle]:
         print(f"[NewsBatch] Cache is still valid. Using cached articles ({len(_news_cache['articles'])} items).")
         return _news_cache["articles"]
     
-    print("[NewsBatch] 🚀 Starting Scheduled AI News Pipeline Batch Job...")
+    print("[NewsBatch] 🚀 Starting Scheduled AI News Pipeline & Neon DB Persistence...")
     try:
         raw_articles = await fetch_rss_feeds()
         print(f"[NewsBatch] Fetched {len(raw_articles)} raw entries from RSS feeds.")
@@ -931,7 +1024,7 @@ async def run_batch_job(force: bool = False) -> List[NewsArticle]:
                 unique_articles.append(a)
         articles = unique_articles
 
-        # 기사 총합이 25개 미만인 경우 FALLBACK_ARTICLES 피드를 중복 없이 상호 보원 결합
+        # 기사 총합이 25개 미만인 경우 FALLBACK_ARTICLES 피드를 중복 없이 결합
         if len(articles) < 25:
             for fb in FALLBACK_ARTICLES:
                 if fb.title not in seen_titles:
@@ -940,18 +1033,23 @@ async def run_batch_job(force: bool = False) -> List[NewsArticle]:
 
         # Impact Score 내림차순 정렬
         articles.sort(key=lambda x: x.impact_score, reverse=True)
+
+        # 🐘 Neon PostgreSQL DB 영구 적재 실행
+        save_articles_to_db(articles)
     except Exception as e:
         print(f"[NewsBatch Error] RSS fetching failed: {e}")
         articles = FALLBACK_ARTICLES
 
-    # 백업 폴백 피드 안전장치
-    if not articles:
-        print("[NewsBatch Warning] No RSS articles processed. Using FALLBACK_ARTICLES for 100% uptime.")
+    # Neon DB에 누적 적재된 전체 최신 기사 불러오기
+    db_articles = fetch_articles_from_db()
+    if db_articles:
+        articles = db_articles
+    elif not articles:
         articles = FALLBACK_ARTICLES
-    
+
     _news_cache["articles"] = articles
     _news_cache["last_updated"] = now
-    print(f"[NewsBatch] ✅ Batch Job Completed! Cached {len(articles)} processed articles.")
+    print(f"[NewsBatch] ✅ Batch Job Completed! Total {len(articles)} articles cached from Neon DB.")
     return articles
 
 async def refresh_news_pipeline() -> List[NewsArticle]:
