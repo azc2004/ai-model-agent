@@ -50,10 +50,11 @@ const I18N_TEXTS = {
     resLabel: "[연구/학계]",
     lenses: {
       all: '🔥 전체',
-      developer: '👩‍💻 개발/엔지니어',
-      pm: '💡 기획/PM',
-      business: '💼 비즈니스',
-      researcher: '🔬 연구/학계'
+      developer: '👩‍💻 코딩 & 프레임워크',
+      agent: '🤖 Agent & 오토메이션',
+      pm: '💡 기획 & UX',
+      business: '💼 비즈니스 & TCO',
+      researcher: '🔬 최신 논문 & 학계'
     }
   },
   en: {
@@ -74,20 +75,22 @@ const I18N_TEXTS = {
     resLabel: "[Researcher]",
     lenses: {
       all: '🔥 All Feed',
-      developer: '👩‍💻 Developer',
-      pm: '💡 Product PM',
-      business: '💼 Business Leader',
-      researcher: '🔬 Researcher'
+      developer: '👩‍💻 Coding & Dev',
+      agent: '🤖 Agent & Automation',
+      pm: '💡 Product & UX',
+      business: '💼 Business & TCO',
+      researcher: '🔬 Research & Papers'
     }
   }
 };
 
 const LENSES = [
   { id: 'all', label: '🔥 전체', icon: Activity, desc: '주요 AI 트렌드 종합' },
-  { id: 'developer', label: '👩‍💻 개발/엔지니어', icon: Users, desc: 'API, 모델 학습, 코딩 에이전트' },
-  { id: 'pm', label: '💡 기획/PM', icon: Lightbulb, desc: '서비스 기획, UX/UI, 워크플로우' },
-  { id: 'business', label: '💼 비즈니스', icon: Briefcase, desc: '도입 사례, TCO, 규제' },
-  { id: 'researcher', label: '🔬 연구/학계', icon: Microscope, desc: 'SOTA 벤치마크, 논문 요약' }
+  { id: 'developer', label: '👩‍💻 코딩 & 프레임워크', icon: Users, desc: 'API, 파인튜닝, Coding Agent, SDK' },
+  { id: 'agent', label: '🤖 Agent & 오토메이션', icon: Activity, desc: 'Agentic AI, 자율 에이전트, RAG, 멀티에이전트' },
+  { id: 'pm', label: '💡 기획 & UX', icon: Lightbulb, desc: '프롬프트 엔지니어링, AI UI/UX, 대화 가드레일' },
+  { id: 'business', label: '💼 비즈니스 & TCO', icon: Briefcase, desc: 'ROI, 클라우드 호스팅 TCO, 사내 보안 IAM' },
+  { id: 'researcher', label: '🔬 최신 논문 & 학계', icon: Microscope, desc: 'SOTA 벤치마크, MCTS, ArXiv 논문 요약' }
 ];
 
 const CLIENT_FALLBACK_NEWS: NewsResponse = {
@@ -229,7 +232,7 @@ export default function NewsPulseView() {
   const getInitialLens = () => {
     const params = new URLSearchParams(window.location.search);
     const lensParam = params.get('lens');
-    if (lensParam && ['all', 'developer', 'pm', 'business', 'researcher'].includes(lensParam)) {
+    if (lensParam && ['all', 'developer', 'agent', 'pm', 'business', 'researcher'].includes(lensParam)) {
       return lensParam;
     }
     return 'all';

@@ -152,18 +152,16 @@ async def startup_event():
     asyncio.create_task(start_news_batch_loop())
 
 @app.get("/api/v1/news/pulse", response_model=NewsPulseResponse)
-async def get_news_pulse(lens: Optional[str] = Query(None, description="직무 렌즈 (예: developer, pm, business, researcher)")):
+async def get_news_pulse(lens: Optional[str] = Query(None, description="직무 렌즈 (예: developer, agent, pm, business, researcher)")):
     """최신 AI 뉴스와 실전 활용 팁(Actionable Insight)을 가져옵니다."""
     articles = await refresh_news_pipeline()
     
-    # 렌즈 필터링이 있다면 적용
+    # 렌즈 필터링이 있다면 matched_lenses 기반으로 명확하게 엄선 필터링
     if lens and lens != "all":
-        filtered = []
-        for a in articles:
-            if lens in a.matched_lenses:
-                filtered.append(a)
-            elif a.actionable_insight and getattr(a.actionable_insight, lens, None):
-                filtered.append(a)
+        filtered = [a for a in articles if lens in a.matched_lenses]
+        # 만약 필터링 결과가 적을 경우 보완 필터링
+        if not filtered:
+            filtered = [a for a in articles if a.actionable_insight and getattr(a.actionable_insight, lens, None)]
         articles = filtered
         
     return {

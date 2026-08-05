@@ -157,7 +157,67 @@ def translate_title_to_korean(title: str) -> str:
         translated_words = [word_maps.get(w, w) for w in words]
         translated = " ".join(translated_words) + " (AI 기술 리포트)"
 
-    return translated.strip()
+def classify_article_lenses(title: str, text: str, source_name: str, category: str) -> List[str]:
+    """기사의 제목, 본문, 출처를 바탕으로 6대 스마트 직무 렌즈를 정밀 추론 및 도출합니다."""
+    combined = (title + " " + text + " " + source_name + " " + category).lower()
+    scores = {
+        "developer": 0,
+        "agent": 0,
+        "pm": 0,
+        "business": 0,
+        "researcher": 0
+    }
+
+    # 1. 코딩 & 프레임워크 (developer)
+    dev_kws = ["code", "coding", "developer", "fine-tuning", "vllm", "api", "sdk", "python", "cuda", "open-weights", "repo", "git", "refactoring", "swe-bench", "파인튜닝", "개발자", "코드"]
+    for kw in dev_kws:
+        if kw in combined:
+            scores["developer"] += 2
+
+    # 2. Agent & 오토메이션 (agent)
+    agent_kws = ["agent", "agentic", "autonomous", "workflow", "rag", "multi-agent", "langchain", "llamaindex", "automation", "task", "에이전트", "자율", "자동화"]
+    for kw in agent_kws:
+        if kw in combined:
+            scores["agent"] += 3
+
+    # 3. 기획 & UX (pm)
+    pm_kws = ["ux", "ui", "product", "pm", "design", "onboarding", "interface", "app", "experience", "dialog", "prompt", "기획", "디자인", "사용자", "인터페이스"]
+    for kw in pm_kws:
+        if kw in combined:
+            scores["pm"] += 3
+
+    # 4. 비즈니스 & TCO (business)
+    biz_kws = ["tco", "cost", "enterprise", "business", "security", "iam", "roi", "price", "market", "f1", "aws", "nvidia", "cloud", "telco", "비용", "비즈니스", "보안", "기업"]
+    for kw in biz_kws:
+        if kw in combined:
+            scores["business"] += 2
+
+    # 5. 최신 논문 & 학계 (researcher)
+    res_kws = ["paper", "arxiv", "sota", "benchmark", "mcts", "math", "dataset", "research", "slm", "evaluations", "eval", "논문", "연구", "학계", "벤치마크"]
+    for kw in res_kws:
+        if kw in combined:
+            scores["researcher"] += 3
+
+    # 출처별 가중치 부여
+    if "arxiv" in combined or "hugging face" in combined or "paper" in combined:
+        scores["researcher"] += 5
+    if "openai" in combined or "anthropic" in combined or "nvidia" in combined or "deepmind" in combined:
+        scores["developer"] += 2
+        scores["agent"] += 2
+    if "techcrunch" in combined or "venturebeat" in combined or "wired" in combined:
+        scores["business"] += 3
+
+    # 점수 기준 정렬
+    sorted_lenses = sorted(scores.items(), key=lambda item: item[1], reverse=True)
+    
+    # 최고 점수가 0점보다 높은 렌즈들 추출 (최대 2개로 제한하여 중복 방지)
+    selected = [lens for lens, score in sorted_lenses if score >= 2][:2]
+    
+    if not selected:
+        # 기본 폴백 렌즈 지정
+        selected = [sorted_lenses[0][0]] if sorted_lenses[0][1] > 0 else ["developer"]
+        
+    return selected
 
 def auto_translate_and_format(title: str, summary_text: str, source_name: str = "AI Tech Feed") -> tuple[str, List[str], str]:
     """영어 원문 제목 및 본문을 자연스러운 한국어 제목, 3줄 요약, 블로그 마크다운 포맷 전문으로 가공합니다."""
@@ -552,9 +612,8 @@ Content: {raw['summary']}
             researcher=insight_data.get("researcher")
         )
         
-        lenses = data.get("matched_lenses", [])
-        if not lenses:
-            lenses = ["developer"]
+        # 정밀 분류 추론기를 통해 주 카테고리 렌즈 결정
+        lenses = classify_article_lenses(raw["title"], raw["summary"], raw["source_name"], raw["category"])
 
         title_kr = data.get("title_kr", raw["title"])
         summary_bullets = data.get("summary_bullets", [])
@@ -579,20 +638,7 @@ Content: {raw['summary']}
     except Exception as e:
         print(f"Error analyzing article {raw['title']}: {e}")
         title_kr, summary_bullets, blog_summary = auto_translate_and_format(raw["title"], raw["summary"], raw["source_name"])
-        t_lower = (raw["title"] + " " + raw["summary"]).lower()
-        
-        lenses = []
-        if any(k in t_lower for k in ["code", "dev", "agent", "fine-tuning", "vllm", "api", "langchain", "sdk", "python", "cuda", "evaluations", "cyber"]):
-            lenses.append("developer")
-        if any(k in t_lower for k in ["ux", "product", "pm", "design", "onboarding", "workflow", "prompt", "interface", "app"]):
-            lenses.append("pm")
-        if any(k in t_lower for k in ["tco", "cost", "enterprise", "business", "security", "iam", "roi", "price", "market", "f1", "aws"]):
-            lenses.append("business")
-        if any(k in t_lower for k in ["paper", "arxiv", "sota", "benchmark", "mcts", "math", "dataset", "research", "slm"]):
-            lenses.append("researcher")
-            
-        if not lenses:
-            lenses = ["developer"] if raw["category"] == "IT 매체" else ["business"]
+        lenses = classify_article_lenses(raw["title"], raw["summary"], raw["source_name"], raw["category"])
             
         return NewsArticle(
             id=str(uuid.uuid4()),
