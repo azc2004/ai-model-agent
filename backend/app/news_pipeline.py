@@ -270,6 +270,72 @@ def auto_translate_and_format(title: str, summary_text: str, source_name: str = 
     return title_kr, bullets, blog_summary
 
 FALLBACK_ARTICLES = [
+    # 🤖 Agent & 오토메이션 특화 피드 (Agent Lens)
+    NewsArticle(
+        id="fb-agent-1",
+        title="Anthropic, 멀티 에이전트 자율 업무 워크플로우를 위한 Computer Use & Agentic Tooling 프레임워크 발표",
+        source_name="Anthropic News",
+        source_url="https://www.anthropic.com/news",
+        published_at=datetime.now(timezone.utc).isoformat(),
+        category="빅테크 공식",
+        image_url="https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=800&q=80",
+        summary_bullets=[
+            "Anthropic이 마우스 클릭, 키보드 입력, 브라우저 탐색을 스스로 수행하는 자율 Agentic 파이프라인 개방.",
+            "복잡한 서류 정리 및 웹 사이트 데이터 수집 작업을 멀티 에이전트 분산 처리로 자동 완수.",
+            "에이전트 판단 행동에 대한 보안 가드레일 및 인간 승인 루프(Human-in-the-loop) 기본 내장."
+        ],
+        actionable_insight=ActionableInsight(
+            developer="Agentic Tooling SDK를 도입하여 단순 백엔드 API 연동을 넘어 브라우저 GUI 자동화 프로세스를 수립하세요.",
+            pm="에이전트가 복잡한 업무를 대행할 때 승인(Human-in-the-loop) 인터랙션을 설계하여 보안 이탈 위험을 차단하세요.",
+            business="반복적인 사내 데이터 처리 업무를 자율 에이전트에 위임하여 인건비 및 업무 처리 시간을 80% 단축하세요."
+        ),
+        impact_score=99,
+        tags=["#Anthropic", "#AgenticAI", "#ComputerUse", "#자율에이전트", "#오토메이션"],
+        matched_lenses=["agent"]
+    ),
+    NewsArticle(
+        id="fb-agent-2",
+        title="Microsoft AutoGen 0.4 발표, 멀티 에이전트 간 분산 협업 및 실시간 자율 자가 오류 교정 엔진 탑재",
+        source_name="Microsoft AI Blog",
+        source_url="https://blogs.microsoft.com/ai/",
+        published_at=datetime.now(timezone.utc).isoformat(),
+        category="빅테크 공식",
+        image_url="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+        summary_bullets=[
+            "마이크로소프트가 자율 멀티 에이전트 오케스트레이션 프레임워크 AutoGen 0.4 버전을 공식 출시함.",
+            "에이전트 간 대화 도중 오류 발생 시 스스로 코드와 추론을 수정하는 Self-Correction 오토메이션 루프 구현.",
+            "기업 사내 ERP, CRM, 데이터베이스와 보안 연동되는 엔터프라이즈 멀티 에이전트 허브 지원."
+        ],
+        actionable_insight=ActionableInsight(
+            developer="AutoGen 0.4 분산 메시지 버스를 활용해 독립적으로 구동되는 전문가 에이전트 시스템을 구축하세요.",
+            business="엔터프라이즈 ERP/CRM과 에이전트를 결합하여 자율 보고서 생성 및 업무 자동화를 도입하세요."
+        ),
+        impact_score=97,
+        tags=["#Microsoft", "#AutoGen", "#MultiAgent", "#자율오토메이션"],
+        matched_lenses=["agent"]
+    ),
+    NewsArticle(
+        id="fb-agent-3",
+        title="AutoGPT 3.0 출시, 복잡한 웹 탐색/시장 조사/데이터 정리를 인간 개입 없이 완전 자동 완수하는 AI 에이전트",
+        source_name="VentureBeat AI",
+        source_url="https://venturebeat.com/category/ai/",
+        published_at=datetime.now(timezone.utc).isoformat(),
+        category="IT 매체",
+        image_url="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
+        summary_bullets=[
+            "AutoGPT 오픈소스 프로젝트가 자율 목표 설정 및 단계별 실행 성능이 극대화된 3.0 엔진을 선보임.",
+            "구글 검색, 웹 스크래핑, 엑셀 파일 생성을 단 하나의 목표 프롬프트만으로 끝까지 실행.",
+            "작업 실패 시 다른 대안 경로를 스스로 탐색하는 지능형 재시도(Retry with Backoff) 내장."
+        ],
+        actionable_insight=ActionableInsight(
+            developer="자율 재시도 알고리즘을 활용해 크롤링 및 수집 파이프라인의 에러 복구력을 강화하세요.",
+            pm="사용자가 복잡한 조작 없이 단 한 줄의 목표 입력으로 결과를 얻는 에이전트 기반 목표 중심 UI를 구축하세요."
+        ),
+        impact_score=93,
+        tags=["#AutoGPT", "#Agent", "#업무자동화", "#WebAgent"],
+        matched_lenses=["agent"]
+    ),
+
     # 👩‍💻 개발자/엔지니어 특화 피드 (Developer Lens)
     NewsArticle(
         id="fb-dev-1",
@@ -312,7 +378,7 @@ FALLBACK_ARTICLES = [
         ),
         impact_score=95,
         tags=["#GoogleDeepMind", "#AgenticAI", "#SWEbench", "#자율코딩"],
-        matched_lenses=["developer"]
+        matched_lenses=["developer", "agent"]
     ),
     NewsArticle(
         id="fb-dev-3",
@@ -332,7 +398,7 @@ FALLBACK_ARTICLES = [
         ),
         impact_score=89,
         tags=["#LangChain", "#LlamaIndex", "#RAG", "#VectorDB"],
-        matched_lenses=["developer"]
+        matched_lenses=["developer", "agent"]
     ),
 
     # 💡 기획/PM 특화 피드 (PM Lens)

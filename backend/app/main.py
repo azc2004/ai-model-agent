@@ -156,12 +156,16 @@ async def get_news_pulse(lens: Optional[str] = Query(None, description="직무 �
     """최신 AI 뉴스와 실전 활용 팁(Actionable Insight)을 가져옵니다."""
     articles = await refresh_news_pipeline()
     
-    # 렌즈 필터링이 있다면 matched_lenses 기반으로 명확하게 엄선 필터링
+    # 렌즈 필터링이 있다면 matched_lenses 기반으로 엄선 필터링
     if lens and lens != "all":
         filtered = [a for a in articles if lens in a.matched_lenses]
-        # 만약 필터링 결과가 적을 경우 보완 필터링
+        # 1차 보완: actionable_insight 직무 팁이 있는 기사 검색
         if not filtered:
             filtered = [a for a in articles if a.actionable_insight and getattr(a.actionable_insight, lens, None)]
+        # 2차 보완 (방어막): 매칭 기사가 0개일 경우 FALLBACK_ARTICLES에서 보충하여 0개 빈 화면 방지
+        if not filtered:
+            from app.news_pipeline import FALLBACK_ARTICLES
+            filtered = [a for a in FALLBACK_ARTICLES if lens in a.matched_lenses or (a.actionable_insight and getattr(a.actionable_insight, lens, None))]
         articles = filtered
         
     return {
