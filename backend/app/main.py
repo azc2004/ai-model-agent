@@ -148,7 +148,8 @@ from app.news_pipeline import refresh_news_pipeline, start_news_batch_loop, run_
 
 @app.on_event("startup")
 async def startup_event():
-    """서버 구동 시 백그라운드 24시간 뉴스 수집 정기 배치를 시작합니다."""
+    """서버 구동 시 최신 기사 즉각 파라렐 수집 및 24시간 뉴스 배치 루프를 구동합니다."""
+    asyncio.create_task(run_batch_job(force=True))
     asyncio.create_task(start_news_batch_loop())
 
 @app.get("/api/v1/news/pulse", response_model=NewsPulseResponse)
