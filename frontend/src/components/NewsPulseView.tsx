@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
-import { Newspaper, Users, Lightbulb, Briefcase, Microscope, ExternalLink, Activity, Hash, Clock, RefreshCw, Globe } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
+import { Newspaper, Users, Lightbulb, Briefcase, Microscope, ExternalLink, Activity, Hash, Clock, RefreshCw, Search, X } from 'lucide-react';
 import { API_BASE_URL } from '../api';
+import { useLanguage } from '../context/LanguageContext';
 
 interface ActionableInsight {
   developer?: string;
@@ -33,15 +34,16 @@ interface NewsResponse {
 
 const I18N_TEXTS = {
   ko: {
-    title: "AI News Pulse 2.0",
+    title: "AI 트렌드 뉴스 2.0",
     subtitle: "실시간 AI 트렌드와 내 업무에 바로 적용하는 실전 팁",
     pulses: "개 펄스",
     updated: "방금 전 갱신",
     refresh: "새로고침",
+    searchPlaceholder: "🔍 AI 트렌드 뉴스 키워드, 기업, 기술 검색 (예: OpenAI, Agent, 보안...)",
+    searchResultCount: "개 기사 검색됨",
     factTitle: "핵심 3줄 요약 (Fact)",
     insightTitle: "실전 활용 팁 (Actionable Insight)",
-    readBlog: "📖 심층 블로그 리포트 읽기",
-    readOriginal: "원문 기사",
+    readOriginal: "원문 기사 전문 보러가기",
     modalBadge: "📖 AI 심층 기술 블로그 리포트",
     modalClose: "닫기",
     devLabel: "[개발자]",
@@ -58,15 +60,16 @@ const I18N_TEXTS = {
     }
   },
   en: {
-    title: "AI News Pulse 2.0",
+    title: "AI Trend News 2.0",
     subtitle: "Real-time AI trends & actionable insights for your workflow",
     pulses: "Pulses",
     updated: "Just updated",
     refresh: "Refresh",
+    searchPlaceholder: "🔍 Search keywords, tech, company (e.g. OpenAI, Agent, Security...)",
+    searchResultCount: "articles found",
     factTitle: "Key 3-Bullet Summary (Fact)",
     insightTitle: "Actionable Insights by Role",
-    readBlog: "📖 Read Deep-Dive Blog Report",
-    readOriginal: "Source Article",
+    readOriginal: "Read Full Source Article",
     modalBadge: "📖 AI Technical Deep-Dive Report",
     modalClose: "Close",
     devLabel: "[Developer]",
@@ -80,6 +83,136 @@ const I18N_TEXTS = {
       pm: '💡 Product & UX',
       business: '💼 Business & TCO',
       researcher: '🔬 Research & Papers'
+    }
+  },
+  ja: {
+    title: "AI トレンドニュース 2.0",
+    subtitle: "リアルタイムAIトレンドと実務に直結する活用ヒント",
+    pulses: "件のパルス",
+    updated: "更新完了",
+    refresh: "更新",
+    searchPlaceholder: "🔍 キーワード・技術・企業検索 (例: OpenAI, Agent, セキュリティ...)",
+    searchResultCount: "件ヒット",
+    factTitle: "要約 3つのポイント (Fact)",
+    insightTitle: "職種別活用ヒント (Actionable Insight)",
+    readOriginal: "原文記事の全文を見る",
+    modalBadge: "📖 AI 詳細技術レポート",
+    modalClose: "閉じる",
+    devLabel: "[開発者]",
+    pmLabel: "[企画/PM]",
+    bizLabel: "[ビジネス]",
+    resLabel: "[研究/学術]",
+    lenses: {
+      all: '🔥 全体',
+      developer: '👩‍💻 コーディング＆開発',
+      agent: '🤖 エージェント＆自動化',
+      pm: '💡 企画＆UX',
+      business: '💼 ビジネス＆TCO',
+      researcher: '🔬 最新論文＆学術'
+    }
+  },
+  zh: {
+    title: "AI 趋势新闻 2.0",
+    subtitle: "实时 AI 趋势与业务应用实践指南",
+    pulses: "条脉搏",
+    updated: "刚刚更新",
+    refresh: "刷新",
+    searchPlaceholder: "🔍 搜索关键词、技术或公司 (例: OpenAI, Agent, 安全...)",
+    searchResultCount: "条结果",
+    factTitle: "核心 3 条摘要 (Fact)",
+    insightTitle: "岗位应用提示 (Actionable Insight)",
+    readOriginal: "查看原文全文",
+    modalBadge: "📖 AI 深度技术报告",
+    modalClose: "关闭",
+    devLabel: "[开发者]",
+    pmLabel: "[产品/PM]",
+    bizLabel: "[商业]",
+    resLabel: "[研究/学术]",
+    lenses: {
+      all: '🔥 全部',
+      developer: '👩‍💻 编程与开发',
+      agent: '🤖 智能体与自动化',
+      pm: '💡 产品与 UX',
+      business: '💼 商业与 TCO',
+      researcher: '🔬 最新论文与学术'
+    }
+  },
+  es: {
+    title: "Noticias de Tendencias de IA 2.0",
+    subtitle: "Tendencias de IA en tiempo real e información práctica",
+    pulses: "Noticias",
+    updated: "Actualizado",
+    refresh: "Actualizar",
+    searchPlaceholder: "🔍 Buscar palabras clave, empresas o tecnología...",
+    searchResultCount: "artículos encontrados",
+    factTitle: "Resumen de 3 Puntos (Fact)",
+    insightTitle: "Recomendaciones por Rol (Actionable Insight)",
+    readOriginal: "Leer Artículo Completo",
+    modalBadge: "📖 Reporte Técnico de IA",
+    modalClose: "Cerrar",
+    devLabel: "[Desarrollador]",
+    pmLabel: "[Producto/PM]",
+    bizLabel: "[Negocios]",
+    resLabel: "[Investigador]",
+    lenses: {
+      all: '🔥 Todo',
+      developer: '👩‍💻 Código y Dev',
+      agent: '🤖 Agentes y Automatización',
+      pm: '💡 Producto y UX',
+      business: '💼 Negocios y TCO',
+      researcher: '🔬 Investigación y Papers'
+    }
+  },
+  de: {
+    title: "AI Trend News 2.0",
+    subtitle: "Echtzeit-KI-Trends & praktische Einblicke für Ihren Workflow",
+    pulses: "Nachrichten",
+    updated: "Aktualisiert",
+    refresh: "Aktualisieren",
+    searchPlaceholder: "🔍 Stichwort, Unternehmen oder Technologie suchen...",
+    searchResultCount: "Artikel gefunden",
+    factTitle: "Kernpunkte 3-Zeilen (Fact)",
+    insightTitle: "Praktische Tipps nach Rolle",
+    readOriginal: "Vollständigen Quellartikel lesen",
+    modalBadge: "📖 KI Technischer Bericht",
+    modalClose: "Schließen",
+    devLabel: "[Entwickler]",
+    pmLabel: "[Produkt/PM]",
+    bizLabel: "[Business]",
+    resLabel: "[Forscher]",
+    lenses: {
+      all: '🔥 Alle Feed',
+      developer: '👩‍💻 Coden & Dev',
+      agent: '🤖 Agenten & Automation',
+      pm: '💡 Produkt & UX',
+      business: '💼 Business & TCO',
+      researcher: '🔬 Forschung & Papiere'
+    }
+  },
+  fr: {
+    title: "Actualités Tendances IA 2.0",
+    subtitle: "Tendances IA en temps réel et conseils pratiques",
+    pulses: "Articles",
+    updated: "Mis à jour",
+    refresh: "Actualiser",
+    searchPlaceholder: "🔍 Rechercher par mots-clés, entreprises...",
+    searchResultCount: "articles trouvés",
+    factTitle: "Résumé en 3 Points (Fact)",
+    insightTitle: "Conseils Pratiques par Rôle",
+    readOriginal: "Lire l'article d'origine",
+    modalBadge: "📖 Rapport Technique IA",
+    modalClose: "Fermer",
+    devLabel: "[Développeur]",
+    pmLabel: "[Produit/PM]",
+    bizLabel: "[Business]",
+    resLabel: "[Chercheur]",
+    lenses: {
+      all: '🔥 Tous',
+      developer: '👩‍💻 Code & Dev',
+      agent: '🤖 Agents & Automatisation',
+      pm: '💡 Produit & UX',
+      business: '💼 Business & TCO',
+      researcher: '🔬 Recherche & Papiers'
     }
   }
 };
@@ -228,6 +361,9 @@ const CLIENT_FALLBACK_NEWS: NewsResponse = {
 };
 
 export default function NewsPulseView() {
+  const { language } = useLanguage();
+  const t = I18N_TEXTS[language as keyof typeof I18N_TEXTS] || I18N_TEXTS.en;
+
   // URL query parameter ?lens= 파싱으로 탭 직행 및 북마크/즐겨찾기 지원
   const getInitialLens = () => {
     const params = new URLSearchParams(window.location.search);
@@ -239,12 +375,11 @@ export default function NewsPulseView() {
   };
 
   const [activeLens, setActiveLensState] = useState(getInitialLens);
+  const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [newsData, setNewsData] = useState<NewsResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
-  const [lang, setLang] = useState<'ko' | 'en'>('ko');
-  const t = I18N_TEXTS[lang];
 
   // 서브 렌즈 탭 클릭 시 주소창 URL 자동 동기화 (북마크/즐겨찾기/공유 가능)
   const setActiveLens = (lens: string) => {
@@ -313,6 +448,21 @@ export default function NewsPulseView() {
     fetchNews(activeLens);
   }, [activeLens]);
 
+  // 키워드 검색 실시간 필터링
+  const filteredArticles = useMemo(() => {
+    if (!newsData?.articles) return [];
+    if (!searchQuery.trim()) return newsData.articles;
+
+    const q = searchQuery.toLowerCase().trim();
+    return newsData.articles.filter(article => {
+      const titleMatch = article.title.toLowerCase().includes(q);
+      const sourceMatch = article.source_name.toLowerCase().includes(q);
+      const tagMatch = article.tags?.some(tag => tag.toLowerCase().includes(q));
+      const summaryMatch = article.summary_bullets?.some(b => b.toLowerCase().includes(q));
+      return titleMatch || sourceMatch || tagMatch || summaryMatch;
+    });
+  }, [newsData, searchQuery]);
+
   // 날짜 포맷팅 함수
   const formatTime = (dateString: string) => {
     try {
@@ -323,7 +473,7 @@ export default function NewsPulseView() {
       const diffHrs = Math.round(diffMins / 60);
       const diffDays = Math.round(diffHrs / 24);
 
-      if (lang === 'en') {
+      if (language !== 'ko') {
         if (diffMins < 60) return `${diffMins}m ago`;
         if (diffHrs < 24) return `${diffHrs}h ago`;
         return `${diffDays}d ago`;
@@ -359,35 +509,10 @@ export default function NewsPulseView() {
           </div>
           
           <div className="flex flex-wrap items-center gap-3">
-            {/* 🌐 다국어 (Language Switcher) 선택 버튼 */}
-            <div className="flex items-center bg-gray-100 dark:bg-gray-700/80 p-1 rounded-lg border border-gray-200 dark:border-gray-600 text-xs font-semibold">
-              <Globe className="w-3.5 h-3.5 text-gray-500 ml-1.5 mr-1" />
-              <button
-                onClick={() => setLang('ko')}
-                className={`px-2.5 py-1 rounded-md transition-all ${
-                  lang === 'ko' 
-                    ? 'bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 shadow-sm font-bold' 
-                    : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
-                }`}
-              >
-                🇰🇷 한국어
-              </button>
-              <button
-                onClick={() => setLang('en')}
-                className={`px-2.5 py-1 rounded-md transition-all ${
-                  lang === 'en' 
-                    ? 'bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 shadow-sm font-bold' 
-                    : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
-                }`}
-              >
-                🇺🇸 English
-              </button>
-            </div>
-
             {newsData && (
               <div className="flex items-center gap-3 text-sm text-gray-500">
                 <span className="flex items-center gap-1 font-medium text-xs sm:text-sm">
-                  <Activity className="w-4 h-4 text-blue-500" /> {newsData.total_count} {t.pulses}
+                  <Activity className="w-4 h-4 text-blue-500" /> {filteredArticles.length} / {newsData.total_count} {t.pulses}
                 </span>
                 <button 
                   onClick={() => fetchNews(activeLens)}
@@ -399,6 +524,33 @@ export default function NewsPulseView() {
               </div>
             )}
           </div>
+        </div>
+
+        {/* 🔍 실시간 키워드 검색바 (Real-time Article Search Bar) */}
+        <div className="mb-5 relative">
+          <div className="relative flex items-center">
+            <Search className="w-4 h-4 text-gray-400 absolute left-3.5 pointer-events-none" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={t.searchPlaceholder}
+              className="w-full pl-10 pr-10 py-2.5 bg-gray-50 dark:bg-gray-900/60 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-inner"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 text-gray-400 hover:text-gray-600 dark:hover:text-white p-1 rounded-full"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+          {searchQuery && (
+            <div className="mt-2 text-xs text-blue-600 dark:text-blue-400 font-semibold px-1">
+              🔍 "{searchQuery}" {t.searchResultCount} ({filteredArticles.length}건)
+            </div>
+          )}
         </div>
 
         {/* Lens Tabs */}
@@ -430,21 +582,21 @@ export default function NewsPulseView() {
       {loading ? (
         <div className="flex flex-col items-center justify-center py-16 text-gray-500">
           <RefreshCw className="w-8 h-8 animate-spin mb-3 text-blue-600" />
-          <p className="font-bold text-gray-700 dark:text-gray-300">Loading AI News Pulse...</p>
+          <p className="font-bold text-gray-700 dark:text-gray-300">Loading AI Trend News...</p>
           <p className="text-xs mt-1 text-gray-400">Fetching latest RSS feeds & background cache.</p>
         </div>
       ) : error ? (
         <div className="bg-red-50 text-red-600 p-4 rounded-xl text-center border border-red-200">
           <p>{error}</p>
         </div>
-      ) : newsData?.articles.length === 0 ? (
+      ) : filteredArticles.length === 0 ? (
         <div className="bg-gray-50 dark:bg-gray-800/50 text-gray-500 p-10 rounded-xl text-center border border-gray-200 dark:border-gray-700">
           <Newspaper className="w-12 h-12 mx-auto mb-3 opacity-20" />
-          <p>No articles found for the selected lens filter.</p>
+          <p>No articles found for the current search/lens filter.</p>
         </div>
       ) : (
         <div className="space-y-6">
-          {newsData?.articles.map(article => (
+          {filteredArticles.map(article => (
             <div key={article.id} className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-xl transition-all duration-300 group">
               <div className="p-6">
                 <div className="flex flex-col md:flex-row items-start gap-6">
@@ -551,14 +703,6 @@ export default function NewsPulseView() {
                     )}
                   </div>
                 </div>
-              </div>
-              <div className="bg-gray-50 dark:bg-gray-800/80 px-6 py-3.5 border-t border-gray-100 dark:border-gray-700 flex flex-wrap justify-between items-center gap-3">
-                <button
-                  onClick={() => setSelectedArticle(article)}
-                  className="px-4 py-2 text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-lg shadow-sm hover:shadow-md transition-all flex items-center gap-2"
-                >
-                  <Newspaper className="w-4 h-4" /> {t.readBlog}
-                </button>
               </div>
             </div>
           ))}

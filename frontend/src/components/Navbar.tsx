@@ -118,7 +118,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, compare
             }`}
           >
             <span className="text-sm shrink-0">📰</span>
-            <span className="whitespace-nowrap">AI 실전 뉴스</span>
+            <span className="whitespace-nowrap">AI 트렌드 뉴스</span>
           </button>
 
           <button
