@@ -359,8 +359,16 @@ export default function NewsPulseView() {
                       </span>
                     </div>
                     
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white leading-snug mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                      {article.title}
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white leading-snug mb-3 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                      <a
+                        href={article.source_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:underline flex items-center gap-1.5 group/title"
+                      >
+                        <span>{article.title}</span>
+                        <ExternalLink className="w-4 h-4 inline-block opacity-60 group-hover/title:opacity-100 group-hover/title:text-blue-600 shrink-0" />
+                      </a>
                     </h3>
 
                     {/* Tags */}
