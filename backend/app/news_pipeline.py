@@ -95,6 +95,71 @@ def extract_image_url(entry: Any, raw_html: str, source_name: str, title: str = 
     # 6. 소스별 고품질 Unsplash AI 테마 이미지 폴백
     return DEFAULT_SOURCE_IMAGES.get(source_name, "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80")
 
+def auto_translate_and_format(title: str, summary_text: str, source_name: str = "AI Tech Feed") -> tuple[str, List[str], str]:
+    """영어 원문 제목 및 본문을 자연스러운 한국어 제목, 3줄 요약, 블로그 마크다운 포맷 전문으로 가공합니다."""
+    title_kr = title
+    replacements = [
+        ("Third-party cyber evaluations involving OpenAI models", "OpenAI 모델 대상 제3자 사이버 보안 및 안전성 평가 결과 발표"),
+        ("Formulas 1®", "포뮬러 1®"),
+        ("accelerates data operations using Agentic AI on AWS", "AWS 환경에서 에이전트 AI를 활용해 데이터 운용 속도 대폭 향상"),
+        ("introduces new safeguards", "신규 보안 가드레일 및 통제 정책 도입"),
+        ("strengthen AI model testing", "AI 모델 안전성 테스트 및 평가 검증 강화"),
+        ("fine-tuning API", "파인튜닝 API"),
+        ("autonomous coding agent", "자율 코딩 개발 에이전트"),
+        ("open-weights", "오픈 웨이트 모델"),
+    ]
+    for eng, kor in replacements:
+        title_kr = title_kr.replace(eng, kor)
+        
+    if title_kr == title and not any('\uac00' <= char <= '\ud7a3' for char in title):
+        title_kr = f"[글로벌 AI 펄스] {title}"
+
+    clean_text = summary_text.replace("\n", " ").strip()
+    sentences = [s.strip() for s in clean_text.split(".") if len(s.strip()) > 15]
+    
+    if len(sentences) >= 3:
+        bullets = [f"{s}." for s in sentences[:3]]
+    elif len(sentences) == 2:
+        bullets = [f"{sentences[0]}.", f"{sentences[1]}.", "본 소식은 최신 AI 기술 트렌드 및 산업 영향력을 담고 있습니다."]
+    else:
+        bullets = [
+            f"{title_kr} 소식에 대한 상세 기술 리포트입니다.",
+            "글로벌 AI 연구소 및 빅테크 공식 채널을 통해 발췌된 최신 피드입니다.",
+            "해당 직무별 실전 활용 팁을 참고하여 현업 아키텍처에 적용해보세요."
+        ]
+
+    # 블로그 형태의 상세 심층 리포트 (Markdown)
+    blog_summary = f"""# 📌 [기술 리포트] {title_kr}
+
+> **출처**: {source_name} | **카테고리**: AI 트렌드 리포트 | **발행**: 최신 피드
+
+---
+
+### 1. 💡 서론 및 배경 (Background & Context)
+최근 AI 기술의 발전과 더불어 글로벌 엔터프라이즈 환경에서의 도입 요구사항이 빠르게 고도화되고 있습니다.  
+본 리포트는 **{source_name}**의 최신 발표를 바탕으로 현업 실무자 및 의사결정권자가 즉시 참고할 수 있는 기술적 배경과 핵심 인사이트를 제공합니다.
+
+---
+
+### 2. ⚙️ 심층 기술 해설 (Deep-Dive Analysis)
+{clean_text if len(clean_text) > 50 else '본 기사는 AI 아키텍처의 신규 기능 및 성능 최적화 파이프라인에 관한 핵심 정보들을 포함하고 있습니다. 상세 수치와 실무 벤치마크 지표를 통해 사내 시스템 적용 타당성을 검토하세요.'}
+
+---
+
+### 3. 🎯 핵심 시사점 및 직무별 대응 가이드라인
+* **👩‍💻 개발자/엔지니어**: 신규 API 파이프라인 및 가드레일 도입 시 추론 지연 시간과 보안 정책을 사전 검증하세요.
+* **💡 기획자/PM**: 사용자 대화 인터랙션 시 스트리밍 렌더링과 프롬프트 가이드를 결합하여 이탈률을 최소화하세요.
+* **💼 비즈니스 리더**: 온프레미스 하이브리드 인프라와 상용 API 간의 TCO를 시뮬레이션하여 비용 구조를 최적화하세요.
+* **🔬 연구자/학계**: SOTA 추론 메커니즘과 새로운 벤치마크 평가 방법론을 벤치마킹하여 사내 알고리즘에 검토하세요.
+
+---
+
+### 4. 🚀 종합 결론 (Strategic Takeaway)
+본 기술 발표는 단순한 기능 추가를 넘어 현업 파이프라인의 효율성을 대폭 끌어올릴 수 있는 계기를 제공합니다. 개발팀 및 기획팀과의 교차 검토를 통해 시범 적용(PoC) 계획을 수립해보는 것을 권장합니다.
+"""
+        
+    return title_kr, bullets, blog_summary
+
 FALLBACK_ARTICLES = [
     # 👩‍💻 개발자/엔지니어 특화 피드 (Developer Lens)
     NewsArticle(
@@ -308,6 +373,11 @@ FALLBACK_ARTICLES = [
     )
 ]
 
+# FALLBACK_ARTICLES에 blog_summary가 채워지지 않은 경우 자동 생성
+for _article in FALLBACK_ARTICLES:
+    if not _article.blog_summary:
+        _, _, _article.blog_summary = auto_translate_and_format(_article.title, " ".join(_article.summary_bullets), _article.source_name)
+
 # In-memory 캐시 (서버 구동 즉시 0초 노출을 위해 기본 피드 선적재)
 _news_cache: Dict[str, Any] = {
     "last_updated": time.time(),
@@ -379,41 +449,6 @@ async def fetch_rss_feeds() -> List[Dict[str, Any]]:
             })
     return raw_articles
 
-def auto_translate_and_format(title: str, summary_text: str) -> tuple[str, List[str]]:
-    """영어 원문 제목 및 본문을 자연스러운 한국어 제목과 3줄 요약 문장 배열로 가공합니다."""
-    title_kr = title
-    replacements = [
-        ("Third-party cyber evaluations involving OpenAI models", "OpenAI 모델 대상 제3자 사이버 보안 및 안전성 평가 결과 발표"),
-        ("Formulas 1®", "포뮬러 1®"),
-        ("accelerates data operations using Agentic AI on AWS", "AWS 환경에서 에이전트 AI를 활용해 데이터 운용 속도 대폭 향상"),
-        ("introduces new safeguards", "신규 보안 가드레일 및 통제 정책 도입"),
-        ("strengthen AI model testing", "AI 모델 안전성 테스트 및 평가 검증 강화"),
-        ("fine-tuning API", "파인튜닝 API"),
-        ("autonomous coding agent", "자율 코딩 개발 에이전트"),
-        ("open-weights", "오픈 웨이트 모델"),
-    ]
-    for eng, kor in replacements:
-        title_kr = title_kr.replace(eng, kor)
-        
-    if title_kr == title and not any('\uac00' <= char <= '\ud7a3' for char in title):
-        title_kr = f"[글로벌 AI 펄스] {title}"
-
-    clean_text = summary_text.replace("\n", " ").strip()
-    sentences = [s.strip() for s in clean_text.split(".") if len(s.strip()) > 15]
-    
-    if len(sentences) >= 3:
-        bullets = [f"{s}." for s in sentences[:3]]
-    elif len(sentences) == 2:
-        bullets = [f"{sentences[0]}.", f"{sentences[1]}.", "본 소식은 최신 AI 기술 트렌드 및 산업 영향력을 담고 있습니다."]
-    else:
-        bullets = [
-            f"{title_kr} 소식에 대한 상세 기술 리포트입니다.",
-            "글로벌 AI 연구소 및 빅테크 공식 채널을 통해 발췌된 최신 피드입니다.",
-            "해당 직무별 실전 활용 팁을 참고하여 현업 아키텍처에 적용해보세요."
-        ]
-        
-    return title_kr, bullets
-
 def analyze_article_with_llm(raw: Dict[str, Any]) -> NewsArticle:
     """원문을 LLM에 넘겨 3줄 요약, 실무 팁, 태그, 렌즈를 추출합니다."""
     prompt = f"""
@@ -472,15 +507,20 @@ Content: {raw['summary']}
         if not lenses:
             lenses = ["developer"]
 
+        title_kr = data.get("title_kr", raw["title"])
+        summary_bullets = data.get("summary_bullets", [])
+        _, _, blog_summary = auto_translate_and_format(title_kr, " ".join(summary_bullets), raw["source_name"])
+
         article = NewsArticle(
             id=str(uuid.uuid5(uuid.NAMESPACE_URL, raw["link"])),
-            title=data.get("title_kr", raw["title"]),
+            title=title_kr,
             source_name=raw["source_name"],
             source_url=raw["link"],
             published_at=raw["published"],
             category=raw["category"],
             image_url=raw.get("image_url"),
-            summary_bullets=data.get("summary_bullets", []),
+            summary_bullets=summary_bullets,
+            blog_summary=blog_summary,
             actionable_insight=insight,
             impact_score=data.get("impact_score", 85),
             tags=data.get("tags", []),
@@ -489,8 +529,7 @@ Content: {raw['summary']}
         return article
     except Exception as e:
         print(f"Error analyzing article {raw['title']}: {e}")
-        # LLM 실패 시 고도화된 자체 한국어 파서 가공 (100% 매끄러운 한국어 & 직무별 특화 렌즈 분류)
-        title_kr, summary_bullets = auto_translate_and_format(raw["title"], raw["summary"])
+        title_kr, summary_bullets, blog_summary = auto_translate_and_format(raw["title"], raw["summary"], raw["source_name"])
         t_lower = (raw["title"] + " " + raw["summary"]).lower()
         
         lenses = []
@@ -515,6 +554,7 @@ Content: {raw['summary']}
             category=raw["category"],
             image_url=raw.get("image_url"),
             summary_bullets=summary_bullets,
+            blog_summary=blog_summary,
             actionable_insight=ActionableInsight(
                 developer="보안 가드레일 및 API 시스템 구축 시 최신 사이버 검증 평가 지침을 준수하세요." if "developer" in lenses else None,
                 pm="보안 지침 업데이트 시 사용자 데이터 관리 정책을 정밀하게 보완하세요." if "pm" in lenses else None,

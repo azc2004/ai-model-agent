@@ -211,6 +211,7 @@ class NewsArticle(BaseModel):
     
     # AI Processed Fields
     summary_bullets: List[str] = Field(default_factory=list, description="3줄 핵심 요약")
+    blog_summary: Optional[str] = Field(None, description="블로그 형태의 상세 기술 리포트 전문 (Markdown)")
     actionable_insight: Optional[ActionableInsight] = Field(None, description="직무별 실무 적용 팁")
     impact_score: int = Field(0, description="산업적 영향도 점수 (1~100)")
     tags: List[str] = Field(default_factory=list, description="핵심 트렌딩 키워드 태그")
