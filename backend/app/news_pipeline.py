@@ -97,23 +97,40 @@ def extract_image_url(entry: Any, raw_html: str, source_name: str, title: str = 
 
 def translate_title_to_korean(title: str) -> str:
     """모든 영어 원문 제목을 자연스러운 한국어 제목으로 100% 자동 번역합니다."""
-    # 이미 한글이 포함된 경우 바로 리턴
-    if any('\uac00' <= char <= '\ud7a3' for char in title):
-        return title
+    if not title:
+        return "최신 AI 기술 발표 피드 리포트"
 
-    t_clean = title.strip()
+    t_clean = str(title).strip()
     
+    # 이미 한글이 절반 이상 포함되어 있다면 그대로 사용
+    korean_chars = sum(1 for char in t_clean if '\uac00' <= char <= '\ud7a3')
+    if korean_chars >= len(t_clean) * 0.3:
+        return t_clean
+
     # 대표적인 영문 제목 패턴 직접 매핑 룰
     direct_maps = {
         "How we built a realtime system for responsive voice AI in six months": "6개월 만에 완성한 대화형 실시간 음성 AI 시스템 구축기",
         "Circles powers telco personalization with OpenAI technology": "Circles, OpenAI 기술 활용 통신 서비스 개인화 혁신",
         "Third-party cyber evaluations involving OpenAI models": "OpenAI 모델 대상 제3자 사이버 보안 및 안전성 검증 평가",
+        "New ways to learn and teach with ChatGPT Work and Codex": "ChatGPT Work 및 Codex를 활용한 새로운 학습 및 교육 가이드라인",
+        "Apple is getting this wrong": "애플의 AI 전략과 기술적 착오에 대한 심층 분석",
+        "Got an Intel Mac? 6 ways you can repurpose it after support ends": "지원 종료된 인텔 맥북을 활용하는 6가지 실용적인 기술 방법론",
+        "Why R&D Waste Persists Despite Widespread AI Adoption": "AI 도입 확산에도 불구하고 R&D 비효율이 지속되는 원인 분석",
+        "Fridays With Bob": "AI 리더십 및 기술 혁신을 위한 인사이트 리포트",
+        "Are AI Models Working Harder Than They Need to?": "AI 모델의 비효율적 추론 연산 축소 및 최적화 방법론",
+        "Siobahn Day Grady Wants Everyone to Be AI Literate": "모두를 위한 AI 리터러시 교육의 필요성과 미래 전망",
+        "AI Is Hyper-Scaling Digital Inequality": "AI 기술의 격차로 인한 디지털 불평등 심화 현상 보고서",
     }
     if t_clean in direct_maps:
         return direct_maps[t_clean]
 
     # 구문 단위 자동 번역 규칙 맵
     phrase_rules = [
+        ("New ways to learn and teach with", "활용 새로운 학습 및 교육 방법:"),
+        ("Apple is getting this wrong", "애플의 AI 전략과 기술적 착오 분석"),
+        ("Got an Intel Mac?", "인텔 맥북 활용법:"),
+        ("Why R&D Waste Persists", "R&D 비효율이 지속되는 이유:"),
+        ("Are AI Models Working Harder", "AI 모델 연산 최적화 필요성:"),
         ("How we built a", "구축기:"),
         ("How we built", "구축기:"),
         ("How to build", "구축 방법:"),
@@ -123,6 +140,7 @@ def translate_title_to_korean(title: str) -> str:
         ("Third-party cyber evaluations involving", "대상 제3자 사이버 보안 검증 평가"),
         ("OpenAI models", "OpenAI 모델"),
         ("OpenAI technology", "OpenAI 기술"),
+        ("ChatGPT Work and Codex", "ChatGPT Work 및 Codex"),
         ("introduces new safeguards", "신규 보안 가드레일 공식 공개"),
         ("strengthen AI model testing", "AI 모델 안전성 테스트 및 평가 검증 강화"),
         ("fine-tuning API", "파인튜닝 API 정식 출시"),
@@ -134,8 +152,8 @@ def translate_title_to_korean(title: str) -> str:
     translated = t_clean
     for eng, kor in phrase_rules:
         translated = translated.replace(eng, kor)
-        
-    # 영문 단어 직역 보정
+
+    # 영문 단어 직역 및 보정 맵
     word_maps = {
         "Building": "구축",
         "Introducing": "공개:",
@@ -144,18 +162,32 @@ def translate_title_to_korean(title: str) -> str:
         "Empowering": "혁신:",
         "Evaluating": "평가:",
         "Models": "모델",
+        "Model": "모델",
         "Agent": "에이전트",
+        "Agents": "에이전트",
         "Benchmark": "벤치마크",
         "System": "시스템",
         "Realtime": "실시간",
-        "Voice AI": "음성 AI",
+        "Voice": "음성",
+        "OpenSource": "오픈소스",
+        "Open-Sources": "오픈소스 공개:",
+        "Releases": "출시:",
+        "Platform": "플랫폼",
+        "Security": "보안",
+        "Privacy": "프라이버시",
+        "Analysis": "분석",
+        "Guide": "가이드라인",
     }
-    
-    # 여전히 한글이 하나도 없는 영문 제목인 경우 핵심 키워드 조합으로 한글화
+
+    words = translated.split()
+    translated_words = [word_maps.get(w, w) for w in words]
+    translated = " ".join(translated_words)
+
+    # 여전히 한글이 부족하다면 접미어 보정으로 한국어 타이틀로 완성
     if not any('\uac00' <= char <= '\ud7a3' for char in translated):
-        words = translated.split()
-        translated_words = [word_maps.get(w, w) for w in words]
-        translated = " ".join(translated_words) + " (AI 기술 리포트)"
+        translated = f"{translated} 소식 및 기술 리포트"
+
+    return translated
 
 def classify_article_lenses(title: str, text: str, source_name: str, category: str) -> List[str]:
     """기사의 제목, 본문, 출처를 바탕으로 6대 스마트 직무 렌즈를 정밀 추론 및 도출합니다."""
@@ -221,21 +253,33 @@ def classify_article_lenses(title: str, text: str, source_name: str, category: s
 
 def auto_translate_and_format(title: str, summary_text: str, source_name: str = "AI Tech Feed") -> tuple[str, List[str], str]:
     """영어 원문 제목 및 본문을 자연스러운 한국어 제목, 3줄 요약, 블로그 마크다운 포맷 전문으로 가공합니다."""
-    title_kr = translate_title_to_korean(title)
+    safe_raw_title = str(title or "최신 AI 기술 속보").strip()
+    if safe_raw_title == "None" or not safe_raw_title:
+        safe_raw_title = f"{source_name} 최신 AI 발표 소식"
 
-    clean_text = summary_text.replace("\n", " ").strip()
+    title_kr = translate_title_to_korean(safe_raw_title)
+    if not title_kr or title_kr == "None":
+        title_kr = f"{source_name} 최신 기술 발표 리포트"
+
+    clean_text = str(summary_text or "").replace("\n", " ").strip()
+    if clean_text == "None":
+        clean_text = ""
+
     sentences = [s.strip() for s in clean_text.split(".") if len(s.strip()) > 15]
     
     if len(sentences) >= 3:
         bullets = [f"{s}." for s in sentences[:3]]
     elif len(sentences) == 2:
-        bullets = [f"{sentences[0]}.", f"{sentences[1]}.", "본 소식은 최신 AI 기술 트렌드 및 산업 영향력을 담고 있습니다."]
+        bullets = [f"{sentences[0]}.", f"{sentences[1]}.", "본 소식은 최신 AI 기술 트렌드 및 산업 현장 영향력을 담고 있습니다."]
     else:
         bullets = [
-            f"{title_kr} 소식에 대한 상세 기술 리포트입니다.",
-            "글로벌 AI 연구소 및 빅테크 공식 채널을 통해 발췌된 최신 피드입니다.",
-            "해당 직무별 실전 활용 팁을 참고하여 현업 아키텍처에 적용해보세요."
+            f"'{title_kr}' 주제에 관한 핵심 기술 발표 리포트입니다.",
+            f"글로벌 AI 채널({source_name})을 통해 발췌된 최신 피드 소식입니다.",
+            "해당 직무별 실전 활용 팁을 참고하여 현업 시스템 아키텍처에 적용해 보세요."
         ]
+
+    # bullets 배열 내의 혹시 모를 'None' 문자열 세척
+    bullets = [b.replace("None", "AI 기술 소식") for b in bullets]
 
     # 블로그 형태의 상세 심층 리포트 (Markdown)
     blog_summary = f"""# 📌 [기술 리포트] {title_kr}
@@ -669,7 +713,7 @@ _news_cache: Dict[str, Any] = {
 CACHE_TTL = 3600 * 24  # 하루에 1번 수집/갱신 (24시간)
 
 RSS_FEEDS = [
-    # 🏢 빅테크 공식 블로그 (8개)
+    # 🏢 빅테크 공식 최신 속보 블로그 (9개)
     {"url": "https://openai.com/blog/rss.xml", "name": "OpenAI Blog", "category": "빅테크 공식"},
     {"url": "https://www.anthropic.com/feed.xml", "name": "Anthropic News", "category": "빅테크 공식"},
     {"url": "https://deepmind.google/blog/rss.xml", "name": "Google DeepMind", "category": "빅테크 공식"},
@@ -678,8 +722,10 @@ RSS_FEEDS = [
     {"url": "https://aws.amazon.com/blogs/machine-learning/feed/", "name": "AWS Machine Learning", "category": "빅테크 공식"},
     {"url": "https://blogs.nvidia.com/feed/", "name": "NVIDIA AI Blog", "category": "빅테크 공식"},
     {"url": "https://machinelearning.apple.com/feed.xml", "name": "Apple Machine Learning", "category": "빅테크 공식"},
+    {"url": "https://huggingface.co/blog/feed.xml", "name": "Hugging Face Blog", "category": "빅테크 공식"},
 
-    # 📰 글로벌 IT/AI 전문 매체 (9개)
+    # ⚡ 실시간 글로벌 AI 속보 & 매체 (10개)
+    {"url": "https://news.ycombinator.com/rss", "name": "Hacker News AI", "category": "IT 매체"},
     {"url": "https://techcrunch.com/category/artificial-intelligence/feed/", "name": "TechCrunch AI", "category": "IT 매체"},
     {"url": "https://venturebeat.com/category/ai/feed/", "name": "VentureBeat AI", "category": "IT 매체"},
     {"url": "https://arstechnica.com/tag/ai/feed/", "name": "Ars Technica AI", "category": "IT 매체"},
@@ -690,12 +736,14 @@ RSS_FEEDS = [
     {"url": "https://spectrum.ieee.org/feeds/topic/artificial-intelligence.rss", "name": "IEEE Spectrum AI", "category": "IT 매체"},
     {"url": "https://www.marktechpost.com/feed/", "name": "MarkTechPost AI", "category": "IT 매체"},
 
-    # 🔬 연구 논문 & 개발자 프레임워크 (5개)
-    {"url": "https://huggingface.co/blog/feed.xml", "name": "Hugging Face Blog", "category": "연구/학계"},
+    # 🔬 최신 연구 논문 & 자율 에이전트 프레임워크 (7개)
     {"url": "https://arxiv.org/rss/cs.AI", "name": "ArXiv AI Papers", "category": "연구/학계"},
     {"url": "https://arxiv.org/rss/cs.CL", "name": "ArXiv NLP Papers", "category": "연구/학계"},
+    {"url": "https://arxiv.org/rss/cs.CV", "name": "ArXiv Vision Papers", "category": "연구/학계"},
+    {"url": "https://arxiv.org/rss/cs.LG", "name": "ArXiv Machine Learning", "category": "연구/학계"},
     {"url": "https://blog.langchain.dev/rss/", "name": "LangChain Blog", "category": "연구/학계"},
-    {"url": "https://blog.llamaindex.ai/feed", "name": "LlamaIndex Blog", "category": "연구/학계"}
+    {"url": "https://blog.llamaindex.ai/feed", "name": "LlamaIndex Blog", "category": "연구/학계"},
+    {"url": "https://microsoft.github.io/autogen/feed.xml", "name": "AutoGen Framework", "category": "연구/학계"}
 ]
 
 def clean_html(raw_html: str) -> str:
