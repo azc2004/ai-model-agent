@@ -14,12 +14,41 @@ import { TutorialView } from './components/TutorialView';
 import NewsPulseView from './components/NewsPulseView';
 
 export const AppContent: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<string>('dashboard');
+  // URL query parameter ?tab= 파싱으로 북마크/즐겨찾기 라우팅 초기화
+  const getInitialTab = () => {
+    const params = new URLSearchParams(window.location.search);
+    const tabParam = params.get('tab');
+    if (tabParam && ['dashboard', 'compare', 'tco', 'advisor', 'tutorial', 'leaderboard', 'gpus', 'news'].includes(tabParam)) {
+      return tabParam;
+    }
+    return 'dashboard';
+  };
+
+  const [activeTab, setActiveTabState] = useState<string>(getInitialTab);
   const [models, setModels] = useState<ModelSpec[]>([]);
   const [providers, setProviders] = useState<Provider[]>([]);
   const [selectedModelIds, setSelectedModelIds] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  // 탭 변경 시 URL 파라미터 주소창 자동 동기화 (즐겨찾기/링크 공유 가능)
+  const setActiveTab = (tab: string) => {
+    setActiveTabState(tab);
+    const url = new URL(window.location.href);
+    url.searchParams.set('tab', tab);
+    window.history.pushState({}, '', url.toString());
+  };
+
+  // 브라우저 뒤로가기/앞으로가기 (popstate) 감지
+  useEffect(() => {
+    const handlePopState = () => {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get('tab') || 'dashboard';
+      setActiveTabState(tabParam);
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   useEffect(() => {
     const loadData = async () => {

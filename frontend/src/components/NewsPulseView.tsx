@@ -225,13 +225,43 @@ const CLIENT_FALLBACK_NEWS: NewsResponse = {
 };
 
 export default function NewsPulseView() {
-  const [activeLens, setActiveLens] = useState('all');
+  // URL query parameter ?lens= 파싱으로 탭 직행 및 북마크/즐겨찾기 지원
+  const getInitialLens = () => {
+    const params = new URLSearchParams(window.location.search);
+    const lensParam = params.get('lens');
+    if (lensParam && ['all', 'developer', 'pm', 'business', 'researcher'].includes(lensParam)) {
+      return lensParam;
+    }
+    return 'all';
+  };
+
+  const [activeLens, setActiveLensState] = useState(getInitialLens);
   const [loading, setLoading] = useState(true);
   const [newsData, setNewsData] = useState<NewsResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
   const [lang, setLang] = useState<'ko' | 'en'>('ko');
   const t = I18N_TEXTS[lang];
+
+  // 서브 렌즈 탭 클릭 시 주소창 URL 자동 동기화 (북마크/즐겨찾기/공유 가능)
+  const setActiveLens = (lens: string) => {
+    setActiveLensState(lens);
+    const url = new URL(window.location.href);
+    url.searchParams.set('tab', 'news');
+    url.searchParams.set('lens', lens);
+    window.history.pushState({}, '', url.toString());
+  };
+
+  // 뒤로가기/앞으로가기 popstate 감지
+  useEffect(() => {
+    const handlePopState = () => {
+      const params = new URLSearchParams(window.location.search);
+      const lensParam = params.get('lens') || 'all';
+      setActiveLensState(lensParam);
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const fetchNews = async (lens: string) => {
     setLoading(true);
