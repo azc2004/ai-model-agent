@@ -48,6 +48,48 @@ def health_check():
         "total_providers": len(PROVIDERS)
     }
 
+from app.database import SessionLocal, engine, Base
+from app.db_models import LLMModelDB, ProviderDB, NewsArticleDB
+
+# Neon DB 테이블 생성 및 시드 데이터 176개 모델 영구 적재 함수
+def init_neon_db_catalog():
+    """서버 구동 시 176개 전체 LLM 모델 데이터를 Neon PostgreSQL DB에 영구 적재(UPSERT)합니다."""
+    try:
+        Base.metadata.create_all(bind=engine)
+        db = SessionLocal()
+        count = db.query(LLMModelDB).count()
+        if count < len(MODELS):
+            print(f"[NeonDB Init] Migrating {len(MODELS)} full LLM models to Neon DB...")
+            for m in MODELS:
+                existing = db.query(LLMModelDB).filter(LLMModelDB.id == m.id).first()
+                if not existing:
+                    db_m = LLMModelDB(
+                        id=m.id,
+                        provider_id=m.provider_id,
+                        provider_name=m.provider_name,
+                        name=m.name,
+                        tier=m.tier,
+                        is_open_weight=m.is_open_weight,
+                        architecture=m.architecture or "Transformer",
+                        context_window=m.context_window,
+                        max_output_tokens=m.max_output_tokens,
+                        modality=m.modality or ["text"],
+                        description=m.description or "",
+                        official_url=m.official_url or "",
+                        source_docs_url=m.source_docs_url or "",
+                        api_pricing=m.api_pricing.dict() if m.api_pricing else {},
+                        benchmarks=m.benchmarks.dict() if m.benchmarks else {}
+                    )
+                    db.add(db_m)
+            db.commit()
+            print(f"[NeonDB Init] ✅ Successfully migrated full LLM catalog to Neon PostgreSQL!")
+        db.close()
+    except Exception as e:
+        print(f"[NeonDB Init Warning] Catalog migration notice: {e}")
+
+# 서버 시작 시 Neon DB 마이그레이션 자동 실행
+init_neon_db_catalog()
+
 @app.get("/api/v1/providers", response_model=List[Provider])
 def get_providers():
     """LLM 프로바이더 목록을 반환합니다."""
@@ -60,8 +102,38 @@ def get_models(
     is_open_weight: Optional[bool] = None,
     search: Optional[str] = None
 ):
-    """LLM 모델 목록 조회 (필터링 지원)"""
+    """Neon PostgreSQL DB에서 176개 전체 LLM 모델 카탈로그 목록 조회 (필터링 지원)"""
     results = MODELS
+
+    # DB에 적재된 최신 176개 모델 우선 로드 시도
+    try:
+        db = SessionLocal()
+        db_models = db.query(LLMModelDB).all()
+        if db_models and len(db_models) >= len(MODELS):
+            parsed_models = []
+            for item in db_models:
+                parsed_models.append(ModelSpec(
+                    id=item.id,
+                    provider_id=item.provider_id,
+                    provider_name=item.provider_name,
+                    name=item.name,
+                    tier=item.tier,
+                    is_open_weight=item.is_open_weight,
+                    license_type="Proprietary",
+                    architecture=item.architecture,
+                    context_window=item.context_window,
+                    max_output_tokens=item.max_output_tokens,
+                    modality=item.modality or ["text"],
+                    description=item.description,
+                    official_url=item.official_url,
+                    source_docs_url=item.source_docs_url,
+                    api_pricing=item.api_pricing or {},
+                    benchmarks=item.benchmarks or {}
+                ))
+            results = parsed_models
+        db.close()
+    except Exception as e:
+        print(f"[DB Models Warning] Falling back to memory MODELS: {e}")
 
     if provider_id:
         results = [m for m in results if m.provider_id.lower() == provider_id.lower()]

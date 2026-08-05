@@ -100,38 +100,67 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
 
       // 6. 📐 시스템 아키텍처 & 플로우 도식화 파이프라인 박스 렌더링 (Special Visual Architecture Box)
       if (trimmed.includes('🔑 주요 기술적 차별점') || trimmed.includes('아키텍처') || trimmed.includes('플로우')) {
+        const lines = trimmed.split('\n');
+        const headerTitle = lines[0]?.replace(/^####\s*/, '') || '🔑 주요 기술적 차별점';
+        const listItems = lines.slice(1).filter(l => l.trim().startsWith('*') || l.trim().startsWith('-'));
+
         return (
-          <div key={bIdx} className="my-6 p-6 rounded-3xl bg-slate-900 text-white shadow-xl border border-slate-800 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div key={bIdx} className="my-8 p-6 sm:p-8 rounded-3xl bg-slate-900 text-white shadow-xl border border-slate-800 space-y-6">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-red-500" />
                 <div className="w-3 h-3 rounded-full bg-yellow-500" />
                 <div className="w-3 h-3 rounded-full bg-green-500" />
                 <span className="text-xs font-mono text-slate-400 ml-2">system-architecture-workflow.diag</span>
               </div>
-              <span className="text-[11px] font-black tracking-wider uppercase bg-blue-600/30 text-blue-400 border border-blue-500/30 px-2.5 py-0.5 rounded-full">
+              <span className="text-[11px] font-black tracking-wider uppercase bg-blue-600/30 text-blue-400 border border-blue-500/30 px-3 py-1 rounded-full">
                 SOTA Pipeline Diagram
               </span>
             </div>
 
             {/* 도식화 메커니즘 흐름도 (Visual Diagram) */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-3 py-2 text-center text-xs font-bold">
-              <div className="p-3 rounded-xl bg-slate-800/90 border border-slate-700 text-cyan-300">
-                1. Multi-Feed Ingestion<br/><span className="text-[10px] text-slate-400 font-normal">Realtime Stream</span>
+              <div className="p-3.5 rounded-2xl bg-slate-800/90 border border-slate-700 text-cyan-300 shadow">
+                1. Multi-Feed Ingestion<br/><span className="text-[10px] text-slate-400 font-normal">Realtime Stream Ingest</span>
               </div>
-              <div className="p-3 rounded-xl bg-slate-800/90 border border-slate-700 text-indigo-300">
+              <div className="p-3.5 rounded-2xl bg-slate-800/90 border border-slate-700 text-indigo-300 shadow">
                 2. LLM Reasoning Agent<br/><span className="text-[10px] text-slate-400 font-normal">Self-Correction Loop</span>
               </div>
-              <div className="p-3 rounded-xl bg-slate-800/90 border border-slate-700 text-purple-300">
+              <div className="p-3.5 rounded-2xl bg-slate-800/90 border border-slate-700 text-purple-300 shadow">
                 3. Safety Guardrails<br/><span className="text-[10px] text-slate-400 font-normal">Security Validation</span>
               </div>
-              <div className="p-3 rounded-xl bg-blue-600 text-white">
+              <div className="p-3.5 rounded-2xl bg-blue-600 text-white shadow">
                 4. Production Servicing<br/><span className="text-[10px] text-blue-100 font-normal">0.1ms Instant Serve</span>
               </div>
             </div>
 
-            <div className="text-sm text-slate-300 leading-relaxed pt-2">
-              {parseInlineMarkdown(trimmed)}
+            {/* 주요 기술적 차별점 리스트 (세로 찌그러짐 원천 방지 3컬럼 카드로 파싱) */}
+            <div className="space-y-3 pt-2">
+              <h4 className="text-sm font-extrabold text-blue-400 flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-blue-400" />
+                {parseInlineMarkdown(headerTitle)}
+              </h4>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {listItems.map((itemStr, idx) => {
+                  const cleanStr = itemStr.replace(/^[\*\-]\s*/, '').trim();
+                  const [itemTitle, ...itemBodyParts] = cleanStr.split(':');
+                  const itemBody = itemBodyParts.join(':').trim();
+
+                  return (
+                    <div key={idx} className="p-4 rounded-2xl bg-slate-800/80 border border-slate-700/80 space-y-1.5 shadow-sm">
+                      <div className="text-xs font-black text-cyan-400">
+                        {parseInlineMarkdown(itemTitle.trim())}
+                      </div>
+                      {itemBody && (
+                        <div className="text-xs text-slate-300 leading-relaxed">
+                          {parseInlineMarkdown(itemBody)}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         );
