@@ -79,7 +79,8 @@ export const AppContent: React.FC = () => {
     setSelectedModelIds([]);
   };
 
-  if (loading) {
+  // non-blocking non-freeze 렌더링: loading 상태여도 메인 UI 화면을 0초만에 노출
+  if (loading && models.length === 0) {
     return (
       <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center flex-col gap-4">
         <div className="w-12 h-12 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
