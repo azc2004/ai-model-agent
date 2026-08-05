@@ -445,16 +445,11 @@ export default function NewsPulseView() {
                       </span>
                     </div>
                     
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white leading-snug mb-3 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                      <a
-                        href={article.source_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:underline flex items-center gap-1.5 group/title"
-                      >
-                        <span>{article.title}</span>
-                        <ExternalLink className="w-4 h-4 inline-block opacity-60 group-hover/title:opacity-100 group-hover/title:text-blue-600 shrink-0" />
-                      </a>
+                    <h3 
+                      onClick={() => setSelectedArticle(article)}
+                      className="text-xl font-bold text-gray-900 dark:text-white leading-snug mb-3 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-2 group/title"
+                    >
+                      <span>{article.title}</span>
                     </h3>
 
                     {/* Tags */}
@@ -468,9 +463,12 @@ export default function NewsPulseView() {
                       </div>
                     )}
 
-                    {/* Summary Bullets */}
-                    <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4 mb-4 border border-gray-100 dark:border-gray-700">
-                      <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
+                    {/* Summary Bullets (Click to open modal) */}
+                    <div 
+                      onClick={() => setSelectedArticle(article)}
+                      className="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4 mb-4 border border-gray-100 dark:border-gray-700 cursor-pointer hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-sm transition-all group/summary"
+                    >
+                      <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2 group-hover/summary:text-blue-600 transition-colors">
                         <Activity className="w-4 h-4 text-green-500" /> {t.factTitle}
                       </h4>
                       <ul className="space-y-2">
@@ -528,20 +526,6 @@ export default function NewsPulseView() {
                 >
                   <Newspaper className="w-4 h-4" /> {t.readBlog}
                 </button>
-
-                <div className="flex items-center gap-4 ml-auto">
-                  <a 
-                    href={article.source_url} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-sm font-medium text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 flex items-center gap-1 transition-colors"
-                  >
-                    {t.readOriginal} <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-                  <span className="text-xs text-gray-400 font-medium border-l border-gray-200 dark:border-gray-700 pl-3">
-                    Gemini 2.5 Flash
-                  </span>
-                </div>
               </div>
             </div>
           ))}
