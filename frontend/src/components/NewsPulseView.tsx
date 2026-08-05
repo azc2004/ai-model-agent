@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Newspaper, Users, Lightbulb, Briefcase, Microscope, ExternalLink, Activity, Hash, Clock, RefreshCw } from 'lucide-react';
+import { Newspaper, Users, Lightbulb, Briefcase, Microscope, ExternalLink, Activity, Hash, Clock, RefreshCw, Globe } from 'lucide-react';
 import { API_BASE_URL } from '../api';
 
 interface ActionableInsight {
@@ -30,6 +30,57 @@ interface NewsResponse {
   total_count: number;
   last_updated: string;
 }
+
+const I18N_TEXTS = {
+  ko: {
+    title: "AI News Pulse 2.0",
+    subtitle: "실시간 AI 트렌드와 내 업무에 바로 적용하는 실전 팁",
+    pulses: "개 펄스",
+    updated: "방금 전 갱신",
+    refresh: "새로고침",
+    factTitle: "핵심 3줄 요약 (Fact)",
+    insightTitle: "실전 활용 팁 (Actionable Insight)",
+    readBlog: "📖 심층 블로그 리포트 읽기",
+    readOriginal: "원문 기사",
+    modalBadge: "📖 AI 심층 기술 블로그 리포트",
+    modalClose: "닫기",
+    devLabel: "[개발자]",
+    pmLabel: "[기획/PM]",
+    bizLabel: "[비즈니스]",
+    resLabel: "[연구/학계]",
+    lenses: {
+      all: '🔥 전체',
+      developer: '👩‍💻 개발/엔지니어',
+      pm: '💡 기획/PM',
+      business: '💼 비즈니스',
+      researcher: '🔬 연구/학계'
+    }
+  },
+  en: {
+    title: "AI News Pulse 2.0",
+    subtitle: "Real-time AI trends & actionable insights for your workflow",
+    pulses: "Pulses",
+    updated: "Just updated",
+    refresh: "Refresh",
+    factTitle: "Key 3-Bullet Summary (Fact)",
+    insightTitle: "Actionable Insights by Role",
+    readBlog: "📖 Read Deep-Dive Blog Report",
+    readOriginal: "Source Article",
+    modalBadge: "📖 AI Technical Deep-Dive Report",
+    modalClose: "Close",
+    devLabel: "[Developer]",
+    pmLabel: "[PM/Product]",
+    bizLabel: "[Business]",
+    resLabel: "[Researcher]",
+    lenses: {
+      all: '🔥 All Feed',
+      developer: '👩‍💻 Developer',
+      pm: '💡 Product PM',
+      business: '💼 Business Leader',
+      researcher: '🔬 Researcher'
+    }
+  }
+};
 
 const LENSES = [
   { id: 'all', label: '🔥 전체', icon: Activity, desc: '주요 AI 트렌드 종합' },
@@ -179,6 +230,8 @@ export default function NewsPulseView() {
   const [newsData, setNewsData] = useState<NewsResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
+  const [lang, setLang] = useState<'ko' | 'en'>('ko');
+  const t = I18N_TEXTS[lang];
 
   const fetchNews = async (lens: string) => {
     setLoading(true);
@@ -237,6 +290,12 @@ export default function NewsPulseView() {
       const diffHrs = Math.round(diffMins / 60);
       const diffDays = Math.round(diffHrs / 24);
 
+      if (lang === 'en') {
+        if (diffMins < 60) return `${diffMins}m ago`;
+        if (diffHrs < 24) return `${diffHrs}h ago`;
+        return `${diffDays}d ago`;
+      }
+
       if (diffMins < 60) return `${diffMins}분 전`;
       if (diffHrs < 24) return `${diffHrs}시간 전`;
       return `${diffDays}일 전`;
@@ -255,33 +314,58 @@ export default function NewsPulseView() {
     <div className="space-y-6 animate-fade-in">
       {/* Header & Lenses */}
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
               <Newspaper className="w-6 h-6 text-blue-600" />
-              AI News Pulse 2.0
+              {t.title}
             </h1>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-              실시간 AI 트렌드와 내 업무에 바로 적용하는 실전 팁
+              {t.subtitle}
             </p>
           </div>
-          {newsData && (
-            <div className="mt-4 md:mt-0 flex items-center gap-4 text-sm text-gray-500">
-              <span className="flex items-center gap-1">
-                <Activity className="w-4 h-4" /> {newsData.total_count}개 펄스
-              </span>
-              <span className="flex items-center gap-1">
-                <Clock className="w-4 h-4" /> 방금 전 갱신
-              </span>
-              <button 
-                onClick={() => fetchNews(activeLens)}
-                className="flex items-center gap-1 text-blue-600 hover:text-blue-700 transition-colors"
-                disabled={loading}
+          
+          <div className="flex flex-wrap items-center gap-3">
+            {/* 🌐 다국어 (Language Switcher) 선택 버튼 */}
+            <div className="flex items-center bg-gray-100 dark:bg-gray-700/80 p-1 rounded-lg border border-gray-200 dark:border-gray-600 text-xs font-semibold">
+              <Globe className="w-3.5 h-3.5 text-gray-500 ml-1.5 mr-1" />
+              <button
+                onClick={() => setLang('ko')}
+                className={`px-2.5 py-1 rounded-md transition-all ${
+                  lang === 'ko' 
+                    ? 'bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 shadow-sm font-bold' 
+                    : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
+                }`}
               >
-                <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} /> 새로고침
+                🇰🇷 한국어
+              </button>
+              <button
+                onClick={() => setLang('en')}
+                className={`px-2.5 py-1 rounded-md transition-all ${
+                  lang === 'en' 
+                    ? 'bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 shadow-sm font-bold' 
+                    : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
+                }`}
+              >
+                🇺🇸 English
               </button>
             </div>
-          )}
+
+            {newsData && (
+              <div className="flex items-center gap-3 text-sm text-gray-500">
+                <span className="flex items-center gap-1 font-medium text-xs sm:text-sm">
+                  <Activity className="w-4 h-4 text-blue-500" /> {newsData.total_count} {t.pulses}
+                </span>
+                <button 
+                  onClick={() => fetchNews(activeLens)}
+                  className="flex items-center gap-1 text-xs sm:text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors bg-blue-50 dark:bg-blue-900/30 px-3 py-1.5 rounded-lg"
+                  disabled={loading}
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} /> {t.refresh}
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Lens Tabs */}
@@ -289,6 +373,7 @@ export default function NewsPulseView() {
           {LENSES.map(lens => {
             const Icon = lens.icon;
             const isActive = activeLens === lens.id;
+            const labelText = t.lenses[lens.id as keyof typeof t.lenses] || lens.label;
             return (
               <button
                 key={lens.id}
@@ -301,7 +386,7 @@ export default function NewsPulseView() {
                 title={lens.desc}
               >
                 <Icon className="w-4 h-4" />
-                {lens.label}
+                {labelText}
               </button>
             );
           })}
@@ -312,8 +397,8 @@ export default function NewsPulseView() {
       {loading ? (
         <div className="flex flex-col items-center justify-center py-16 text-gray-500">
           <RefreshCw className="w-8 h-8 animate-spin mb-3 text-blue-600" />
-          <p className="font-bold text-gray-700 dark:text-gray-300">실시간 AI 뉴스 펄스를 불러오는 중입니다...</p>
-          <p className="text-xs mt-1 text-gray-400">24시간 정기 배치로 준비된 캐시 피드로 즉시 전환됩니다.</p>
+          <p className="font-bold text-gray-700 dark:text-gray-300">Loading AI News Pulse...</p>
+          <p className="text-xs mt-1 text-gray-400">Fetching latest RSS feeds & background cache.</p>
         </div>
       ) : error ? (
         <div className="bg-red-50 text-red-600 p-4 rounded-xl text-center border border-red-200">
@@ -322,7 +407,7 @@ export default function NewsPulseView() {
       ) : newsData?.articles.length === 0 ? (
         <div className="bg-gray-50 dark:bg-gray-800/50 text-gray-500 p-10 rounded-xl text-center border border-gray-200 dark:border-gray-700">
           <Newspaper className="w-12 h-12 mx-auto mb-3 opacity-20" />
-          <p>현재 선택된 렌즈에 해당하는 최신 뉴스가 없습니다.</p>
+          <p>No articles found for the selected lens filter.</p>
         </div>
       ) : (
         <div className="space-y-6">
@@ -338,7 +423,6 @@ export default function NewsPulseView() {
                         alt={article.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         onError={(e) => {
-                          // Image load fallback
                           (e.target as HTMLElement).style.display = 'none';
                         }}
                       />
@@ -354,7 +438,7 @@ export default function NewsPulseView() {
                         🏢 {article.source_name}
                       </span>
                       <span className={`px-2.5 py-1 text-xs font-bold rounded-lg ${getImpactColor(article.impact_score)}`}>
-                        🔥 Impact Score: {article.impact_score}점
+                        🔥 Impact: {article.impact_score}
                       </span>
                       <span className="text-xs text-gray-400 flex items-center gap-1 font-medium ml-auto sm:ml-0">
                         <Clock className="w-3.5 h-3.5" /> {formatTime(article.published_at)}
@@ -387,7 +471,7 @@ export default function NewsPulseView() {
                     {/* Summary Bullets */}
                     <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4 mb-4 border border-gray-100 dark:border-gray-700">
                       <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
-                        <Activity className="w-4 h-4 text-green-500" /> 핵심 3줄 요약 (Fact)
+                        <Activity className="w-4 h-4 text-green-500" /> {t.factTitle}
                       </h4>
                       <ul className="space-y-2">
                         {article.summary_bullets.map((bullet, idx) => (
@@ -404,30 +488,30 @@ export default function NewsPulseView() {
                       <div className="bg-blue-50/50 dark:bg-blue-900/10 rounded-lg p-4 border border-blue-100 dark:border-blue-900/30">
                         <h4 className="text-sm font-bold text-blue-800 dark:text-blue-300 mb-3 flex items-center gap-2">
                           <Lightbulb className="w-4 h-4 text-yellow-500" /> 
-                          💡 실전 활용 팁 (Actionable Insight)
+                          {t.insightTitle}
                         </h4>
                         <div className="space-y-3">
                           {activeLens === 'all' || activeLens === 'developer' ? article.actionable_insight.developer && (
                             <div className="text-sm">
-                              <span className="font-semibold text-blue-700 dark:text-blue-400 mr-2">[개발자]</span>
+                              <span className="font-semibold text-blue-700 dark:text-blue-400 mr-2">{t.devLabel}</span>
                               <span className="text-gray-700 dark:text-gray-300">{article.actionable_insight.developer}</span>
                             </div>
                           ) : null}
                           {activeLens === 'all' || activeLens === 'pm' ? article.actionable_insight.pm && (
                             <div className="text-sm">
-                              <span className="font-semibold text-blue-700 dark:text-blue-400 mr-2">[기획/PM]</span>
+                              <span className="font-semibold text-blue-700 dark:text-blue-400 mr-2">{t.pmLabel}</span>
                               <span className="text-gray-700 dark:text-gray-300">{article.actionable_insight.pm}</span>
                             </div>
                           ) : null}
                           {activeLens === 'all' || activeLens === 'business' ? article.actionable_insight.business && (
                             <div className="text-sm">
-                              <span className="font-semibold text-blue-700 dark:text-blue-400 mr-2">[비즈니스]</span>
+                              <span className="font-semibold text-blue-700 dark:text-blue-400 mr-2">{t.bizLabel}</span>
                               <span className="text-gray-700 dark:text-gray-300">{article.actionable_insight.business}</span>
                             </div>
                           ) : null}
                           {activeLens === 'all' || activeLens === 'researcher' ? article.actionable_insight.researcher && (
                             <div className="text-sm">
-                              <span className="font-semibold text-blue-700 dark:text-blue-400 mr-2">[연구/학계]</span>
+                              <span className="font-semibold text-blue-700 dark:text-blue-400 mr-2">{t.resLabel}</span>
                               <span className="text-gray-700 dark:text-gray-300">{article.actionable_insight.researcher}</span>
                             </div>
                           ) : null}
@@ -442,7 +526,7 @@ export default function NewsPulseView() {
                   onClick={() => setSelectedArticle(article)}
                   className="px-4 py-2 text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-lg shadow-sm hover:shadow-md transition-all flex items-center gap-2"
                 >
-                  <Newspaper className="w-4 h-4" /> 📖 심층 블로그 리포트 읽기
+                  <Newspaper className="w-4 h-4" /> {t.readBlog}
                 </button>
 
                 <div className="flex items-center gap-4 ml-auto">
@@ -452,10 +536,10 @@ export default function NewsPulseView() {
                     rel="noopener noreferrer"
                     className="text-sm font-medium text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 flex items-center gap-1 transition-colors"
                   >
-                    원문 기사 <ExternalLink className="w-3.5 h-3.5" />
+                    {t.readOriginal} <ExternalLink className="w-3.5 h-3.5" />
                   </a>
                   <span className="text-xs text-gray-400 font-medium border-l border-gray-200 dark:border-gray-700 pl-3">
-                    분석 엔진: Gemini 2.5 Flash
+                    Gemini 2.5 Flash
                   </span>
                 </div>
               </div>
@@ -475,7 +559,7 @@ export default function NewsPulseView() {
             <div className="sticky top-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center z-10">
               <div className="flex items-center gap-2">
                 <span className="px-2.5 py-1 text-xs font-bold rounded-lg bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300">
-                  📖 AI 심층 기술 블로그 리포트
+                  {t.modalBadge}
                 </span>
                 <span className="text-xs text-gray-400 font-medium">
                   {selectedArticle.source_name}

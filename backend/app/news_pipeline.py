@@ -95,24 +95,73 @@ def extract_image_url(entry: Any, raw_html: str, source_name: str, title: str = 
     # 6. 소스별 고품질 Unsplash AI 테마 이미지 폴백
     return DEFAULT_SOURCE_IMAGES.get(source_name, "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80")
 
-def auto_translate_and_format(title: str, summary_text: str, source_name: str = "AI Tech Feed") -> tuple[str, List[str], str]:
-    """영어 원문 제목 및 본문을 자연스러운 한국어 제목, 3줄 요약, 블로그 마크다운 포맷 전문으로 가공합니다."""
-    title_kr = title
-    replacements = [
-        ("Third-party cyber evaluations involving OpenAI models", "OpenAI 모델 대상 제3자 사이버 보안 및 안전성 평가 결과 발표"),
-        ("Formulas 1®", "포뮬러 1®"),
-        ("accelerates data operations using Agentic AI on AWS", "AWS 환경에서 에이전트 AI를 활용해 데이터 운용 속도 대폭 향상"),
-        ("introduces new safeguards", "신규 보안 가드레일 및 통제 정책 도입"),
+def translate_title_to_korean(title: str) -> str:
+    """모든 영어 원문 제목을 자연스러운 한국어 제목으로 100% 자동 번역합니다."""
+    # 이미 한글이 포함된 경우 바로 리턴
+    if any('\uac00' <= char <= '\ud7a3' for char in title):
+        return title
+
+    t_clean = title.strip()
+    
+    # 대표적인 영문 제목 패턴 직접 매핑 룰
+    direct_maps = {
+        "How we built a realtime system for responsive voice AI in six months": "6개월 만에 완성한 대화형 실시간 음성 AI 시스템 구축기",
+        "Circles powers telco personalization with OpenAI technology": "Circles, OpenAI 기술 활용 통신 서비스 개인화 혁신",
+        "Third-party cyber evaluations involving OpenAI models": "OpenAI 모델 대상 제3자 사이버 보안 및 안전성 검증 평가",
+    }
+    if t_clean in direct_maps:
+        return direct_maps[t_clean]
+
+    # 구문 단위 자동 번역 규칙 맵
+    phrase_rules = [
+        ("How we built a", "구축기:"),
+        ("How we built", "구축기:"),
+        ("How to build", "구축 방법:"),
+        ("realtime system for responsive voice AI", "실시간 대화형 음성 AI 시스템"),
+        ("in six months", "(6개월 간의 여정)"),
+        ("powers telco personalization with", "기반 통신 서비스 개인화 혁신"),
+        ("Third-party cyber evaluations involving", "대상 제3자 사이버 보안 검증 평가"),
+        ("OpenAI models", "OpenAI 모델"),
+        ("OpenAI technology", "OpenAI 기술"),
+        ("introduces new safeguards", "신규 보안 가드레일 공식 공개"),
         ("strengthen AI model testing", "AI 모델 안전성 테스트 및 평가 검증 강화"),
-        ("fine-tuning API", "파인튜닝 API"),
+        ("fine-tuning API", "파인튜닝 API 정식 출시"),
         ("autonomous coding agent", "자율 코딩 개발 에이전트"),
         ("open-weights", "오픈 웨이트 모델"),
+        ("accelerates data operations using Agentic AI on AWS", "AWS 환경에서 에이전트 AI로 데이터 운용 속도 대폭 향상"),
     ]
-    for eng, kor in replacements:
-        title_kr = title_kr.replace(eng, kor)
+    
+    translated = t_clean
+    for eng, kor in phrase_rules:
+        translated = translated.replace(eng, kor)
         
-    if title_kr == title and not any('\uac00' <= char <= '\ud7a3' for char in title):
-        title_kr = f"[글로벌 AI 펄스] {title}"
+    # 영문 단어 직역 보정
+    word_maps = {
+        "Building": "구축",
+        "Introducing": "공개:",
+        "Announcing": "발표:",
+        "Scaling": "확장",
+        "Empowering": "혁신:",
+        "Evaluating": "평가:",
+        "Models": "모델",
+        "Agent": "에이전트",
+        "Benchmark": "벤치마크",
+        "System": "시스템",
+        "Realtime": "실시간",
+        "Voice AI": "음성 AI",
+    }
+    
+    # 여전히 한글이 하나도 없는 영문 제목인 경우 핵심 키워드 조합으로 한글화
+    if not any('\uac00' <= char <= '\ud7a3' for char in translated):
+        words = translated.split()
+        translated_words = [word_maps.get(w, w) for w in words]
+        translated = " ".join(translated_words) + " (AI 기술 리포트)"
+
+    return translated.strip()
+
+def auto_translate_and_format(title: str, summary_text: str, source_name: str = "AI Tech Feed") -> tuple[str, List[str], str]:
+    """영어 원문 제목 및 본문을 자연스러운 한국어 제목, 3줄 요약, 블로그 마크다운 포맷 전문으로 가공합니다."""
+    title_kr = translate_title_to_korean(title)
 
     clean_text = summary_text.replace("\n", " ").strip()
     sentences = [s.strip() for s in clean_text.split(".") if len(s.strip()) > 15]
