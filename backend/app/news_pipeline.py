@@ -10,6 +10,45 @@ from typing import List, Dict, Any
 from app.schemas import NewsArticle, ActionableInsight, NewsPulseResponse
 from app.markdown_generator import client, GENERATOR_MODEL
 
+TOPIC_IMAGE_MAP: List[Dict[str, Any]] = [
+    {
+        "keywords": ["cyber", "security", "evaluations", "safeguards", "보안", "사이버", "통제"],
+        "url": "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+        "keywords": ["audio", "voice", "speech", "sound", "turnless", "음성", "대화"],
+        "url": "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+        "keywords": ["formula", "f1", "racing", "speed", "operations", "포뮬러"],
+        "url": "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+        "keywords": ["code", "coding", "agent", "swe-bench", "refactoring", "자율", "개발자", "코드"],
+        "url": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+        "keywords": ["tco", "cost", "market", "financial", "business", "enterprise", "비용", "호스팅"],
+        "url": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+        "keywords": ["paper", "arxiv", "sota", "mcts", "research", "benchmark", "논문", "학계"],
+        "url": "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+        "keywords": ["artifacts", "ux", "ui", "design", "interface", "prototype", "아티팩트"],
+        "url": "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+        "keywords": ["fine-tuning", "gpu", "nvidia", "cuda", "pipeline", "파인튜닝"],
+        "url": "https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+        "keywords": ["robot", "robotics", "physical", "hardware", "로봇"],
+        "url": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=800&q=80"
+    }
+]
+
 DEFAULT_SOURCE_IMAGES: Dict[str, str] = {
     "OpenAI Blog": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
     "Anthropic News": "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=800&q=80",
@@ -18,27 +57,10 @@ DEFAULT_SOURCE_IMAGES: Dict[str, str] = {
     "Microsoft Research": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
     "AWS Machine Learning": "https://images.unsplash.com/photo-1607799279861-4dd421887fb3?auto=format&fit=crop&w=800&q=80",
     "NVIDIA AI Blog": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80",
-    "Apple Machine Learning": "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&w=800&q=80",
-    "TechCrunch AI": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80",
-    "VentureBeat AI": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80",
-    "Ars Technica AI": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80",
-    "MIT Tech Review": "https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=800&q=80",
-    "Wired AI": "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80",
-    "The Verge AI": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=800&q=80",
-    "ZDNet AI": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80",
-    "IEEE Spectrum AI": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80",
-    "InfoQ AI & ML": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
-    "Hugging Face Blog": "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80",
-    "ArXiv AI Papers": "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80",
-    "ArXiv NLP Papers": "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=800&q=80",
-    "Papers With Code": "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?auto=format&fit=crop&w=800&q=80",
-    "LangChain Blog": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
-    "LlamaIndex Blog": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
-    "MarkTechPost AI": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80",
 }
 
-def extract_image_url(entry: Any, raw_html: str, source_name: str) -> str:
-    """RSS entry 및 HTML에서 대표 기사 썸네일 이미지 URL을 정밀 추출합니다."""
+def extract_image_url(entry: Any, raw_html: str, source_name: str, title: str = "", summary: str = "") -> str:
+    """RSS entry, HTML 및 기사 내용 주제 매핑을 통해 대표 기사 썸네일 이미지 URL을 스마트 추출합니다."""
     # 1. media_thumbnail 확인
     if hasattr(entry, 'media_thumbnail') and entry.media_thumbnail:
         url = entry.media_thumbnail[0].get('url')
@@ -64,7 +86,13 @@ def extract_image_url(entry: Any, raw_html: str, source_name: str) -> str:
             if src.startswith("http"):
                 return src
 
-    # 5. 소스별 고품질 Unsplash AI 테마 이미지 폴백
+    # 5. 기사 제목 및 본문 주제 키워드 기반 스마트 이미지 동적 선택 (스크린샷 중복 방지 핵심)
+    text_content = (title + " " + summary).lower()
+    for topic_item in TOPIC_IMAGE_MAP:
+        if any(kw in text_content for kw in topic_item["keywords"]):
+            return topic_item["url"]
+
+    # 6. 소스별 고품질 Unsplash AI 테마 이미지 폴백
     return DEFAULT_SOURCE_IMAGES.get(source_name, "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80")
 
 FALLBACK_ARTICLES = [
@@ -339,7 +367,7 @@ async def fetch_rss_feeds() -> List[Dict[str, Any]]:
             
         for entry in parsed.entries[:5]:  # 소스당 상위 5개 최신 기사 수집 (총 최대 125개 파싱)
             raw_html = entry.get("summary", "") or entry.get("description", "")
-            img_url = extract_image_url(entry, raw_html, feed_info["name"])
+            img_url = extract_image_url(entry, raw_html, feed_info["name"], entry.get("title", ""), raw_html)
             raw_articles.append({
                 "source_name": feed_info["name"],
                 "category": feed_info["category"],
