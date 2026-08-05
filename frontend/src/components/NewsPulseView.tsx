@@ -754,120 +754,241 @@ export default function NewsPulseView() {
 
       {/* 📖 심층 블로그 리포트 모달 (Blog Article Modal) */}
       {selectedArticle && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-fade-in">
-          <div 
-            className="bg-white dark:bg-gray-900 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-200 dark:border-gray-800 flex flex-col my-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal Header */}
-            <div className="sticky top-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center z-10">
-              <div className="flex items-center gap-2">
-                <span className="px-2.5 py-1 text-xs font-bold rounded-lg bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300">
-                  {t.modalBadge}
-                </span>
-                <span className="text-xs text-gray-400 font-medium">
-                  {selectedArticle.source_name}
-                </span>
-              </div>
-              <button
-                onClick={() => setSelectedArticle(null)}
-                className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-800 dark:hover:text-white flex items-center justify-center font-bold transition-colors"
-              >
-                ✕
-              </button>
-            </div>
+        <BlogModalView 
+          article={selectedArticle} 
+          t={t} 
+          onClose={() => setSelectedArticle(null)} 
+        />
+      )}
+    </div>
+  );
+}
 
-            {/* Modal Content (Blog Post Style) */}
-            <div className="p-6 sm:p-8 space-y-6">
-              {selectedArticle.image_url && (
-                <img 
-                  src={selectedArticle.image_url} 
-                  alt={selectedArticle.title} 
-                  className="w-full h-64 object-cover rounded-xl shadow-sm"
-                />
-              )}
+interface BlogModalViewProps {
+  article: NewsArticle;
+  t: any;
+  onClose: () => void;
+}
 
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white leading-tight">
-                {selectedArticle.title}
-              </h2>
+function BlogModalView({ article, t, onClose }: BlogModalViewProps) {
+  const [imgError, setImgError] = useState(false);
 
-              <div className="flex flex-wrap gap-2 py-1">
-                {selectedArticle.tags?.map(tag => (
-                  <span key={tag} className="text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 px-2.5 py-1 rounded-md">
-                    {tag}
-                  </span>
-                ))}
-              </div>
+  // 텍스트 내의 **볼드** 문법을 <strong> 태그로 정밀 전환 파싱하는 인라인 마크다운 렌더러
+  const parseInlineMarkdown = (text: string) => {
+    const parts = text.split(/(\*\*.*?\*\*)/g);
+    return parts.map((part: string, idx: number) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return <strong key={idx} className="font-extrabold text-slate-900 dark:text-white">{part.slice(2, -2)}</strong>;
+      }
+      return part;
+    });
+  };
 
-              {/* Formatted Markdown Content Body */}
-              <div className="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 leading-relaxed space-y-4 text-base">
-                {selectedArticle.blog_summary ? (
-                  selectedArticle.blog_summary.split('\n\n').map((paragraph, pIdx) => {
-                    if (paragraph.startsWith('# ')) {
-                      return <h1 key={pIdx} className="text-2xl font-bold text-gray-900 dark:text-white mt-6 mb-3">{paragraph.replace('# ', '')}</h1>;
-                    }
-                    if (paragraph.startsWith('## ')) {
-                      return <h2 key={pIdx} className="text-xl font-bold text-gray-800 dark:text-gray-100 mt-6 mb-3 border-b border-gray-100 dark:border-gray-800 pb-2">{paragraph.replace('## ', '')}</h2>;
-                    }
-                    if (paragraph.startsWith('### ')) {
-                      return <h3 key={pIdx} className="text-lg font-bold text-blue-600 dark:text-blue-400 mt-5 mb-2">{paragraph.replace('### ', '')}</h3>;
-                    }
-                    if (paragraph.startsWith('> ')) {
-                      return (
-                        <blockquote key={pIdx} className="bg-slate-50 dark:bg-slate-800/60 border-l-4 border-blue-600 p-4 rounded-r-lg italic my-4 text-slate-700 dark:text-slate-300">
-                          {paragraph.replace('> ', '')}
-                        </blockquote>
-                      );
-                    }
-                    if (paragraph.startsWith('* ') || paragraph.startsWith('- ')) {
-                      return (
-                        <ul key={pIdx} className="space-y-2 my-3 pl-2">
-                          {paragraph.split('\n').map((item, iIdx) => (
-                            <li key={iIdx} className="flex gap-2 text-sm sm:text-base">
-                              <span className="text-blue-500 font-bold">•</span>
-                              <span>{item.replace(/^[\*\-]\s*/, '')}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      );
-                    }
-                    return <p key={pIdx} className="text-gray-700 dark:text-gray-300 my-3 leading-relaxed">{paragraph}</p>;
-                  })
-                ) : (
-                  <div>
-                    <h3 className="text-lg font-bold text-blue-600 mb-2">1. 💡 서론 및 배경</h3>
-                    <p className="mb-4">{selectedArticle.summary_bullets[0]}</p>
-                    
-                    <h3 className="text-lg font-bold text-blue-600 mb-2">2. ⚙️ 심층 분석 리포트</h3>
-                    <p className="mb-4">{selectedArticle.summary_bullets[1] || selectedArticle.summary_bullets[0]}</p>
-                    
-                    <h3 className="text-lg font-bold text-blue-600 mb-2">3. 🎯 종합 결론 및 시사점</h3>
-                    <p className="mb-4">{selectedArticle.summary_bullets[2] || '본 기사는 AI 아키텍처 도입 및 실무 현장용 팁을 제공합니다.'}</p>
+  // 블로그 마크다운 구조를 프리미엄 UI 블록 카드로 파싱 렌더링
+  const renderMarkdownBlocks = (markdown: string) => {
+    const blocks = markdown.split('\n\n');
+    return blocks.map((block: string, bIdx: number) => {
+      const trimmed = block.trim();
+      if (!trimmed) return null;
+
+      // 1. 대형 📌 [기술 리포트] 헤더
+      if (trimmed.startsWith('# 📌')) {
+        return (
+          <div key={bIdx} className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white p-6 rounded-2xl shadow-lg my-4">
+            <span className="text-xs font-black uppercase tracking-wider bg-white/20 px-3 py-1 rounded-full backdrop-blur-md">
+              AI Technical Deep-Dive
+            </span>
+            <h1 className="text-xl sm:text-2xl font-black mt-3 leading-snug">
+              {parseInlineMarkdown(trimmed.replace(/^#\s*📌\s*/, '').replace(/^\[기술 리포트\]\s*/, ''))}
+            </h1>
+          </div>
+        );
+      }
+
+      // 2. > **출처**: ... 메타 요약 카우션 카드
+      if (trimmed.startsWith('> ')) {
+        const content = trimmed.replace(/^>\s*/, '');
+        return (
+          <div key={bIdx} className="bg-slate-100 dark:bg-slate-800/80 border-l-4 border-blue-500 p-4 rounded-r-xl text-xs sm:text-sm text-slate-700 dark:text-slate-300 shadow-sm flex items-center justify-between flex-wrap gap-2 my-3">
+            <div>{parseInlineMarkdown(content)}</div>
+            <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
+              Verified Source
+            </span>
+          </div>
+        );
+      }
+
+      // 3. --- 구분선
+      if (trimmed === '---') {
+        return <hr key={bIdx} className="border-t border-slate-200 dark:border-slate-800 my-6" />;
+      }
+
+      // 4. ### 1. 💡 섹션 헤더
+      if (trimmed.startsWith('### ')) {
+        const headerText = trimmed.replace(/^###\s*/, '');
+        return (
+          <div key={bIdx} className="flex items-center gap-2 mt-6 mb-3">
+            <div className="w-1.5 h-6 bg-blue-600 rounded-full shrink-0" />
+            <h3 className="text-lg font-extrabold text-slate-900 dark:text-white tracking-tight">
+              {parseInlineMarkdown(headerText)}
+            </h3>
+          </div>
+        );
+      }
+
+      // 5. * **👩‍💻 개발자/엔지니어**: ... 직무별 활용 팁 리스트 파싱
+      if (trimmed.includes('* **')) {
+        const items = trimmed.split('\n');
+        return (
+          <div key={bIdx} className="space-y-3 my-4">
+            {items.map((item: string, iIdx: number) => {
+              const cleanItem = item.replace(/^[\*\-]\s*/, '');
+              let badgeColor = "bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300 border-blue-200 dark:border-blue-800";
+              
+              if (cleanItem.includes("개발자")) {
+                badgeColor = "bg-cyan-50 text-cyan-800 dark:bg-cyan-950/50 dark:text-cyan-300 border-cyan-200 dark:border-cyan-800";
+              } else if (cleanItem.includes("기획자") || cleanItem.includes("PM")) {
+                badgeColor = "bg-purple-50 text-purple-800 dark:bg-purple-950/50 dark:text-purple-300 border-purple-200 dark:border-purple-800";
+              } else if (cleanItem.includes("비즈니스")) {
+                badgeColor = "bg-emerald-50 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800";
+              } else if (cleanItem.includes("연구자")) {
+                badgeColor = "bg-amber-50 text-amber-800 dark:bg-amber-950/50 dark:text-amber-300 border-amber-200 dark:border-amber-800";
+              }
+
+              return (
+                <div key={iIdx} className={`p-4 rounded-xl border ${badgeColor} shadow-sm transition-all hover:shadow-md`}>
+                  <div className="text-sm leading-relaxed">
+                    {parseInlineMarkdown(cleanItem)}
                   </div>
-                )}
+                </div>
+              );
+            })}
+          </div>
+        );
+      }
+
+      // 일반 문단
+      return (
+        <p key={bIdx} className="text-slate-700 dark:text-slate-300 leading-relaxed text-sm sm:text-base my-3">
+          {parseInlineMarkdown(trimmed)}
+        </p>
+      );
+    });
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fade-in">
+      <div 
+        className="bg-white dark:bg-slate-900 rounded-3xl max-w-3xl w-full max-h-[92vh] overflow-y-auto shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col my-auto transition-all"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Modal Header */}
+        <div className="sticky top-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center z-20">
+          <div className="flex items-center gap-2.5">
+            <span className="px-3 py-1 text-xs font-black rounded-lg bg-blue-600 text-white shadow-sm">
+              {t.modalBadge}
+            </span>
+            <span className="text-xs text-slate-500 dark:text-slate-400 font-bold">
+              🏢 {article.source_name}
+            </span>
+          </div>
+          <button
+            onClick={onClose}
+            className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center font-black transition-colors"
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* Modal Content */}
+        <div className="p-6 sm:p-8 space-y-6">
+          {/* Header Hero Image with Error Handling */}
+          {!imgError && article.image_url ? (
+            <div className="w-full h-56 sm:h-72 rounded-2xl overflow-hidden shadow-lg border border-slate-200 dark:border-slate-800 relative bg-slate-950">
+              <img 
+                src={article.image_url} 
+                alt={article.title} 
+                onError={() => setImgError(true)}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-6">
+                <span className="px-3 py-1 rounded-md bg-blue-600/90 text-white text-xs font-extrabold backdrop-blur-md shadow">
+                  {article.category}
+                </span>
               </div>
             </div>
+          ) : (
+            /* 깨진 이미지 시 대체 그래디언트 배너 */
+            <div className="w-full h-48 rounded-2xl bg-gradient-to-r from-cyan-600 via-indigo-600 to-purple-700 p-6 flex flex-col justify-between text-white shadow-lg relative overflow-hidden">
+              <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+              <div className="flex items-center justify-between">
+                <span className="px-3 py-1 rounded-full bg-white/20 text-xs font-black backdrop-blur-md">
+                  {article.category}
+                </span>
+                <span className="text-xs font-bold opacity-80">AI Tech Deep-Dive</span>
+              </div>
+              <div>
+                <span className="text-xs font-bold opacity-75">🏢 {article.source_name}</span>
+                <h3 className="text-lg font-black mt-1 line-clamp-1">{article.title}</h3>
+              </div>
+            </div>
+          )}
 
-            {/* Modal Footer */}
-            <div className="sticky bottom-0 bg-gray-50 dark:bg-gray-800/90 backdrop-blur-md px-6 py-4 border-t border-gray-100 dark:border-gray-800 flex justify-between items-center">
-              <a
-                href={selectedArticle.source_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-4 py-2 text-sm font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 flex items-center gap-1.5"
-              >
-                원문 기사 전문 보러가기 <ExternalLink className="w-4 h-4" />
-              </a>
-              <button
-                onClick={() => setSelectedArticle(null)}
-                className="px-5 py-2 text-sm font-bold text-white bg-gray-800 hover:bg-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-xl transition-all"
-              >
-                닫기
-              </button>
+          {/* Title */}
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white leading-tight tracking-tight">
+              {article.title}
+            </h2>
+            <div className="flex flex-wrap gap-2 mt-4">
+              {article.tags?.map(tag => (
+                <span key={tag} className="text-xs font-extrabold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-3 py-1 rounded-lg border border-blue-500/10">
+                  {tag.startsWith('#') ? tag : `#${tag}`}
+                </span>
+              ))}
             </div>
           </div>
+
+          {/* Rich Parsed Markdown Body */}
+          <div className="space-y-4 pt-2 border-t border-slate-100 dark:border-slate-800">
+            {article.blog_summary ? (
+              renderMarkdownBlocks(article.blog_summary)
+            ) : (
+              <div className="space-y-4">
+                <div className="bg-slate-50 dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-700">
+                  <h4 className="font-extrabold text-blue-600 dark:text-blue-400 mb-2">1. 💡 서론 및 배경</h4>
+                  <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed">{article.summary_bullets[0]}</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-700">
+                  <h4 className="font-extrabold text-blue-600 dark:text-blue-400 mb-2">2. ⚙️ 심층 리포트 해설</h4>
+                  <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed">{article.summary_bullets[1] || article.summary_bullets[0]}</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-700">
+                  <h4 className="font-extrabold text-blue-600 dark:text-blue-400 mb-2">3. 🎯 핵심 종합 결론</h4>
+                  <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed">{article.summary_bullets[2] || '본 소식은 최신 AI 기술 트렌드 및 산업 현장 활용 팁을 담고 있습니다.'}</p>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-      )}
+
+        {/* Modal Footer */}
+        <div className="sticky bottom-0 bg-slate-50/95 dark:bg-slate-900/95 backdrop-blur-md px-6 py-4 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center z-20">
+          <a
+            href={article.source_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-4 py-2.5 text-xs sm:text-sm font-extrabold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md transition-all flex items-center gap-1.5"
+          >
+            {t.readOriginal} <ExternalLink className="w-4 h-4" />
+          </a>
+          <button
+            onClick={onClose}
+            className="px-5 py-2.5 text-xs sm:text-sm font-black text-slate-700 dark:text-slate-200 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 rounded-xl transition-all"
+          >
+            {t.modalClose}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
