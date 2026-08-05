@@ -446,10 +446,27 @@ export default function NewsPulseView() {
   }, []);
 
   const fetchNews = async (lens: string) => {
-    setLoading(true);
     setError(null);
+
+    // 1. SWR (Stale-While-Revalidate): localStorage에서 이전 캐시 기사를 0.001초 만에 즉시 화면 표출!
+    const cacheKey = `llm_compass_news_cache_${lens}`;
+    const savedCache = localStorage.getItem(cacheKey);
+    if (savedCache) {
+      try {
+        const parsed = JSON.parse(savedCache);
+        if (parsed && parsed.articles && parsed.articles.length > 0) {
+          setNewsData(parsed);
+          setLoading(false); // 로딩 스피너 0초 만에 제거!
+        }
+      } catch (e) {
+        console.warn("Failed to parse local news cache:", e);
+      }
+    } else {
+      setLoading(true);
+    }
+
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 6000); // 6초 타임아웃 방어막
+    const timeoutId = setTimeout(() => controller.abort(), 4000); // 4초 타임아웃 방어막
 
     try {
       const url = lens === 'all' 
@@ -462,7 +479,23 @@ export default function NewsPulseView() {
       const data = await res.json();
       if (data && data.articles && data.articles.length > 0) {
         setNewsData(data);
-      } else {
+        localStorage.setItem(cacheKey, JSON.stringify(data)); // 로컬 스토리지 최신화
+      } else if (!savedCache) {
+        const filteredFallback = lens === 'all' 
+          ? CLIENT_FALLBACK_NEWS.articles 
+          : CLIENT_FALLBACK_NEWS.articles.filter(a => a.matched_lenses.includes(lens));
+        const fallbackData = {
+          articles: filteredFallback,
+          total_count: filteredFallback.length,
+          last_updated: CLIENT_FALLBACK_NEWS.last_updated
+        };
+        setNewsData(fallbackData);
+        localStorage.setItem(cacheKey, JSON.stringify(fallbackData));
+      }
+    } catch (err: any) {
+      clearTimeout(timeoutId);
+      console.warn("Using Client Fallback/Cached News due to network or timeout:", err);
+      if (!savedCache) {
         const filteredFallback = lens === 'all' 
           ? CLIENT_FALLBACK_NEWS.articles 
           : CLIENT_FALLBACK_NEWS.articles.filter(a => a.matched_lenses.includes(lens));
@@ -472,17 +505,6 @@ export default function NewsPulseView() {
           last_updated: CLIENT_FALLBACK_NEWS.last_updated
         });
       }
-    } catch (err: any) {
-      clearTimeout(timeoutId);
-      console.warn("Using Client Fallback News due to network/timeout:", err);
-      const filteredFallback = lens === 'all' 
-        ? CLIENT_FALLBACK_NEWS.articles 
-        : CLIENT_FALLBACK_NEWS.articles.filter(a => a.matched_lenses.includes(lens));
-      setNewsData({
-        articles: filteredFallback,
-        total_count: filteredFallback.length,
-        last_updated: CLIENT_FALLBACK_NEWS.last_updated
-      });
     } finally {
       setLoading(false);
     }
