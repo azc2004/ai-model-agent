@@ -153,20 +153,32 @@ async def startup_event():
     asyncio.create_task(start_news_batch_loop())
 
 @app.get("/api/v1/news/pulse", response_model=NewsPulseResponse)
-async def get_news_pulse(lens: Optional[str] = Query(None, description="직무 렌즈 (예: developer, agent, pm, business, researcher)")):
-    """최신 AI 뉴스와 실전 활용 팁(Actionable Insight)을 가져옵니다."""
+async def get_news_pulse(
+    response: Response,
+    lens: Optional[str] = Query(None, description="직무 렌즈 필터 (developer, pm, business, researcher)"),
+    search: Optional[str] = Query(None, description="키워드 검색어")
+):
+    """
+    Neon DB 영구 적재 및 3계층 다층 캐싱(RAM Caching + HTTP Browser Caching) 기반 AI 뉴스 리포트 API
+    """
+    # 1. 30분 간 브라우저 & Edge CDN 캐싱 헤더 적용
+    response.headers["Cache-Control"] = "public, max-age=1800, s-maxage=3600"
+
     articles = await refresh_news_pipeline()
     
-    # 렌즈 필터링이 있다면 matched_lenses 기반으로 엄선 필터링
-    if lens and lens != "all":
-        filtered = [a for a in articles if lens in a.matched_lenses]
-        # 1차 보완: actionable_insight 직무 팁이 있는 기사 검색
-        if not filtered:
-            filtered = [a for a in articles if a.actionable_insight and getattr(a.actionable_insight, lens, None)]
-        # 2차 보완 (방어막): 매칭 기사가 0개일 경우 FALLBACK_ARTICLES에서 보충하여 0개 빈 화면 방지
-        if not filtered:
-            from app.news_pipeline import FALLBACK_ARTICLES
-            filtered = [a for a in FALLBACK_ARTICLES if lens in a.matched_lenses or (a.actionable_insight and getattr(a.actionable_insight, lens, None))]
+    if lens:
+        articles = [a for a in articles if lens in a.matched_lenses]
+        
+    if search:
+        s = search.lower()
+        filtered = []
+        for a in articles:
+            in_title = s in a.title.lower()
+            in_bullets = any(s in b.lower() for b in a.summary_bullets)
+            in_tags = any(s in t.lower() for t in a.tags)
+            in_source = s in a.source_name.lower()
+            if in_title or in_bullets or in_tags or in_source:
+                filtered.append(a)
         articles = filtered
         
     return {
@@ -177,7 +189,7 @@ async def get_news_pulse(lens: Optional[str] = Query(None, description="직무 �
 
 @app.post("/api/v1/news/pulse/refresh", response_model=NewsPulseResponse)
 async def force_refresh_news_pulse():
-    """관리자/개발자 수동 강제 수집 배치 실행 엔드포인트"""
+    """관리자/개발자 수동 강제 수집 배치 및 DB 동기화 엔드포인트"""
     articles = await run_batch_job(force=True)
     return {
         "articles": articles,
