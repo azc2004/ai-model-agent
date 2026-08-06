@@ -10,20 +10,23 @@ jobs:
   trigger-news-batch:
     runs-on: ubuntu-latest
     steps:
-      - name: 🚀 Trigger AI News Refresh API on Render Backend
+      - name: ⚡ 1. Wake up Render Backend Server (Warmup Ping)
         run: |
-          echo "Starting GitHub Actions Cron Trigger..."
-          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" -X POST "https://llm-compass-backend.onrender.com/api/v1/news/pulse/refresh" \
-               -H "Content-Type: application/json")
+          echo "🌐 Sending Health Check Ping to wake up Render Backend Spin-Down Server..."
+          curl -s --max-time 30 "https://llm-compass-backend.onrender.com/api/v1/health" || true
+          echo "⏳ Waiting 10 seconds for Render server and Neon DB pool to stabilize..."
+          sleep 10
+
+      - name: 🚀 2. Execute AI News Refresh Batch Job with Retries
+        run: |
+          echo "Starting GitHub Actions AI News Pulse Batch..."
           
-          echo "Response Output:"
-          echo "$RESPONSE"
-          
-          STATUS=$(echo "$RESPONSE" | grep "HTTP_STATUS" | cut -d':' -f2)
-          if [ "$STATUS" -eq 200 ]; then
-            echo "✅ Successfully triggered news batch pipeline on Render backend!"
-          else
-            echo "⚠️ Backend responded with HTTP status $STATUS. Retrying in 15 seconds..."
-            sleep 15
-            curl -f -X POST "https://llm-compass-backend.onrender.com/api/v1/news/pulse/refresh" -H "Content-Type: application/json"
-          fi
+          # 타임아웃 180초, 3회 재시도 (재시도 간격 10초) 적용
+          curl -v -X POST "https://llm-compass-backend.onrender.com/api/v1/news/pulse/refresh" \
+               -H "Content-Type: application/json" \
+               --max-time 180 \
+               --retry 3 \
+               --retry-delay 10 \
+               --retry-max-time 300
+
+          echo "✅ Successfully triggered news batch pipeline on Render backend!"
