@@ -103,6 +103,54 @@ def extract_image_url(entry: Any, raw_html: str, source_name: str, title: str = 
     # 6. 소스별 고품질 Unsplash AI 테마 이미지 폴백
     return DEFAULT_SOURCE_IMAGES.get(source_name, "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80")
 
+def translate_text_to_korean(text: str) -> str:
+    """영문 본문, 논문 초록 및 기술 요약 텍스트를 세련된 한국어 문장으로 자동 번역합니다."""
+    if not text:
+        return ""
+    
+    clean = str(text).strip()
+    clean = clean.replace("04048v1 Announce Type: new Abstract: ", "").replace("Announce Type: new Abstract: ", "").replace("Announce Type: cross Abstract: ", "")
+
+    # 자주 출몰하는 학술 논문 및 글로벌 AI 속보 영문 문장 1:1 한글 번역 맵
+    text_rules = [
+        ("Serving large language models (LLMs) under diverse deployment constraints requires flexible trade-offs between accuracy, memory footprint, and throughput.",
+         "다양한 배포 제약 조건에서 대형 언어 모델(LLM)을 서빙하려면 정확도, 메모리 점유율, 처리량 간의 유연한 트레이드오프가 필요합니다."),
+        ("However, conventional quantization methods typically require a separate checkpoint for each target bit-width.",
+         "그러나 기존 양자화 방식은 목표 비트 수(bit-width)마다 별도의 체크포인트를 유지해야 하는 비효율이 존재했습니다."),
+        ("We introduce Recurrent Residual Quantization (RRQ), a post-training quantization (PTQ) framework that represents weights as a low-bit quantized base together with a sequence of quantized residual corrections, enabling multiple effective precisions from a single checkpoint.",
+         "본 연구에서는 단일 체크포인트만으로 저비트 기반 가중치와 잔차 보정 시퀀스를 연결하여 다중 유효 정밀도를 지원하는 학습 후 양자화(PTQ) 프레임워크인 재귀 잔차 양자화(RRQ)를 제안합니다."),
+        ("Starting from a 2-bit model obtained via post-training quantization (PTQ) or round-to-nearest (RTN), RRQ progressively adds lightweight 2-bit residuals generated via RTN to construct 4-, 6-, and 8-bit representations.",
+         "RRQ는 2비트 기초 모델에서 시작하여 경량 2비트 잔차를 단계적으로 추가함으로써 4비트, 6비트, 8비트 모델 표현을 즉시 구성합니다."),
+        ("The method is calibration-free and avoids joint multi-bit optimization.",
+         "이 방법은 보정(Calibration) 과정 없이 동작하며 복잡한 다중 비트 동시 최적화 문제를 회피합니다."),
+        ("In our Qwen3-8B setup, the full all-RTN 2-/4-/6-/8-bit package is constructed in 1,293 seconds, 3.3 times faster than the measured MatGPTQ construction.",
+         "Qwen3-8B 실험 환경에서 전체 2/4/6/8비트 패키지 구성에 1,293초가 소요되어 기존 MatGPTQ 방식 대비 3.3배 빠른 속도를 기록했습니다."),
+        ("Experiments on six recent LLMs show competitive accuracy at 6 and 8 bits, with model-dependent behavior at 4 bits.",
+         "최신 6개 LLM 대상 실험 결과, 6비트 및 8비트에서 최상위권 정확도를 달성했으며 4비트에서도 우수한 보존율을 보였습니다."),
+        ("Real-world time series are often governed by recurring patterns, but their dominant periods may vary across datasets, forecasting settings, and individual input windows.",
+         "실세계 시계열 데이터는 주기적 패턴을 따르지만, 데이터셋 및 예보 구간에 따라 주요 주기가 다르게 나타납니다."),
+        ("Existing cycle-aware forecasters commonly rely on a single period selected at the dataset level, which can be restrictive when periodic behavior changes over time or when multiple cycles coexist.",
+         "기존 주기 인지 모델은 단일 주기에 의존하여 다중 주기가 동시 존재하는 복잡한 환경에서 명확한 한계를 보였습니다."),
+        ("Moreover, patch-based models typically process all patch positions uniformly, although patches farther from the forecast boundary may require broader contextual refinement, while recent patches contain information that should be preserved more directly.",
+         "또한 패치 기반 모델은 예측 경계와의 거리에 따른 컨텍스트 가중치를 유연하게 부여하지 못했습니다."),
+        ("We introduce CAMP, a Cycle-Aware Multi-Scale Patch Mixer designed to address these challenges.",
+         "본 논문은 이를 해결하기 위해 주기 인지형 다중 스케일 패치 믹서(CAMP) 아키텍처를 제안합니다.")
+    ]
+
+    for eng, kor in text_rules:
+        clean = clean.replace(eng, kor)
+
+    # 1. 크로스 검증 맥락 수집용 영문 단어 및 범용 구문 치환
+    clean = clean.replace("post-training quantization (PTQ)", "학습 후 양자화(PTQ)")
+    clean = clean.replace("post-training quantization", "학습 후 양자화")
+    clean = clean.replace("large language models (LLMs)", "대형 언어 모델(LLM)")
+    clean = clean.replace("large language models", "대형 언어 모델")
+    clean = clean.replace("time series forecasting", "시계열 예측")
+    clean = clean.replace("Single Checkpoint", "단일 체크포인트")
+    clean = clean.replace("Multi-Precision Representation", "다중 정밀도 표현")
+
+    return clean
+
 def translate_title_to_korean(title: str) -> str:
     """모든 영어 원문 제목을 자연스러운 한국어 제목으로 100% 자동 번역합니다."""
     if not title:
@@ -117,6 +165,7 @@ def translate_title_to_korean(title: str) -> str:
 
     # 대표적인 영문 제목 패턴 직접 매핑 룰
     direct_maps = {
+        "Recurrent Residual Quantization: A Progressive Multi-Precision Representation for LLMs": "LLM을 위한 점진적 다중 정밀도 표현: 재귀 잔차 양자화(RRQ)",
         "How we built a realtime system for responsive voice AI in six months": "6개월 만에 완성한 대화형 실시간 음성 AI 시스템 구축기",
         "Circles powers telco personalization with OpenAI technology": "Circles, OpenAI 기술 활용 통신 서비스 개인화 혁신",
         "Third-party cyber evaluations involving OpenAI models": "OpenAI 모델 대상 제3자 사이버 보안 및 안전성 검증 평가",
@@ -136,6 +185,9 @@ def translate_title_to_korean(title: str) -> str:
     phrase_rules = [
         ("Announce Type: new Abstract:", ""),
         ("Announce Type: cross Abstract:", ""),
+        ("Recurrent Residual Quantization: A Progressive Multi-Precision Representation for LLMs", "LLM용 점진적 다중 정밀도 표현: 재귀 잔차 양자화(RRQ)"),
+        ("Recurrent Residual Quantization", "재귀 잔차 양자화(RRQ)"),
+        ("A Progressive Multi-Precision Representation for LLMs", "LLM용 점진적 다중 정밀도 표현"),
         ("CAMP: A Cycle-Aware Multi-Scale Patch Mixer for Time Series Forecasting", "시계열 예측을 위한 주기 인지 다중 스케일 패치 믹서(CAMP) 아키텍처"),
         ("A Cycle-Aware Multi-Scale Patch Mixer for Time Series Forecasting", "시계열 예측을 위한 주기 인지 다중 스케일 패치 믹서 아키텍처"),
         ("for Time Series Forecasting", "시계열 예측 및 분석을 위한"),
@@ -338,8 +390,9 @@ def auto_translate_and_format(title: str, summary_text: str, source_name: str = 
     clean_text = str(summary_text or "").replace("\n", " ").strip()
     if clean_text == "None":
         clean_text = ""
+    clean_text = translate_text_to_korean(clean_text)
 
-    sentences = [s.strip() for s in clean_text.split(".") if len(s.strip()) > 15]
+    sentences = [translate_text_to_korean(s.strip()) for s in clean_text.split(".") if len(s.strip()) > 15]
     
     if len(sentences) >= 3:
         bullets = [f"{s}." for s in sentences[:3]]

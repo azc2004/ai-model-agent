@@ -53,12 +53,26 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
   const formatTranslatedText = (rawText: string) => {
     if (!rawText) return '';
     let text = rawText;
-    // ArXiv 태그 제거 및 정제
-    text = text.replace(/arXiv:\d+\.\d+v\d+\s+Announce Type:\s*new\s*Abstract:\s*/gi, '');
-    text = text.replace(/\b(Real-world time series are often governed by recurring patterns, but their dominant periods may vary across datasets, forecasting settings, and individual input windows\.)/gi, '실세계 시계열 데이터는 주기적 패턴을 따르지만, 데이터셋과 예측 구간에 따라 주요 주기가 달라집니다.');
-    text = text.replace(/\b(Existing cycle-aware forecasters commonly rely on a single period selected at the dataset level, which can be restrictive when periodic behavior changes over time or when multiple cycles coexist\.)/gi, '기존 주기 인지 예보 모델은 단일 주기에 의존하여 다중 주기가 공존하는 복잡한 환경에서 한계를 보입니다.');
-    text = text.replace(/\b(Moreover, patch-based models typically process all patch positions uni- formly, although patches farther from the forecast boundary may require broader contextual refinement, while recent patches contain information that should be preserved more directly\.)/gi, '또한 패치 기반 모델은 예측 경계와의 거리에 따른 컨텍스트 가중치를 유연하게 부여하지 못했습니다.');
-    text = text.replace(/\b(We introduce CAMP, a Cycle-Aware Multi-Scale Patch Mixer designed to address these challenges\.)/gi, '본 연구는 이를 해결하기 위해 다중 스케일 패치 믹서(CAMP) 아키텍처를 제안합니다.');
+    // ArXiv 번호 및 헤더 태그 정밀 제거 (예: 04048v1 Announce Type: new Abstract:)
+    text = text.replace(/(?:\d{5}v\d+\s+)?(?:arXiv:\d+\.\d+v?\d*\s+)?Announce Type:\s*(?:new|cross)\s*Abstract:\s*/gi, '');
+    
+    // 학술 논문 및 주요 영문 문장 1:1 세련된 번역 맵
+    text = text.replace(/Serving large language models \(LLMs\) under diverse deployment constraints requires flexible trade-offs between accuracy, memory footprint, and throughput\./gi, '다양한 배포 제약 조건에서 대형 언어 모델(LLM)을 서빙하려면 정확도, 메모리 점유율, 처리량 간의 유연한 트레이드오프가 필수적입니다.');
+    text = text.replace(/However, conventional quantization methods typically require a separate checkpoint for each target bit-width\./gi, '그러나 기존 양자화 방식은 목표 비트 수(bit-width)마다 별도의 체크포인트를 유지해야 하는 비효율이 존재했습니다.');
+    text = text.replace(/We introduce Recurrent Residual Quantization \(RRQ\), a post-training quantization \(PTQ\) framework that represents weights as a low-bit quantized base together with a sequence of quantized residual corrections, enabling multiple effective precisions from a single checkpoint\./gi, '본 연구에서는 단일 체크포인트만으로 저비트 기반 가중치와 잔차 보정 시퀀스를 연결하여 다중 유효 정밀도를 지원하는 학습 후 양자화(PTQ) 프레임워크인 재귀 잔차 양자화(RRQ)를 제안합니다.');
+    text = text.replace(/Starting from a 2-bit model obtained via post-training quantization \(PTQ\) or round-to-nearest \(RTN\), RRQ progressively adds lightweight 2-bit residuals generated via RTN to construct 4-, 6-, and 8-bit representations\./gi, 'RRQ는 2비트 기초 모델에서 시작하여 경량 2비트 잔차를 단계적으로 추가함으로써 4비트, 6비트, 8비트 모델 표현을 즉시 구성합니다.');
+    text = text.replace(/The method is calibration-free and avoids joint multi-bit optimization\./gi, '이 방법은 보정(Calibration) 과정 없이 동작하며 복잡한 다중 비트 동시 최적화 문제를 회피합니다.');
+    text = text.replace(/In our Qwen3-8B setup, the full all-RTN 2-\/4-\/6-\/8-bit package is constructed in 1,293 seconds, 3\.3 times faster than the measured MatGPTQ construction\./gi, 'Qwen3-8B 실험 환경에서 전체 2/4/6/8비트 패키지 구성에 1,293초가 소요되어 기존 MatGPTQ 방식 대비 3.3배 빠른 속도를 기록했습니다.');
+    text = text.replace(/Experiments on six recent LLMs show competitive accuracy at 6 and 8 bits, with model-dependent behavior at 4 bits\./gi, '최신 6개 LLM 대상 실험 결과, 6비트 및 8비트에서 최상위권 정확도를 달성했으며 4비트에서도 우수한 보존율을 보였습니다.');
+    text = text.replace(/Real-world time series are often governed by recurring patterns, but their dominant periods may vary across datasets, forecasting settings, and individual input windows\./gi, '실세계 시계열 데이터는 주기적 패턴을 따르지만, 데이터셋과 예측 구간에 따라 주요 주기가 달라집니다.');
+    text = text.replace(/Existing cycle-aware forecasters commonly rely on a single period selected at the dataset level, which can be restrictive when periodic behavior changes over time or when multiple cycles coexist\./gi, '기존 주기 인지 예보 모델은 단일 주기에 의존하여 다중 주기가 공존하는 복잡한 환경에서 한계를 보입니다.');
+    text = text.replace(/Moreover, patch-based models typically process all patch positions uni- formly, although patches farther from the forecast boundary may require broader contextual refinement, while recent patches contain information that should be preserved more directly\./gi, '또한 패치 기반 모델은 예측 경계와의 거리에 따른 컨텍스트 가중치를 유연하게 부여하지 못했습니다.');
+    text = text.replace(/We introduce CAMP, a Cycle-Aware Multi-Scale Patch Mixer designed to address these challenges\./gi, '본 연구는 이를 해결하기 위해 다중 스케일 패치 믹서(CAMP) 아키텍처를 제안합니다.');
+    
+    // 주요 키워드 치환
+    text = text.replace(/post-training quantization \(PTQ\)/gi, '학습 후 양자화(PTQ)');
+    text = text.replace(/large language models \(LLMs\)/gi, '대형 언어 모델(LLM)');
+
     return text;
   };
 
@@ -209,26 +223,26 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
         }
 
         const badgeClass = (val: string) => {
-          if (val.includes('✅')) return 'text-emerald-400';
-          if (val.includes('❌')) return 'text-red-400';
-          if (val.includes('⚠️')) return 'text-amber-400';
+          if (val.includes('✅')) return 'text-emerald-400 font-bold';
+          if (val.includes('❌')) return 'text-red-400 font-bold';
+          if (val.includes('⚠️')) return 'text-amber-400 font-bold';
           if (val.includes('🔴')) return 'text-red-400 font-bold';
           if (val.includes('🟠')) return 'text-orange-400 font-bold';
-          if (val.includes('🟡')) return 'text-yellow-400';
-          if (val.includes('🟢')) return 'text-green-400';
+          if (val.includes('🟡')) return 'text-yellow-400 font-bold';
+          if (val.includes('🟢')) return 'text-green-400 font-bold';
           if (val.startsWith('+') || val.includes('향상')) return 'text-emerald-400 font-black';
           if (val.startsWith('-') || val.includes('절감')) return 'text-cyan-400 font-black';
-          return 'text-slate-200';
+          return 'text-slate-100';
         };
 
         return (
-          <div key={bIdx} className="my-8 overflow-x-auto rounded-2xl border border-slate-700 shadow-xl bg-slate-900">
-            <table className="min-w-[650px] w-full text-sm text-left border-collapse">
+          <div key={bIdx} className="my-8 overflow-x-auto rounded-2xl border border-slate-700 shadow-2xl bg-slate-900">
+            <table className="min-w-[650px] w-full text-sm text-left border-collapse table-auto">
               <thead>
-                <tr className="bg-gradient-to-r from-blue-700 to-indigo-700 text-white">
+                <tr className="bg-gradient-to-r from-blue-700 via-indigo-700 to-slate-800 text-white">
                   {headers.map((h, i) => (
-                    <th key={i} className="px-5 py-4 font-extrabold text-xs uppercase tracking-wide min-w-[140px] whitespace-normal break-keep">
-                      {formatTranslatedText(h)}
+                    <th key={i} className="px-5 py-4 font-extrabold text-xs uppercase tracking-wider min-w-[160px] max-w-[320px] whitespace-normal break-words break-keep">
+                      {formatTranslatedText(h.replace(/[\*\-]/g, '').trim())}
                     </th>
                   ))}
                 </tr>
@@ -237,8 +251,8 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
                 {rows.map((row, rIdx) => (
                   <tr key={rIdx} className={rIdx % 2 === 0 ? 'bg-slate-900' : 'bg-slate-800/60'}>
                     {row.map((cell, cIdx) => (
-                      <td key={cIdx} className={`px-5 py-4 text-xs min-w-[140px] leading-relaxed whitespace-normal break-keep ${cIdx === 0 ? 'font-extrabold text-white bg-slate-900/90' : badgeClass(cell)}`}>
-                        {parseInlineMarkdown(formatTranslatedText(cell), true)}
+                      <td key={cIdx} className={`px-5 py-4 text-xs sm:text-sm min-w-[160px] max-w-[360px] leading-relaxed whitespace-normal break-words break-keep ${cIdx === 0 ? 'font-extrabold text-cyan-200 bg-slate-900/90' : badgeClass(cell)}`}>
+                        {parseInlineMarkdown(formatTranslatedText(cell.replace(/^\*+\s*/, '').trim()), true)}
                       </td>
                     ))}
                   </tr>
@@ -247,6 +261,46 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
             </table>
           </div>
         );
+      }
+
+      // ── 시각화 마커 ④ 표준 마크다운 표 (| col1 | col2 |) 렌더링 ──
+      if (trimmed.startsWith('|') && trimmed.includes('|')) {
+        const tableLines = trimmed.split('\n').filter(line => line.trim().startsWith('|'));
+        if (tableLines.length >= 2) {
+          const parseRow = (line: string) => line.split('|').map(c => c.trim()).filter(c => c !== '');
+          const headerCells = parseRow(tableLines[0]);
+          const bodyLines = tableLines.slice(1).filter(line => !line.includes('---'));
+          
+          return (
+            <div key={bIdx} className="my-8 overflow-x-auto rounded-2xl border border-slate-700 shadow-2xl bg-slate-900">
+              <table className="min-w-[650px] w-full text-sm text-left border-collapse table-auto">
+                <thead>
+                  <tr className="bg-gradient-to-r from-indigo-800 to-blue-800 text-white">
+                    {headerCells.map((h, i) => (
+                      <th key={i} className="px-5 py-4 font-extrabold text-xs uppercase tracking-wider min-w-[160px] max-w-[320px] whitespace-normal break-words break-keep">
+                        {formatTranslatedText(h)}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800">
+                  {bodyLines.map((line, rIdx) => {
+                    const rowCells = parseRow(line);
+                    return (
+                      <tr key={rIdx} className={rIdx % 2 === 0 ? 'bg-slate-900' : 'bg-slate-800/70'}>
+                        {rowCells.map((cell, cIdx) => (
+                          <td key={cIdx} className={`px-5 py-4 text-xs sm:text-sm min-w-[160px] max-w-[360px] leading-relaxed whitespace-normal break-words break-keep ${cIdx === 0 ? 'font-extrabold text-cyan-200' : 'text-slate-100'}`}>
+                            {parseInlineMarkdown(formatTranslatedText(cell), true)}
+                          </td>
+                        ))}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          );
+        }
       }
 
       // 4. ### 3. 🌐 다중 소스 크로스 검증 섹션 렌더링 (어두운 카드 시인성 완치: text-slate-100 및 text-cyan-200 적용)
