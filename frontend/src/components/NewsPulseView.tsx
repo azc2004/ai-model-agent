@@ -229,7 +229,7 @@ const LENSES = [
 
 const CLIENT_FALLBACK_NEWS: NewsResponse = {
   articles: [
-    // 🤖 Agent & 오토메이션 특화
+    // 🤖 Agent & 오토메이션 특화 (Agent Lens)
     {
       id: "fb-agent-1",
       title: "Anthropic, 멀티 에이전트 자율 업무 워크플로우를 위한 Computer Use & Agentic Tooling 프레임워크 발표",
@@ -266,13 +266,36 @@ const CLIENT_FALLBACK_NEWS: NewsResponse = {
         "기업 사내 ERP, CRM, 데이터베이스와 보안 연동되는 엔터프라이즈 멀티 에이전트 허브 지원."
       ],
       actionable_insight: {
-        developer: "AutoGen 0.4 분산 메시지 버스를 활용해 독립적으로 구동되는 전문가 에이전트 시스템을 구축하세요."
+        developer: "AutoGen 0.4 분산 메시지 버스를 활용해 독립적으로 구동되는 전문가 에이전트 시스템을 구축하세요.",
+        business: "엔터프라이즈 ERP/CRM과 에이전트를 결합하여 자율 보고서 생성 및 업무 자동화를 도입하세요."
       },
       impact_score: 97,
       tags: ["#Microsoft", "#AutoGen", "#MultiAgent", "#자율오토메이션"],
       matched_lenses: ["agent"]
     },
-    // 👩‍💻 개발자/엔지니어 특화
+    {
+      id: "fb-agent-3",
+      title: "AutoGPT 3.0 출시, 복잡한 웹 탐색/시장 조사/데이터 정리를 인간 개입 없이 완전 자동 완수하는 AI 에이전트",
+      source_name: "VentureBeat AI",
+      source_url: "https://venturebeat.com/category/ai/",
+      published_at: new Date().toISOString(),
+      category: "IT 매체",
+      image_url: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
+      summary_bullets: [
+        "AutoGPT 오픈소스 프로젝트가 자율 목표 설정 및 단계별 실행 성능이 극대화된 3.0 엔진을 선보임.",
+        "구글 검색, 웹 스크래핑, 엑셀 파일 생성을 단 하나의 목표 프롬프트만으로 끝까지 실행.",
+        "작업 실패 시 다른 대안 경로를 스스로 탐색하는 지능형 재시도(Retry with Backoff) 내장."
+      ],
+      actionable_insight: {
+        developer: "자율 재시도 알고리즘을 활용해 크롤링 및 수집 파이프라인의 에러 복구력을 강화하세요.",
+        pm: "사용자가 복잡한 조작 없이 단 한 줄의 목표 입력으로 결과를 얻는 에이전트 기반 목표 중심 UI를 구축하세요."
+      },
+      impact_score: 93,
+      tags: ["#AutoGPT", "#Agent", "#업무자동화", "#WebAgent"],
+      matched_lenses: ["agent"]
+    },
+
+    // 👩‍💻 개발자/엔지니어 특화 (Developer Lens)
     {
       id: "fb-dev-1",
       title: "OpenAI, 저비용 고효율 모델 Fine-Tuning API 및 추론 지연시간 35% 단축 기술 정식 출시",
@@ -287,7 +310,9 @@ const CLIENT_FALLBACK_NEWS: NewsResponse = {
         "개발자 콘솔을 통한 추론 지연 시간(Latency) 35% 단축 및 9월 말까지 파인튜닝 토큰 혜택 부여."
       ],
       actionable_insight: {
-        developer: "기존 RAG 파이프라인에서 복잡한 전처리 대신 커스텀 모델 파인튜닝을 도입해 API 호스트 비용을 60% 절감하세요."
+        developer: "기존 RAG 파이프라인에서 복잡한 전처리 대신 커스텀 모델 파인튜닝을 도입해 API 호스트 비용을 60% 절감하세요.",
+        pm: "사용자 도메인 특화 챗봇의 응답 일관성을 끌어올려 UX 이탈률을 감소시킬 시점입니다.",
+        business: "엔터프라이즈 사내 지식 기반 도메인을 고성능 소형 파인튜닝 모델로 대체하여 TCO를 최적화하세요."
       },
       impact_score: 98,
       tags: ["#OpenAI", "#FineTuning", "#GPT4o", "#개발자API"],
@@ -307,14 +332,35 @@ const CLIENT_FALLBACK_NEWS: NewsResponse = {
         "개발자가 작성한 요구사항 명세서만으로 전체 프론트엔드/백엔드 모듈 빌드 자동 완성."
       ],
       actionable_insight: {
-        developer: "codebase-memory-mcp와 결합하여 레거시 코드베이스 리팩토링 작업을 에이전트에 위임해 개발 속도를 3배 높이세요."
+        developer: "codebase-memory-mcp와 결합하여 레거시 코드베이스 리팩토링 작업을 에이전트에 위임해 개발 속도를 3배 높이세요.",
+        pm: "새로운 모듈 기획 시 스펙 문서(spec.md)의 EARS 구문을 정밀화하여 에이전트 자동 구현 성공률을 높이세요."
       },
       impact_score: 95,
       tags: ["#GoogleDeepMind", "#AgenticAI", "#SWEbench", "#자율코딩"],
       matched_lenses: ["developer", "agent"]
     },
+    {
+      id: "fb-dev-3",
+      title: "LangChain & LlamaIndex, 멀티 에이전트 메모리 분산 및 로컬 임베딩 벡터 속도 5배 향상 프레임워크 공개",
+      source_name: "LangChain Blog",
+      source_url: "https://blog.langchain.dev/",
+      published_at: new Date().toISOString(),
+      category: "연구/학계",
+      image_url: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
+      summary_bullets: [
+        "LangChain 0.3 버전 업데이트를 통해 멀티 에이전트 간 비동기 메모리 공유 구조가 정식 통합됨.",
+        "LlamaIndex와의 분산 백엔드 결합으로 100만 건 이상의 벡터 검색 지연 시간을 20ms 이하로 단축.",
+        "로컬 환경에서의 Ollama / vLLM 서빙 호환 라우터 기본 내장."
+      ],
+      actionable_insight: {
+        developer: "vLLM과 LangChain 0.3 비동기 체인을 결합하여 에이전트 응답 속도를 20ms 수준으로 최적화하세요."
+      },
+      impact_score: 89,
+      tags: ["#LangChain", "#LlamaIndex", "#RAG", "#VectorDB"],
+      matched_lenses: ["developer", "agent"]
+    },
 
-    // 💡 기획/PM 특화
+    // 💡 기획/PM 특화 (PM Lens)
     {
       id: "fb-pm-1",
       title: "Anthropic, Claude 3.5 Sonnet Interactive Artifacts 아키텍처 및 프로토타입 자동화 UX 가이드 발표",
@@ -355,8 +401,28 @@ const CLIENT_FALLBACK_NEWS: NewsResponse = {
       tags: ["#MITTechReview", "#AIUX", "#챗봇기획", "#프로덕트디자인"],
       matched_lenses: ["pm"]
     },
+    {
+      id: "fb-pm-3",
+      title: "AWS, 에이전트 AI 기반 데이터 온보딩 기획 프레임워크 공개... 수주 소요 작업을 40분으로 단축",
+      source_name: "AWS Machine Learning",
+      source_url: "https://aws.amazon.com/blogs/machine-learning/",
+      published_at: new Date().toISOString(),
+      category: "빅테크 공식",
+      image_url: "https://images.unsplash.com/photo-1607799279861-4dd421887fb3?auto=format&fit=crop&w=800&q=80",
+      summary_bullets: [
+        "AWS가 포뮬러 1®과의 협업을 통해 Amazon Bedrock 에이전트 기반 데이터 기획 파이프라인 구축.",
+        "기존 데이터 소스 온보딩 요구사항 수집 및 분석 시간을 최대 8주에서 40분으로 단축.",
+        "비엔지니어 기획자도 자연어 명령만으로 데이터 스키마를 구성하는 기획 자동화 실현."
+      ],
+      actionable_insight: {
+        pm: "데이터 통합 프로젝트의 병목 현상을 식별하고 에이전트 AI 도입으로 프로덕트 출시 속도를 끌어올리세요."
+      },
+      impact_score: 92,
+      tags: ["#AWS", "#Bedrock", "#데이터기획", "#온보딩자동화"],
+      matched_lenses: ["pm"]
+    },
 
-    // 💼 비즈니스/임원 특화
+    // 💼 비즈니스/임원 특화 (Business Lens)
     {
       id: "fb-biz-1",
       title: "VentureBeat, Enterprise AI 도입 기업 74%가 API 대신 자수성가 셀프호스팅 TCO 절감 달성",
@@ -377,8 +443,28 @@ const CLIENT_FALLBACK_NEWS: NewsResponse = {
       tags: ["#VentureBeat", "#AITCO", "#비즈니스전략", "#GPU호스팅"],
       matched_lenses: ["business"]
     },
+    {
+      id: "fb-biz-2",
+      title: "Gartner 2026 AI 레포트, 에이전트 워크플로우 도입으로 엔터프라이즈 운영비 40% 절감 예측",
+      source_name: "Gartner Newsroom",
+      source_url: "https://www.gartner.com/en/newsroom",
+      published_at: new Date().toISOString(),
+      category: "IT 매체",
+      image_url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
+      summary_bullets: [
+        "가트너가 2026년 전 세계 기업의 AI 도입 트렌드 분석 보고서를 발간함.",
+        "단순 생성형 AI 챗봇을 넘어 업무를 자동 수행하는 에이전트 워크플로우 도입이 핵심 차별화 요소로 부상.",
+        "에이전트 오토메이션을 적용한 솔루션의 OpEx 절감률이 평균 40%에 달함."
+      ],
+      actionable_insight: {
+        business: "단순 챗봇 서비스에서 자율 수행 에이전트로 프로덕트를 고도화하여 시장 경쟁력을 확보하세요."
+      },
+      impact_score: 95,
+      tags: ["#Gartner", "#OpEx절감", "#AI전략", "#엔터프라이즈"],
+      matched_lenses: ["business"]
+    },
 
-    // 🔬 연구/학계 특화
+    // 🔬 연구/학계 특화 (Researcher Lens)
     {
       id: "fb-res-1",
       title: "ArXiv & Hugging Face, SOTA 추론 성능 상회하는 MCTS 기반 차세대 프런티어 논문 심사 공개",
@@ -398,9 +484,72 @@ const CLIENT_FALLBACK_NEWS: NewsResponse = {
       impact_score: 97,
       tags: ["#ArXiv", "#HuggingFace", "#MCTS", "#TestTimeCompute"],
       matched_lenses: ["researcher"]
+    },
+    {
+      id: "fb-res-2",
+      title: "Stanford AI Lab, hallucination 0.1% 미만 달성하는 3-Tier Verifier 아키텍처 논문 발표",
+      source_name: "Stanford AI Lab",
+      source_url: "https://ai.stanford.edu/blog/",
+      published_at: new Date().toISOString(),
+      category: "연구/학계",
+      image_url: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=800&q=80",
+      summary_bullets: [
+        "스탠포드 연구진이 환각 현상을 0.1% 미만으로 억제하는 결정론적 검증 파이프라인 제시.",
+        "Router ➔ Generator ➔ Critique ➔ Deterministic Validator 4단계 루프 알고리즘 수식 입증.",
+        "의료 및 법률 등 미션 크리티컬 도메인에서의 높은 답변 신뢰성 확보 방법 제시."
+      ],
+      actionable_insight: {
+        researcher: "4단계 Critique 루프 알고리즘을 프로덕션 검증 시스템에 이식하여 답변 환각율을 0.1%로 낮추세요."
+      },
+      impact_score: 96,
+      tags: ["#StanfordAI", "#Hallucination", "#Verifier", "#AI연구"],
+      matched_lenses: ["researcher"]
+    },
+
+    // 🛡️ AI 보안 & TCO 특화
+    {
+      id: "fb-sec-1",
+      title: "OWASP Top 10 for LLM 2026 개정판 발표... Prompt Injection 및 Indirect System Override 방어 가이드",
+      source_name: "OWASP Foundation",
+      source_url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+      published_at: new Date().toISOString(),
+      category: "IT 매체",
+      image_url: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80",
+      summary_bullets: [
+        "OWASP가 2026년 기준 LLM 서비스 보안 취약점 1위로 간접 프롬프트 인젝션(Indirect Prompt Injection)을 지정.",
+        "외부 웹사이트 크롤링 및 PDF 분석 시 악의적 에이전트 오버라이드 지침이 삽입되는 위협 차단 솔루션 제시.",
+        "입력 샌드박싱과 출력 정규식 Sanitizer 필터링의 필후성 강조."
+      ],
+      actionable_insight: {
+        developer: "입력 프롬프트 산화 필터와 Output JSON 스키마 검증 루틴을 도입해 프롬프트 탈옥 위험을 무력화하세요.",
+        pm: "외부 데이터 수집 기능 추가 시 보안 가드레일을 기본 스펙으로 정의하세요."
+      },
+      impact_score: 98,
+      tags: ["#OWASP", "#LLM보안", "#PromptInjection", "#보안가드레일"],
+      matched_lenses: ["developer", "pm", "business"]
+    },
+    {
+      id: "fb-tco-1",
+      title: "SemiAnalysis, NVIDIA H100 vs L40S vs Cloud API 비용 분기점 정밀 대조 분석",
+      source_name: "SemiAnalysis",
+      source_url: "https://semianalysis.com/",
+      published_at: new Date().toISOString(),
+      category: "IT 매체",
+      image_url: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80",
+      summary_bullets: [
+        "글로벌 반도체 전문 분석 기관이 Cloud API 대비 독립 GPU 클러스터 TCO 손익분기점을 발표.",
+        "Token/sec 수율 대비 H100 SXM5는 대규모 Batch 추론에서, L40S는 Real-time Agentic 추론에서 40% 가성비 우위.",
+        "상용 API 사용 시 월 $15,000 이상 발생 구간부터 독립 GPU 서버리스 호스팅이 6개월 내 손익분기점(BEP) 달성."
+      ],
+      actionable_insight: {
+        business: "월간 API 지출이 $15,000를 상회할 때 L40S 서버리스 GPU 호스팅으로 전환하여 6개월 내 BEP를 달성하세요."
+      },
+      impact_score: 96,
+      tags: ["#SemiAnalysis", "#GPU비용", "#H100", "#L40S", "#TCO분석"],
+      matched_lenses: ["business", "developer"]
     }
   ],
-  total_count: 7,
+  total_count: 15,
   last_updated: new Date().toISOString()
 };
 
