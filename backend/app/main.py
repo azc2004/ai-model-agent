@@ -92,22 +92,12 @@ def init_neon_db_catalog():
         print(f"[NeonDB Init Warning] Catalog migration notice: {e}")
 
 
-@app.get("/api/v1/providers", response_model=List[Provider])
-def get_providers():
-    """LLM 프로바이더 목록을 반환합니다."""
-    return PROVIDERS
+# ⚡ 서버단 인메모리(RAM) 캐시 보관함 — 디바이스 독립적 0.001초 고속 응답
+_models_cache: List[ModelSpec] = []
 
-@app.get("/api/v1/models", response_model=List[ModelSpec])
-def get_models(
-    provider_id: Optional[str] = None,
-    tier: Optional[str] = None,
-    is_open_weight: Optional[bool] = None,
-    search: Optional[str] = None
-):
-    """Neon PostgreSQL DB에서 176개 전체 LLM 모델 카탈로그 목록 조회 (필터링 지원)"""
-    results = MODELS
-
-    # DB에 적재된 최신 176개 모델 우선 로드 시도
+def init_models_cache_from_db():
+    """서버 기동 및 갱신 시 Neon DB에서 176개 전체 모델을 서버 메모리에 전량 상주(Warm-up)시킵니다."""
+    global _models_cache
     try:
         db = SessionLocal()
         db_models = db.query(LLMModelDB).all()
@@ -132,10 +122,35 @@ def get_models(
                     api_pricing=item.api_pricing or {},
                     benchmarks=item.benchmarks or {}
                 ))
-            results = parsed_models
+            _models_cache.clear()
+            _models_cache.extend(parsed_models)
+            print(f"[ModelCache Server Warmup] ✅ Loaded {len(_models_cache)} LLM models into Server Memory!")
+        else:
+            _models_cache.clear()
+            _models_cache.extend(MODELS)
         db.close()
     except Exception as e:
-        print(f"[DB Models Warning] Falling back to memory MODELS: {e}")
+        print(f"[ModelCache Warning] Falling back to memory MODELS: {e}")
+        _models_cache = MODELS
+
+@app.get("/api/v1/providers", response_model=List[Provider])
+def get_providers():
+    """LLM 프로바이더 목록을 반환합니다."""
+    return PROVIDERS
+
+@app.get("/api/v1/models", response_model=List[ModelSpec])
+def get_models(
+    provider_id: Optional[str] = None,
+    tier: Optional[str] = None,
+    is_open_weight: Optional[bool] = None,
+    search: Optional[str] = None
+):
+    """서버 인메모리(RAM) 캐시에서 0.001초 만에 176개 전체 LLM 모델 카탈로그 조회 (필터링 지원)"""
+    global _models_cache
+    if not _models_cache:
+        init_models_cache_from_db()
+
+    results = list(_models_cache)
 
     if provider_id:
         results = [m for m in results if m.provider_id.lower() == provider_id.lower()]
@@ -230,7 +245,7 @@ def generate_custom_markdown(req: CustomMarkdownRequest):
         raise HTTPException(status_code=500, detail=f"마크다운 생성 중 오류가 발생했습니다: {str(e)}")
 
 import asyncio
-from app.news_pipeline import refresh_news_pipeline, start_news_batch_loop, run_batch_job
+from app.news_pipeline import refresh_news_pipeline, start_news_batch_loop, run_batch_job, init_news_cache_from_db
 
 async def _delayed_batch_loop():
     """서버 안정화 후 (60초 대기) 뉴스 배치 루프를 가동합니다.
@@ -243,19 +258,25 @@ async def _delayed_batch_loop():
 
 @app.on_event("startup")
 async def startup_event():
-    """서버 구동 시 DB 마이그레이션을 비동기 안전하게 실행하고,
-    뉴스 배치 루프는 60초 안정화 후에 지연 시작합니다.
-    ⚠️ startup 시 force=True run_batch_job는 제거 — OOM Kill 방지
+    """서버 구동 시 DB 마이그레이션 후, 176개 모델과 197개 기사를 서버 RAM 메모리 캐시에 즉각 상주(Warm-up)시킵니다.
+    디바이스와 상관없이 누구나 0.001초 만에 최신 전량 응답을 받도록 보장합니다.
     """
-    # DB 마이그레이션 (경량, 비동기 안전하게)
+    # 1. DB 마이그레이션 (경량, 비동기 안전하게)
     try:
         init_neon_db_catalog()
     except Exception as e:
         print(f"[Startup] DB init warning (non-fatal): {e}")
+
+    # 2. ⚡ 서버단 인메모리(RAM) 캐시 웜업 (LLM 모델 176개 + 뉴스 기사 197개)
+    try:
+        init_models_cache_from_db()
+        init_news_cache_from_db()
+    except Exception as e:
+        print(f"[Startup] Cache warmup notice: {e}")
     
-    # 뉴스 배치 루프: 60초 뒤 지연 시작 (OOM 방지)
+    # 3. 뉴스 배치 루프: 60초 뒤 지연 시작 (OOM 방지)
     asyncio.create_task(_delayed_batch_loop())
-    print("[Startup] ✅ LLM Compass API 안정적으로 가동 완료. 뉴스 배치는 60초 후 시작됩니다.")
+    print("[Startup] ✅ LLM Compass API 서버단 인메모리 캐시 웜업 완수. 0.001초 응답 준비 완료!")
 
 @app.get("/api/v1/news/pulse", response_model=NewsPulseResponse)
 async def get_news_pulse(

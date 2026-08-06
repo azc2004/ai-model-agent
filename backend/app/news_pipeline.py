@@ -1309,7 +1309,22 @@ async def run_batch_job(force: bool = False) -> List[NewsArticle]:
     return articles
 
 async def refresh_news_pipeline() -> List[NewsArticle]:
+    # 인메모리 캐시가 비어있으면 DB에서 즉시 웜업
+    if not _news_cache["articles"]:
+        init_news_cache_from_db()
     return await run_batch_job(force=False)
+
+def init_news_cache_from_db():
+    """서버 스타트업 시 DB에서 197개 전체 기사를 서버 RAM 메모리 캐시에 즉각 영구 상주(Warm-up) 시킵니다."""
+    db_articles = fetch_articles_from_db()
+    if db_articles:
+        _news_cache["articles"] = db_articles
+        _news_cache["last_updated"] = time.time()
+        print(f"[NewsCache Server Warmup] ✅ Loaded {len(db_articles)} articles from Neon DB into Server Memory!")
+    else:
+        _news_cache["articles"] = FALLBACK_ARTICLES
+        _news_cache["last_updated"] = time.time()
+        print(f"[NewsCache Server Warmup] Loaded fallback articles into Server Memory.")
 
 async def start_news_batch_loop():
     """서버 구동 시 실행되는 24시간 단위 정기 배치 루프"""
@@ -1322,4 +1337,5 @@ async def start_news_batch_loop():
         
         # 24시간(86400초) 대기 후 다음 배치 실행
         await asyncio.sleep(CACHE_TTL)
+
 

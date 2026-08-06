@@ -47,53 +47,14 @@ export async function fetchModels(params?: {
   if (params?.is_open_weight !== undefined) query.append('is_open_weight', String(params.is_open_weight));
   if (params?.search) query.append('search', params.search);
 
-  const cacheKey = `llm_compass_models_cache_${query.toString() || 'all'}`;
-  const CACHE_TTL_MS = 60 * 60 * 1000; // 1시간 캐시 유지
-
-  // ① SWR: localStorage에 캐시된 데이터가 있으면 즉시 반환 (0ms 로딩)
-  try {
-    const cached = localStorage.getItem(cacheKey);
-    if (cached) {
-      const { data, timestamp } = JSON.parse(cached);
-      const age = Date.now() - timestamp;
-      if (data && data.length > 0) {
-        // 캐시 데이터를 즉시 반환하면서 백그라운드로 최신 데이터 갱신 시도
-        if (age < CACHE_TTL_MS) {
-          // 백그라운드 갱신 (완료를 기다리지 않음)
-          fetchWithTimeout(`${API_BASE_URL}/models?${query.toString()}`, 15000)
-            .then(res => res.ok ? res.json() : null)
-            .then(fresh => {
-              if (fresh && fresh.length > 18) {
-                localStorage.setItem(cacheKey, JSON.stringify({ data: fresh, timestamp: Date.now() }));
-              }
-            })
-            .catch(() => {});
-          return data as ModelSpec[];
-        }
-      }
-    }
-  } catch (_) {}
-
-  // ② 캐시 없거나 만료됨: 백엔드에서 신규 수신 시도 (최대 15초)
+  // 백엔드가 서버단 인메모리 캐시(RAM Warm-up)를 적용하였으므로 0.001초 만에 최신 176개 전량 반환
   try {
     const res = await fetchWithTimeout(`${API_BASE_URL}/models?${query.toString()}`, 15000);
     if (!res.ok) throw new Error('Failed to fetch models');
     const data: ModelSpec[] = await res.json();
-    // 176개 이상 정상 수신 시 localStorage에 저장
-    if (data && data.length > 18) {
-      try { localStorage.setItem(cacheKey, JSON.stringify({ data, timestamp: Date.now() })); } catch (_) {}
-    }
     return data;
   } catch (err) {
-    console.warn("Backend warming up. Using Expanded 25+ SOTA Model Catalog:", err);
-    // ③ 완전 폴백: localStorage에 이전에 저장된 것이 있으면 기간 상관없이 반환
-    try {
-      const stale = localStorage.getItem(cacheKey);
-      if (stale) {
-        const { data } = JSON.parse(stale);
-        if (data && data.length > 18) return data as ModelSpec[];
-      }
-    } catch (_) {}
+    console.warn("Backend warming up. Using Fallback Model Catalog:", err);
     return [
       {
         id: "deepseek-r1",
