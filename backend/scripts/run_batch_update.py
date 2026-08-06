@@ -24,7 +24,10 @@ def main():
         print(f"• 카테고리: {sample.category}")
         print(f"• 리포트 크기: {len(sample.blog_summary)}자")
         print(f"• 템플릿 포함 여부: {any(h in sample.blog_summary for h in ['[SOTA Research]', '[Agent SDK]', '[Enterprise TCO]', '[Community Trend]'])}")
-        print(f"• Multi-Source Verified 포함 여부: {'Multi-Source Verified' in sample.blog_summary}")
+        print(f"• Multi-Source Cross-Validated 포함 여부: {'Multi-Source Cross-Validated' in sample.blog_summary}")
+        header = [l for l in sample.blog_summary.split('\n') if '주요 출처' in l]
+        print(f"• 출처 헤더: {header[0] if header else 'NOT FOUND'}")
+
 
 if __name__ == "__main__":
     main()
