@@ -44,6 +44,7 @@ def health_check():
         "status": "ok",
         "service": "LLM Compass API",
         "version": "1.0.0",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "total_models": len(MODELS),
         "total_providers": len(PROVIDERS)
     }
@@ -51,9 +52,11 @@ def health_check():
 from app.database import SessionLocal, engine, Base
 from app.db_models import LLMModelDB, ProviderDB, NewsArticleDB
 
-# Neon DB 테이블 생성 및 시드 데이터 176개 모델 영구 적재 함수
+# ✅ Neon DB 테이블 생성 및 시드 데이터 176개 모델 영구 적재 함수
 def init_neon_db_catalog():
-    """서버 구동 시 176개 전체 LLM 모델 데이터를 Neon PostgreSQL DB에 영구 적재(UPSERT)합니다."""
+    """서버 구동 시 176개 전체 LLM 모델 데이터를 Neon PostgreSQL DB에 영구 적재(UPSERT)합니다.
+    DB 연결 실패 시 crash 없이 로그만 출력합니다.
+    """
     try:
         Base.metadata.create_all(bind=engine)
         db = SessionLocal()
@@ -85,10 +88,9 @@ def init_neon_db_catalog():
             print(f"[NeonDB Init] ✅ Successfully migrated full LLM catalog to Neon PostgreSQL!")
         db.close()
     except Exception as e:
+        # ⚠️ DB 연결 실패해도 앱 크래시 없이 로그만 출력
         print(f"[NeonDB Init Warning] Catalog migration notice: {e}")
 
-# 서버 시작 시 Neon DB 마이그레이션 자동 실행
-init_neon_db_catalog()
 
 @app.get("/api/v1/providers", response_model=List[Provider])
 def get_providers():
@@ -230,11 +232,30 @@ def generate_custom_markdown(req: CustomMarkdownRequest):
 import asyncio
 from app.news_pipeline import refresh_news_pipeline, start_news_batch_loop, run_batch_job
 
+async def _delayed_batch_loop():
+    """서버 안정화 후 (60초 대기) 뉴스 배치 루프를 가동합니다.
+    Render 무료 플랜 512MB RAM 한계로 인해 기동 즉시 force=True 배치는
+    메모리 스파이크 유발 및 OOM Kill 위험이 있어 1분 지연 실행합니다.
+    """
+    print("[NewsBatch] ⏳ Waiting 60s for server stabilization before starting batch loop...")
+    await asyncio.sleep(60)  # 60초 대기 후 배치 시작
+    await start_news_batch_loop()
+
 @app.on_event("startup")
 async def startup_event():
-    """서버 구동 시 최신 기사 즉각 파라렐 수집 및 24시간 뉴스 배치 루프를 구동합니다."""
-    asyncio.create_task(run_batch_job(force=True))
-    asyncio.create_task(start_news_batch_loop())
+    """서버 구동 시 DB 마이그레이션을 비동기 안전하게 실행하고,
+    뉴스 배치 루프는 60초 안정화 후에 지연 시작합니다.
+    ⚠️ startup 시 force=True run_batch_job는 제거 — OOM Kill 방지
+    """
+    # DB 마이그레이션 (경량, 비동기 안전하게)
+    try:
+        init_neon_db_catalog()
+    except Exception as e:
+        print(f"[Startup] DB init warning (non-fatal): {e}")
+    
+    # 뉴스 배치 루프: 60초 뒤 지연 시작 (OOM 방지)
+    asyncio.create_task(_delayed_batch_loop())
+    print("[Startup] ✅ LLM Compass API 안정적으로 가동 완료. 뉴스 배치는 60초 후 시작됩니다.")
 
 @app.get("/api/v1/news/pulse", response_model=NewsPulseResponse)
 async def get_news_pulse(
