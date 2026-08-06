@@ -182,6 +182,8 @@ def translate_title_to_korean(title: str) -> str:
 
     # 대표적인 영문 제목 패턴 직접 매핑 룰
     direct_maps = {
+        "Learning to Resolve Neutron Resonances with Fully Convolutional Neural Networks": "완전 합성곱 신경망(FCNN)을 활용한 중성자 공명 해석 자동화 모델",
+        "On Hamming-Lipschitz Type Stability of the Subdominant (Minmax) Ultrametric: Theory and Simple Proofs": "서브도미넌트(Minmax) 울트라메트릭의 해밍-립시츠 유형 안정성: 이론 및 정밀 증명",
         "Recurrent Residual Quantization: A Progressive Multi-Precision Representation for LLMs": "LLM을 위한 점진적 다중 정밀도 표현: 재귀 잔차 양자화(RRQ)",
         "How we built a realtime system for responsive voice AI in six months": "6개월 만에 완성한 대화형 실시간 음성 AI 시스템 구축기",
         "Circles powers telco personalization with OpenAI technology": "Circles, OpenAI 기술 활용 통신 서비스 개인화 혁신",

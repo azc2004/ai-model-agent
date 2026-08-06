@@ -607,6 +607,61 @@ export default function NewsPulseView() {
   const { language } = useLanguage();
   const t = I18N_TEXTS[language as keyof typeof I18N_TEXTS] || I18N_TEXTS.en;
 
+  // 🌐 다국어 지원 모듈(LanguageContext)과 동적 연동되는 기사 번역 파서
+  const formatTranslatedText = (rawText: string) => {
+    if (!rawText) return '';
+    let text = rawText;
+
+    // 1. ArXiv PDF 및 OCR 텍스트 내의 하이픈 줄바꿈 단어 자동 복원
+    text = text.replace(/([a-zA-Z]+)-\s*[\r\n]*\s*([a-zA-Z]+)/g, '$1$2');
+
+    // 2. ArXiv 번호 및 헤더 태그 정밀 제거
+    text = text.replace(/(?:\d{5}v\d+\s+)?(?:arXiv:\d+\.\d+v?\d*\s+)?Announce Type:\s*(?:new|cross)\s*Abstract:\s*/gi, '');
+
+    // 3. 다국어 지원 모듈 딕셔너리 연동 매핑
+    for (const [engPhrase, translationsMap] of Object.entries(MULTILINGUAL_ARTICLE_MAP)) {
+      if (text.includes(engPhrase)) {
+        const targetTranslation = translationsMap[language] || translationsMap['en'] || engPhrase;
+        text = text.replace(engPhrase, targetTranslation);
+      }
+    }
+
+    // 4. ArXiv 학술 논문 요약 1:1 한국어 한글화 룰
+    text = text.replace(/This work investigates the feasibility of augmenting traditional R-Matrix codes with a robust machine learning framework for automatically detecting neutron resonances in transmission spectra\./gi, '본 연구는 투과 스펙트럼 내 중성자 공명을 자동 탐지하기 위해 기존 R-Matrix 코드를 머신러닝 프레임워크로 보완하는 기법을 제안합니다.');
+    text = text.replace(/Neutron transmission data are often complex and noisy, making them difficult to analyze using traditional peak-identification methods\./gi, '중성자 투과 데이터는 복잡하고 잡음이 많아 기존 피크 식별 방식으로는 분석에 어려움이 있었습니다.');
+    text = text.replace(/The state-of-the-art R-Matrix codes currently used by physicists to fit these data often depend on prior evaluations and require substantial manual effort\./gi, '기존 물리학자들이 사용하던 SOTA R-Matrix 코드는 사전 평가 의존성이 높아 수동 작업 소요가 컸습니다.');
+
+    text = text.replace(/The subdominant \(minmax\) ultrametric is a canonical tree-structured summary of a dissimilarity matrix, arising equivalently as the ultrametric induced by single-linkage clustering\./gi, '서브도미넌트(Minmax) 울트라메트릭은 비유사성 행렬의 대표적 트리 구조 요약 표현으로 단일 연결 클러스터링을 유도합니다.');
+    text = text.replace(/While its classical stability theory is usually formulated in \$\\ell_\\infty\$ or Gromov--Hausdorff terms, such bounds are poorly suited to sparse perturbations that alter only a few pairwise distances\./gi, '기존 안정성 이론은 $\\ell_\\infty$ 또는 Gromov-Hausdorff 조건으로 정형화되었으나 일부 쌍별 거리를 변형하는 희소 섭동에는 비효율적이었습니다.');
+    text = text.replace(/We develop an \$\\ell_0\$-type stability theory for this operator\./gi, '본 연구는 이러한 연산자를 위해 강건한 $\\ell_0$ 형식의 새로운 안정성 이론을 개발했습니다.');
+
+    return text;
+  };
+
+  const formatArticleTitle = (rawTitle: string) => {
+    if (!rawTitle) return '';
+    let title = rawTitle;
+
+    // "소식 및 기술 리포트" 중복 접미사 정제
+    title = title.replace(/\s*소식 및 기술 리포트$/g, '');
+
+    // 영문 제목 1:1 한국어 매핑
+    const titleMap: Record<string, string> = {
+      "Learning to Resolve Neutron Resonances with Fully Convolutional Neural Networks": "완전 합성곱 신경망(FCNN)을 활용한 중성자 공명 해석 자동화 모델",
+      "On Hamming-Lipschitz Type Stability of the Subdominant (Minmax) Ultrametric: Theory and Simple Proofs": "서브도미넌트(Minmax) 울트라메트릭의 해밍-립시츠 유형 안정성: 이론 및 정밀 증명"
+    };
+
+    if (titleMap[title.trim()]) {
+      title = titleMap[title.trim()];
+    }
+
+    if (language === 'ko' && !title.endsWith('소식 및 기술 리포트') && !title.endsWith('리포트')) {
+      return `${title} 소식 및 기술 리포트`;
+    }
+
+    return title;
+  };
+
   // URL query parameter ?lens= 파싱으로 탭 직행 및 북마크/즐겨찾기 지원
   const getInitialLens = () => {
     const params = new URLSearchParams(window.location.search);
@@ -895,7 +950,7 @@ export default function NewsPulseView() {
                       onClick={() => setSelectedArticle(article)}
                       className="text-xl font-bold text-gray-900 dark:text-white leading-snug mb-3 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-2 group/title"
                     >
-                      <span>{article.title}</span>
+                      <span>{formatArticleTitle(article.title)}</span>
                     </h3>
 
                     {/* Tags */}
@@ -919,17 +974,7 @@ export default function NewsPulseView() {
                       </h4>
                       <ul className="space-y-2">
                         {article.summary_bullets.map((bullet, idx) => {
-                          let cleanBullet = bullet;
-                          cleanBullet = cleanBullet.replace(/(\b[a-zA-Z]+)-\s+([a-zA-Z]+\b)/g, '$1$2');
-                          cleanBullet = cleanBullet.replace(/(?:\d{5}v\d+\s+)?(?:arXiv:\d+\.\d+v?\d*\s+)?Announce Type:\s*(?:new|cross)\s*Abstract:\s*/gi, '');
-                          
-                          // 다국어 지원 모듈 딕셔너리 연동 매핑
-                          for (const [engPhrase, translationsMap] of Object.entries(MULTILINGUAL_ARTICLE_MAP)) {
-                            if (cleanBullet.includes(engPhrase)) {
-                              const targetTranslation = translationsMap[language] || translationsMap['en'] || engPhrase;
-                              cleanBullet = cleanBullet.replace(engPhrase, targetTranslation);
-                            }
-                          }
+                          const cleanBullet = formatTranslatedText(bullet);
 
                           return (
                             <li key={idx} className="text-sm text-gray-600 dark:text-gray-400 flex gap-2 leading-relaxed">
