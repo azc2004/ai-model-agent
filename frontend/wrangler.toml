@@ -1,6 +1,7 @@
 name = "llm-compass-frontend"
 compatibility_date = "2025-01-01"
 
-# ✅ Vite 빌드 출력 디렉토리를 Cloudflare Workers Static Assets로 배포
+# ✅ SPA(Single Page Application) 라우팅 처리 - _redirects 불필요
 [assets]
 directory = "./dist"
+not_found_handling = "single-page-application"
