@@ -1,0 +1,6 @@
+name = "llm-compass-frontend"
+compatibility_date = "2025-01-01"
+
+# ✅ Vite 빌드 출력 디렉토리를 Cloudflare Workers Static Assets로 배포
+[assets]
+directory = "./dist"
