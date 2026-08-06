@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from typing import List, Optional
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Response
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.schemas import (
