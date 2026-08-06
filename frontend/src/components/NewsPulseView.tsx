@@ -448,25 +448,33 @@ export default function NewsPulseView() {
   const fetchNews = async (lens: string) => {
     setError(null);
 
-    // 1. SWR (Stale-While-Revalidate): localStorage에서 이전 캐시 기사를 0.001초 만에 즉시 화면 표출!
+    // 1. SWR (Stale-While-Revalidate): localStorage에서 이전 캐시 기사를 즉시 화면 표출!
     const cacheKey = `llm_compass_news_cache_${lens}`;
     const savedCache = localStorage.getItem(cacheKey);
+    let hasValidLargeCache = false;
+
     if (savedCache) {
       try {
         const parsed = JSON.parse(savedCache);
         if (parsed && parsed.articles && parsed.articles.length > 0) {
           setNewsData(parsed);
           setLoading(false); // 로딩 스피너 0초 만에 제거!
+          if (parsed.articles.length > 15) {
+            hasValidLargeCache = true;
+          }
         }
       } catch (e) {
         console.warn("Failed to parse local news cache:", e);
       }
-    } else {
+    }
+
+    if (!hasValidLargeCache) {
       setLoading(true);
     }
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 4000); // 4초 타임아웃 방어막
+    // 백엔드 Neon DB 197개 대용량 데이터 응답을 안정 수신하기 위해 타임아웃 15초 적용
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
 
     try {
       const url = lens === 'all' 
@@ -476,10 +484,17 @@ export default function NewsPulseView() {
       const res = await fetch(url, { signal: controller.signal });
       clearTimeout(timeoutId);
 
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
       const data = await res.json();
       if (data && data.articles && data.articles.length > 0) {
         setNewsData(data);
-        localStorage.setItem(cacheKey, JSON.stringify(data)); // 로컬 스토리지 최신화
+        // 15개 이상의 진짜 DB 데이터일 때만 localStorage에 영구 캐싱
+        if (data.articles.length > 10) {
+          try {
+            localStorage.setItem(cacheKey, JSON.stringify(data));
+          } catch (_) {}
+        }
       } else if (!savedCache) {
         const filteredFallback = lens === 'all' 
           ? CLIENT_FALLBACK_NEWS.articles 
@@ -490,11 +505,11 @@ export default function NewsPulseView() {
           last_updated: CLIENT_FALLBACK_NEWS.last_updated
         };
         setNewsData(fallbackData);
-        localStorage.setItem(cacheKey, JSON.stringify(fallbackData));
       }
     } catch (err: any) {
       clearTimeout(timeoutId);
       console.warn("Using Client Fallback/Cached News due to network or timeout:", err);
+      // 저장된 캐시가 전혀 없을 경우에만 fallback 8개 데이터 사용 (localStorage엔 저장 안 함)
       if (!savedCache) {
         const filteredFallback = lens === 'all' 
           ? CLIENT_FALLBACK_NEWS.articles 
