@@ -145,13 +145,25 @@ def get_models(
         results = [m for m in results if m.is_open_weight == is_open_weight]
 
     if search:
-        query = search.lower()
+        s = search.lower()
         results = [
             m for m in results 
-            if query in m.name.lower() or query in m.provider_name.lower() or query in m.description.lower()
+            if s in m.name.lower() or s in m.provider_name.lower() or s in m.description.lower()
         ]
 
     return results
+
+from app.model_fetcher import run_daily_model_sync_job
+
+@app.post("/api/v1/models/sync")
+def sync_models_daily():
+    """외부 OpenRouter & LMSYS API와 동기화하여 Neon DB 내 LLM 모델 스펙 및 가격을 데일리 자동 갱신합니다."""
+    updated_count = run_daily_model_sync_job()
+    return {
+        "status": "ok",
+        "message": f"Successfully synced {updated_count} models with daily live pricing and benchmarks.",
+        "updated_count": updated_count
+    }
 
 @app.get("/api/v1/models/{model_id}", response_model=ModelSpec)
 def get_model_detail(model_id: str):
