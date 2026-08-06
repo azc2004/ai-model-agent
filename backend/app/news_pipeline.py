@@ -1256,7 +1256,7 @@ async def run_batch_job(force: bool = False) -> List[NewsArticle]:
     global _news_cache
     now = time.time()
     
-    if not force and _news_cache["articles"] and (now - _news_cache["last_updated"]) < CACHE_TTL:
+    if not force and _news_cache["articles"] and len(_news_cache["articles"]) >= 25 and (now - _news_cache["last_updated"]) < CACHE_TTL:
         print(f"[NewsBatch] Cache is still valid. Using cached articles ({len(_news_cache['articles'])} items).")
         return _news_cache["articles"]
     
@@ -1309,15 +1309,27 @@ async def run_batch_job(force: bool = False) -> List[NewsArticle]:
     return articles
 
 async def refresh_news_pipeline() -> List[NewsArticle]:
-    # 인메모리 캐시가 비어있으면 DB에서 즉시 웜업
-    if not _news_cache["articles"]:
-        init_news_cache_from_db()
+    """유저 뉴스 조회 요청 시 호출되는 캐시 웜업 & 반환 파이프라인.
+    만약 인메모리 캐시가 비어있거나, 폴백 상태(<25개)일 경우 Neon DB에서 197개 전체 실기사를 즉시 웜업합니다.
+    """
+    global _news_cache
+    
+    # 1. 인메모리 캐시가 비어있거나 기사 수가 25개 미만(폴백 상태)이면 DB에서 최신 데이터(197개)로 즉시 갱신
+    if not _news_cache["articles"] or len(_news_cache["articles"]) < 25:
+        db_articles = fetch_articles_from_db()
+        if db_articles and len(db_articles) >= 25:
+            _news_cache["articles"] = db_articles
+            _news_cache["last_updated"] = time.time()
+            print(f"[NewsCache Invalidation] ⚡ Reloaded {len(db_articles)} articles from Neon DB into Server Memory!")
+            return db_articles
+
     return await run_batch_job(force=False)
 
 def init_news_cache_from_db():
     """서버 스타트업 시 DB에서 197개 전체 기사를 서버 RAM 메모리 캐시에 즉각 영구 상주(Warm-up) 시킵니다."""
+    global _news_cache
     db_articles = fetch_articles_from_db()
-    if db_articles:
+    if db_articles and len(db_articles) >= 25:
         _news_cache["articles"] = db_articles
         _news_cache["last_updated"] = time.time()
         print(f"[NewsCache Server Warmup] ✅ Loaded {len(db_articles)} articles from Neon DB into Server Memory!")
