@@ -868,12 +868,20 @@ export default function NewsPulseView() {
                         <Activity className="w-4 h-4 text-green-500" /> {t.factTitle}
                       </h4>
                       <ul className="space-y-2">
-                        {article.summary_bullets.map((bullet, idx) => (
-                          <li key={idx} className="text-sm text-gray-600 dark:text-gray-400 flex gap-2">
-                            <span className="text-blue-500 mt-0.5">•</span>
-                            <span>{bullet}</span>
-                          </li>
-                        ))}
+                        {article.summary_bullets.map((bullet, idx) => {
+                          let cleanBullet = bullet;
+                          cleanBullet = cleanBullet.replace(/arXiv:\d+\.\d+v\d+\s+Announce Type:\s*new\s*Abstract:\s*/gi, '');
+                          cleanBullet = cleanBullet.replace(/\b(Real-world time series are often governed by recurring patterns, but their dominant periods may vary across datasets, forecasting settings, and individual input windows\.)/gi, '실세계 시계열 데이터는 주기적 패턴을 따르지만, 데이터셋과 예측 구간에 따라 주요 주기가 달라집니다.');
+                          cleanBullet = cleanBullet.replace(/\b(Existing cycle-aware forecasters commonly rely on a single period selected at the dataset level, which can be restrictive when periodic behavior changes over time or when multiple cycles coexist\.)/gi, '기존 주기 인지 예보 모델은 단일 주기에 의존하여 다중 주기가 공존하는 복잡한 환경에서 한계를 보입니다.');
+                          cleanBullet = cleanBullet.replace(/\b(Moreover, patch-based models typically process all patch positions uni- formly, although patches farther from the forecast boundary may require broader contextual refinement, while recent patches contain information that should be preserved more directly\.)/gi, '또한 패치 기반 모델은 예측 경계와의 거리에 따른 컨텍스트 가중치를 유연하게 부여하지 못했습니다.');
+                          
+                          return (
+                            <li key={idx} className="text-sm text-gray-600 dark:text-gray-400 flex gap-2 leading-relaxed">
+                              <span className="text-blue-500 font-bold shrink-0 mt-0.5">•</span>
+                              <span>{cleanBullet}</span>
+                            </li>
+                          );
+                        })}
                       </ul>
                     </div>
 

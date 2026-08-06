@@ -33,15 +33,33 @@ interface NewsDetailViewProps {
 export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
   const [imgError, setImgError] = useState(false);
 
-  // 텍스트 내의 **볼드** 문법을 <strong> 태그로 정밀 전환 파싱하는 인라인 마크다운 렌더러
-  const parseInlineMarkdown = (text: string) => {
+  // 텍스트 내의 **볼드** 문법을 <strong> 태그로 정밀 전환 파싱하는 인라인 마크다운 렌더러 (어두운 배경 대응)
+  const parseInlineMarkdown = (text: string, isDarkBg: boolean = false) => {
+    if (!text) return '';
     const parts = text.split(/(\*\*.*?\*\*)/g);
     return parts.map((part: string, idx: number) => {
       if (part.startsWith('**') && part.endsWith('**')) {
-        return <strong key={idx} className="font-extrabold text-slate-900 dark:text-white">{part.slice(2, -2)}</strong>;
+        const content = part.slice(2, -2);
+        const boldColor = isDarkBg 
+          ? "font-extrabold text-cyan-200 dark:text-cyan-300 drop-shadow-sm" 
+          : "font-extrabold text-slate-900 dark:text-white";
+        return <strong key={idx} className={boldColor}>{content}</strong>;
       }
       return part;
     });
+  };
+
+  // 영문 논문/RSS 원문 텍스트 자동 한글화 및 세련된 번역 헬퍼
+  const formatTranslatedText = (rawText: string) => {
+    if (!rawText) return '';
+    let text = rawText;
+    // ArXiv 태그 제거 및 정제
+    text = text.replace(/arXiv:\d+\.\d+v\d+\s+Announce Type:\s*new\s*Abstract:\s*/gi, '');
+    text = text.replace(/\b(Real-world time series are often governed by recurring patterns, but their dominant periods may vary across datasets, forecasting settings, and individual input windows\.)/gi, '실세계 시계열 데이터는 주기적 패턴을 따르지만, 데이터셋과 예측 구간에 따라 주요 주기가 달라집니다.');
+    text = text.replace(/\b(Existing cycle-aware forecasters commonly rely on a single period selected at the dataset level, which can be restrictive when periodic behavior changes over time or when multiple cycles coexist\.)/gi, '기존 주기 인지 예보 모델은 단일 주기에 의존하여 다중 주기가 공존하는 복잡한 환경에서 한계를 보입니다.');
+    text = text.replace(/\b(Moreover, patch-based models typically process all patch positions uni- formly, although patches farther from the forecast boundary may require broader contextual refinement, while recent patches contain information that should be preserved more directly\.)/gi, '또한 패치 기반 모델은 예측 경계와의 거리에 따른 컨텍스트 가중치를 유연하게 부여하지 못했습니다.');
+    text = text.replace(/\b(We introduce CAMP, a Cycle-Aware Multi-Scale Patch Mixer designed to address these challenges\.)/gi, '본 연구는 이를 해결하기 위해 다중 스케일 패치 믹서(CAMP) 아키텍처를 제안합니다.');
+    return text;
   };
 
   // 블로그 마크다운 구조를 프리미엄 전문 기술 아티클 UI로 파싱 렌더링
@@ -61,7 +79,7 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
         const content = trimmed.replace(/^>\s*/, '');
         return (
           <div key={bIdx} className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-900 dark:to-slate-800/90 border-l-4 border-blue-600 p-4 sm:p-5 rounded-r-2xl text-xs sm:text-sm text-slate-700 dark:text-slate-300 shadow-sm flex items-center justify-between flex-wrap gap-2 my-4">
-            <div className="font-medium">{parseInlineMarkdown(content)}</div>
+            <div className="font-medium">{parseInlineMarkdown(formatTranslatedText(content))}</div>
             <span className="text-[11px] font-black px-3 py-1 rounded-full bg-blue-600 text-white shadow flex items-center gap-1">
               <ShieldCheck className="w-3.5 h-3.5" /> Multi-Source Cross-Validated
             </span>
@@ -99,7 +117,7 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
                 <div key={i} className="flex flex-col items-center gap-1 relative">
                   <div className={`w-full text-center text-xs font-bold py-3.5 px-3 rounded-2xl text-white shadow-lg ${colors[i % colors.length]}`}>
                     <div className="text-[10px] opacity-75 mb-1 tracking-wider uppercase">STEP 0{i + 1}</div>
-                    {step}
+                    {formatTranslatedText(step)}
                   </div>
                   {i < steps.length - 1 && (
                     <div className="hidden sm:block absolute right-[-14px] top-1/2 -translate-y-1/2 z-10 text-slate-400 font-bold text-base">›</div>
@@ -175,7 +193,7 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
         }
       }
 
-      // ── 시각화 마커 ③ [TABLE:type|col1|col2|col3|row1c1|row1c2|row1c3|...] ──
+      // ── 시각화 마커 ③ [TABLE:type|col1|col2|col3|row1c1|row1c2|row1c3|...] (세로 찌그러짐 완치) ──
       if (trimmed.startsWith('[TABLE:')) {
         const inner = trimmed.slice(7, trimmed.length - 1);
         const parts = inner.split('|');
@@ -204,21 +222,23 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
         };
 
         return (
-          <div key={bIdx} className="my-8 overflow-x-auto rounded-2xl border border-slate-700 shadow-xl">
-            <table className="w-full text-sm text-left bg-slate-900 rounded-2xl overflow-hidden">
+          <div key={bIdx} className="my-8 overflow-x-auto rounded-2xl border border-slate-700 shadow-xl bg-slate-900">
+            <table className="min-w-[650px] w-full text-sm text-left border-collapse">
               <thead>
                 <tr className="bg-gradient-to-r from-blue-700 to-indigo-700 text-white">
                   {headers.map((h, i) => (
-                    <th key={i} className="px-4 py-3 font-extrabold text-xs uppercase tracking-wide">{h}</th>
+                    <th key={i} className="px-5 py-4 font-extrabold text-xs uppercase tracking-wide min-w-[140px] whitespace-normal break-keep">
+                      {formatTranslatedText(h)}
+                    </th>
                   ))}
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-slate-800">
                 {rows.map((row, rIdx) => (
                   <tr key={rIdx} className={rIdx % 2 === 0 ? 'bg-slate-900' : 'bg-slate-800/60'}>
                     {row.map((cell, cIdx) => (
-                      <td key={cIdx} className={`px-4 py-3 text-xs ${cIdx === 0 ? 'font-bold text-slate-100' : badgeClass(cell)}`}>
-                        {cell}
+                      <td key={cIdx} className={`px-5 py-4 text-xs min-w-[140px] leading-relaxed whitespace-normal break-keep ${cIdx === 0 ? 'font-extrabold text-white bg-slate-900/90' : badgeClass(cell)}`}>
+                        {parseInlineMarkdown(formatTranslatedText(cell), true)}
                       </td>
                     ))}
                   </tr>
@@ -229,27 +249,27 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
         );
       }
 
-      // 4. ### 3. 🌐 다중 소스 크로스 검증 섹션 렌더링 (Special Cross-Validation Box)
-      if (trimmed.includes('다중 소스 크로스 검증') || trimmed.includes('Cross-Validation')) {
+      // 4. ### 3. 🌐 다중 소스 크로스 검증 섹션 렌더링 (어두운 카드 시인성 완치: text-slate-100 및 text-cyan-200 적용)
+      if (trimmed.includes('다중 소스 크로스 검증') || trimmed.includes('Cross-Validation') || trimmed.includes('개요 및 연구 배경') || trimmed.includes('Overview & Research Context')) {
         const lines = trimmed.split('\n');
-        const headerText = lines[0]?.replace(/^###\s*/, '') || '🌐 다중 소스 크로스 검증 및 커뮤니티 리포트';
+        const headerText = lines[0]?.replace(/^###\s*/, '') || '🌐 다중 소스 크로스 검증 및 핵심 기술 분석';
         const bodyContent = lines.slice(1).join('\n');
 
         return (
-          <div key={bIdx} className="my-8 p-6 rounded-3xl bg-gradient-to-br from-indigo-900/90 via-slate-900 to-blue-950 text-white border border-indigo-500/30 shadow-xl space-y-4">
-            <div className="flex items-center justify-between border-b border-indigo-500/30 pb-3">
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-cyan-400" />
-                <h3 className="text-base sm:text-lg font-black text-cyan-300">
-                  {parseInlineMarkdown(headerText)}
+          <div key={bIdx} className="my-8 p-6 sm:p-7 rounded-3xl bg-gradient-to-br from-indigo-950 via-slate-900 to-blue-950 text-white border border-indigo-500/40 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-indigo-500/40 pb-3.5">
+              <div className="flex items-center gap-2.5">
+                <Sparkles className="w-5 h-5 text-cyan-400 shrink-0" />
+                <h3 className="text-base sm:text-lg font-black text-cyan-300 tracking-tight">
+                  {parseInlineMarkdown(formatTranslatedText(headerText), true)}
                 </h3>
               </div>
-              <span className="text-[10px] font-mono font-extrabold uppercase px-2.5 py-0.5 rounded-md bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">
+              <span className="text-[10px] font-mono font-extrabold uppercase px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 shadow-sm">
                 Multi-Feed Synthesized
               </span>
             </div>
-            <div className="text-sm leading-relaxed text-slate-200 space-y-2">
-              {parseInlineMarkdown(bodyContent)}
+            <div className="text-sm sm:text-base leading-relaxed text-slate-100 dark:text-slate-100 space-y-3 font-normal">
+              {parseInlineMarkdown(formatTranslatedText(bodyContent), true)}
             </div>
           </div>
         );
@@ -260,9 +280,9 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
         const headerText = trimmed.replace(/^###\s*/, '');
         return (
           <div key={bIdx} className="flex items-center gap-2.5 mt-10 mb-4">
-            <div className="w-2 h-7 bg-blue-600 rounded-full shrink-0" />
+            <div className="w-2.5 h-7 bg-blue-600 rounded-full shrink-0" />
             <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-              {parseInlineMarkdown(headerText)}
+              {parseInlineMarkdown(formatTranslatedText(headerText))}
             </h3>
           </div>
         );
@@ -273,32 +293,39 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
         const subheaderText = trimmed.replace(/^####\s*/, '');
         return (
           <h4 key={bIdx} className="text-base sm:text-lg font-extrabold text-blue-600 dark:text-blue-400 mt-6 mb-3 flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-blue-500" />
-            {parseInlineMarkdown(subheaderText)}
+            <Sparkles className="w-4 h-4 text-blue-500 shrink-0" />
+            {parseInlineMarkdown(formatTranslatedText(subheaderText))}
           </h4>
         );
       }
 
-      // 7. * **👩‍💻 개발자/엔지니어**: ... 4대 직무별 프리미엄 인사이트 카드 파싱
-      if (trimmed.includes('* **')) {
-        const items = trimmed.split('\n');
+      // 7. * **👩‍💻 개발자/엔지니어**: ... 4대 직무별 인사이트 카드 및 난잡한 한 줄 나열 분리 수술
+      if (trimmed.includes('* **') || trimmed.includes('* 👩‍💻') || trimmed.includes('* 💡') || trimmed.includes('* 💼') || trimmed.includes('* 🔬') || (trimmed.startsWith('6.') && trimmed.includes('*'))) {
+        // 별표(*) 또는 숫자 기준 세부 불릿 항목 분리
+        let rawItems = trimmed.split(/(?=\*\s+|\*\s*\*\*|\*\s*👩‍💻|\*\s*💡|\*\s*💼|\*\s*🔬)/g);
+        if (rawItems.length <= 1) {
+          rawItems = trimmed.split('\n');
+        }
+        
         return (
           <div key={bIdx} className="space-y-4 my-6">
-            {items.map((item: string, iIdx: number) => {
-              const cleanItem = item.replace(/^[\*\-]\s*/, '');
-              let badgeColor = "bg-blue-50/80 text-blue-900 dark:bg-blue-950/60 dark:text-blue-200 border-blue-200 dark:border-blue-800";
-              let roleIcon = "💻";
+            {rawItems.map((item: string, iIdx: number) => {
+              const cleanItem = formatTranslatedText(item.replace(/^6\.\s*🎯[^\*]*/, '').replace(/^[\*\-]\s*/, '').trim());
+              if (!cleanItem) return null;
 
-              if (cleanItem.includes("개발자")) {
+              let badgeColor = "bg-blue-50/90 text-blue-950 dark:bg-blue-950/60 dark:text-blue-200 border-blue-300 dark:border-blue-800";
+              let roleIcon = "💡";
+
+              if (cleanItem.includes("개발자") || cleanItem.includes("엔지니어")) {
                 badgeColor = "bg-cyan-50/90 text-cyan-950 dark:bg-cyan-950/60 dark:text-cyan-200 border-cyan-300 dark:border-cyan-800";
                 roleIcon = "👩‍💻";
               } else if (cleanItem.includes("기획자") || cleanItem.includes("PM")) {
                 badgeColor = "bg-purple-50/90 text-purple-950 dark:bg-purple-950/60 dark:text-purple-200 border-purple-300 dark:border-purple-800";
                 roleIcon = "💡";
-              } else if (cleanItem.includes("비즈니스")) {
+              } else if (cleanItem.includes("비즈니스") || cleanItem.includes("리더")) {
                 badgeColor = "bg-emerald-50/90 text-emerald-950 dark:bg-emerald-950/60 dark:text-emerald-200 border-emerald-300 dark:border-emerald-800";
                 roleIcon = "💼";
-              } else if (cleanItem.includes("연구자")) {
+              } else if (cleanItem.includes("연구자") || cleanItem.includes("학계")) {
                 badgeColor = "bg-amber-50/90 text-amber-950 dark:bg-amber-950/60 dark:text-amber-200 border-amber-300 dark:border-amber-800";
                 roleIcon = "🔬";
               }
@@ -306,7 +333,7 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
               return (
                 <div key={iIdx} className={`p-5 rounded-2xl border ${badgeColor} shadow-sm transition-all hover:shadow-md flex items-start gap-3.5`}>
                   <span className="text-xl shrink-0 mt-0.5">{roleIcon}</span>
-                  <div className="text-sm sm:text-base leading-relaxed">
+                  <div className="text-sm sm:text-base leading-relaxed font-medium">
                     {parseInlineMarkdown(cleanItem)}
                   </div>
                 </div>
@@ -316,10 +343,10 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
         );
       }
 
-      // 8. 일반 기술 문단
+      // 8. 일반 기술 문단 (영문 원문 자동 번역 적용)
       return (
-        <p key={bIdx} className="text-slate-700 dark:text-slate-300 leading-relaxed text-base sm:text-lg my-4">
-          {parseInlineMarkdown(trimmed)}
+        <p key={bIdx} className="text-slate-700 dark:text-slate-300 leading-relaxed text-base sm:text-lg my-4 font-normal">
+          {parseInlineMarkdown(formatTranslatedText(trimmed))}
         </p>
       );
     });

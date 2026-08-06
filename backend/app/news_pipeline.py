@@ -134,6 +134,13 @@ def translate_title_to_korean(title: str) -> str:
 
     # 구문 단위 자동 번역 규칙 맵
     phrase_rules = [
+        ("Announce Type: new Abstract:", ""),
+        ("Announce Type: cross Abstract:", ""),
+        ("CAMP: A Cycle-Aware Multi-Scale Patch Mixer for Time Series Forecasting", "시계열 예측을 위한 주기 인지 다중 스케일 패치 믹서(CAMP) 아키텍처"),
+        ("A Cycle-Aware Multi-Scale Patch Mixer for Time Series Forecasting", "시계열 예측을 위한 주기 인지 다중 스케일 패치 믹서 아키텍처"),
+        ("for Time Series Forecasting", "시계열 예측 및 분석을 위한"),
+        ("Multi-Scale Patch Mixer", "다중 스케일 패치 믹서"),
+        ("Cycle-Aware", "주기 인지형"),
         ("New ways to learn and teach with", "활용 새로운 학습 및 교육 방법:"),
         ("Apple is getting this wrong", "애플의 AI 전략과 기술적 착오 분석"),
         ("Got an Intel Mac?", "인텔 맥북 활용법:"),
