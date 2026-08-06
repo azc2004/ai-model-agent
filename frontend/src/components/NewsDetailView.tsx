@@ -56,7 +56,16 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
     // ArXiv 번호 및 헤더 태그 정밀 제거 (예: 04048v1 Announce Type: new Abstract:)
     text = text.replace(/(?:\d{5}v\d+\s+)?(?:arXiv:\d+\.\d+v?\d*\s+)?Announce Type:\s*(?:new|cross)\s*Abstract:\s*/gi, '');
     
-    // 학술 논문 및 주요 영문 문장 1:1 세련된 번역 맵
+    // 학술 논문 및 주요 영문 문장 1:1 세련된 번역 맵 (스크린샷 논문 포함)
+    text = text.replace(/Robust and Personalized Federated Learning for Aircraft-Engine Prognostics under Benign and Adversarial Client Heterogeneity/gi, '건전 및 적대적 클라이언트 이질성 환경에서의 항공 엔진 상태 진단을 위한 강건하고 개인화된 연합 학습');
+    text = text.replace(/Federated learning \(FL\) enables aircraft fleet operators to jointly train remaining-useful-life \(RUL\) models from engine sensor telemetry without sharing raw data\./gi, '연합 학습(FL)을 통해 항공기 운용사는 원시 데이터 공유 없이 엔진 센서 텔레메트리 데이터를 활용하여 잔여 유효 수명(RUL) 예측 모델을 공동 학습할 수 있습니다.');
+    text = text.replace(/This study examines two complementary challenges: benign heterogeneity, where honest operators observe different operating conditions and fault modes, and adversarial heterogeneity, where compromised operators submit poisoned updates\./gi, '본 연구는 두 가지 상호보완적 과제(정상 운용사의 다양한 동작 환경/고장 모드에 따른 일반 이질성과, 악의적 사용자가 오염된 업데이트를 제출하는 적대적 이질성)를 분석합니다.');
+    text = text.replace(/We conduct a controlled, safety-oriented evaluation using a multi-task one-dimensional convolutional neural network and a structurally non-IID partition of the Commercial Modular Aero-Propulsion System Simulation \(C-MAPSS\) benchmark\./gi, '본 연구는 1D-CNN 및 C-MAPSS 벤치마크의 비독립 동일 분포(non-IID) 분할 환경에서 안전성 중심 평가를 수행했습니다.');
+    
+    text = text.replace(/Tactus: Open-Vocabulary Object Recognition from Low-Cost Pressure Arrays/gi, '저비용 압력 어레이 기반 개방형 어휘 물체 인식 모델 Tactus');
+    text = text.replace(/Resistive pressure arrays are the cheapest and most widely shipped tactile sensors, yet tactile representation learning has concentrated on optical sensors that image a deforming gel\./gi, '저항성 압력 어레이는 가장 보급률이 높은 촉각 센서이지만, 기존 촉각 표현 학습은 변형 젤 방식 광학 센서에 치우쳐 있었습니다.');
+    text = text.replace(/We present Tactus, an open model that answers text queries from pressure data alone: on the STAG benchmark \(27 objects, held-out recordings\), it reaches 0\./gi, '본 논문은 압력 데이터만으로 텍스트 쿼리에 응답하는 오픈 인공지능 모델 Tactus를 제안합니다.');
+
     text = text.replace(/Serving large language models \(LLMs\) under diverse deployment constraints requires flexible trade-offs between accuracy, memory footprint, and throughput\./gi, '다양한 배포 제약 조건에서 대형 언어 모델(LLM)을 서빙하려면 정확도, 메모리 점유율, 처리량 간의 유연한 트레이드오프가 필수적입니다.');
     text = text.replace(/However, conventional quantization methods typically require a separate checkpoint for each target bit-width\./gi, '그러나 기존 양자화 방식은 목표 비트 수(bit-width)마다 별도의 체크포인트를 유지해야 하는 비효율이 존재했습니다.');
     text = text.replace(/We introduce Recurrent Residual Quantization \(RRQ\), a post-training quantization \(PTQ\) framework that represents weights as a low-bit quantized base together with a sequence of quantized residual corrections, enabling multiple effective precisions from a single checkpoint\./gi, '본 연구에서는 단일 체크포인트만으로 저비트 기반 가중치와 잔차 보정 시퀀스를 연결하여 다중 유효 정밀도를 지원하는 학습 후 양자화(PTQ) 프레임워크인 재귀 잔차 양자화(RRQ)를 제안합니다.');
@@ -69,9 +78,16 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
     text = text.replace(/Moreover, patch-based models typically process all patch positions uni- formly, although patches farther from the forecast boundary may require broader contextual refinement, while recent patches contain information that should be preserved more directly\./gi, '또한 패치 기반 모델은 예측 경계와의 거리에 따른 컨텍스트 가중치를 유연하게 부여하지 못했습니다.');
     text = text.replace(/We introduce CAMP, a Cycle-Aware Multi-Scale Patch Mixer designed to address these challenges\./gi, '본 연구는 이를 해결하기 위해 다중 스케일 패치 믹서(CAMP) 아키텍처를 제안합니다.');
     
-    // 주요 키워드 치환
+    // 주요 범용 기술 어휘 및 구문 치환
+    text = text.replace(/Federated learning \(FL\)/gi, '연합 학습(FL)');
+    text = text.replace(/Federated learning/gi, '연합 학습');
     text = text.replace(/post-training quantization \(PTQ\)/gi, '학습 후 양자화(PTQ)');
     text = text.replace(/large language models \(LLMs\)/gi, '대형 언어 모델(LLM)');
+    text = text.replace(/remaining-useful-life \(RUL\)/gi, '잔여 유효 수명(RUL)');
+    text = text.replace(/Open-Vocabulary Object Recognition/gi, '개방형 어휘 물체 인식');
+    text = text.replace(/tactile representation learning/gi, '촉각 표현 학습');
+    text = text.replace(/Resistive pressure arrays/gi, '저항성 압력 어레이 센서');
+    text = text.replace(/without sharing raw data/gi, '원시 데이터 공유 없이');
 
     return text;
   };

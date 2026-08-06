@@ -113,6 +113,20 @@ def translate_text_to_korean(text: str) -> str:
 
     # 자주 출몰하는 학술 논문 및 글로벌 AI 속보 영문 문장 1:1 한글 번역 맵
     text_rules = [
+        ("Robust and Personalized Federated Learning for Aircraft-Engine Prognostics under Benign and Adversarial Client Heterogeneity",
+         "건전 및 적대적 클라이언트 이질성 환경에서의 항공 엔진 상태 진단을 위한 강건하고 개인화된 연합 학습"),
+        ("Federated learning (FL) enables aircraft fleet operators to jointly train remaining-useful-life (RUL) models from engine sensor telemetry without sharing raw data.",
+         "연합 학습(FL)을 통해 항공기 운용사는 원시 데이터 공유 없이 엔진 센서 텔레메트리 데이터를 활용하여 잔여 유효 수명(RUL) 예측 모델을 공동 학습할 수 있습니다."),
+        ("This study examines two complementary challenges: benign heterogeneity, where honest operators observe different operating conditions and fault modes, and adversarial heterogeneity, where compromised operators submit poisoned updates.",
+         "본 연구는 두 가지 상호보완적 과제(정상 운용사의 다양한 동작 환경/고장 모드에 따른 일반 이질성과, 악의적 사용자가 오염된 업데이트를 제출하는 적대적 이질성)를 분석합니다."),
+        ("We conduct a controlled, safety-oriented evaluation using a multi-task one-dimensional convolutional neural network and a structurally non-IID partition of the Commercial Modular Aero-Propulsion System Simulation (C-MAPSS) benchmark.",
+         "본 연구는 1D-CNN 및 C-MAPSS 벤치마크의 비독립 동일 분포(non-IID) 분할 환경에서 안전성 중심 평가를 수행했습니다."),
+        ("Tactus: Open-Vocabulary Object Recognition from Low-Cost Pressure Arrays",
+         "저비용 압력 어레이 기반 개방형 어휘 물체 인식 모델 Tactus"),
+        ("Resistive pressure arrays are the cheapest and most widely shipped tactile sensors, yet tactile representation learning has concentrated on optical sensors that image a deforming gel.",
+         "저항성 압력 어레이는 가장 보급률이 높은 촉각 센서이지만, 기존 촉각 표현 학습은 변형 젤 방식 광학 센서에 치우쳐 있었습니다."),
+        ("We present Tactus, an open model that answers text queries from pressure data alone: on the STAG benchmark (27 objects, held-out recordings), it reaches 0.",
+         "본 논문은 압력 데이터만으로 텍스트 쿼리에 응답하는 오픈 인공지능 모델 Tactus를 제안합니다."),
         ("Serving large language models (LLMs) under diverse deployment constraints requires flexible trade-offs between accuracy, memory footprint, and throughput.",
          "다양한 배포 제약 조건에서 대형 언어 모델(LLM)을 서빙하려면 정확도, 메모리 점유율, 처리량 간의 유연한 트레이드오프가 필요합니다."),
         ("However, conventional quantization methods typically require a separate checkpoint for each target bit-width.",
@@ -141,6 +155,8 @@ def translate_text_to_korean(text: str) -> str:
         clean = clean.replace(eng, kor)
 
     # 1. 크로스 검증 맥락 수집용 영문 단어 및 범용 구문 치환
+    clean = clean.replace("Federated learning (FL)", "연합 학습(FL)")
+    clean = clean.replace("Federated learning", "연합 학습")
     clean = clean.replace("post-training quantization (PTQ)", "학습 후 양자화(PTQ)")
     clean = clean.replace("post-training quantization", "학습 후 양자화")
     clean = clean.replace("large language models (LLMs)", "대형 언어 모델(LLM)")
