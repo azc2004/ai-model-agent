@@ -106,7 +106,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, compare
             }`}
           >
             <BookOpen className="w-4 h-4 shrink-0 text-purple-400" />
-            <span className="whitespace-nowrap">🎓 튜토리얼</span>
+            <span className="whitespace-nowrap">{t.nav.tutorial}</span>
           </button>
 
           <button
@@ -118,7 +118,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, compare
             }`}
           >
             <span className="text-sm shrink-0">📰</span>
-            <span className="whitespace-nowrap">AI 트렌드 뉴스</span>
+            <span className="whitespace-nowrap">{t.nav.news}</span>
           </button>
 
           <button

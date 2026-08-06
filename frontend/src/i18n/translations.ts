@@ -7,6 +7,8 @@ export interface TranslationDictionary {
     compare: string;
     tco: string;
     advisor: string;
+    tutorial: string;
+    news: string;
     leaderboard: string;
     gpus: string;
   };
@@ -97,6 +99,8 @@ export const translations: Record<Language, TranslationDictionary> = {
       compare: "모델 비교",
       tco: "API vs 셀프호스팅 TCO",
       advisor: "🏆 AI 아키텍처 추천기",
+      tutorial: "🎓 튜토리얼",
+      news: "📰 AI 트렌드 뉴스",
       leaderboard: "리더보드",
       gpus: "GPU 스펙 & 비용"
     },
@@ -185,6 +189,8 @@ export const translations: Record<Language, TranslationDictionary> = {
       compare: "Compare",
       tco: "TCO Simulator",
       advisor: "🏆 Architecture Advisor",
+      tutorial: "🎓 Tutorial",
+      news: "📰 AI Trends News",
       leaderboard: "Leaderboard",
       gpus: "GPU Specs & Costs"
     },
@@ -269,10 +275,12 @@ export const translations: Record<Language, TranslationDictionary> = {
   ja: {
     nav: {
       brandSubtitle: "世界AIモデルTCO・スペック比較",
-      catalog: "모델カタログ",
+      catalog: "モデルカタログ",
       compare: "カスタム比較",
       tco: "TCOシミュレーター",
       advisor: "🏆 AIアーキテクチャ推薦",
+      tutorial: "🎓 チュートリアル",
+      news: "📰 AI トレンドニュース",
       leaderboard: "リーダーボード",
       gpus: "GPUスペック・コスト"
     },
@@ -319,7 +327,7 @@ export const translations: Record<Language, TranslationDictionary> = {
       subtitle: "SaaS API呼び出し vs クラウドGPUレンタル vs オンプレミスサーバー導入の3年間TCOを精緻に計算",
       selectModel: "対象モデルを選択",
       inputTokens: "月間入力トークン (1,000,000単位)",
-      outputTokens: "月間出力トークン (1,000,000単位)",
+      outputTokens: "月间出力トークン (1,000,000単位)",
       quantization: "量子化レベル (Quantization)",
       recommendedOption: "推奨インフラ構成",
       cheapest: "最安値オプション",
@@ -361,6 +369,8 @@ export const translations: Record<Language, TranslationDictionary> = {
       compare: "自定义对比",
       tco: "TCO 模拟器",
       advisor: "🏆 AI 架构推荐器",
+      tutorial: "🎓 教程",
+      news: "📰 AI 趋势新闻",
       leaderboard: "排行榜",
       gpus: "GPU 规格与成本"
     },
@@ -449,6 +459,8 @@ export const translations: Record<Language, TranslationDictionary> = {
       compare: "Comparar Modelos",
       tco: "API vs TCO Autoalojado",
       advisor: "Recomendador de Arquitectura",
+      tutorial: "🎓 Tutorial",
+      news: "📰 Noticias de Tendencias IA",
       leaderboard: "Tabla de Clasificación",
       gpus: "Precios y Especificaciones GPU"
     },
@@ -527,6 +539,8 @@ export const translations: Record<Language, TranslationDictionary> = {
       compare: "Modellvergleich",
       tco: "API vs Self-Host TCO",
       advisor: "Architektur-Empfehlungen",
+      tutorial: "🎓 Tutorial",
+      news: "📰 KI Trend-News",
       leaderboard: "Bestenliste",
       gpus: "GPU Preise & Specs"
     },
@@ -605,6 +619,8 @@ export const translations: Record<Language, TranslationDictionary> = {
       compare: "Comparer les Modèles",
       tco: "API vs TCO Auto-hébergé",
       advisor: "Recommandateur d'Architecture",
+      tutorial: "🎓 Tutoriel",
+      news: "📰 Actualités des Tendances IA",
       leaderboard: "Classement Général",
       gpus: "Spécifications & Prix GPU"
     },
