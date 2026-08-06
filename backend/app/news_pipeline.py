@@ -1139,6 +1139,35 @@ def fetch_articles_from_db() -> List[NewsArticle]:
     finally:
         db.close()
 
+def refresh_all_articles_in_db() -> int:
+    """Neon DB에 적재된 모든 기사를 4대 템플릿 & 다중 소스 크로스 검증 아티클로 일괄 배치 갱신합니다."""
+    db = SessionLocal()
+    try:
+        items = db.query(NewsArticleDB).all()
+        updated_count = 0
+        print(f"[NeonDB Batch] Total {len(items)} articles loaded for 4-Template & Cross-Validation refresh...")
+
+        for art in items:
+            raw_summary = art.summary_bullets[0] if (art.summary_bullets and len(art.summary_bullets) > 0) else art.title
+            title_kr, bullets, new_blog_summary = auto_translate_and_format(
+                art.title,
+                raw_summary,
+                art.source_name,
+                art.category
+            )
+            art.blog_summary = new_blog_summary
+            updated_count += 1
+
+        db.commit()
+        print(f"[NeonDB Batch] ✅ Successfully updated {updated_count} articles with 4-Template & Multi-Source Cross-Validation!")
+        return updated_count
+    except Exception as e:
+        db.rollback()
+        print(f"[NeonDB Batch Error] Failed to refresh articles: {e}")
+        return 0
+    finally:
+        db.close()
+
 async def run_batch_job(force: bool = False) -> List[NewsArticle]:
     """정기 배치 또는 수동 강제 실행 시 RSS 수집, AI 요약 및 Neon DB 영구 적재 파이프라인을 실행합니다."""
     global _news_cache
