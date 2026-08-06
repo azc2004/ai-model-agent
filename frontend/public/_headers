@@ -1,0 +1,31 @@
+# =============================================
+# Cloudflare Pages: Security & Cache Headers
+# =============================================
+
+# ── 정적 에셋 (JS/CSS/폰트): 1년 장기 캐시 + Immutable ──
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+  X-Content-Type-Options: nosniff
+
+# ── 이미지 & SVG: 1년 캐시 ──
+/*.svg
+  Cache-Control: public, max-age=31536000, immutable
+/*.png
+  Cache-Control: public, max-age=31536000, immutable
+/*.ico
+  Cache-Control: public, max-age=31536000, immutable
+/*.webp
+  Cache-Control: public, max-age=31536000, immutable
+
+# ── index.html: 캐시 금지 (항상 최신 버전 강제) ──
+/index.html
+  Cache-Control: no-store, no-cache, must-revalidate
+  X-Content-Type-Options: nosniff
+
+# ── 전역 보안 헤더 ──
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  X-XSS-Protection: 1; mode=block
