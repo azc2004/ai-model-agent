@@ -25,15 +25,16 @@ try:
     _api_key = os.getenv("GEMINI_API_KEY", "")
     if _api_key:
         genai.configure(api_key=_api_key)
+        # 공식 구글 Gemini API 표준 모델: gemini-2.0-flash (404 예외 방지)
         _gemini_model = genai.GenerativeModel(
-            model_name="gemini-2.5-flash",
+            model_name="gemini-2.0-flash",
             generation_config={
                 "temperature": 0.4,
                 "top_p": 0.95,
                 "max_output_tokens": 8192,
             }
         )
-        logger.info("✅ Gemini 2.5 Flash 마크다운 생성 모드 활성화")
+        logger.info("✅ Gemini 2.0 Flash 마크다운 생성 모드 활성화")
     else:
         logger.warning("⚠️  GEMINI_API_KEY 미설정 → 정적 템플릿 폴백 모드")
 except ImportError:
@@ -334,33 +335,46 @@ def generate_markdown_spec(
                 reason=error_reason or "안전 정책에 위배된 입력"
             )
 
-    # Gemini API 사용 가능 시 동적 생성
+    # Gemini API 사용 가능 시 동적 생성 (Primary: gemini-2.0-flash -> Fallback: gemini-1.5-flash)
     if _gemini_model is not None:
+        user_prompt = _build_gemini_user_prompt(
+            service_name=service_name,
+            req=req,
+            total_input_m=total_input_m,
+            total_output_m=total_output_m,
+            smart_combo=smart_combo,
+            best_combo=best_combo,
+            hosting=hosting,
+        )
+        full_content = [{"role": "user", "parts": [SYSTEM_PROMPT + "\n\n---\n\n" + user_prompt]}]
+
+        # 1차 시도: gemini-2.0-flash
         try:
-            user_prompt = _build_gemini_user_prompt(
-                service_name=service_name,
-                req=req,
-                total_input_m=total_input_m,
-                total_output_m=total_output_m,
-                smart_combo=smart_combo,
-                best_combo=best_combo,
-                hosting=hosting,
-            )
-            # Free Tier 안정성을 위해 timeout 60s 적용
             response = _gemini_model.generate_content(
-                contents=[
-                    {"role": "user", "parts": [SYSTEM_PROMPT + "\n\n---\n\n" + user_prompt]}
-                ],
+                contents=full_content,
                 request_options={"timeout": 60}
             )
             generated_text = response.text.strip()
             if generated_text and len(generated_text) > 500:
-                logger.info(f"✅ Gemini 마크다운 생성 완료 ({len(generated_text)} chars)")
+                logger.info(f"✅ Gemini 2.0 Flash 마크다운 생성 완료 ({len(generated_text)} chars)")
                 return generated_text
-            else:
-                logger.warning("⚠️  Gemini 응답이 너무 짧음 → 폴백 템플릿 사용")
         except Exception as e:
-            logger.error(f"❌ Gemini API 오류: {e} → 폴백 템플릿으로 전환")
+            logger.warning(f"⚠️ Primary gemini-2.0-flash 실패: {e} → 2차 gemini-1.5-flash 폴백 시도")
+
+        # 2차 시도: gemini-1.5-flash 폴백 라우팅
+        try:
+            import google.generativeai as genai
+            fallback_model = genai.GenerativeModel("gemini-1.5-flash")
+            response = fallback_model.generate_content(
+                contents=full_content,
+                request_options={"timeout": 60}
+            )
+            generated_text = response.text.strip()
+            if generated_text and len(generated_text) > 500:
+                logger.info(f"✅ Gemini 1.5 Flash 차순위 폴백 생성 완료 ({len(generated_text)} chars)")
+                return generated_text
+        except Exception as fallback_err:
+            logger.error(f"❌ Gemini 차순위 모델도 실패: {fallback_err} → 정적 템플릿으로 전환")
 
     # 폴백: 정적 f-string 템플릿
     return _fallback_markdown_spec(

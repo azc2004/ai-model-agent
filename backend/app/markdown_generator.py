@@ -44,9 +44,9 @@ elif _gemini_api_key:
         base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
         api_key=_gemini_api_key,
     )
-    GENERATOR_MODEL = os.getenv("GENERATOR_MODEL", "gemini-2.5-flash")
-    CRITIQUE_MODEL = os.getenv("CRITIQUE_MODEL", "gemini-2.5-flash")
-    ROUTER_MODEL = os.getenv("ROUTER_MODEL", "gemini-2.5-flash")
+    GENERATOR_MODEL = os.getenv("GENERATOR_MODEL", "gemini-2.0-flash")
+    CRITIQUE_MODEL = os.getenv("CRITIQUE_MODEL", "gemini-2.0-flash")
+    ROUTER_MODEL = os.getenv("ROUTER_MODEL", "gemini-2.0-flash")
 elif _openai_api_key:
     client = OpenAI(api_key=_openai_api_key)
     GENERATOR_MODEL = os.getenv("GENERATOR_MODEL", "gpt-4o-mini")
