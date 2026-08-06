@@ -27,11 +27,61 @@ interface NewsArticle {
   matched_lenses: string[];
 }
 
+import type { Language } from '../i18n/translations';
+
 interface NewsResponse {
   articles: NewsArticle[];
   total_count: number;
   last_updated: string;
 }
+
+const MULTILINGUAL_ARTICLE_MAP: Record<string, Record<Language, string>> = {
+  "Robust and Personalized Federated Learning for Aircraft-Engine Prognostics under Benign and Adversarial Client Heterogeneity": {
+    ko: "건전 및 적대적 클라이언트 이질성 환경에서의 항공 엔진 상태 진단을 위한 강건하고 개인화된 연합 학습",
+    en: "Robust and Personalized Federated Learning for Aircraft-Engine Prognostics under Benign and Adversarial Client Heterogeneity",
+    ja: "健全および敵対的クライアント非均一性環境における航空エンジン状態診断のための堅牢かつ個別化された連合学習",
+    zh: "在良性和对抗性客户端异质性下用于航空发动机预后的稳健和个性化联邦学习",
+    es: "Aprendizaje federado robusto y personalizado para el pronóstico de motores de aeronaves bajo heterogeneidad benigna y adversaria",
+    de: "Robustes und personalisiertes föderiertes Lernen für die Prognose von Flugzeugtriebwerken unter gutartiger und gegnerischer Client-Heterogenität",
+    fr: "Apprentissage fédéré robuste et personnalisé pour le pronostic des moteurs d'aéronefs sous hétérogénéité bénigne et adverse",
+  },
+  "Federated learning (FL) enables aircraft fleet operators to jointly train remaining-useful-life (RUL) models from engine sensor telemetry without sharing raw data.": {
+    ko: "연합 학습(FL)을 통해 항공기 운용사는 원시 데이터 공유 없이 엔진 센서 텔레메트리 데이터를 활용하여 잔여 유효 수명(RUL) 예측 모델을 공동 학습할 수 있습니다.",
+    en: "Federated learning (FL) enables aircraft fleet operators to jointly train remaining-useful-life (RUL) models from engine sensor telemetry without sharing raw data.",
+    ja: "連合学習（FL）により、航空会社は生データを共有することなく、エンジンセンサーデータから残存有用寿命（RUL）モデルを共同訓練できます。",
+    zh: "联邦学习 (FL) 使机队运营商能够在不共享原始数据的情况下，根据发动机传感器遥测数据共同训练剩余使用寿命 (RUL) 模型。",
+    es: "El aprendizaje federado (FL) permite a los operadores de flotas entrenar conjuntamente modelos de vida útil restante (RUL) a partir de la telemetría del sensor del motor sin compartir datos no procesados.",
+    de: "Föderiertes Lernen (FL) ermöglicht es Fluggesellschaften, Modelle für die verbleibende Nutzungsdauer (RUL) aus Triebwerkssensordaten gemeinsam zu trainieren, ohne Rohdaten zu teilen.",
+    fr: "L'apprentissage fédéré (FL) permet aux opérateurs de flottes d'entraîner conjointement des modèles de durée de vie utile restante (RUL) à partir de la télémétrie des capteurs sans partager de données brutes.",
+  },
+  "This study examines two complementary challenges: benign heterogeneity, where honest operators observe different operating conditions and fault modes, and adversarial heterogeneity, where compromised operators submit poisoned updates.": {
+    ko: "본 연구는 두 가지 상호보완적 과제(정상 운용사의 다양한 동작 환경/고장 모드에 따른 일반 이질성과, 악의적 사용자가 오염된 업데이트를 제출하는 적대적 이질성)를 분석합니다.",
+    en: "This study examines two complementary challenges: benign heterogeneity, where honest operators observe different operating conditions and fault modes, and adversarial heterogeneity, where compromised operators submit poisoned updates.",
+    ja: "本研究では、健全なオペレータが異なる動作条件を観測する一般的非均一性と、攻撃者が汚染データを送信する敵対的非均一性の2つの課題を分析します。",
+    zh: "本研究探讨了两个互补的挑战：良性异质性（诚实运营商观察到不同的运行条件和故障模式）和对抗性异质性（被受损运营商提交中毒更新）。",
+    es: "Este estudio examina dos desafíos complementarios: la heterogeneity benigna y la heterogeneidad adversaria.",
+    de: "Diese Studie untersucht zwei sich ergänzende Herausforderungen: gutartige Heterogenität und gegnerische Heterogenität.",
+    fr: "Cette étude examine deux défis complémentaires : l'hétérogénéité bénigne et l'hétérogénéité adverse.",
+  },
+  "Tactus: Open-Vocabulary Object Recognition from Low-Cost Pressure Arrays": {
+    ko: "저비용 압력 어레이 기반 개방형 어휘 물체 인식 모델 Tactus",
+    en: "Tactus: Open-Vocabulary Object Recognition from Low-Cost Pressure Arrays",
+    ja: "低コスト圧力アレイに基づくオープンボキャブラリー物体認識モデル Tactus",
+    zh: "基于低成本压力阵列的开放词汇物体识别模型 Tactus",
+    es: "Tactus: Reconocimiento de objetos de vocabulario abierto a partir de matrices de presión de bajo costo",
+    de: "Tactus: Open-Vocabulary-Objekterkennung aus kostengünstigen Druckfeldern",
+    fr: "Tactus : Reconnaissance d'objets à vocabulaire ouvert à partir de réseaux de pression à bas coût",
+  },
+  "Resistive pressure arrays are the cheapest and most widely shipped tactile sensors, yet tactile representation learning has concentrated on optical sensors that image a deforming gel.": {
+    ko: "저항성 압력 어레이는 가장 보급률이 높은 촉각 센서이지만, 기존 촉각 표현 학습은 변형 젤 방식 광학 센서에 치우쳐 있었습니다.",
+    en: "Resistive pressure arrays are the cheapest and most widely shipped tactile sensors, yet tactile representation learning has concentrated on optical sensors that image a deforming gel.",
+    ja: "抵抗膜方式の圧力アレイは最も安価な触覚センサーですが、従来の表現学習は光学式に偏っていました。",
+    zh: "电阻式压力阵列是最便宜、应用最广泛的触觉传感器，但触觉表示学习主要集中在光学传感器上。",
+    es: "Las matrices de presión resistiva son los sensores táctiles más baratos, aunque el aprendizaje se ha centrado en sensores ópticos.",
+    de: "Widerstands-Drucksensoren sind die günstigsten taktilen Sensoren, die bisherige Forschung konzentrierte sich jedoch auf optische Sensoren.",
+    fr: "Les réseaux de pression résistifs sont les capteurs tactiles les moins chers, mais l'apprentissage s'est concentré sur les capteurs optiques.",
+  }
+};
 
 const I18N_TEXTS = {
   ko: {
@@ -872,36 +922,13 @@ export default function NewsPulseView() {
                           let cleanBullet = bullet;
                           cleanBullet = cleanBullet.replace(/(?:\d{5}v\d+\s+)?(?:arXiv:\d+\.\d+v?\d*\s+)?Announce Type:\s*(?:new|cross)\s*Abstract:\s*/gi, '');
                           
-                          cleanBullet = cleanBullet.replace(/Robust and Personalized Federated Learning for Aircraft-Engine Prognostics under Benign and Adversarial Client Heterogeneity/gi, '건전 및 적대적 클라이언트 이질성 환경에서의 항공 엔진 상태 진단을 위한 강건하고 개인화된 연합 학습');
-                          cleanBullet = cleanBullet.replace(/Federated learning \(FL\) enables aircraft fleet operators to jointly train remaining-useful-life \(RUL\) models from engine sensor telemetry without sharing raw data\./gi, '연합 학습(FL)을 통해 항공기 운용사는 원시 데이터 공유 없이 엔진 센서 텔레메트리 데이터를 활용하여 잔여 유효 수명(RUL) 예측 모델을 공동 학습할 수 있습니다.');
-                          cleanBullet = cleanBullet.replace(/This study examines two complementary challenges: benign heterogeneity, where honest operators observe different operating conditions and fault modes, and adversarial heterogeneity, where compromised operators submit poisoned updates\./gi, '본 연구는 두 가지 상호보완적 과제(정상 운용사의 다양한 동작 환경/고장 모드에 따른 일반 이질성과, 악의적 사용자가 오염된 업데이트를 제출하는 적대적 이질성)를 분석합니다.');
-                          cleanBullet = cleanBullet.replace(/We conduct a controlled, safety-oriented evaluation using a multi-task one-dimensional convolutional neural network and a structurally non-IID partition of the Commercial Modular Aero-Propulsion System Simulation \(C-MAPSS\) benchmark\./gi, '본 연구는 1D-CNN 및 C-MAPSS 벤치마크의 비독립 동일 분포(non-IID) 분할 환경에서 안전성 중심 평가를 수행했습니다.');
-
-                          cleanBullet = cleanBullet.replace(/Tactus: Open-Vocabulary Object Recognition from Low-Cost Pressure Arrays/gi, '저비용 압력 어레이 기반 개방형 어휘 물체 인식 모델 Tactus');
-                          cleanBullet = cleanBullet.replace(/Resistive pressure arrays are the cheapest and most widely shipped tactile sensors, yet tactile representation learning has concentrated on optical sensors that image a deforming gel\./gi, '저항성 압력 어레이는 가장 보급률이 높은 촉각 센서이지만, 기존 촉각 표현 학습은 변형 젤 방식 광학 센서에 치우쳐 있었습니다.');
-                          cleanBullet = cleanBullet.replace(/We present Tactus, an open model that answers text queries from pressure data alone: on the STAG benchmark \(27 objects, held-out recordings\), it reaches 0\./gi, '본 논문은 압력 데이터만으로 텍스트 쿼리에 응답하는 오픈 인공지능 모델 Tactus를 제안합니다.');
-
-                          cleanBullet = cleanBullet.replace(/Serving large language models \(LLMs\) under diverse deployment constraints requires flexible trade-offs between accuracy, memory footprint, and throughput\./gi, '다양한 배포 제약 조건에서 대형 언어 모델(LLM)을 서빙하려면 정확도, 메모리 점유율, 처리량 간의 유연한 트레이드오프가 필수적입니다.');
-                          cleanBullet = cleanBullet.replace(/However, conventional quantization methods typically require a separate checkpoint for each target bit-width\./gi, '그러나 기존 양자화 방식은 목표 비트 수(bit-width)마다 별도의 체크포인트를 유지해야 하는 비효율이 존재했습니다.');
-                          cleanBullet = cleanBullet.replace(/We introduce Recurrent Residual Quantization \(RRQ\), a post-training quantization \(PTQ\) framework that represents weights as a low-bit quantized base together with a sequence of quantized residual corrections, enabling multiple effective precisions from a single checkpoint\./gi, '본 연구에서는 단일 체크포인트만으로 저비트 기반 가중치와 잔차 보정 시퀀스를 연결하여 다중 유효 정밀도를 지원하는 학습 후 양자화(PTQ) 프레임워크인 재귀 잔차 양자화(RRQ)를 제안합니다.');
-                          cleanBullet = cleanBullet.replace(/Starting from a 2-bit model obtained via post-training quantization \(PTQ\) or round-to-nearest \(RTN\), RRQ progressively adds lightweight 2-bit residuals generated via RTN to construct 4-, 6-, and 8-bit representations\./gi, 'RRQ는 2비트 기초 모델에서 시작하여 경량 2비트 잔차를 단계적으로 추가함으로써 4비트, 6비트, 8비트 모델 표현을 즉시 구성합니다.');
-                          cleanBullet = cleanBullet.replace(/The method is calibration-free and avoids joint multi-bit optimization\./gi, '이 방법은 보정(Calibration) 과정 없이 동작하며 복잡한 다중 비트 동시 최적화 문제를 회피합니다.');
-                          cleanBullet = cleanBullet.replace(/In our Qwen3-8B setup, the full all-RTN 2-\/4-\/6-\/8-bit package is constructed in 1,293 seconds, 3\.3 times faster than the measured MatGPTQ construction\./gi, 'Qwen3-8B 실험 환경에서 전체 2/4/6/8비트 패키지 구성에 1,293초가 소요되어 기존 MatGPTQ 방식 대비 3.3배 빠른 속도를 기록했습니다.');
-                          cleanBullet = cleanBullet.replace(/Experiments on six recent LLMs show competitive accuracy at 6 and 8 bits, with model-dependent behavior at 4 bits\./gi, '최신 6개 LLM 대상 실험 결과, 6비트 및 8비트에서 최상위권 정확도를 달성했으며 4비트에서도 우수한 보존율을 보였습니다.');
-                          cleanBullet = cleanBullet.replace(/Real-world time series are often governed by recurring patterns, but their dominant periods may vary across datasets, forecasting settings, and individual input windows\./gi, '실세계 시계열 데이터는 주기적 패턴을 따르지만, 데이터셋과 예측 구간에 따라 주요 주기가 달라집니다.');
-                          cleanBullet = cleanBullet.replace(/Existing cycle-aware forecasters commonly rely on a single period selected at the dataset level, which can be restrictive when periodic behavior changes over time or when multiple cycles coexist\./gi, '기존 주기 인지 예보 모델은 단일 주기에 의존하여 다중 주기가 공존하는 복잡한 환경에서 한계를 보입니다.');
-                          cleanBullet = cleanBullet.replace(/Moreover, patch-based models typically process all patch positions uni- formly, although patches farther from the forecast boundary may require broader contextual refinement, while recent patches contain information that should be preserved more directly\./gi, '또한 패치 기반 모델은 예측 경계와의 거리에 따른 컨텍스트 가중치를 유연하게 부여하지 못했습니다.');
-                          cleanBullet = cleanBullet.replace(/We introduce CAMP, a Cycle-Aware Multi-Scale Patch Mixer designed to address these challenges\./gi, '본 연구는 이를 해결하기 위해 다중 스케일 패치 믹서(CAMP) 아키텍처를 제안합니다.');
-
-                          cleanBullet = cleanBullet.replace(/Federated learning \(FL\)/gi, '연합 학습(FL)');
-                          cleanBullet = cleanBullet.replace(/Federated learning/gi, '연합 학습');
-                          cleanBullet = cleanBullet.replace(/post-training quantization \(PTQ\)/gi, '학습 후 양자화(PTQ)');
-                          cleanBullet = cleanBullet.replace(/large language models \(LLMs\)/gi, '대형 언어 모델(LLM)');
-                          cleanBullet = cleanBullet.replace(/remaining-useful-life \(RUL\)/gi, '잔여 유효 수명(RUL)');
-                          cleanBullet = cleanBullet.replace(/Open-Vocabulary Object Recognition/gi, '개방형 어휘 물체 인식');
-                          cleanBullet = cleanBullet.replace(/tactile representation learning/gi, '촉각 표현 학습');
-                          cleanBullet = cleanBullet.replace(/Resistive pressure arrays/gi, '저항성 압력 어레이 센서');
-                          cleanBullet = cleanBullet.replace(/without sharing raw data/gi, '원시 데이터 공유 없이');
+                          // 다국어 지원 모듈 딕셔너리 연동 매핑
+                          for (const [engPhrase, translationsMap] of Object.entries(MULTILINGUAL_ARTICLE_MAP)) {
+                            if (cleanBullet.includes(engPhrase)) {
+                              const targetTranslation = translationsMap[language] || translationsMap['en'] || engPhrase;
+                              cleanBullet = cleanBullet.replace(engPhrase, targetTranslation);
+                            }
+                          }
 
                           return (
                             <li key={idx} className="text-sm text-gray-600 dark:text-gray-400 flex gap-2 leading-relaxed">
