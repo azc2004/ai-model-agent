@@ -174,6 +174,6 @@ export interface TrendingTemplate {
   category: string;
   description: string;
   icon: string;
-  typical_monthly_requests: number;
+  typical_monthly_requests?: number;
   request: RecommendationRequest;
 }

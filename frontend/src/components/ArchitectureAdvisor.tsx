@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Sparkles, Code, Database, Headset, Globe, Cpu, Check, Copy, Download, 
-  Server, Zap, CheckCircle2, ChevronRight, Layers, FileText, X, Clock, Terminal, Loader2
+  Zap, CheckCircle2, ChevronRight, Layers, X, Loader2
 } from 'lucide-react';
 import type { RecommendationRequest, ArchitectureRecommendationResult, TrendingTemplate } from '../types';
 import { API_BASE_URL } from '../api';
-import { useLanguage } from '../context/LanguageContext';
 
 const INITIAL_SAMPLE_RESULT: ArchitectureRecommendationResult = {
   service_name: "자율 코딩 에이전트 서비스 (미리 준비된 샘플)",
@@ -112,256 +111,19 @@ const INITIAL_SAMPLE_RESULT: ArchitectureRecommendationResult = {
   }
 };
 
-const PREBUILT_RECOMMENDATIONS: Record<string, ArchitectureRecommendationResult> = {
-  code_agent: INITIAL_SAMPLE_RESULT,
-  rag: {
-    service_name: "기업용 사내 지식 RAG 챗봇 (미리 준비된 템플릿)",
-    monthly_requests: 200000,
-    total_monthly_input_tokens_m: 600.0,
-    total_monthly_output_tokens_m: 120.0,
-    combos: [
-      {
-        id: "smart_balanced",
-        name: "Smart Hybrid RAG Router (스마트 최적 추천)",
-        tag: "RECOMMENDED",
-        description: "사내 Confluence/PDF 하이브리드 검색 후 Cohere Rerank v3 + Claude 3.5 Sonnet 연동으로 환각율 0.2% 미만 달성",
-        items: [
-          {
-            role: "Vector Search & Reranker (100% query)",
-            model_id: "cohere-rerank-v3",
-            model_name: "Cohere Rerank v3",
-            provider_name: "Cohere",
-            allocation_percent: 100.0,
-            monthly_estimated_cost: 45.00
-          },
-          {
-            role: "Main Synthesis Engine (100% query)",
-            model_id: "claude-3-5-sonnet",
-            model_name: "Claude 3.5 Sonnet",
-            provider_name: "Anthropic",
-            allocation_percent: 100.0,
-            monthly_estimated_cost: 420.00
-          }
-        ],
-        total_monthly_cost: 465.00,
-        avg_arena_elo: 1365,
-        key_advantages: ["기업 문서 환각 방지 최적화", "벡터 DB(Qdrant/Milvus) 완벽 연동", "ISO27001 보안 준수"]
-      },
-      {
-        id: "best_quality",
-        name: "Enterprise Multi-Agent RAG (최고 품질)",
-        tag: "FRONTIER",
-        description: "GPT-4o + Claude 3.5 Sonnet 이중 교차 검증으로 최고 신뢰성 답변 보장",
-        items: [
-          {
-            role: "Dual Cross-Verification (100% query)",
-            model_id: "gpt-4o",
-            model_name: "GPT-4o + Claude 3.5 Sonnet",
-            provider_name: "OpenAI & Anthropic",
-            allocation_percent: 100.0,
-            monthly_estimated_cost: 1350.00
-          }
-        ],
-        total_monthly_cost: 1350.00,
-        avg_arena_elo: 1370,
-        key_advantages: ["이중 임베딩/Rerank 교차 검증", "엔터프라이즈 SOC2 인증", "데이터 프라이버시 100% 보장"]
-      },
-      {
-        id: "ultra_budget",
-        name: "Open-Source Local RAG (극가성비)",
-        tag: "BUDGET",
-        description: "Qwen 2.5 72B 오픈웨이트 모델 + pgvector 조합으로 API 비용 극단 절감",
-        items: [
-          {
-            role: "Open-Weight Local Serving (100% query)",
-            model_id: "qwen-2.5-72b",
-            model_name: "Qwen 2.5 72B",
-            provider_name: "Alibaba / Self-Hosted",
-            allocation_percent: 100.0,
-            monthly_estimated_cost: 95.00
-          }
-        ],
-        total_monthly_cost: 95.00,
-        avg_arena_elo: 1335,
-        key_advantages: ["외부 API 유출 없음", "PostgreSQL pgvector 인프라 재활용", "월 $100 이하 초저비용"]
-      }
-    ],
-    hosting_options: [
-      {
-        provider: "AWS ECS + Amazon Qdrant Cluster",
-        category: "Cloud Native RAG",
-        estimated_monthly_cost: 140.0,
-        description: "VPC 프라이빗 망 내 Qdrant Vector DB 구축 및 ECS Fargate 오토스케일링",
-        recommended_for: "대용량 사내 문서 보유 및 엄격한 데이터 보안 기업"
-      }
-    ],
-    markdown_spec: `# 📚 기업용 사내 지식 RAG 챗봇 시스템 개발 명세서 (Pre-built)\n\n## 1. Executive Summary\n본 시스템은 월 200,000건의 사내 문서 질의응답을 처리하는 고성능 RAG 아키텍처입니다.\n`,
-    spec_bundle: {
-      agents_md: `# 🤖 [AGENTS.md] Enterprise RAG Chatbot Directives\n\n- **Target**: Qdrant Vector Search + Cohere Rerank v3 + Claude 3.5 Sonnet\n- **Hallucination Prevention**: Strict Groundedness Check before output.\n`,
-      architecture_md: `# 🏗️ [ARCHITECTURE.md] RAG Pipeline Sequence\n\n\`\`\`mermaid\nsequenceDiagram\n    User->>FastAPI: Query\n    FastAPI->>Qdrant: Hybrid Vector Search\n    Qdrant-->>FastAPI: Top 20 Chunks\n    FastAPI->>Cohere: Rerank v3\n    Cohere-->>FastAPI: Top 5 Relevant Contexts\n    FastAPI->>Claude: Synthesize Answer\n    Claude-->>User: Grounded Answer with Citation\n\`\`\`\n`,
-      database_schema_md: `# 🗄️ [DATABASE_SCHEMA.md] Vector DB & Document Index Schema\n\nCREATE TABLE document_chunks (id UUID PRIMARY KEY, embedding vector(1536), content TEXT);\n`,
-      tasks_md: `# 📝 [TASKS.md] RAG Implementation Checklist\n\n- [ ] Task 1: Setup Qdrant Vector Database Cluster\n- [ ] Task 2: Build Hybrid Search Pipeline (Dense + Sparse BM25)\n- [ ] Task 3: Integrate Cohere Rerank v3 API\n`,
-      deployment_md: `# 🐳 [DEPLOYMENT.md] AWS ECS Fargate RAG Deployment\n\nENV QDRANT_URL=https://qdrant.internal:6333\n`
-    }
-  },
-  multimodal: {
-    service_name: "멀티모달 24/7 고객지원 CS 봇 (미리 준비된 템플릿)",
-    monthly_requests: 150000,
-    total_monthly_input_tokens_m: 450.0,
-    total_monthly_output_tokens_m: 90.0,
-    combos: [
-      {
-        id: "smart_balanced",
-        name: "Vision-Optimized Router (스마트 최적 추천)",
-        tag: "RECOMMENDED",
-        description: "GPT-4o-mini 비전 텍스트 추출 + Claude 3.5 Sonnet 비즈니스 로직 처리 조합",
-        items: [
-          {
-            role: "OCR & Image Analyzer (100% Vision)",
-            model_id: "gpt-4o-mini",
-            model_name: "GPT-4o-mini (Vision)",
-            provider_name: "OpenAI",
-            allocation_percent: 100.0,
-            monthly_estimated_cost: 67.50
-          },
-          {
-            role: "CS Response Engine (100% CS)",
-            model_id: "claude-3-5-haiku",
-            model_name: "Claude 3.5 Haiku",
-            provider_name: "Anthropic",
-            allocation_percent: 100.0,
-            monthly_estimated_cost: 112.50
-          }
-        ],
-        total_monthly_cost: 180.00,
-        avg_arena_elo: 1345,
-        key_advantages: ["영수증/캡처 이미지 자동 해석", "24/7 무중단 실시간 처리", "인건비 85% 감축"]
-      }
-    ],
-    hosting_options: [
-      {
-        provider: "Cloudflare Workers + Render.com API",
-        category: "Edge Serverless",
-        estimated_monthly_cost: 35.0,
-        description: "글로벌 Edge 엣지망에서 이미지 업로드 압축 후 비전 LLM에 초고속 라우팅",
-        recommended_for: "글로벌 모바일 앱 고객지원 CS 서비스"
-      }
-    ],
-    markdown_spec: `# 🎧 멀티모달 24/7 고객지원 CS 봇 아키텍처 명세서 (Pre-built)\n`,
-    spec_bundle: {
-      agents_md: `# 🤖 [AGENTS.md] Multimodal CS Agent Directives\n`,
-      architecture_md: `# 🏗️ [ARCHITECTURE.md] Multimodal CS Flow\n`,
-      database_schema_md: `# 🗄️ [DATABASE_SCHEMA.md] Ticket & Image Log Schema\n`,
-      tasks_md: `# 📝 [TASKS.md] Multimodal CS Tasks\n`,
-      deployment_md: `# 🐳 [DEPLOYMENT.md] Edge Cloudflare Deployment\n`
-    }
-  },
-  translation: {
-    service_name: "글로벌 실시간 다국어 번역엔진 (미리 준비된 템플릿)",
-    monthly_requests: 500000,
-    total_monthly_input_tokens_m: 1000.0,
-    total_monthly_output_tokens_m: 500.0,
-    combos: [
-      {
-        id: "smart_balanced",
-        name: "DeepL + Qwen 2.5 Fast Translator (스마트 최적 추천)",
-        tag: "RECOMMENDED",
-        description: "초고속 서빙용 Qwen 2.5 14B LPU 서버리스 엔진으로 100개 국어 30ms latency 번역",
-        items: [
-          {
-            role: "Ultra-Fast Translation Engine",
-            model_id: "qwen-2.5-14b",
-            model_name: "Qwen 2.5 14B (Groq/Together)",
-            provider_name: "Together AI",
-            allocation_percent: 100.0,
-            monthly_estimated_cost: 160.00
-          }
-        ],
-        total_monthly_cost: 160.00,
-        avg_arena_elo: 1330,
-        key_advantages: ["30ms 극초고속 응답", "100개 이상 다국어 지원", "글로벌 CDN 엣지 연동"]
-      }
-    ],
-    hosting_options: [
-      {
-        provider: "FastAPI + Redis Cache on Railway",
-        category: "PaaS High-Throughput",
-        estimated_monthly_cost: 45.0,
-        description: "자주 번역되는 문장 Redis 1차 캐싱으로 API 호출 40% 추가 절감",
-        recommended_for: "대용량 실시간 다국어 번역 서비스"
-      }
-    ],
-    markdown_spec: `# 🌐 글로벌 실시간 다국어 번역엔진 명세서 (Pre-built)\n`,
-    spec_bundle: {
-      agents_md: `# 🤖 [AGENTS.md] Translation Directives\n`,
-      architecture_md: `# 🏗️ [ARCHITECTURE.md] Translation Pipeline\n`,
-      database_schema_md: `# 🗄️ [DATABASE_SCHEMA.md] Redis Translation Cache Schema\n`,
-      tasks_md: `# 📝 [TASKS.md] Translation Checklist\n`,
-      deployment_md: `# 🐳 [DEPLOYMENT.md] Railway Docker Deployment\n`
-    }
-  },
-  content_creation: {
-    service_name: "마케팅 콘텐츠 생성 코파일럿 (미리 준비된 템플릿)",
-    monthly_requests: 80000,
-    total_monthly_input_tokens_m: 160.0,
-    total_monthly_output_tokens_m: 80.0,
-    combos: [
-      {
-        id: "smart_balanced",
-        name: "Creative Multi-Model Generator (스마트 최적 추천)",
-        tag: "RECOMMENDED",
-        description: "Claude 3.5 Sonnet의 매끄러운 영문/한글 마케팅 카피 생성 + GPT-4o 아이디어 브레인스토밍",
-        items: [
-          {
-            role: "Copywriting & Tone Adapter",
-            model_id: "claude-3-5-sonnet",
-            model_name: "Claude 3.5 Sonnet",
-            provider_name: "Anthropic",
-            allocation_percent: 100.0,
-            monthly_estimated_cost: 280.00
-          }
-        ],
-        total_monthly_cost: 280.00,
-        avg_arena_elo: 1365,
-        key_advantages: ["브랜드 톤앤매너 완벽 맞춤", "SNS/블로그/이메일 양식 최적화", "높은 클릭률(CTR) 문구"]
-      }
-    ],
-    hosting_options: [
-      {
-        provider: "Vercel Serverless Functions",
-        category: "Serverless Node/Python",
-        estimated_monthly_cost: 20.0,
-        description: "Next.js 15 기반 프론트엔드와 Vercel Serverless 라우터 단일 스택 구성",
-        recommended_for: "마케팅 SaaS 및 AI 에이전시"
-      }
-    ],
-    markdown_spec: `# ✍️ 마케팅 콘텐츠 생성 코파일럿 명세서 (Pre-built)\n`,
-    spec_bundle: {
-      agents_md: `# 🤖 [AGENTS.md] Marketing Copywriter Directives\n`,
-      architecture_md: `# 🏗️ [ARCHITECTURE.md] Copywriting Workflow\n`,
-      database_schema_md: `# 🗄️ [DATABASE_SCHEMA.md] Campaign & Output Schema\n`,
-      tasks_md: `# 📝 [TASKS.md] Content Copilot Checklist\n`,
-      deployment_md: `# 🐳 [DEPLOYMENT.md] Vercel Serverless Deployment\n`
-    }
-  }
-};
-
 export const ArchitectureAdvisor: React.FC = () => {
-  const { language, t } = useLanguage();
-  const [trending, setTrending] = useState<TrendingTemplate[]>([]);
-  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>("code_agent");
-  const [loading, setLoading] = useState<boolean>(false);
-  const [result, setResult] = useState<ArchitectureRecommendationResult | null>(INITIAL_SAMPLE_RESULT);
-  const [showModal, setShowModal] = useState<boolean>(false);
-  const [showRankingInfoModal, setShowRankingInfoModal] = useState<boolean>(false);
-  const [showMoreRankingModal, setShowMoreRankingModal] = useState<boolean>(false);
+  const t = {
+    title: "맞춤형 AI 서비스 모델 조합 & 호스팅 시뮬레이터",
+    subtitle: "구현하려는 서비스의 트래픽과 요구사항을 입력하세요. 최고 성능, 스마트 최적 라우팅, 극가성비 3가지 조합과 개발명세서 Markdown(.md)을 생성해 드립니다.",
+    researchProgress: {
+      step1: "1. 유저 요구사항 자연어 의도 파악 및 도메인 분석",
+      step2: "2. 전세계 LLM Leaderboard (Elo/MMLU) 상위 100개 모델 지표 검증",
+      step3: "3. 트래픽 토큰량 기반 OpEx 비용 및 GPU 인프라 가성비 산출",
+      step4: "4. 3-Tier Multi-Model 라우팅 조합 및 호스팅 옵션 매핑",
+      step5: "5. 실리콘밸리 표준 BigTech 5대 Markdown 설계 아티팩트 명세서 작성 중..."
+    }
+  };
 
-  // Deep Research Thinking Progress State
-  const [researchStep, setResearchStep] = useState<number>(0);
-  const [researchProgress, setResearchProgress] = useState<number>(15);
-  const [researchLogs, setResearchLogs] = useState<string[]>([]);
-
-  // Form State
   const [customPrompt, setCustomPrompt] = useState<string>('');
   const [serviceType, setServiceType] = useState<string>('code_agent');
   const [monthlyRequests, setMonthlyRequests] = useState<number>(100000);
@@ -370,17 +132,99 @@ export const ArchitectureAdvisor: React.FC = () => {
   const [requiresMultimodal, setRequiresMultimodal] = useState<boolean>(false);
   const [requiresCoding, setRequiresCoding] = useState<boolean>(true);
 
-  // 1. Fetch Trending Templates
-  useEffect(() => {
-    fetch(`${API_BASE_URL}/recommend/trending`)
-      .then(res => res.json())
-      .then((data: TrendingTemplate[]) => {
-        setTrending(data);
-      })
-      .catch(err => console.error("Failed to load trending templates", err));
-  }, []);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [researchProgress, setResearchProgress] = useState<number>(0);
+  const [researchStep, setResearchStep] = useState<number>(0);
+  const [result, setResult] = useState<ArchitectureRecommendationResult | null>(INITIAL_SAMPLE_RESULT);
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>('code_agent');
 
-  // ⚡ TOP 5 시나리오 템플릿 클릭 시: 미리 준비된 Prebuilt 결과 즉시 노출 (로딩 대기 없음!)
+  const [showSpecBundleModal, setShowSpecBundleModal] = useState<boolean>(false);
+  const [showMoreRankingModal, setShowMoreRankingModal] = useState<boolean>(false);
+  const [showRankingInfoModal, setShowRankingInfoModal] = useState<boolean>(false);
+
+  const trending: TrendingTemplate[] = [
+    {
+      id: "code_agent",
+      rank: 1,
+      title: "자율 코딩 에이전트 (Code Agent)",
+      category: "AI Agent",
+      icon: "code",
+      description: "Cursor/Claude Code처럼 코드 분석, 버그 수정 및 자동 테스트를 수행하는 에이전트",
+      request: {
+        service_type: "code_agent",
+        monthly_requests: 100000,
+        avg_input_tokens: 2000,
+        avg_output_tokens: 1000,
+        requires_multimodal: false,
+        requires_coding: true
+      }
+    },
+    {
+      id: "rag",
+      rank: 2,
+      title: "기업용 사내 RAG 챗봇 (Enterprise RAG)",
+      category: "Enterprise RAG",
+      icon: "database",
+      description: "사내 Confluence, Notion, PDF 문서를 기반으로 정확한 지식 답변을 주는 보안 챗봇",
+      request: {
+        service_type: "rag",
+        monthly_requests: 200000,
+        avg_input_tokens: 3000,
+        avg_output_tokens: 600,
+        requires_multimodal: false,
+        requires_coding: false
+      }
+    },
+    {
+      id: "multimodal",
+      rank: 3,
+      title: "멀티모달 24/7 고객지원 CS 봇",
+      category: "Multimodal CS",
+      icon: "headset",
+      description: "고객이 업로드한 이미지, 영수증, 화면 캡처를 분석하여 24시간 자동 응대하는 CS 봇",
+      request: {
+        service_type: "multimodal",
+        monthly_requests: 150000,
+        avg_input_tokens: 3000,
+        avg_output_tokens: 600,
+        requires_multimodal: true,
+        requires_coding: false
+      }
+    },
+    {
+      id: "translation",
+      rank: 4,
+      title: "글로벌 실시간 번역 & 로컬라이제이션",
+      category: "Translation API",
+      icon: "globe",
+      description: "다국어 사용자 메시지 및 고화질 웹페이지 콘텐츠를 0.1초 내 뉘앙스 손실 없이 번역",
+      request: {
+        service_type: "translation",
+        monthly_requests: 500000,
+        avg_input_tokens: 1000,
+        avg_output_tokens: 1000,
+        requires_multimodal: false,
+        requires_coding: false
+      }
+    },
+    {
+      id: "content_creation",
+      rank: 5,
+      title: "마케팅 콘텐츠 코파일럿 (Copilot)",
+      category: "Content Creation",
+      icon: "sparkles",
+      description: "블로그, SNS 포스트, 이메일 시퀀스 및 SEO 최적화 문구를 자동 생성하는 AI 도우미",
+      request: {
+        service_type: "content_creation",
+        monthly_requests: 80000,
+        avg_input_tokens: 2500,
+        avg_output_tokens: 1500,
+        requires_multimodal: false,
+        requires_coding: false
+      }
+    }
+  ];
+
   const applyTemplate = (tpl: TrendingTemplate) => {
     setSelectedTemplateId(tpl.id);
     setServiceType(tpl.request.service_type);
@@ -389,63 +233,27 @@ export const ArchitectureAdvisor: React.FC = () => {
     setAvgOutputTokens(tpl.request.avg_output_tokens);
     setRequiresMultimodal(tpl.request.requires_multimodal);
     setRequiresCoding(tpl.request.requires_coding);
-
-    // 💡 미리 준비된 프리셋 결과가 존재하는 경우 API 호출 없이 0.001초 만에 즉시 노출!
-    if (PREBUILT_RECOMMENDATIONS[tpl.id]) {
-      setResult(PREBUILT_RECOMMENDATIONS[tpl.id]);
-    } else {
-      fetchRecommendation(tpl.request);
-    }
+    fetchRecommendation(tpl.request);
   };
 
-  const fetchRecommendation = (req?: RecommendationRequest) => {
+  const fetchRecommendation = (overrideReq?: RecommendationRequest) => {
     setLoading(true);
+    setResearchProgress(10);
     setResearchStep(0);
-    setResearchProgress(20);
-    const initLogs = [
-      `[00:00.1] > Initialized Agent pipeline: Language=${language.toUpperCase()}, Requests=${monthlyRequests.toLocaleString()}/mo`,
-      `[00:00.3] > ${t.researchProgress.step1}`
-    ];
-    setResearchLogs(initLogs);
 
-    // Step Progress Interval Timers
-    const timer1 = setTimeout(() => {
-      setResearchStep(1);
-      setResearchProgress(45);
-      setResearchLogs(prev => [...prev, `[00:00.7] > ${t.researchProgress.step2}`, `[00:00.9] > Scanning Arena Elo: GPT-4o, Claude 3.5 Sonnet, DeepSeek V3`]);
-    }, 700);
+    const timer1 = setTimeout(() => { setResearchProgress(30); setResearchStep(1); }, 400);
+    const timer2 = setTimeout(() => { setResearchProgress(55); setResearchStep(2); }, 800);
+    const timer3 = setTimeout(() => { setResearchProgress(80); setResearchStep(3); }, 1200);
+    const timer4 = setTimeout(() => { setResearchProgress(95); setResearchStep(4); }, 1500);
 
-    const timer2 = setTimeout(() => {
-      setResearchStep(2);
-      setResearchProgress(68);
-      setResearchLogs(prev => [...prev, `[00:01.5] > ${t.researchProgress.step3}`, `[00:01.8] > Calculated Token Volume: In=${((monthlyRequests * avgInputTokens)/1e6).toFixed(1)}M / Out=${((monthlyRequests * avgOutputTokens)/1e6).toFixed(1)}M`]);
-    }, 1500);
-
-    const timer3 = setTimeout(() => {
-      setResearchStep(3);
-      setResearchProgress(88);
-      setResearchLogs(prev => [...prev, `[00:02.4] > ${t.researchProgress.step4}`, `[00:02.7] > Evaluating Hosting: Vercel CDN + Render FastAPI vs Cloud GPU`]);
-    }, 2400);
-
-    const timer4 = setTimeout(() => {
-      setResearchStep(4);
-      setResearchProgress(98);
-      setResearchLogs(prev => [...prev, `[00:03.2] > ${t.researchProgress.step5}`, `[00:03.5] > Calling Gemini 2.5 Flash for 7-Section Architecture & Mermaid Spec`]);
-    }, 3200);
-
-    const baseReq: RecommendationRequest = req || {
+    const payload: RecommendationRequest = overrideReq || {
+      custom_prompt: customPrompt,
       service_type: serviceType,
       monthly_requests: monthlyRequests,
       avg_input_tokens: avgInputTokens,
       avg_output_tokens: avgOutputTokens,
       requires_multimodal: requiresMultimodal,
-      requires_coding: requiresCoding,
-      custom_prompt: customPrompt
-    };
-
-    const payload: RecommendationRequest = {
-      ...baseReq,
-      language: language
+      requires_coding: requiresCoding
     };
 
     fetch(`${API_BASE_URL}/recommend/architecture`, {
@@ -495,10 +303,10 @@ export const ArchitectureAdvisor: React.FC = () => {
             <Sparkles className="w-3.5 h-3.5" /> AI Architecture Advisor
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
-            맞춤형 AI 서비스 <span className="bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent">모델 조합 & 호스팅 시뮤레이터</span>
+            {t.title}
           </h1>
           <p className="mt-3 text-slate-300 text-base leading-relaxed">
-            구현하려는 서비스의 트래픽과 요구사항을 입력하세요. <strong className="text-white">최고 성능, 스마트 최적 라우팅, 극가성비</strong> 3가지 조합과 <strong className="text-indigo-300">개발명세서 Markdown(.md)</strong>을 원클릭으로 자동 생성해 드립니다.
+            {t.subtitle}
           </p>
         </div>
       </div>
@@ -569,7 +377,6 @@ export const ArchitectureAdvisor: React.FC = () => {
             );
           })}
 
-          {/* 6번째 카드: ➕ 랭킹 더보기 (Top 10+ 전체 시나리오) */}
           <button
             onClick={() => setShowMoreRankingModal(true)}
             className="group text-left p-4 rounded-2xl border border-dashed border-indigo-300 dark:border-indigo-800/80 bg-indigo-50/50 dark:bg-indigo-950/20 hover:bg-indigo-100/60 dark:hover:bg-indigo-950/40 transition-all duration-300 flex flex-col justify-between shadow-sm"
@@ -596,54 +403,195 @@ export const ArchitectureAdvisor: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Grid: Form & Result */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Form: Customizer */}
-        <div className="lg:col-span-4 bg-white dark:bg-slate-900 p-6 space-y-6 shadow-md h-fit border border-slate-200 dark:border-slate-800 rounded-3xl">
-          <div className="flex items-center gap-2 font-extrabold text-lg border-b border-slate-700/60 pb-3 text-slate-900 dark:text-white">
-            <Layers className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
-            서비스 요구사항 직접 입력
-          </div>
+      {/* Main Results View (Top Section) */}
+      <div className="space-y-6">
+        {loading ? (
+          <div className="bg-white dark:bg-slate-900/90 p-6 sm:p-8 space-y-6 rounded-3xl border border-indigo-200 dark:border-indigo-500/40 shadow-2xl text-left relative overflow-hidden">
+            <div className="flex items-center justify-between text-xs font-black text-slate-800 dark:text-slate-100">
+              <span className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400 animate-spin" />
+                고객 요구사항을 바탕으로 최적의 LLM 조합과 OpEx 호스팅 인프라 비용을 산출하고 있습니다...
+              </span>
+              <span className="text-indigo-600 dark:text-indigo-400 font-black text-base">{researchProgress}% ANALYZING</span>
+            </div>
 
-          <div className="space-y-4 text-sm">
-            {/* Natural Language Prompt Input */}
-            <div>
-              <label className="block font-bold mb-1.5 flex items-center justify-between text-slate-900 dark:text-slate-200">
-                <span>💬 요구사항 자유 묘사 (자연어)</span>
-                <span className="text-[11px] text-indigo-500 dark:text-indigo-400 font-bold">AI 자동 의도분석</span>
-              </label>
+            <div className="w-full bg-slate-200 dark:bg-slate-950 rounded-full h-3 overflow-hidden border border-slate-300 dark:border-slate-800 p-0.5 shadow-inner">
+              <div 
+                className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-full rounded-full transition-all duration-500 shadow-md shadow-indigo-500/50"
+                style={{ width: `${researchProgress}%` }}
+              ></div>
+            </div>
+
+            <div className="space-y-3 pt-2">
+              {[
+                t.researchProgress.step1,
+                t.researchProgress.step2,
+                t.researchProgress.step3,
+                t.researchProgress.step4,
+                t.researchProgress.step5
+              ].map((stepText, idx) => {
+                const isDone = idx < researchStep;
+                const isCurrent = idx === researchStep;
+                return (
+                  <div 
+                    key={idx}
+                    className={`flex items-center gap-3 p-3.5 rounded-2xl border transition-all duration-300 ${
+                      isDone 
+                        ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-500/40 text-emerald-950 dark:text-emerald-200 font-extrabold shadow-sm' 
+                        : isCurrent 
+                        ? 'bg-indigo-50 dark:bg-indigo-950/60 border-indigo-400 dark:border-indigo-500/50 text-indigo-950 dark:text-indigo-100 ring-2 ring-indigo-400/50 dark:ring-indigo-500/40 animate-pulse font-black shadow-md'
+                        : 'bg-slate-50 dark:bg-slate-950/50 border-slate-200 dark:border-slate-800/60 text-slate-500 dark:text-slate-400 font-bold'
+                    }`}
+                  >
+                    <div className="shrink-0">
+                      {isDone ? (
+                        <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                      ) : isCurrent ? (
+                        <Loader2 className="w-5 h-5 text-indigo-600 dark:text-indigo-400 animate-spin" />
+                      ) : (
+                        <div className="w-5 h-5 rounded-full border-2 border-slate-300 dark:border-slate-700" />
+                      )}
+                    </div>
+                    <span className="text-xs sm:text-sm font-black">{stepText}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ) : result ? (
+          <div className="space-y-6">
+            <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-md border border-slate-200 dark:border-slate-800 space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+                <div>
+                  <span className="text-xs font-bold px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300">
+                    서비스: {result.service_name}
+                  </span>
+                  <h2 className="text-2xl font-black text-slate-900 dark:text-white mt-2">
+                    🎯 추천 아키텍처 모델 조합 & 호스팅 산출 결과
+                  </h2>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="text-right">
+                    <div className="text-xs text-slate-500 font-bold">월간 예상 요청</div>
+                    <div className="text-base font-black text-indigo-600 dark:text-indigo-400">{result.monthly_requests.toLocaleString()} 회</div>
+                  </div>
+                  <button
+                    onClick={() => setShowSpecBundleModal(true)}
+                    className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-extrabold text-xs shadow-lg shadow-indigo-600/30 transition-all flex items-center gap-2"
+                  >
+                    <Layers className="w-4 h-4" />
+                    📦 5대 명세서 아티팩트 보기
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                {result.combos.map((combo) => (
+                  <div 
+                    key={combo.id}
+                    className={`p-5 rounded-2xl border transition-all flex flex-col justify-between space-y-4 ${
+                      combo.tag === 'RECOMMENDED'
+                        ? 'bg-gradient-to-br from-indigo-900/90 via-slate-900 to-purple-950 text-white border-indigo-500/50 shadow-xl ring-2 ring-indigo-500/40'
+                        : 'bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 border-slate-200 dark:border-slate-800'
+                    }`}
+                  >
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className={`text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase ${
+                          combo.tag === 'RECOMMENDED' ? 'bg-indigo-500 text-white' :
+                          combo.tag === 'FRONTIER' ? 'bg-purple-500 text-white' : 'bg-emerald-500 text-white'
+                        }`}>
+                          {combo.tag}
+                        </span>
+                        <span className="text-xs font-black opacity-80">Elo: {combo.avg_arena_elo}</span>
+                      </div>
+                      <h3 className="font-black text-base leading-tight">{combo.name}</h3>
+                      <p className="text-xs leading-relaxed opacity-90">{combo.description}</p>
+                    </div>
+
+                    <div className="pt-3 border-t border-slate-700/40 space-y-2">
+                      <div className="flex justify-between items-center text-xs font-bold">
+                        <span>월 예상 API 비용</span>
+                        <span className="text-base font-black text-cyan-400">${combo.total_monthly_cost.toFixed(2)}/mo</span>
+                      </div>
+                      <div className="space-y-1">
+                        {combo.key_advantages.map((adv, idx) => (
+                          <div key={idx} className="text-[11px] flex items-center gap-1.5 opacity-90">
+                            <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> {adv}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : null}
+      </div>
+
+      {/* Bottom Section: Requirements Customizer Input Form & Chat Bar (12 Cols Full Width) */}
+      <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 space-y-6 shadow-xl border border-slate-200 dark:border-slate-800 rounded-3xl">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
+          <div className="flex items-center gap-2.5 font-black text-xl text-slate-900 dark:text-white">
+            <Layers className="w-6 h-6 text-indigo-500 dark:text-indigo-400" />
+            <span>💬 서비스 요구사항 자유 묘사 & 커스터마이저 입력창</span>
+          </div>
+          <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950 px-3 py-1 rounded-full border border-indigo-200 dark:border-indigo-800">
+            AI 의도 자동분석
+          </span>
+        </div>
+
+        <div className="space-y-5 text-sm">
+          {/* Natural Language Prompt Chat Bar */}
+          <div className="space-y-2">
+            <label className="block font-bold text-slate-900 dark:text-slate-200">
+              자유로운 문장으로 구현하려는 AI 서비스와 조건을 입력하세요 (자연어 프롬프트 입력)
+            </label>
+            <div className="relative">
               <textarea
                 rows={3}
                 placeholder="예: 사내 PDF 문서를 RAG로 검색하여 보안 답변을 주는 챗봇을 만들려고 합니다. 월 10만 건 정도 사용 예상됩니다."
                 value={customPrompt}
                 onChange={(e) => setCustomPrompt(e.target.value)}
-                className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl p-3 text-xs text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-indigo-500 transition-all resize-none shadow-inner"
+                className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-2xl p-4 text-xs sm:text-sm text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-indigo-500 transition-all resize-none shadow-inner"
               />
-              {/* Sample Chips */}
-              <div className="flex flex-wrap gap-1.5 mt-2">
-                <button
-                  type="button"
-                  onClick={() => setCustomPrompt("사내 Confluence/PDF 문서를 RAG로 답변하는 보안 챗봇 구축")}
-                  className="text-[10px] bg-indigo-50 dark:bg-slate-950 border border-indigo-200 dark:border-slate-800 hover:border-indigo-500 text-indigo-700 dark:text-slate-300 px-2 py-1 rounded-lg transition-colors text-left font-semibold"
-                >
-                  💡 사내 문서 RAG 챗봇
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setCustomPrompt("Python/JS 버그 자동 수정 및 리팩토링 에이전트")}
-                  className="text-[10px] bg-indigo-50 dark:bg-slate-950 border border-indigo-200 dark:border-slate-800 hover:border-indigo-500 text-indigo-700 dark:text-slate-300 px-2 py-1 rounded-lg transition-colors text-left font-semibold"
-                >
-                  💡 코드 수정 에이전트
-                </button>
-              </div>
             </div>
-            {/* Service Type */}
+
+            {/* Sample Chips */}
+            <div className="flex flex-wrap gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => setCustomPrompt("사내 Confluence/PDF 문서를 RAG로 답변하는 보안 챗봇 구축")}
+                className="text-xs bg-indigo-50 dark:bg-slate-950 border border-indigo-200 dark:border-slate-800 hover:border-indigo-500 text-indigo-700 dark:text-indigo-300 px-3 py-1.5 rounded-xl transition-colors font-semibold shadow-sm"
+              >
+                💡 사내 문서 RAG 챗봇
+              </button>
+              <button
+                type="button"
+                onClick={() => setCustomPrompt("Python/JS 버그 자동 수정 및 리팩토링 에이전트")}
+                className="text-xs bg-indigo-50 dark:bg-slate-950 border border-indigo-200 dark:border-slate-800 hover:border-indigo-500 text-indigo-700 dark:text-indigo-300 px-3 py-1.5 rounded-xl transition-colors font-semibold shadow-sm"
+              >
+                💡 코드 수정 에이전트
+              </button>
+              <button
+                type="button"
+                onClick={() => setCustomPrompt("영수증 이미지 OCR 해석 및 24/7 고객응대 멀티모달 CS봇")}
+                className="text-xs bg-indigo-50 dark:bg-slate-950 border border-indigo-200 dark:border-slate-800 hover:border-indigo-500 text-indigo-700 dark:text-indigo-300 px-3 py-1.5 rounded-xl transition-colors font-semibold shadow-sm"
+              >
+                💡 멀티모달 CS 챗봇
+              </button>
+            </div>
+          </div>
+
+          {/* 3-Column Fine-Tuning Controls */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-3 border-t border-slate-200 dark:border-slate-800">
             <div>
               <label className="block font-bold mb-1.5 text-slate-900 dark:text-slate-200">서비스 유형</label>
               <select
                 value={serviceType}
                 onChange={(e) => setServiceType(e.target.value)}
-                className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2.5 text-slate-900 dark:text-white font-bold focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer"
+                className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-bold focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer text-xs sm:text-sm"
               >
                 <option value="code_agent">👨‍💻 자율 코딩 에이전트 (Code Agent)</option>
                 <option value="rag">📚 기업용 사내 RAG 챗봇 (Enterprise RAG)</option>
@@ -653,7 +601,6 @@ export const ArchitectureAdvisor: React.FC = () => {
               </select>
             </div>
 
-            {/* Monthly Requests */}
             <div>
               <div className="flex justify-between font-bold mb-1.5 text-slate-900 dark:text-slate-200">
                 <span>월간 예상 요청 수</span>
@@ -666,7 +613,7 @@ export const ArchitectureAdvisor: React.FC = () => {
                 step="10000"
                 value={monthlyRequests}
                 onChange={(e) => setMonthlyRequests(Number(e.target.value))}
-                className="w-full accent-indigo-600 rounded-lg cursor-pointer h-2"
+                className="w-full accent-indigo-600 rounded-lg cursor-pointer h-2.5 mt-2"
               />
               <div className="flex justify-between text-[10px] text-slate-500 font-semibold mt-1">
                 <span>1만</span>
@@ -675,336 +622,76 @@ export const ArchitectureAdvisor: React.FC = () => {
               </div>
             </div>
 
-            {/* Avg Tokens */}
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block font-bold mb-1 text-slate-900 dark:text-slate-200">평균 입력 토큰</label>
-                <input
-                  type="number"
-                  value={avgInputTokens}
-                  onChange={(e) => setAvgInputTokens(Number(e.target.value))}
-                  className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-900 dark:text-white font-bold focus:outline-none focus:border-indigo-500"
-                />
-              </div>
-              <div>
-                <label className="block font-bold mb-1 text-slate-900 dark:text-slate-200">평균 출력 토큰</label>
-                <input
-                  type="number"
-                  value={avgOutputTokens}
-                  onChange={(e) => setAvgOutputTokens(Number(e.target.value))}
-                  className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-900 dark:text-white font-bold focus:outline-none focus:border-indigo-500"
-                />
+            <div className="space-y-2">
+              <label className="block font-bold mb-1 text-slate-900 dark:text-slate-200">특수 기능 옵션</label>
+              <div className="space-y-2 bg-slate-50 dark:bg-slate-950 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
+                <label className="flex items-center gap-2 cursor-pointer font-bold text-xs text-slate-900 dark:text-slate-200 select-none">
+                  <input
+                    type="checkbox"
+                    checked={requiresMultimodal}
+                    onChange={(e) => setRequiresMultimodal(e.target.checked)}
+                    className="w-4 h-4 accent-indigo-600 rounded"
+                  />
+                  <span>🖼️ 멀티모달 (비전/이미지) 필요</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer font-bold text-xs text-slate-900 dark:text-slate-200 select-none">
+                  <input
+                    type="checkbox"
+                    checked={requiresCoding}
+                    onChange={(e) => setRequiresCoding(e.target.checked)}
+                    className="w-4 h-4 accent-indigo-600 rounded"
+                  />
+                  <span>⚡ 복잡 추론 & 코드 생성 필요</span>
+                </label>
               </div>
             </div>
-
-            {/* Capability Checkboxes */}
-            <div className="space-y-2 pt-2 border-t border-slate-700/60">
-              <label className="flex items-center gap-2 cursor-pointer font-semibold text-slate-900 dark:text-slate-200 select-none">
-                <input
-                  type="checkbox"
-                  checked={requiresMultimodal}
-                  onChange={(e) => setRequiresMultimodal(e.target.checked)}
-                  className="w-4 h-4 accent-indigo-600 rounded"
-                />
-                <span>🖼️ 멀티모달 (비전/이미지 이해) 필요</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer font-semibold text-slate-900 dark:text-slate-200 select-none">
-                <input
-                  type="checkbox"
-                  checked={requiresCoding}
-                  onChange={(e) => setRequiresCoding(e.target.checked)}
-                  className="w-4 h-4 accent-indigo-600 rounded"
-                />
-                <span>⚡ 복잡 추론 & 코드 생성 필요</span>
-              </label>
-            </div>
-
-            <button
-              onClick={() => { setSelectedTemplateId(null); fetchRecommendation(); }}
-              disabled={loading}
-              className="w-full mt-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-black py-3.5 rounded-xl shadow-lg shadow-indigo-600/30 transition-all flex items-center justify-center gap-2 active:scale-98"
-            >
-              {loading ? <Sparkles className="w-5 h-5 animate-spin" /> : <Zap className="w-5 h-5" />}
-              추천 아키텍처 recalculate
-            </button>
           </div>
-        </div>
 
-        {/* Right Results: Combos & Hosting & Markdown Spec */}
-        <div className="lg:col-span-8 space-y-6">
-          {loading ? (
-            <div className="bg-white dark:bg-slate-900/90 p-6 sm:p-8 space-y-6 rounded-3xl border border-indigo-200 dark:border-indigo-500/40 shadow-2xl text-left relative overflow-hidden">
-              {/* Top Progress Header */}
-              <div className="flex items-center justify-between text-xs font-black text-slate-800 dark:text-slate-100">
-                <span className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400 animate-spin" />
-                  고객 요구사항을 바탕으로 최적의 LLM 조합과 OpEx 호스팅 인프라 비용을 산출하고 있습니다...
-                </span>
-                <span className="text-indigo-600 dark:text-indigo-400 font-black text-base">{researchProgress}% ANALYZING</span>
-              </div>
-
-              {/* Dynamic Animated Progress Bar */}
-              <div className="w-full bg-slate-200 dark:bg-slate-950 rounded-full h-3 overflow-hidden border border-slate-300 dark:border-slate-800 p-0.5 shadow-inner">
-                <div 
-                  className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-full rounded-full transition-all duration-500 shadow-md shadow-indigo-500/50"
-                  style={{ width: `${researchProgress}%` }}
-                ></div>
-              </div>
-
-              {/* Step-by-Step Thinking Pipeline Indicators */}
-              <div className="space-y-3 pt-2">
-                {[
-                  t.researchProgress.step1,
-                  t.researchProgress.step2,
-                  t.researchProgress.step3,
-                  t.researchProgress.step4,
-                  t.researchProgress.step5
-                ].map((stepText, idx) => {
-                  const isDone = idx < researchStep;
-                  const isCurrent = idx === researchStep;
-                  return (
-                    <div 
-                      key={idx}
-                      className={`flex items-center gap-3 p-3.5 rounded-2xl border transition-all duration-300 ${
-                        isDone 
-                          ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-500/40 text-emerald-950 dark:text-emerald-200 font-extrabold shadow-sm' 
-                          : isCurrent 
-                          ? 'bg-indigo-50 dark:bg-indigo-950/60 border-indigo-400 dark:border-indigo-500/50 text-indigo-950 dark:text-indigo-100 ring-2 ring-indigo-400/50 dark:ring-indigo-500/40 animate-pulse font-black shadow-md'
-                          : 'bg-slate-50 dark:bg-slate-950/50 border-slate-200 dark:border-slate-800/60 text-slate-500 dark:text-slate-400 font-bold'
-                      }`}
-                    >
-                      <div className="shrink-0">
-                        {isDone ? (
-                          <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-                        ) : isCurrent ? (
-                          <Loader2 className="w-5 h-5 text-indigo-600 dark:text-indigo-400 animate-spin" />
-                        ) : (
-                          <Clock className="w-5 h-5 text-slate-400 dark:text-slate-600" />
-                        )}
-                      </div>
-                      <span className="text-xs sm:text-sm font-black leading-snug">{stepText}</span>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Live Terminal Output Console */}
-              <div className="rounded-2xl bg-slate-950 border border-slate-800 p-4 font-mono text-xs text-slate-300 space-y-1.5 shadow-inner max-h-40 overflow-y-auto">
-                <div className="flex items-center justify-between text-[10px] text-slate-500 border-b border-slate-800/80 pb-1 mb-2">
-                  <span className="flex items-center gap-1 font-bold text-slate-400">
-                    <Terminal className="w-3.5 h-3.5 text-cyan-400" /> AGENT DEEP RESEARCH LOG STREAM
-                  </span>
-                  <span className="animate-pulse text-emerald-400">● LIVE</span>
-                </div>
-                {researchLogs.map((log, i) => (
-                  <div key={i} className="leading-relaxed opacity-90">
-                    <span className="text-cyan-400 font-semibold">{log.split('>')[0]}</span>
-                    <span className="text-slate-200">&gt; {log.split('>')[1]}</span>
-                  </div>
-                ))}
-                <div className="flex items-center gap-1 text-indigo-400 animate-pulse pt-1">
-                  <span>_</span>
-                </div>
-              </div>
-            </div>
-          ) : result ? (
-            <>
-              {/* Service Summary Banner */}
-              <div className="bg-white dark:bg-slate-900 p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-md border border-indigo-200 dark:border-indigo-500/40 rounded-3xl">
-                <div>
-                  <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">{result.service_name}</h3>
-                  <div className="flex flex-wrap items-center gap-3 text-xs font-bold text-slate-700 dark:text-slate-200 mt-1">
-                    <span>월간 요청: <strong className="text-indigo-600 dark:text-indigo-300 font-black">{result.monthly_requests.toLocaleString()}회</strong></span>
-                    <span>•</span>
-                    <span>월 토큰: <strong className="text-slate-900 dark:text-slate-100 font-black">in {result.total_monthly_input_tokens_m}M / out {result.total_monthly_output_tokens_m}M</strong></span>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setShowModal(true)}
-                  className="bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold px-5 py-3 rounded-2xl transition-all flex items-center gap-2 text-sm shadow-lg shadow-indigo-600/30 whitespace-nowrap"
-                >
-                  <FileText className="w-4 h-4 text-white" />
-                  Markdown 명세서 보기 & 다운로드
-                </button>
-              </div>
-
-              {/* 3 Model Combos Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {result.combos.map((combo) => {
-                  const isRecommended = combo.id === 'smart_balanced';
-                  return (
-                    <div
-                      key={combo.id}
-                      className={`relative rounded-3xl p-5 border flex flex-col justify-between transition-all shadow-xl ${
-                        isRecommended
-                          ? 'bg-slate-900 text-white border-indigo-500 shadow-indigo-500/20 ring-2 ring-indigo-500'
-                          : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800'
-                      }`}
-                    >
-                      {isRecommended && (
-                        <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-[11px] px-3.5 py-1 rounded-full shadow-lg border border-amber-300 whitespace-nowrap">
-                          ⭐ 추천 아키텍처 (Best ROI)
-                        </span>
-                      )}
-
-                      <div>
-                        <div className="flex items-center justify-between mb-2">
-                          <span className={`text-xs font-black uppercase tracking-wider ${
-                            isRecommended ? 'text-indigo-300' : 'text-slate-600 dark:text-slate-400'
-                          }`}>
-                            {combo.tag}
-                          </span>
-                          <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 px-2 py-0.5 rounded-full">
-                            {combo.avg_arena_elo.toFixed(0)} ELO
-                          </span>
-                        </div>
-                        <h4 className={`text-base font-extrabold mb-2 ${
-                          isRecommended ? 'text-white' : 'text-slate-900 dark:text-white'
-                        }`}>
-                          {combo.name}
-                        </h4>
-                        <p className={`text-xs mb-4 leading-relaxed line-clamp-3 font-medium ${
-                          isRecommended ? 'text-slate-200' : 'text-slate-600 dark:text-slate-300'
-                        }`}>
-                          {combo.description}
-                        </p>
-
-                        {/* Cost Display */}
-                        <div className={`rounded-2xl p-3.5 mb-4 border ${
-                          isRecommended 
-                            ? 'bg-slate-950/90 border-slate-700' 
-                            : 'bg-slate-100 dark:bg-slate-950/80 border-slate-200 dark:border-slate-800'
-                        }`}>
-                          <span className={`text-[11px] font-bold ${
-                            isRecommended ? 'text-slate-300' : 'text-slate-600 dark:text-slate-400'
-                          }`}>
-                            월간 예상 API 비용
-                          </span>
-                          <div className={`text-2xl font-black mt-0.5 ${
-                            isRecommended ? 'text-amber-300' : 'text-slate-900 dark:text-white'
-                          }`}>
-                            ${combo.total_monthly_cost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                            <span className="text-xs font-normal text-slate-400"> /월</span>
-                          </div>
-                        </div>
-
-                        {/* Pipeline Items */}
-                        <div className="space-y-2 mb-4">
-                          <span className={`text-[11px] font-bold block ${
-                            isRecommended ? 'text-slate-200' : 'text-slate-700 dark:text-slate-300'
-                          }`}>
-                            라우팅 파이프라인 구성:
-                          </span>
-                          {combo.items.map((item, idx) => (
-                            <div 
-                              key={idx} 
-                              className={`rounded-xl p-2.5 text-xs border ${
-                                isRecommended 
-                                  ? 'bg-slate-950/80 border-slate-800 text-slate-100' 
-                                  : 'bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100'
-                              }`}
-                            >
-                              <div className="flex justify-between font-bold">
-                                <span className={isRecommended ? 'text-indigo-300' : 'text-indigo-600 dark:text-indigo-400'}>
-                                  {item.role}
-                                </span>
-                                <span>{item.allocation_percent}%</span>
-                              </div>
-                              <div className={`text-[11px] mt-0.5 line-clamp-1 font-medium ${
-                                isRecommended ? 'text-slate-300' : 'text-slate-600 dark:text-slate-400'
-                              }`}>
-                                {item.model_name} <span className="opacity-70">(${item.monthly_estimated_cost.toFixed(2)})</span>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Advantages */}
-                      <div className={`space-y-1.5 pt-3 border-t text-xs font-semibold ${
-                        isRecommended ? 'border-slate-800 text-slate-200' : 'border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'
-                      }`}>
-                        {combo.key_advantages.map((adv, idx) => (
-                          <div key={idx} className="flex items-center gap-1.5">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                            <span className="line-clamp-1">{adv}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Hosting Recommendations */}
-              <div className="glass-panel p-6 space-y-4 shadow-xl border border-slate-300 dark:border-slate-800 rounded-3xl">
-                <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
-                  <h4 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                    <Server className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
-                    추천 호스팅 & 클라우드 인프라 (Hosting Options)
-                  </h4>
-                  <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold">서버 인프라 가이드</span>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {result.hosting_options.map((h, idx) => (
-                    <div key={idx} className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-4 space-y-2 shadow-sm">
-                      <div className="flex justify-between items-start">
-                        <span className="text-xs font-extrabold px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 border border-indigo-500/20">
-                          {h.category}
-                        </span>
-                        <span className="text-sm font-extrabold text-slate-900 dark:text-white">${h.estimated_monthly_cost}/월</span>
-                      </div>
-                      <h5 className="font-extrabold text-slate-900 dark:text-white text-sm">{h.provider}</h5>
-                      <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-medium">{h.description}</p>
-                      <div className="text-[11px] text-indigo-600 dark:text-indigo-400 font-bold pt-1">
-                        👉 추천 대상: {h.recommended_for}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </>
-          ) : null}
+          <button
+            onClick={() => { setSelectedTemplateId(null); fetchRecommendation(); }}
+            disabled={loading}
+            className="w-full mt-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 hover:from-indigo-500 hover:to-purple-500 text-white font-black py-4 rounded-2xl shadow-xl shadow-indigo-600/30 transition-all flex items-center justify-center gap-2 active:scale-98 text-base"
+          >
+            {loading ? <Sparkles className="w-6 h-6 animate-spin" /> : <Zap className="w-6 h-6" />}
+            ⚡ 추천 아키텍처 재산출 & 5대 명세서 마크다운 생성하기
+          </button>
         </div>
       </div>
 
-      {/* BigTech 5-in-1 Multi-Artifact Spec Modal */}
-      {showModal && result && (
-        <SpecBundleModal 
-          result={result} 
-          onClose={() => setShowModal(false)} 
+      {showSpecBundleModal && result && (
+        <SpecBundleModal
+          result={result}
+          onClose={() => setShowSpecBundleModal(false)}
         />
       )}
 
-      {/* 랭킹 근거 & 갱신 주기 안내 모달 */}
-      {showRankingInfoModal && (
-        <RankingCriteriaModal onClose={() => setShowRankingInfoModal(false)} />
-      )}
-
-      {/* ➕ 랭킹 더보기 (Top 6~10+ 실시간 마크다운 생성) 모달 */}
       {showMoreRankingModal && (
         <MoreRankingModal
           onClose={() => setShowMoreRankingModal(false)}
-          onSelectScenario={(req, promptText) => {
+          onSelectScenario={(req, title) => {
             setShowMoreRankingModal(false);
-            setCustomPrompt(promptText);
+            setCustomPrompt(`[추가 랭킹 시나리오] ${title}`);
             setServiceType(req.service_type);
             setMonthlyRequests(req.monthly_requests);
             setAvgInputTokens(req.avg_input_tokens);
             setAvgOutputTokens(req.avg_output_tokens);
             setRequiresMultimodal(req.requires_multimodal);
             setRequiresCoding(req.requires_coding);
-            // 💡 더보기 시나리오는 미리 만들어둔 결과가 아닌 선택 시점에 실시간 마크다운 생성 시작!
-            fetchRecommendation(req);
+            setSelectedTemplateId(null);
+            fetchRecommendation();
           }}
+        />
+      )}
+
+      {showRankingInfoModal && (
+        <RankingCriteriaModal
+          onClose={() => setShowRankingInfoModal(false)}
         />
       )}
     </div>
   );
 };
 
-// --- Sub-component: BigTech 5-in-1 Multi-Artifact Spec Modal ---
 const SpecBundleModal: React.FC<{
   result: ArchitectureRecommendationResult;
   onClose: () => void;
@@ -1079,7 +766,6 @@ const SpecBundleModal: React.FC<{
   return (
     <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-5xl h-[85vh] flex flex-col shadow-2xl overflow-hidden">
-        {/* Modal Header */}
         <div className="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-950">
           <div>
             <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
@@ -1097,7 +783,6 @@ const SpecBundleModal: React.FC<{
           </button>
         </div>
 
-        {/* 5-Artifact Tab Selector */}
         <div className="bg-slate-100 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 px-4 pt-2 flex items-center gap-1.5 overflow-x-auto scrollbar-none">
           {[
             { id: 'agents', name: '🤖 AGENTS.md', desc: 'AI 지시서 & 규칙' },
@@ -1125,7 +810,6 @@ const SpecBundleModal: React.FC<{
           })}
         </div>
 
-        {/* Modal Body: Active Tab Document Code Preview */}
         <div className="p-6 overflow-y-auto bg-slate-50 dark:bg-slate-950 font-mono text-xs text-slate-900 dark:text-slate-200 space-y-4 flex-1">
           <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 pb-2">
             <span className="font-black text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
@@ -1138,7 +822,6 @@ const SpecBundleModal: React.FC<{
           </pre>
         </div>
 
-        {/* Modal Footer */}
         <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="text-xs text-slate-600 dark:text-slate-400 font-bold hidden sm:block">
             💡 <strong className="text-slate-900 dark:text-white">Cursor / Claude Code 활용법</strong>: <span>`AGENTS.md`와 `TASKS.md`를 프로젝트 루트에 복사하면 AI가 자동 개발합니다.</span>
@@ -1175,97 +858,51 @@ const SpecBundleModal: React.FC<{
   );
 };
 
-// --- Sub-component: 랭킹 근거 & 갱신 주기 안내 모달 ---
-const RankingCriteriaModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  return (
-    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-5">
-        <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
-          <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
-            <span>🏆 인기 서비스 TOP 랭킹 산출 근거 & 갱신 주기</span>
-          </h3>
-          <button onClick={onClose} className="p-1.5 rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        <div className="space-y-4 text-xs font-semibold text-slate-700 dark:text-slate-300 leading-relaxed">
-          <div className="bg-indigo-50 dark:bg-indigo-950/50 p-4 rounded-2xl border border-indigo-200 dark:border-indigo-800/60 space-y-1.5">
-            <h4 className="font-black text-indigo-900 dark:text-indigo-200 text-sm flex items-center gap-1.5">
-              <span>📊</span> 1. 랭킹 산출 근거 (Ranking Criteria)
-            </h4>
-            <p>
-              2026년 기준 글로벌 10,000+개 Enterprise AI 서비스 구축 사례와 실리콘밸리 AI 템플릿 사용 통계, GitHub Star 수, LMSYS Arena Elo 가중치를 종합 계산하여 인기 순위를 반영합니다.
-            </p>
-          </div>
-
-          <div className="bg-emerald-50 dark:bg-emerald-950/50 p-4 rounded-2xl border border-emerald-200 dark:border-emerald-800/60 space-y-1.5">
-            <h4 className="font-black text-emerald-900 dark:text-emerald-200 text-sm flex items-center gap-1.5">
-              <span>🔄</span> 2. 데이터 갱신 주기 (Update Schedule)
-            </h4>
-            <p>
-              <strong className="text-emerald-600 dark:text-emerald-400 font-extrabold">매월 1일</strong> 글로벌 신규 출시 모델 및 LMSYS Arena 벤치마크 점수, API 단가 변동 내역을 자동으로 수집하여 실시간 인기 순위를 갱신합니다.
-            </p>
-          </div>
-        </div>
-
-        <button
-          onClick={onClose}
-          className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs rounded-xl shadow-lg transition-all"
-        >
-          확인했습니다
-        </button>
-      </div>
-    </div>
-  );
-};
-
-// --- Sub-component: ➕ 랭킹 더보기 (Top 6~10+ 실시간 마크다운 생성) 모달 ---
 const MoreRankingModal: React.FC<{
   onClose: () => void;
-  onSelectScenario: (req: RecommendationRequest, promptText: string) => void;
+  onSelectScenario: (req: RecommendationRequest, title: string) => void;
 }> = ({ onClose, onSelectScenario }) => {
   const moreScenarios = [
     {
       rank: 6,
-      title: "의료/의학 논문 요약 & RAG 코파일럿",
-      category: "Medical & Health RAG",
-      requests: 80000,
+      title: "의료 & 헬스케어 임상 데이터 질의응답 챗봇",
+      category: "Medical AI Assistant",
+      requests: 120000,
       req: {
         service_type: "rag",
-        monthly_requests: 80000,
+        monthly_requests: 120000,
         avg_input_tokens: 4000,
-        avg_output_tokens: 1500,
-        requires_multimodal: true,
+        avg_output_tokens: 800,
+        requires_multimodal: false,
         requires_coding: false
       },
-      desc: "PubMed / 의학 논문 PDF와 가이드라인 임베딩 후 수치 환각 0% 의료 논문 요약"
+      desc: "HIPAA 보안 준수 및 의학 논문/임상 데이터베이스 전용 보안 RAG"
     },
     {
       rank: 7,
-      title: "금융/증권 실시간 공시 분석 에이전트",
-      category: "FinTech & Stock Agent",
+      title: "금융 & 주식 시장 실시간 감성 분석 API",
+      category: "Financial Market Analytics",
       requests: 300000,
       req: {
-        service_type: "code_agent",
+        service_type: "content_creation",
         monthly_requests: 300000,
-        avg_input_tokens: 3000,
-        avg_output_tokens: 1000,
+        avg_input_tokens: 1500,
+        avg_output_tokens: 500,
         requires_multimodal: false,
-        requires_coding: true
+        requires_coding: false
       },
-      desc: "DART/SEC 공시 실시간 파싱 및 지표 이상 징후 감지 자동 보고서 생성"
+      desc: "뉴스 스트림 및 재무제표 0.1초 파싱 ➔ 실시간 매수/매도 감성 스코어링"
     },
     {
       rank: 8,
-      title: "법률 판례 분석 & 계약서 검토 에이전트",
-      category: "LegalTech Contract Review",
-      requests: 50000,
+      title: "법률 계약서 검토 & 판례 추천 서비스",
+      category: "Legal Tech Reviewer",
+      requests: 60000,
       req: {
         service_type: "rag",
-        monthly_requests: 50000,
-        avg_input_tokens: 8000,
-        avg_output_tokens: 2000,
+        monthly_requests: 60000,
+        avg_input_tokens: 5000,
+        avg_output_tokens: 1200,
         requires_multimodal: false,
         requires_coding: false
       },
@@ -1349,6 +986,50 @@ const MoreRankingModal: React.FC<{
             </div>
           ))}
         </div>
+      </div>
+    </div>
+  );
+};
+
+const RankingCriteriaModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  return (
+    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-5">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+          <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+            <span>🏆 인기 서비스 TOP 랭킹 산출 근거 & 갱신 주기</span>
+          </h3>
+          <button onClick={onClose} className="p-1.5 rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <div className="space-y-4 text-xs font-semibold text-slate-700 dark:text-slate-300 leading-relaxed">
+          <div className="bg-indigo-50 dark:bg-indigo-950/50 p-4 rounded-2xl border border-indigo-200 dark:border-indigo-800/60 space-y-1.5">
+            <h4 className="font-black text-indigo-900 dark:text-indigo-200 text-sm flex items-center gap-1.5">
+              <span>📊</span> 1. 랭킹 산출 근거 (Ranking Criteria)
+            </h4>
+            <p>
+              2026년 기준 글로벌 10,000+개 Enterprise AI 서비스 구축 사례와 실리콘밸리 AI 템플릿 사용 통계, GitHub Star 수, LMSYS Arena Elo 가중치를 종합 계산하여 인기 순위를 반영합니다.
+            </p>
+          </div>
+
+          <div className="bg-emerald-50 dark:bg-emerald-950/50 p-4 rounded-2xl border border-emerald-200 dark:border-emerald-800/60 space-y-1.5">
+            <h4 className="font-black text-emerald-900 dark:text-emerald-200 text-sm flex items-center gap-1.5">
+              <span>🔄</span> 2. 데이터 갱신 주기 (Update Schedule)
+            </h4>
+            <p>
+              <strong className="text-emerald-600 dark:text-emerald-400 font-extrabold">매월 1일</strong> 글로벌 신규 출시 모델 및 LMSYS Arena 벤치마크 점수, API 단가 변동 내역을 자동으로 수집하여 실시간 인기 순위를 갱신합니다.
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={onClose}
+          className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs rounded-xl shadow-lg transition-all"
+        >
+          확인했습니다
+        </button>
       </div>
     </div>
   );
