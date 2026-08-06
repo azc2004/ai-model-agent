@@ -281,16 +281,12 @@ async def startup_event():
 
 @app.get("/api/v1/news/pulse", response_model=NewsPulseResponse)
 async def get_news_pulse(
-    response: Response,
     lens: Optional[str] = Query(None, description="직무 렌즈 필터 (developer, pm, business, researcher)"),
     search: Optional[str] = Query(None, description="키워드 검색어")
 ):
     """
     Neon DB 영구 적재 및 3계층 다층 캐싱(RAM Caching + HTTP Browser Caching) 기반 AI 뉴스 리포트 API
     """
-    # 1. 30분 간 브라우저 & Edge CDN 캐싱 헤더 적용
-    response.headers["Cache-Control"] = "public, max-age=1800, s-maxage=3600"
-
     articles = await refresh_news_pipeline()
     
     if lens:
