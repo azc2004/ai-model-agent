@@ -176,6 +176,7 @@ from app.model_fetcher import run_daily_model_sync_job
 def sync_models_daily():
     """외부 OpenRouter & LMSYS API와 동기화하여 Neon DB 내 LLM 모델 스펙 및 가격을 데일리 자동 갱신합니다."""
     updated_count = run_daily_model_sync_job()
+    init_models_cache_from_db()  # ⚡ 서버단 인메모리(RAM) 캐시 즉시 자동 갱신
     return {
         "status": "ok",
         "message": f"Successfully synced {updated_count} models with daily live pricing and benchmarks.",
