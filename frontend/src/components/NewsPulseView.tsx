@@ -920,6 +920,7 @@ export default function NewsPulseView() {
                       <ul className="space-y-2">
                         {article.summary_bullets.map((bullet, idx) => {
                           let cleanBullet = bullet;
+                          cleanBullet = cleanBullet.replace(/(\b[a-zA-Z]+)-\s+([a-zA-Z]+\b)/g, '$1$2');
                           cleanBullet = cleanBullet.replace(/(?:\d{5}v\d+\s+)?(?:arXiv:\d+\.\d+v?\d*\s+)?Announce Type:\s*(?:new|cross)\s*Abstract:\s*/gi, '');
                           
                           // 다국어 지원 모듈 딕셔너리 연동 매핑

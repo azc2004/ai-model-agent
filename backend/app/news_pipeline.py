@@ -109,6 +109,7 @@ def translate_text_to_korean(text: str) -> str:
         return ""
     
     clean = str(text).strip()
+    clean = re.sub(r'(\b[a-zA-Z]+)-\s+([a-zA-Z]+\b)', r'\1\2', clean)
     clean = clean.replace("04048v1 Announce Type: new Abstract: ", "").replace("Announce Type: new Abstract: ", "").replace("Announce Type: cross Abstract: ", "")
 
     # 자주 출몰하는 학술 논문 및 글로벌 AI 속보 영문 문장 1:1 한글 번역 맵

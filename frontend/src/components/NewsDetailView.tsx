@@ -105,16 +105,31 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
   const formatTranslatedText = (rawText: string) => {
     if (!rawText) return '';
     let text = rawText;
-    // ArXiv 번호 및 헤더 태그 정밀 제거
+
+    // 1. ArXiv PDF 및 OCR 텍스트 내의 하이픈 줄바꿈 단어 자동 복원 (예: uni- formly -> uniformly, fre- quencies -> frequencies, Af- ter -> After)
+    text = text.replace(/(\b[a-zA-Z]+)-\s+([a-zA-Z]+\b)/g, '$1$2');
+
+    // 2. ArXiv 번호 및 헤더 태그 정밀 제거
     text = text.replace(/(?:\d{5}v\d+\s+)?(?:arXiv:\d+\.\d+v?\d*\s+)?Announce Type:\s*(?:new|cross)\s*Abstract:\s*/gi, '');
     
-    // 다국어 지원 모듈 딕셔너리 연동 매핑
+    // 3. 다국어 지원 모듈 딕셔너리 연동 매핑
     for (const [engPhrase, translationsMap] of Object.entries(MULTILINGUAL_ARTICLE_MAP)) {
       if (text.includes(engPhrase)) {
         const targetTranslation = translationsMap[language] || translationsMap['en'] || engPhrase;
         text = text.replace(engPhrase, targetTranslation);
       }
     }
+
+    // 4. CAMP 및 시계열 논문 핵심 문장 1:1 세련된 한글화
+    text = text.replace(/Real-world time series are often governed by recurring patterns, but their dominant periods may vary across datasets, forecasting settings, and individual input windows\./gi, '실세계 시계열 데이터는 주기적 패턴을 따르지만, 데이터셋과 예측 구간에 따라 주요 주기가 달라집니다.');
+    text = text.replace(/Existing cycle-aware forecasters commonly rely on a single period selected at the dataset level, which can be restrictive when periodic behavior changes over time or when multiple cycles coexist\./gi, '기존 주기 인지 예보 모델은 단일 주기에 의존하여 다중 주기가 공존하는 복잡한 환경에서 명확한 한계를 보였습니다.');
+    text = text.replace(/Moreover, patch-based models typically process all patch positions uniformly, although patches farther from the forecast boundary may require broader contextual refinement, while recent patches contain information that should be preserved more directly\./gi, '또한 기존 패치 기반 모델은 예측 경계와의 거리에 따른 컨텍스트 가중치를 균일하게 처리하는 한계가 있었으나, 최신 패치는 직관 정보를 보다 직접 보존해야 합니다.');
+    text = text.replace(/After cyclic behavior is removed, the remaining dynamics may also span multiple temporal resolutions and cannot be adequately described at a single scale\./gi, '주기적 동역학이 제거된 후 남은 잔여 시계열 변동성 역시 단일 스케일로는 기술할 수 없는 다중 시간 해상도 구조를 가집니다.');
+    text = text.replace(/We introduce CAMP, a Cycle-Aware Multi-Scale Patch Mixer designed to address these challenges\./gi, '본 논문은 이러한 한계를 극복하기 위해 주기 인지형 다중 스케일 패치 믹서(CAMP) 아키텍처를 제안합니다.');
+    text = text.replace(/The Adaptive Cycle Learning module identifies dominant frequencies separately for each input window and generates both historical and future cyclic components without requiring a pre-defined cycle length\./gi, '적응형 주기 학습 모듈은 사전 정의된 주기 길이 없이도 입력 윈도우별 주요 주파수를 독립 추출하여 과거 및 미래 주기 성분을 자동 생성합니다.');
+    text = text.replace(/The Horizon-Guided Patch Mixer introduces position-dependent refinement, allowing earlier patches to incorporate broader temporal context while preserving information close to the forecast boundary\./gi, '예측 경계 가이드 패치 믹서는 위치 의존적 정밀화를 도입하여 초기 패치에 넓은 시간 맥락을 부여하는 동시에 예측 경계 부근 정보를 손실 없이 보존합니다.');
+    text = text.replace(/CAMP further models the de-cycled residual through temporally aligned multi-resolution representations, enabling complementary dynamics at different scales to be captured within one forecasting framework\./gi, 'CAMP는 주기 제거 후 잔차 데이터를 시간 정렬된 다중 해상도 표현으로 모델링하여 단일 예보 프레임워크 내에서 다중 스케일 상호보완 동역학을 신속히 캡처합니다.');
+    text = text.replace(/Across seven long-term forecasting benchmarks, CAMP achieves the best average MSE on six datasets and the best or tied-best MAE on six\. It also obtains the highest MSE win count across sixteen settings on four PEMS traffic benchmarks\./gi, '7개 장기 예보 벤치마크 실험 결과, CAMP는 6개 데이터셋에서 최상위 평균 MSE 및 최상위 MAE를 기록했으며 4개 PEMS 교통 벤치마크 16개 환경에서 최다 승수를 달성했습니다.');
 
     // 영문 언어 설정 시에는 원문 영어 텍스트 정제 반환
     if (language === 'en') {
@@ -401,42 +416,61 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
         );
       }
 
-      // 7. * **👩‍💻 개발자/엔지니어**: ... 4대 직무별 인사이트 카드 및 난잡한 한 줄 나열 분리 수술
-      if (trimmed.includes('* **') || trimmed.includes('* 👩‍💻') || trimmed.includes('* 💡') || trimmed.includes('* 💼') || trimmed.includes('* 🔬') || (trimmed.startsWith('6.') && trimmed.includes('*'))) {
-        // 별표(*) 또는 숫자 기준 세부 불릿 항목 분리
-        let rawItems = trimmed.split(/(?=\*\s+|\*\s*\*\*|\*\s*👩‍💻|\*\s*💡|\*\s*💼|\*\s*🔬)/g);
+      // 7. * **👩‍💻 개발자/엔지니어**: ... 4대 직무별 인사이트 및 🔑 주요 기술적 차별점 불릿 카드 정밀 분리 수술
+      if (trimmed.includes('* **') || trimmed.includes('* 👩‍💻') || trimmed.includes('* 💡') || trimmed.includes('* 💼') || trimmed.includes('* 🔬') || trimmed.includes('🔑') || (trimmed.startsWith('6.') && trimmed.includes('*'))) {
+        // 별표(*) 또는 개행 기준 세부 불릿 항목 정밀 분리
+        let rawItems = trimmed.split(/(?=\*\s+|\*\s*\*\*|\*\s*👩‍💻|\*\s*💡|\*\s*💼|\*\s*🔬|\*\s*🔑)/g);
         if (rawItems.length <= 1) {
           rawItems = trimmed.split('\n');
         }
         
         return (
-          <div key={bIdx} className="space-y-4 my-6">
+          <div key={bIdx} className="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
             {rawItems.map((item: string, iIdx: number) => {
-              const cleanItem = formatTranslatedText(item.replace(/^6\.\s*🎯[^\*]*/, '').replace(/^[\*\-]\s*/, '').trim());
+              const cleanItem = formatTranslatedText(item.replace(/^6\.\s*🎯[^\*]*/, '').replace(/^[\*\-]\s*/, '').replace(/\*$/, '').trim());
               if (!cleanItem) return null;
 
-              let badgeColor = "bg-blue-50/90 text-blue-950 dark:bg-blue-950/60 dark:text-blue-200 border-blue-300 dark:border-blue-800";
-              let roleIcon = "💡";
+              // 콜론(:) 기준으로 타이틀과 설명 분리 파싱
+              let titlePart = "";
+              let descPart = cleanItem;
+              if (cleanItem.includes(':')) {
+                const colonIdx = cleanItem.indexOf(':');
+                titlePart = cleanItem.slice(0, colonIdx).trim();
+                descPart = cleanItem.slice(colonIdx + 1).trim();
+              }
+
+              let cardBg = "bg-slate-900/80 border-slate-800 text-slate-200";
+              let badgeBg = "bg-blue-500/20 text-blue-300 border-blue-400/30";
+              let roleIcon = "🔑";
 
               if (cleanItem.includes("개발자") || cleanItem.includes("엔지니어")) {
-                badgeColor = "bg-cyan-50/90 text-cyan-950 dark:bg-cyan-950/60 dark:text-cyan-200 border-cyan-300 dark:border-cyan-800";
+                cardBg = "bg-cyan-950/40 border-cyan-800/60 text-cyan-100";
+                badgeBg = "bg-cyan-500/20 text-cyan-300 border-cyan-400/40";
                 roleIcon = "👩‍💻";
               } else if (cleanItem.includes("기획자") || cleanItem.includes("PM")) {
-                badgeColor = "bg-purple-50/90 text-purple-950 dark:bg-purple-950/60 dark:text-purple-200 border-purple-300 dark:border-purple-800";
+                cardBg = "bg-purple-950/40 border-purple-800/60 text-purple-100";
+                badgeBg = "bg-purple-500/20 text-purple-300 border-purple-400/40";
                 roleIcon = "💡";
               } else if (cleanItem.includes("비즈니스") || cleanItem.includes("리더")) {
-                badgeColor = "bg-emerald-50/90 text-emerald-950 dark:bg-emerald-950/60 dark:text-emerald-200 border-emerald-300 dark:border-emerald-800";
+                cardBg = "bg-emerald-950/40 border-emerald-800/60 text-emerald-100";
+                badgeBg = "bg-emerald-500/20 text-emerald-300 border-emerald-400/40";
                 roleIcon = "💼";
               } else if (cleanItem.includes("연구자") || cleanItem.includes("학계")) {
-                badgeColor = "bg-amber-50/90 text-amber-950 dark:bg-amber-950/60 dark:text-amber-200 border-amber-300 dark:border-amber-800";
+                cardBg = "bg-amber-950/40 border-amber-800/60 text-amber-100";
+                badgeBg = "bg-amber-500/20 text-amber-300 border-amber-400/40";
                 roleIcon = "🔬";
               }
 
               return (
-                <div key={iIdx} className={`p-5 rounded-2xl border ${badgeColor} shadow-sm transition-all hover:shadow-md flex items-start gap-3.5`}>
-                  <span className="text-xl shrink-0 mt-0.5">{roleIcon}</span>
-                  <div className="text-sm sm:text-base leading-relaxed font-medium">
-                    {parseInlineMarkdown(cleanItem)}
+                <div key={iIdx} className={`p-4 rounded-2xl border ${cardBg} shadow-md flex flex-col justify-between space-y-2.5 transition-all hover:border-blue-500/50`}>
+                  <div className="flex items-center gap-2">
+                    <span className="text-base shrink-0">{roleIcon}</span>
+                    <span className={`text-xs font-black px-2.5 py-1 rounded-lg border ${badgeBg} truncate`}>
+                      {parseInlineMarkdown(titlePart || "핵심 요약")}
+                    </span>
+                  </div>
+                  <div className="text-xs sm:text-sm leading-relaxed font-normal text-slate-300 dark:text-slate-200">
+                    {parseInlineMarkdown(descPart)}
                   </div>
                 </div>
               );
