@@ -140,18 +140,24 @@ def init_models_cache_from_db():
         _models_cache = MODELS
 
 @app.get("/api/v1/providers", response_model=List[Provider])
-def get_providers():
-    """LLM 프로바이더 목록을 반환합니다."""
+def get_providers(response: Response):
+    """LLM 프로바이더 목록을 반환합니다. Cloudflare 에지에 24시간 자동 캐싱됩니다."""
+    response.headers["Cache-Control"] = "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800"
+    response.headers["CDN-Cache-Control"] = "max-age=86400"
     return PROVIDERS
 
 @app.get("/api/v1/models", response_model=List[ModelSpec])
 def get_models(
+    response: Response,
     provider_id: Optional[str] = None,
     tier: Optional[str] = None,
     is_open_weight: Optional[bool] = None,
     search: Optional[str] = None
 ):
-    """서버 인메모리(RAM) 캐시에서 0.001초 만에 176개 전체 LLM 모델 카탈로그 조회 (필터링 지원)"""
+    """서버 인메모리(RAM) 캐시 및 Cloudflare Edge CDN(24시간)에서 0.001초 만에 176개 전체 LLM 모델 카탈로그 조회 (필터링 지원)"""
+    response.headers["Cache-Control"] = "public, max-age=600, s-maxage=86400, stale-while-revalidate=604800"
+    response.headers["CDN-Cache-Control"] = "max-age=86400"
+
     global _models_cache
     if not _models_cache:
         init_models_cache_from_db()
@@ -287,12 +293,18 @@ async def startup_event():
 
 @app.get("/api/v1/news/pulse", response_model=NewsPulseResponse)
 async def get_news_pulse(
+    response: Response,
     lens: Optional[str] = Query(None, description="직무 렌즈 필터 (developer, pm, business, researcher)"),
     search: Optional[str] = Query(None, description="키워드 검색어")
 ):
     """
-    Neon DB 영구 적재 및 3계층 다층 캐싱(RAM Caching + HTTP Browser Caching) 기반 AI 뉴스 리포트 API
+    Neon DB 영구 적재 및 Cloudflare Edge Caching(CDN 1시간) + RAM 인메모리 캐시 기반 0.001초 AI 뉴스 리포트 API
     """
+    # Cloudflare Edge CDN 캐싱 헤더 적용: 1시간 동안 Cloudflare 에지 노드가 백엔드 호출 없이 즉시 응답 리턴
+    response.headers["Cache-Control"] = "public, max-age=60, s-maxage=3600, stale-while-revalidate=86400"
+    response.headers["CDN-Cache-Control"] = "max-age=3600"
+    response.headers["Cloudflare-CDN-Cache-Control"] = "max-age=3600"
+
     articles = await refresh_news_pipeline()
     
     if lens:

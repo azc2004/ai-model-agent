@@ -1311,6 +1311,28 @@ def refresh_all_articles_in_db() -> int:
     finally:
         db.close()
 
+def purge_cloudflare_cache():
+    """배치 완수 후 Cloudflare Edge CDN 캐시를 자동 갱신(Purge)하여 전세계 노드에 신규 피드를 즉시 반영합니다."""
+    zone_id = os.getenv("CLOUDFLARE_ZONE_ID")
+    api_token = os.getenv("CLOUDFLARE_API_TOKEN")
+    
+    if zone_id and api_token:
+        try:
+            import urllib.request
+            import json
+            url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/purge_cache"
+            headers = {
+                "Authorization": f"Bearer {api_token}",
+                "Content-Type": "application/json"
+            }
+            req = urllib.request.Request(url, data=json.dumps({"purge_everything": True}).encode(), headers=headers, method="POST")
+            with urllib.request.urlopen(req, timeout=5) as resp:
+                print(f"[Cloudflare CDN Purge] ✅ Cloudflare Edge Cache successfully purged! Status: {resp.status}")
+        except Exception as e:
+            print(f"[Cloudflare CDN Purge Notice] Cloudflare Cache Purge notice: {e}")
+    else:
+        print("[Cloudflare CDN Edge Cache] ⚡ Edge Caching Active with Cache-Control headers (s-maxage=3600).")
+
 async def run_batch_job(force: bool = False) -> List[NewsArticle]:
     """정기 배치 또는 수동 강제 실행 시 RSS 수집, AI 요약 및 Neon DB 영구 적재 파이프라인을 실행합니다."""
     global _news_cache
@@ -1365,6 +1387,10 @@ async def run_batch_job(force: bool = False) -> List[NewsArticle]:
 
     _news_cache["articles"] = articles
     _news_cache["last_updated"] = now
+    
+    # ⚡ Cloudflare Edge Cache Purge & Refresh 연동
+    purge_cloudflare_cache()
+    
     print(f"[NewsBatch] ✅ Batch Job Completed! Total {len(articles)} articles cached from Neon DB.")
     return articles
 
