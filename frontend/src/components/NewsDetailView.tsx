@@ -51,7 +51,7 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
       const trimmed = block.trim();
       if (!trimmed) return null;
 
-      // 1. 최상단 배너와 중복되는 # 📌 헤더 스킵 (대신 템플릿 배지 추출)
+      // 1. 최상단 배너와 중복되는 # 📌 헤더 스킵
       if (trimmed.startsWith('# 📌') || trimmed.startsWith('# [기술 리포트]')) {
         return null;
       }
@@ -72,6 +72,161 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
       // 3. --- 구분선
       if (trimmed === '---') {
         return <hr key={bIdx} className="border-t border-slate-200 dark:border-slate-800 my-8" />;
+      }
+
+      // ── 시각화 마커 ① [FLOW:type|step1|step2|...] ──────────────────────────────
+      if (trimmed.startsWith('[FLOW:')) {
+        const inner = trimmed.slice(6, trimmed.length - 1); // FLOW: 이후 ] 제거
+        const [flowType, ...steps] = inner.split('|');
+        const colorMap: Record<string, string[]> = {
+          sota:  ['bg-violet-600','bg-indigo-600','bg-blue-600','bg-cyan-600','bg-emerald-600'],
+          agent: ['bg-amber-500','bg-orange-500','bg-rose-500','bg-purple-600','bg-green-600'],
+          infra: ['bg-slate-600','bg-blue-700','bg-teal-600','bg-cyan-700','bg-emerald-700','bg-green-600'],
+        };
+        const colors = colorMap[flowType] ?? colorMap['sota'];
+        const gridCols = steps.length <= 4 ? `grid-cols-1 sm:grid-cols-${steps.length}` : 'grid-cols-2 sm:grid-cols-5';
+
+        return (
+          <div key={bIdx} className="my-8 p-5 sm:p-6 rounded-3xl bg-slate-950 border border-slate-800 shadow-2xl">
+            <div className="flex items-center gap-2 mb-5 pb-3 border-b border-slate-800">
+              <div className="w-3 h-3 rounded-full bg-red-500" />
+              <div className="w-3 h-3 rounded-full bg-yellow-500" />
+              <div className="w-3 h-3 rounded-full bg-green-500" />
+              <span className="text-xs font-mono text-slate-400 ml-2">architecture-pipeline.flow</span>
+            </div>
+            <div className={`grid ${gridCols} gap-3 items-center`}>
+              {steps.map((step, i) => (
+                <div key={i} className="flex flex-col items-center gap-1 relative">
+                  <div className={`w-full text-center text-xs font-bold py-3.5 px-3 rounded-2xl text-white shadow-lg ${colors[i % colors.length]}`}>
+                    <div className="text-[10px] opacity-75 mb-1 tracking-wider uppercase">STEP 0{i + 1}</div>
+                    {step}
+                  </div>
+                  {i < steps.length - 1 && (
+                    <div className="hidden sm:block absolute right-[-14px] top-1/2 -translate-y-1/2 z-10 text-slate-400 font-bold text-base">›</div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      }
+
+      // ── 시각화 마커 ② [CHART:type|label:val|label:val|...] ───────────────────
+      if (trimmed.startsWith('[CHART:')) {
+        const inner = trimmed.slice(7, trimmed.length - 1);
+        const [chartType, ...items] = inner.split('|');
+        const palette = ['bg-blue-500','bg-indigo-500','bg-violet-500','bg-cyan-500','bg-emerald-500','bg-amber-500'];
+        const isCommunity = chartType === 'community';
+
+        if (isCommunity) {
+          const parsed = items.map(item => {
+            const [label, valStr] = item.split(':');
+            return { label: label.trim(), val: parseInt(valStr ?? '0', 10) };
+          });
+          return (
+            <div key={bIdx} className="my-8 p-5 rounded-3xl bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 shadow-xl">
+              <div className="text-sm font-extrabold text-slate-300 mb-4 flex items-center gap-2">
+                <span>📊</span> 커뮤니티 반응 분포
+              </div>
+              <div className="space-y-3">
+                {parsed.map(({ label, val }, i) => (
+                  <div key={i} className="flex items-center gap-3">
+                    <div className="text-xs text-slate-400 w-28 shrink-0 text-right font-medium">{label}</div>
+                    <div className="flex-1 bg-slate-700 rounded-full h-4 overflow-hidden">
+                      <div
+                        className={`h-full rounded-full ${palette[i % palette.length]} transition-all duration-700`}
+                        style={{ width: `${val}%` }}
+                      />
+                    </div>
+                    <div className="text-xs font-black text-white w-10 text-right">{val}%</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        } else {
+          const parsed = items.map(item => {
+            const [label, valStr] = item.split(':');
+            return { label: label.trim(), val: parseInt(valStr ?? '0', 10) };
+          });
+          const maxVal = Math.max(...parsed.map(p => p.val));
+          return (
+            <div key={bIdx} className="my-8 p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 border border-indigo-800/50 shadow-xl">
+              <div className="text-sm font-extrabold text-indigo-300 mb-5 flex items-center gap-2">
+                <span>🏆</span> Benchmark Leaderboard
+              </div>
+              <div className="space-y-3">
+                {parsed.map(({ label, val }, i) => (
+                  <div key={i} className="flex items-center gap-3">
+                    <div className="text-xs font-mono text-slate-400 w-28 shrink-0 text-right">{label}</div>
+                    <div className="flex-1 bg-slate-800 rounded-lg h-6 overflow-hidden relative">
+                      <div
+                        className={`h-full rounded-lg ${palette[i % palette.length]} transition-all duration-700 flex items-center justify-end pr-2`}
+                        style={{ width: `${(val / (maxVal > 100 ? maxVal : 100)) * 100}%` }}
+                      >
+                        <span className="text-[11px] font-black text-white">{val}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        }
+      }
+
+      // ── 시각화 마커 ③ [TABLE:type|col1|col2|col3|row1c1|row1c2|row1c3|...] ──
+      if (trimmed.startsWith('[TABLE:')) {
+        const inner = trimmed.slice(7, trimmed.length - 1);
+        const parts = inner.split('|');
+        const tableType = parts[0];
+        const cells = parts.slice(1);
+
+        const colMap: Record<string, number> = { impact: 3, compare: 5, tco: 4, impact_sector: 3 };
+        const numCols = colMap[tableType] ?? 3;
+        const headers = cells.slice(0, numCols);
+        const rows: string[][] = [];
+        for (let i = numCols; i < cells.length; i += numCols) {
+          rows.push(cells.slice(i, i + numCols));
+        }
+
+        const badgeClass = (val: string) => {
+          if (val.includes('✅')) return 'text-emerald-400';
+          if (val.includes('❌')) return 'text-red-400';
+          if (val.includes('⚠️')) return 'text-amber-400';
+          if (val.includes('🔴')) return 'text-red-400 font-bold';
+          if (val.includes('🟠')) return 'text-orange-400 font-bold';
+          if (val.includes('🟡')) return 'text-yellow-400';
+          if (val.includes('🟢')) return 'text-green-400';
+          if (val.startsWith('+') || val.includes('향상')) return 'text-emerald-400 font-black';
+          if (val.startsWith('-') || val.includes('절감')) return 'text-cyan-400 font-black';
+          return 'text-slate-200';
+        };
+
+        return (
+          <div key={bIdx} className="my-8 overflow-x-auto rounded-2xl border border-slate-700 shadow-xl">
+            <table className="w-full text-sm text-left bg-slate-900 rounded-2xl overflow-hidden">
+              <thead>
+                <tr className="bg-gradient-to-r from-blue-700 to-indigo-700 text-white">
+                  {headers.map((h, i) => (
+                    <th key={i} className="px-4 py-3 font-extrabold text-xs uppercase tracking-wide">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((row, rIdx) => (
+                  <tr key={rIdx} className={rIdx % 2 === 0 ? 'bg-slate-900' : 'bg-slate-800/60'}>
+                    {row.map((cell, cIdx) => (
+                      <td key={cIdx} className={`px-4 py-3 text-xs ${cIdx === 0 ? 'font-bold text-slate-100' : badgeClass(cell)}`}>
+                        {cell}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
       }
 
       // 4. ### 3. 🌐 다중 소스 크로스 검증 섹션 렌더링 (Special Cross-Validation Box)
@@ -113,7 +268,7 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
         );
       }
 
-      // 5. #### H4 서브 헤더 파싱 (raw text 제거)
+      // 6. #### H4 서브 헤더 파싱
       if (trimmed.startsWith('#### ')) {
         const subheaderText = trimmed.replace(/^####\s*/, '');
         return (
@@ -121,74 +276,6 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
             <Sparkles className="w-4 h-4 text-blue-500" />
             {parseInlineMarkdown(subheaderText)}
           </h4>
-        );
-      }
-
-      // 6. 📐 시스템 아키텍처 & 플로우 도식화 파이프라인 박스 렌더링 (Special Visual Architecture Box)
-      if (trimmed.includes('🔑 주요 기술적 차별점') || trimmed.includes('아키텍처') || trimmed.includes('플로우')) {
-        const lines = trimmed.split('\n');
-        const headerTitle = lines[0]?.replace(/^####\s*/, '') || '🔑 주요 기술적 차별점';
-        const listItems = lines.slice(1).filter(l => l.trim().startsWith('*') || l.trim().startsWith('-'));
-
-        return (
-          <div key={bIdx} className="my-8 p-6 sm:p-8 rounded-3xl bg-slate-900 text-white shadow-xl border border-slate-800 space-y-6">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-red-500" />
-                <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                <div className="w-3 h-3 rounded-full bg-green-500" />
-                <span className="text-xs font-mono text-slate-400 ml-2">system-architecture-workflow.diag</span>
-              </div>
-              <span className="text-[11px] font-black tracking-wider uppercase bg-blue-600/30 text-blue-400 border border-blue-500/30 px-3 py-1 rounded-full">
-                SOTA Pipeline Diagram
-              </span>
-            </div>
-
-            {/* 도식화 메커니즘 흐름도 (Visual Diagram) */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-3 py-2 text-center text-xs font-bold">
-              <div className="p-3.5 rounded-2xl bg-slate-800/90 border border-slate-700 text-cyan-300 shadow">
-                1. Multi-Feed Ingestion<br/><span className="text-[10px] text-slate-400 font-normal">Realtime Stream Ingest</span>
-              </div>
-              <div className="p-3.5 rounded-2xl bg-slate-800/90 border border-slate-700 text-indigo-300 shadow">
-                2. LLM Reasoning Agent<br/><span className="text-[10px] text-slate-400 font-normal">Self-Correction Loop</span>
-              </div>
-              <div className="p-3.5 rounded-2xl bg-slate-800/90 border border-slate-700 text-purple-300 shadow">
-                3. Safety Guardrails<br/><span className="text-[10px] text-slate-400 font-normal">Security Validation</span>
-              </div>
-              <div className="p-3.5 rounded-2xl bg-blue-600 text-white shadow">
-                4. Production Servicing<br/><span className="text-[10px] text-blue-100 font-normal">0.1ms Instant Serve</span>
-              </div>
-            </div>
-
-            {/* 주요 기술적 차별점 리스트 (세로 찌그러짐 원천 방지 3컬럼 카드로 파싱) */}
-            <div className="space-y-3 pt-2">
-              <h4 className="text-sm font-extrabold text-blue-400 flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-blue-400" />
-                {parseInlineMarkdown(headerTitle)}
-              </h4>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {listItems.map((itemStr, idx) => {
-                  const cleanStr = itemStr.replace(/^[\*\-]\s*/, '').trim();
-                  const [itemTitle, ...itemBodyParts] = cleanStr.split(':');
-                  const itemBody = itemBodyParts.join(':').trim();
-
-                  return (
-                    <div key={idx} className="p-4 rounded-2xl bg-slate-800/80 border border-slate-700/80 space-y-1.5 shadow-sm">
-                      <div className="text-xs font-black text-cyan-400">
-                        {parseInlineMarkdown(itemTitle.trim())}
-                      </div>
-                      {itemBody && (
-                        <div className="text-xs text-slate-300 leading-relaxed">
-                          {parseInlineMarkdown(itemBody)}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
         );
       }
 
@@ -229,7 +316,7 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
         );
       }
 
-      // 일반 기술 문단
+      // 8. 일반 기술 문단
       return (
         <p key={bIdx} className="text-slate-700 dark:text-slate-300 leading-relaxed text-base sm:text-lg my-4">
           {parseInlineMarkdown(trimmed)}

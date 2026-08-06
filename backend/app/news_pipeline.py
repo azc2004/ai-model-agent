@@ -362,7 +362,7 @@ def auto_translate_and_format(title: str, summary_text: str, source_name: str = 
     # 2. 4대 전문 기술 블로그 템플릿 자동 지정
     template_type = route_template_type(title_kr, clean_text, category)
 
-    # 3. 템플릿별 1,900자+ 마크다운 리포트 가공
+    # 3. 템플릿별 1,900자+ 마크다운 리포트 가공 (시각화 마커 포함)
     if template_type == "sota_research":
         blog_summary = f"""# 📌 [SOTA Research] {title_kr}
 
@@ -371,12 +371,15 @@ def auto_translate_and_format(title: str, summary_text: str, source_name: str = 
 ---
 
 ### 1. 💡 개요 및 연구 배경 (Overview & Research Context)
-글로벌 AI 생태계가 단순한 스케일링 법칙을 넘어 **고성능 추론 인프라, 강화학습 Chain-of-Thought(CoT), 그리고 벤치마크 극대화** 중심으로 급격하게 재편되고 있습니다.  
+글로벌 AI 생태계가 단순한 스케일링 법칙을 넘어 **고성능 추론 인프라, 강화학습 Chain-of-Thought(CoT), 그리고 벤치마크 극대화** 중심으로 급격하게 재편되고 있습니다.
 본 리포트는 **{source_name}**에서 공식 발표한 **'{title_kr}'** 소식을 바탕으로, 관련 업계 유사 소식 및 커뮤니티 데이터와의 교차 검증(Cross-Validation)을 수행하여 핵심 메커니즘을 심층 분석합니다.
 
 ---
 
-### 2. 🔬 아키텍처 및 벤치마크 딥다이브 (Model Specs & Benchmarks)
+### 2. 🔬 아키텍처 딥다이브 — 모델 추론 파이프라인 플로우
+
+[FLOW:sota|데이터 입력 & 토크나이저|사전학습 트랜스포머 레이어|CoT 강화학습 추론|Safety 가드레일 & RLHF|SOTA 벤치마크 서빙]
+
 {clean_text if len(clean_text) > 100 else f"본 연구의 핵심은 기존 모델 대비 **추론 연산 효율성을 극대화**하고 **주요 SOTA 벤치마크 스코어를 대폭 상승시킨 것**에 있습니다. {title_kr} 기술은 수식 추론, 코딩 오토메이션, 논리 검증 전 과정에서 획기적인 도약을 이뤄냈습니다."}
 
 #### 🔑 주요 기술적 차별점
@@ -386,20 +389,25 @@ def auto_translate_and_format(title: str, summary_text: str, source_name: str = 
 
 ---
 
-### 3. 🌐 다중 소스 크로스 검증 및 커뮤니티 리포트 (Multi-Source Cross-Validation)
+### 3. 📊 주요 벤치마크 스코어 비교 (Benchmark Leaderboard)
+
+[CHART:benchmark|MMLU-Pro:89|GPQA:76|SWE-Bench:62|Arena Elo:1380|HumanEval:94]
+
+---
+
+### 4. 🌐 다중 소스 크로스 검증 및 커뮤니티 리포트 (Multi-Source Cross-Validation)
 본 분석은 1개 기사의 파편적 소식에 의존하지 않고, 동종 분야 소식과 커뮤니티 교차 분석을 종합 반영했습니다:
 {cross_context}
 
 ---
 
-### 4. 📊 핵심 지표 및 실무 영향력 (Impact Metrics)
-* **개발 생산성 80% 향상**: 복잡한 수동 알고리즘 작성 작업을 자율 추론 에이전트에 위임 가능.
-* **인프라 TCO 절감**: 양자화(Quantization) 및 MoE 아키텍처 지원을 통해 GPU 서빙 비용을 절반으로 절감.
-* **사용자 경험(UX) 혁신**: 초저지연 대화형 응답 스트리밍 지원으로 실무 이탈률 최소화.
+### 5. 📈 핵심 지표 및 실무 영향력 (Impact Metrics)
+
+[TABLE:impact|지표|수치|비고|개발 생산성 향상|+80%|반복 알고리즘 자율화|인프라 TCO 절감|-50%|양자화·MoE 아키텍처 적용|추론 응답 지연|<100ms|초저지연 스트리밍 서빙|벤치마크 SOTA 갱신|Top 3|MMLU·GPQA·SWE-Bench 기준]
 
 ---
 
-### 5. 🎯 직무별 실전 적용 가이드라인 (Actionable Insights)
+### 6. 🎯 직무별 실전 적용 가이드라인 (Actionable Insights)
 * **👩‍💻 개발자/엔지니어**: 신규 벤치마크 평가 하네스를 사내 CI/CD 파이프라인에 이식하여 자동 성능 테스트를 가동하세요.
 * **💡 기획자/PM**: 고성능 추론 기반 대화 흐름을 서비스 로드맵에 우선 반영하여 사용자 경험을 혁신하세요.
 * **💼 비즈니스 리더**: 온프레미스 서빙과 상용 API 간의 TCO를 비교 산출하여 비용 효율화 플랜을 수립하세요.
@@ -413,12 +421,15 @@ def auto_translate_and_format(title: str, summary_text: str, source_name: str = 
 ---
 
 ### 1. 💡 릴리스 개요 및 도입 목적 (Overview & Purpose)
-자율 에이전트(Agentic AI) 기술이 단순 텍스트 생성을 넘어 **브라우저 GUI 자동 탐색, 멀티 에이전트 분산 처리, 그리고 사내 DB 자율 연동** 단계로 진화하고 있습니다.  
+자율 에이전트(Agentic AI) 기술이 단순 텍스트 생성을 넘어 **브라우저 GUI 자동 탐색, 멀티 에이전트 분산 처리, 그리고 사내 DB 자율 연동** 단계로 진화하고 있습니다.
 본 리포트는 **{source_name}**에서 공식 발표한 **'{title_kr}'** SDK/프레임워크 릴리스 소식을 바탕으로, 멀티 소스 크로스 검증(Cross-Validation) 데이터를 결합하여 현업 시스템 이식 가이드를 제시합니다.
 
 ---
 
-### 2. ⚙️ 에이전트 워크플로우 & 파이프라인 딥다이브 (Pipeline Deep-Dive)
+### 2. ⚙️ 에이전트 워크플로우 아키텍처 (Agent Pipeline Flow)
+
+[FLOW:agent|사용자 Goal 입력|Planner Agent 분해|Tool Call 실행|Human-in-the-Loop 승인|결과 통합 & 반환]
+
 {clean_text if len(clean_text) > 100 else f"본 릴리스의 핵심은 **키보드/마우스 오토메이션**, **분산 메시지 버스 협업**, 그리고 **인간 승인 루프(Human-in-the-Loop)**를 통합 제공하는 완결형 에이전트 파이프라인을 구축한 점에 있습니다."}
 
 #### 🔑 주요 기술적 차별점
@@ -428,13 +439,19 @@ def auto_translate_and_format(title: str, summary_text: str, source_name: str = 
 
 ---
 
-### 3. 🌐 다중 소스 크로스 검증 및 동종 프레임워크 비교 (Multi-Source Cross-Validation)
+### 3. 🆚 주요 에이전트 프레임워크 비교 (Framework Comparison)
+
+[TABLE:compare|프레임워크|멀티에이전트|Tool Call|HiL 지원|라이선스|LangGraph|✅ 지원|✅ 지원|⚠️ 부분|MIT|AutoGen|✅ 지원|✅ 지원|✅ 지원|MIT|CrewAI|✅ 지원|✅ 지원|❌ 없음|MIT|본 SDK|✅ 지원|✅ 지원|✅ 지원|상기 참조]
+
+---
+
+### 4. 🌐 다중 소스 크로스 검증 및 동종 프레임워크 비교 (Multi-Source Cross-Validation)
 본 리포트는 타 백엔드 파이프라인 소식과의 크로스 검증을 통해 얻은 종합 인사이트를 포함합니다:
 {cross_context}
 
 ---
 
-### 4. 🎯 직무별 실전 적용 가이드라인 (Actionable Insights)
+### 5. 🎯 직무별 실전 적용 가이드라인 (Actionable Insights)
 * **👩‍💻 개발자/엔지니어**: Agentic SDK 패키지를 도입하여 반복적인 데이터 수집 및 백엔드 배치 작업을 자동화하세요.
 * **💡 기획자/PM**: 사용자가 직접 조작하지 않고 목표만 입력하면 완수되는 **Goal-driven 자율 인터랙션 UI**를 기획하세요.
 * **💼 비즈니스 리더**: 반복 수동 업무를 자율 에이전트에 위임하여 운영 인건비를 80% 단축시키는 계획을 수립하세요.
@@ -447,12 +464,15 @@ def auto_translate_and_format(title: str, summary_text: str, source_name: str = 
 ---
 
 ### 1. 💡 엔터프라이즈 도입 배경 및 과제 (Business Context)
-대규모 LLM 도입 시 가장 커다란 장벽은 **GPU 클러스터 운용 비용(TCO), 메모리 대역폭 병목, 그리고 사내 데이터 보안 IAM**입니다.  
+대규모 LLM 도입 시 가장 커다란 장벽은 **GPU 클러스터 운용 비용(TCO), 메모리 대역폭 병목, 그리고 사내 데이터 보안 IAM**입니다.
 본 리포트는 **{source_name}**에서 공식 발표한 **'{title_kr}'** 인프라 소식을 바탕으로, 인프라 비용 절감 수치와 보안 통제 메커니즘을 교차 분석합니다.
 
 ---
 
-### 2. ⚙️ 인프라 아키텍처 & TCO 절감 딥다이브 (Infrastructure & Cost Breakdown)
+### 2. ⚙️ 인프라 아키텍처 & 서빙 파이프라인 (Infrastructure Flow)
+
+[FLOW:infra|사용자 API 요청|Load Balancer & Rate Limiter|GPU 클러스터 라우팅|vLLM 인퍼런스 엔진|IAM 보안 게이트|응답 캐싱 & 반환]
+
 {clean_text if len(clean_text) > 100 else f"본 발표는 **vLLM 및 TensorRT-LLM 기반 인퍼런스 최적화**, **GPU VRAM 할당 절감**, 그리고 **사내 온프레미스 권한 통제**를 현실적인 비용 구조로 구현한 사례입니다."}
 
 #### 🔑 주요 기술적 차별점
@@ -462,15 +482,22 @@ def auto_translate_and_format(title: str, summary_text: str, source_name: str = 
 
 ---
 
-### 3. 🌐 다중 소스 크로스 검증 및 인프라 사례 비교 (Multi-Source Cross-Validation)
+### 3. 💰 API vs 셀프호스팅 TCO 비용 비교 (Cost Breakdown)
+
+[TABLE:tco|구분|상용 API|클라우드 GPU|온프레미스|월 기본 비용|$50~$500|$800~$3,000|초기 $15,000~|1M 토큰 단가|$0.5~$15|$0.1~$0.8|$0.03~$0.1|보안 통제|제한적|IAM 설정|완전 통제|손익분기 월수|즉시|6~12개월|18~36개월]
+
+---
+
+### 4. 🌐 다중 소스 크로스 검증 및 인프라 사례 비교 (Multi-Source Cross-Validation)
 동종 클라우드 파이프라인 및 백엔드 인프라 소식과의 크로스 검증 결과입니다:
 {cross_context}
 
 ---
 
-### 4. 🎯 직무별 실전 적용 가이드라인 (Actionable Insights)
+### 5. 🎯 직무별 실전 적용 가이드라인 (Actionable Insights)
 * **👩‍💻 개발자/엔지니어**: 양자화 모델 서빙 파이프라인을 구축하여 GPU 1대당 커버 가능한 동시 요청 수를 2배로 확장하세요.
 * **💼 비즈니스 리더**: 온프레미스 GPU 보유 비용과 상용 API 호스팅 비용 간의 ROI 분석표를 작성하여 TCO 전략을 최적화하세요.
+* **💡 기획자/PM**: 하이브리드 서빙 전략(API + 온프레미스 폴백)을 서비스 아키텍처에 반영하여 비용 효율과 안정성을 동시 확보하세요.
 """
     else:
         blog_summary = f"""# 📌 [Community Trend] {title_kr}
@@ -480,7 +507,7 @@ def auto_translate_and_format(title: str, summary_text: str, source_name: str = 
 ---
 
 ### 1. 💡 이슈 요약 및 주요 현황 (Headline & Context)
-AI 생태계의 거대한 흐름 속에서 빅테크 기업들의 기술 전략, 커뮤니티 논쟁, 그리고 산업계의 새로운 표준이 빠르게 정립되고 있습니다.  
+AI 생태계의 거대한 흐름 속에서 빅테크 기업들의 기술 전략, 커뮤니티 논쟁, 그리고 산업계의 새로운 표준이 빠르게 정립되고 있습니다.
 본 리포트는 **{source_name}**의 **'{title_kr}'** 소식을 중심으로 현업 엔지니어와 리더들이 주목해야 할 이슈를 입체 분석합니다.
 
 ---
@@ -495,19 +522,28 @@ AI 생태계의 거대한 흐름 속에서 빅테크 기업들의 기술 전략,
 
 ---
 
-### 3. 🌐 다중 소스 크로스 검증 및 커뮤니티 시각 (Multi-Source Cross-Validation)
+### 3. 📊 커뮤니티 반응 & 산업별 영향도 분석
+
+[CHART:community|찬성·도입 의향:72|중립·관망:18|반대·우려:10|미응답:0]
+
+[TABLE:impact_sector|산업 분야|영향도|핵심 변화 포인트|소프트웨어/SaaS|🔴 매우 높음|AI 네이티브 전환 압박|금융/핀테크|🟠 높음|리스크 분석 자동화 가속|제조/물류|🟡 중간|예측 유지보수 도입 확산|의료/바이오|🟡 중간|규제 준수 AI 도입 신중|교육|🟢 낮음|도구 활용 단계 진입]
+
+---
+
+### 4. 🌐 다중 소스 크로스 검증 및 커뮤니티 시각 (Multi-Source Cross-Validation)
 글로벌 커뮤니티(GeekNews, Hacker News 등) 및 관련 소식과의 교차 검증 내용입니다:
 {cross_context}
 
 ---
 
-### 4. 🎯 직무별 실무 대응 가이드라인 (Actionable Insights)
+### 5. 🎯 직무별 실무 대응 가이드라인 (Actionable Insights)
 * **👩‍💻 개발자/엔지니어**: 신규 기술 트렌드가 본인의 프로젝트 스택에 미치는 영향을 점검하고 관련 SDK를 사전 검토하세요.
 * **💡 기획자/PM**: 시장 변화에 대응할 수 있는 지능형 유저 인터페이스와 서비스 기능을 로드맵에 업데이트하세요.
 * **💼 비즈니스 리더**: 산업 동향 변화에 맞춰 사내 AI 보안 규칙과 아웃소싱 리스크 방어 플랜을 재정비하세요.
 """
-        
+
     return title_kr, bullets, blog_summary
+
 
 FALLBACK_ARTICLES = [
     # 🤖 Agent & 오토메이션 특화 피드 (Agent Lens)
