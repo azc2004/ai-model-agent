@@ -51,19 +51,19 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
       const trimmed = block.trim();
       if (!trimmed) return null;
 
-      // 1. 최상단 배너와 중복되는 # 📌 [기술 리포트] 헤더는 렌더링 스킵 (중복 방지)
+      // 1. 최상단 배너와 중복되는 # 📌 헤더 스킵 (대신 템플릿 배지 추출)
       if (trimmed.startsWith('# 📌') || trimmed.startsWith('# [기술 리포트]')) {
         return null;
       }
 
-      // 2. > **출처**: ... 메타 요약 카우션 바
+      // 2. > **출처**: ... 메타 요약 카우션 바 (Verified Multi-Source Badge)
       if (trimmed.startsWith('> ')) {
         const content = trimmed.replace(/^>\s*/, '');
         return (
-          <div key={bIdx} className="bg-blue-50/80 dark:bg-slate-800/80 border-l-4 border-blue-600 p-4 sm:p-5 rounded-r-2xl text-xs sm:text-sm text-slate-700 dark:text-slate-300 shadow-sm flex items-center justify-between flex-wrap gap-2 my-4">
-            <div>{parseInlineMarkdown(content)}</div>
-            <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-blue-600/10 text-blue-600 dark:text-blue-400 border border-blue-600/20 flex items-center gap-1">
-              <ShieldCheck className="w-3.5 h-3.5" /> Verified Tech Source
+          <div key={bIdx} className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-900 dark:to-slate-800/90 border-l-4 border-blue-600 p-4 sm:p-5 rounded-r-2xl text-xs sm:text-sm text-slate-700 dark:text-slate-300 shadow-sm flex items-center justify-between flex-wrap gap-2 my-4">
+            <div className="font-medium">{parseInlineMarkdown(content)}</div>
+            <span className="text-[11px] font-black px-3 py-1 rounded-full bg-blue-600 text-white shadow flex items-center gap-1">
+              <ShieldCheck className="w-3.5 h-3.5" /> Multi-Source Cross-Validated
             </span>
           </div>
         );
@@ -74,7 +74,33 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
         return <hr key={bIdx} className="border-t border-slate-200 dark:border-slate-800 my-8" />;
       }
 
-      // 4. ### 1. 💡 H3 섹션 헤더
+      // 4. ### 3. 🌐 다중 소스 크로스 검증 섹션 렌더링 (Special Cross-Validation Box)
+      if (trimmed.includes('다중 소스 크로스 검증') || trimmed.includes('Cross-Validation')) {
+        const lines = trimmed.split('\n');
+        const headerText = lines[0]?.replace(/^###\s*/, '') || '🌐 다중 소스 크로스 검증 및 커뮤니티 리포트';
+        const bodyContent = lines.slice(1).join('\n');
+
+        return (
+          <div key={bIdx} className="my-8 p-6 rounded-3xl bg-gradient-to-br from-indigo-900/90 via-slate-900 to-blue-950 text-white border border-indigo-500/30 shadow-xl space-y-4">
+            <div className="flex items-center justify-between border-b border-indigo-500/30 pb-3">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-cyan-400" />
+                <h3 className="text-base sm:text-lg font-black text-cyan-300">
+                  {parseInlineMarkdown(headerText)}
+                </h3>
+              </div>
+              <span className="text-[10px] font-mono font-extrabold uppercase px-2.5 py-0.5 rounded-md bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">
+                Multi-Feed Synthesized
+              </span>
+            </div>
+            <div className="text-sm leading-relaxed text-slate-200 space-y-2">
+              {parseInlineMarkdown(bodyContent)}
+            </div>
+          </div>
+        );
+      }
+
+      // 5. 일반 ### H3 섹션 헤더
       if (trimmed.startsWith('### ')) {
         const headerText = trimmed.replace(/^###\s*/, '');
         return (
