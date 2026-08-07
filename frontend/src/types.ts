@@ -55,6 +55,7 @@ export interface ModelSpec {
   supports_reasoning: boolean;
   supports_web_search: boolean;
   is_deprecated: boolean;
+  hardware_requirements?: any;
 }
 
 export interface GPUSpec {

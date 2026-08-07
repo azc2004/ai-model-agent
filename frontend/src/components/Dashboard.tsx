@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { ModelSpec, Provider } from '../types';
 import { useLanguage } from '../context/LanguageContext';
-import { API_BASE_URL } from '../api';
+import { fetchModels, fetchProviders } from '../api';
 import { CodeSnippetModal } from './CodeSnippetModal';
 
 interface DashboardProps {
@@ -76,15 +76,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
     const fetchData = async () => {
       try {
-        const [modelsRes, providersRes] = await Promise.all([
-          fetch(`${API_BASE_URL}/models`),
-          fetch(`${API_BASE_URL}/providers`)
+        const [modelsData, providersData] = await Promise.all([
+          fetchModels(),
+          fetchProviders()
         ]);
-        const modelsData = await modelsRes.json();
-        const providersData = await providersRes.json();
 
-        setModels(modelsData);
-        setProviders(providersData);
+        if (modelsData && modelsData.length > 0) setModels(modelsData);
+        if (providersData && providersData.length > 0) setProviders(providersData);
       } catch (err) {
         console.error('Failed to fetch catalog data:', err);
       } finally {
