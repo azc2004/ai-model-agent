@@ -477,8 +477,12 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
           {parseInlineMarkdown(formatTranslatedText(trimmed))}
         </p>
       );
+      i++;
+    }
+
     return elements;
   };
+
 
 
 
