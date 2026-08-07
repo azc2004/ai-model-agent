@@ -1,9 +1,10 @@
 import type { ModelSpec, Provider, GPUSpec, TCOInput, TCOComparisonResult } from './types';
 
-const rawBase = import.meta.env.VITE_API_BASE_URL || 'https://llm-compass-backend.onrender.com';
+const rawBase = import.meta.env.VITE_API_BASE_URL || (import.meta.env.DEV ? 'http://localhost:8000' : 'https://llm-compass-backend.onrender.com');
 export const API_BASE_URL = rawBase.endsWith('/api/v1') 
   ? rawBase 
   : `${rawBase.replace(/\/$/, '')}/api/v1`;
+
 
 // 백엔드가 Render 수면 상태(Spin Down)일 때 무한 로딩 갇힘을 방지하기 위한 타임아웃 헬퍼
 async function fetchWithTimeout(url: string, timeoutMs: number = 4000): Promise<Response> {
