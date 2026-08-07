@@ -314,23 +314,25 @@ def find_related_cross_context(title: str, text: str, category: str) -> tuple:
         source_names = []
 
         for art in db_articles:
-            # 동일 기사 제외
-            art_clean_title = art.title.replace(" 소식 및 기술 리포트", "")
-            if art_clean_title.lower() == clean_title.lower():
+            # 동일 기사 제외 및 제목 한글 번역
+            raw_t = art.title.replace(" 소식 및 기술 리포트", "").replace("소식 및 기술 리포트", "").strip()
+            art_clean_title = translate_title_to_korean(raw_t)
+            
+            if art_clean_title.lower() == clean_title.lower() or raw_t.lower() == clean_title.lower():
                 continue
             art_text = (art.title + " " + " ".join(art.summary_bullets or [])).lower()
             if any(kw in art_text for kw in keywords) or art.category == category:
                 bullet = (art.summary_bullets or [""])[0]
-                if bullet and len(bullet) > 20:
-                    # 영어 raw RSS 텍스트면 제목만 사용
-                    snippet = bullet[:120] if not bullet.startswith("Abstract:") else art.title
+                if bullet and len(bullet) > 20 and not bullet.startswith("Abstract:"):
+                    snippet = translate_text_to_korean(bullet[:120])
                 else:
-                    snippet = art.title
+                    snippet = f"'{art_clean_title}' 주제에 관한 핵심 기술 발표 리포트입니다."
                 matches.append(f"• **[{art.source_name}]** {art_clean_title}\n  → {snippet}")
                 if art.source_name not in source_names:
                     source_names.append(art.source_name)
                 if len(matches) >= 3:
                     break
+
 
         if matches:
             cross_text = "\n\n".join(matches)

@@ -92,6 +92,14 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
     return parts.map((part: string, idx: number) => {
       if (part.startsWith('**') && part.endsWith('**')) {
         const content = part.slice(2, -2);
+        // [Source Name] 대괄호 출처 태그는 선명한 시인성의 프리미엄 뱃지로 파싱 렌더링
+        if (content.startsWith('[') && content.endsWith(']')) {
+          return (
+            <span key={idx} className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-black bg-blue-600/30 text-cyan-300 border border-blue-400/40 shadow-sm mr-1.5 shrink-0">
+              {content}
+            </span>
+          );
+        }
         const boldColor = isDarkBg 
           ? "font-extrabold text-cyan-200 dark:text-cyan-300 drop-shadow-sm" 
           : "font-extrabold text-slate-900 dark:text-white";
@@ -161,8 +169,10 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
       }
     }
 
-    // 3. ArXiv 신규 학술 논문 1:1 완벽한 한글화 치환
-    text = text.replace(/OpenWorld Learning \(OWL\) pipelines for oil well anomaly detection have recently been shown to combine autoencoder-based detection, multi-class classification, and Mahalanobis-based novelty detection on the public 3W dataset\./gi, '유정 이상 탐지를 위한 개방형 세계 학습(OWL) 파이프라인은 공개 3W 데이터셋에서 오토인코더 기반 탐지, 다중 클래스 분류 및 마하노비스 기반 변형 탐지를 결합하여 뛰어난 성과를 입증했습니다.');
+    // 3. ArXiv 신규 학술 논문 및 주요 영문 제목 1:1 한글화 치환
+    text = text.replace(/Industry Leaders Unite in Open Secure AI Alliance for AI Safety and(?: 보안)?/gi, 'AI 안전 및 보안을 위한 오픈 보안 AI 얼라이언스 글로벌 리더 결성');
+    text = text.replace(/Memora: A Harmonic Memory Representation Balancing Abstraction and Specificity(?: 소식 및 기술 리포트)?/gi, '추상화와 구체성의 균형을 맞춘 조화로운 메모리 표현 기법 Memora');
+    text = text.replace(/Open World Learning \(OWL\) pipelines for oil well anomaly detection have recently been shown to combine autoencoder-based detection, multi-class classification, and Mahalanobis-based novelty detection on the public 3W dataset\./gi, '유정 이상 탐지를 위한 개방형 세계 학습(OWL) 파이프라인은 공개 3W 데이터셋에서 오토인코더 기반 탐지, 다중 클래스 분류 및 마하노비스 기반 변형 탐지를 결합하여 뛰어난 성과를 입증했습니다.');
     text = text.replace(/These pipelines answer what happened, but they do not explain why the model believes it or what the operator should do next, and they do not put a human-readable name on the novelty clusters they discover\./gi, '그러나 기존 파이프라인은 무슨 일이 일어났는지는 답할 수 있지만, 모델이 왜 그렇게 판단했는지나 운용자가 다음에 무엇을 수행해야 하는지는 설명하지 못하며, 새로 발견된 클러스터에 사람이 이해할 수 있는 명칭을 부여하지 못하는 한계가 있었습니다.');
     text = text.replace(/This paper evaluates a Large Language Model \(LLM\) agent layer placed downstream of the OWL pipeline, designed as a companion to the published upstream methods rather than a replacement\./gi, '본 논문은 이러한 한계를 극복하기 위해 OWL 파이프라인 후단에 대형 언어 모델(LLM) 에이전트 레이어를 배치하여, 기존 업스트림 기법을 대체하는 대신 상호보완적 자율 동반 모듈로 동작하도록 설계 및 평가했습니다.');
     text = text.replace(/Using the Qwen3\.5-397BA17B Mixture-of-Experts model served via NVIDIA NIM, the agent receives structured sensor metrics and upstream classification or novelty assertions, and returns natural-language justifications, confidence-ranked critiques, and consolidated names for detected novelties\./gi, 'NVIDIA NIM으로 서빙되는 Qwen3.5 Mixture-of-Experts 모델을 활용하여, 에이전트는 구조화된 센서 메트릭과 분류 판단을 수신하고 자연어 근거, 신뢰도 순위 비평 및 탐지된 변동에 대한 정밀 명칭을 자동 리턴합니다.');
@@ -179,6 +189,9 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
 
     // 4. 영문 피드 구문 단위 범용 동적 번역 헬퍼
     if (language === 'ko') {
+      text = text.replace(/Open Secure AI Alliance/gi, '오픈 보안 AI 얼라이언스');
+      text = text.replace(/Harmonic Memory Representation Balancing Abstraction and Specificity/gi, '추상화와 구체성의 균형을 맞춘 조화로운 메모리 표현 기법');
+      text = text.replace(/Industry Leaders Unite in/gi, '산업 리더 결성:');
       text = text.replace(/OpenWorld Learning \(OWL\) pipelines for/gi, '개방형 세계 학습(OWL) 파이프라인:');
       text = text.replace(/These pipelines answer/gi, '이 파이프라인은 다음을 설명합니다:');
       text = text.replace(/This paper evaluates/gi, '본 논문에서는 다음을 평가합니다:');
@@ -196,6 +209,7 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
 
     return text;
   };
+
 
   // 블로그 마크다운 구조를 라인 단위 state machine으로 파싱하여 프리미엄 기술 아티클 UI로 렌더링
   const renderMarkdownBlocks = (markdown: string) => {
@@ -462,14 +476,28 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
           else break;
         }
         elements.push(
-          <div key={nextKey()} className="my-3 p-4 bg-slate-900/60 rounded-xl border border-slate-800 space-y-1.5">
-            {bulletLines.map((bl, bi) => (
-              <div key={bi} className="text-xs sm:text-sm text-slate-400 leading-relaxed">{parseInlineMarkdown(formatTranslatedText(bl))}</div>
-            ))}
+          <div key={nextKey()} className="my-5 p-5 rounded-2xl bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white border border-indigo-500/40 shadow-xl space-y-3">
+            {bulletLines.map((bl, bi) => {
+              const translated = formatTranslatedText(bl);
+              const isHeaderLine = bl.startsWith('•');
+              return (
+                <div 
+                  key={bi} 
+                  className={
+                    isHeaderLine 
+                      ? "text-sm sm:text-base font-black text-white dark:text-white flex items-start gap-2 leading-snug tracking-tight" 
+                      : "text-xs sm:text-sm font-medium text-cyan-200 dark:text-cyan-200 pl-5 flex items-start gap-1.5 leading-relaxed"
+                  }
+                >
+                  {parseInlineMarkdown(translated, true)}
+                </div>
+              );
+            })}
           </div>
         );
         continue;
       }
+
 
       // 11. 일반 문단 — 번역 적용 후 렌더링
       elements.push(
