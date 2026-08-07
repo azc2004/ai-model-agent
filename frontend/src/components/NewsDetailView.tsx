@@ -197,17 +197,295 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
     return text;
   };
 
-  // 블로그 마크다운 구조를 프리미엄 전문 기술 아티클 UI로 파싱 렌더링
+  // 블로그 마크다운 구조를 라인 단위 state machine으로 파싱하여 프리미엄 기술 아티클 UI로 렌더링
   const renderMarkdownBlocks = (markdown: string) => {
-    const blocks = markdown.split('\n\n');
-    return blocks.map((block: string, bIdx: number) => {
-      const trimmed = block.trim();
-      if (!trimmed) return null;
+    const lines = markdown.split('\n');
+    const elements: React.ReactNode[] = [];
+    let i = 0;
+    let elKey = 0;
 
-      // 1. 최상단 배너와 중복되는 # 📌 헤더 스킵
-      if (trimmed.startsWith('# 📌') || trimmed.startsWith('# [기술 리포트]')) {
-        return null;
+    const nextKey = () => `md-${elKey++}`;
+
+    while (i < lines.length) {
+      const line = lines[i];
+      const trimmed = line.trim();
+
+      // 빈 줄 스킵
+      if (!trimmed) { i++; continue; }
+
+      // 1. 최상단 # 헤더 스킵
+      if (trimmed.startsWith('# ')) { i++; continue; }
+
+      // 2. > 메타 배너
+      if (trimmed.startsWith('> ')) {
+        const content = trimmed.replace(/^>\s*/, '');
+        elements.push(
+          <div key={nextKey()} className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-900 dark:to-slate-800/90 border-l-4 border-blue-600 p-4 sm:p-5 rounded-r-2xl text-xs sm:text-sm text-slate-700 dark:text-slate-300 shadow-sm flex items-center justify-between flex-wrap gap-2 my-4">
+            <div className="font-medium">{parseInlineMarkdown(formatTranslatedText(content))}</div>
+            <span className="text-[11px] font-black px-3 py-1 rounded-full bg-blue-600 text-white shadow flex items-center gap-1">
+              <ShieldCheck className="w-3.5 h-3.5" /> Multi-Source Cross-Validated
+            </span>
+          </div>
+        );
+        i++; continue;
       }
+
+      // 3. --- 구분선
+      if (trimmed === '---') {
+        elements.push(<hr key={nextKey()} className="border-t border-slate-200 dark:border-slate-800 my-8" />);
+        i++; continue;
+      }
+
+      // 4. [FLOW:...] 파이프라인 시각화
+      if (trimmed.startsWith('[FLOW:')) {
+        const inner = trimmed.slice(6, trimmed.length - 1);
+        const [flowType, ...steps] = inner.split('|');
+        const colorMap: Record<string, string[]> = {
+          sota:  ['bg-violet-600','bg-indigo-600','bg-blue-600','bg-cyan-600','bg-emerald-600'],
+          agent: ['bg-amber-500','bg-orange-500','bg-rose-500','bg-purple-600','bg-green-600'],
+          infra: ['bg-slate-600','bg-blue-700','bg-teal-600','bg-cyan-700','bg-emerald-700','bg-green-600'],
+        };
+        const colors = colorMap[flowType] ?? colorMap['sota'];
+        const gridCols = steps.length <= 4 ? `grid-cols-1 sm:grid-cols-${steps.length}` : 'grid-cols-2 sm:grid-cols-5';
+        elements.push(
+          <div key={nextKey()} className="my-8 p-5 sm:p-6 rounded-3xl bg-slate-950 border border-slate-800 shadow-2xl">
+            <div className="flex items-center gap-2 mb-5 pb-3 border-b border-slate-800">
+              <div className="w-3 h-3 rounded-full bg-red-500" /><div className="w-3 h-3 rounded-full bg-yellow-500" /><div className="w-3 h-3 rounded-full bg-green-500" />
+              <span className="text-xs font-mono text-slate-400 ml-2">architecture-pipeline.flow</span>
+            </div>
+            <div className={`grid ${gridCols} gap-3 items-center`}>
+              {steps.map((step, si) => (
+                <div key={si} className="flex flex-col items-center gap-1 relative">
+                  <div className={`w-full text-center text-xs font-bold py-3.5 px-3 rounded-2xl text-white shadow-lg ${colors[si % colors.length]}`}>
+                    <div className="text-[10px] opacity-75 mb-1 tracking-wider uppercase">STEP 0{si + 1}</div>
+                    {formatTranslatedText(step)}
+                  </div>
+                  {si < steps.length - 1 && <div className="hidden sm:block absolute right-[-14px] top-1/2 -translate-y-1/2 z-10 text-slate-400 font-bold text-base">›</div>}
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+        i++; continue;
+      }
+
+      // 5. [CHART:...] 차트 시각화
+      if (trimmed.startsWith('[CHART:')) {
+        const inner = trimmed.slice(7, trimmed.length - 1);
+        const parts = inner.split('|');
+        const chartType = parts[0];
+        const dataPairs = parts.slice(1).map(p => { const [label, val] = p.split(':'); return { label: label?.trim() || '', val: parseInt(val?.trim() || '0', 10) }; });
+        const maxVal = Math.max(...dataPairs.map(d => d.val), 1);
+        const barColors = ['bg-violet-500','bg-blue-500','bg-cyan-500','bg-emerald-500','bg-amber-500'];
+        elements.push(
+          <div key={nextKey()} className="my-6 p-5 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-xl">
+            <div className="text-[11px] font-mono text-slate-400 uppercase mb-4">{chartType} performance chart</div>
+            <div className="space-y-3">
+              {dataPairs.map((d, di) => (
+                <div key={di} className="flex items-center gap-3">
+                  <span className="text-xs text-slate-300 w-28 shrink-0 text-right font-medium">{d.label}</span>
+                  <div className="flex-1 bg-slate-800 rounded-full h-4 overflow-hidden">
+                    <div className={`h-full rounded-full ${barColors[di % barColors.length]} transition-all`} style={{ width: `${(d.val / maxVal) * 100}%` }} />
+                  </div>
+                  <span className="text-xs font-black text-white w-10 text-right">{d.val}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+        i++; continue;
+      }
+
+      // 6. [TABLE:...] 테이블 시각화
+      if (trimmed.startsWith('[TABLE:')) {
+        const inner = trimmed.slice(7, trimmed.length - 1);
+        const parts = inner.split('|');
+        const tableType = parts[0];
+        const cells = parts.slice(1);
+        const colCount = cells.length > 0 ? (tableType.includes('impact') ? 3 : tableType.includes('tco') ? 4 : tableType.includes('compare') ? 5 : 3) : 3;
+        const headers = cells.slice(0, colCount);
+        const rows: string[][] = [];
+        for (let ri = colCount; ri < cells.length; ri += colCount) { rows.push(cells.slice(ri, ri + colCount)); }
+        elements.push(
+          <div key={nextKey()} className="my-6 overflow-x-auto rounded-2xl border border-slate-800 shadow-xl">
+            <table className="w-full text-xs sm:text-sm text-left">
+              <thead className="bg-slate-900 text-cyan-300 border-b border-slate-700">
+                <tr>{headers.map((h, hi) => <th key={hi} className="px-4 py-3 font-black">{h}</th>)}</tr>
+              </thead>
+              <tbody>
+                {rows.map((row, ri) => (
+                  <tr key={ri} className={ri % 2 === 0 ? 'bg-slate-950' : 'bg-slate-900/60'}>
+                    {row.map((cell, ci) => <td key={ci} className="px-4 py-3 text-slate-300 font-medium">{cell}</td>)}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+        i++; continue;
+      }
+
+      // 7. ### H3 섹션 헤더 → 이후 연속된 [크로스 컨텍스트 블록 • **...**] 처리
+      if (trimmed.startsWith('### ')) {
+        const headerText = trimmed.replace(/^###\s*/, '');
+        elements.push(
+          <div key={nextKey()} className="flex items-center gap-2.5 mt-10 mb-4">
+            <div className="w-2.5 h-7 bg-blue-600 rounded-full shrink-0" />
+            <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+              {parseInlineMarkdown(formatTranslatedText(headerText))}
+            </h3>
+          </div>
+        );
+        i++; continue;
+      }
+
+      // 8. #### H4 서브헤더 → 다음 줄부터 나오는 * 불릿들을 카드 그리드로 묶어서 처리
+      if (trimmed.startsWith('#### ')) {
+        const subheaderText = trimmed.replace(/^####\s*/, '');
+        i++;
+        // 다음 줄들을 미리 살펴서 * 불릿이 있으면 카드로 처리
+        const bulletLines: string[] = [];
+        while (i < lines.length) {
+          const nextLine = lines[i];
+          const nextTrimmed = nextLine.trim();
+          if (!nextTrimmed) { i++; continue; } // 빈 줄은 스킵하되 계속 수집
+          if (nextTrimmed.startsWith('* ') || nextTrimmed.startsWith('- ')) {
+            bulletLines.push(nextTrimmed);
+            i++;
+          } else {
+            break; // 불릿 아닌 다른 구조가 나오면 수집 종료
+          }
+        }
+
+        if (bulletLines.length > 0) {
+          // 카드 그리드 렌더링
+          elements.push(
+            <div key={nextKey()} className="my-6 space-y-3">
+              <div className="flex items-center gap-2 text-base sm:text-lg font-black text-cyan-300 dark:text-cyan-300 border-b border-slate-800 pb-2">
+                <Sparkles className="w-4 h-4 text-cyan-400 shrink-0" />
+                <span>{parseInlineMarkdown(formatTranslatedText(subheaderText))}</span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {bulletLines.map((bulletLine, bi) => {
+                  let cleanItem = formatTranslatedText(bulletLine.replace(/^[*\-]\s*/, '').trim());
+                  cleanItem = cleanItem.replace(/^\*+|\*+$/g, '').trim();
+                  if (!cleanItem) return null;
+
+                  let titlePart = '';
+                  let descPart = cleanItem;
+                  if (cleanItem.includes(':')) {
+                    const colonIdx = cleanItem.indexOf(':');
+                    titlePart = cleanItem.slice(0, colonIdx).replace(/[*\-]/g, '').trim();
+                    descPart = cleanItem.slice(colonIdx + 1).replace(/^[*\-\s]+/, '').replace(/[*\s]+$/, '').trim();
+                  }
+
+                  let cardBg = 'bg-slate-900/90 border-slate-800 text-slate-200';
+                  let badgeBg = 'bg-blue-500/20 text-blue-300 border-blue-400/30';
+                  let roleIcon = '🔑';
+
+                  if (cleanItem.includes('개발자') || cleanItem.includes('엔지니어')) {
+                    cardBg = 'bg-cyan-950/40 border-cyan-800/60 text-cyan-100';
+                    badgeBg = 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40';
+                    roleIcon = '👩‍💻';
+                  } else if (cleanItem.includes('기획자') || cleanItem.includes('PM')) {
+                    cardBg = 'bg-purple-950/40 border-purple-800/60 text-purple-100';
+                    badgeBg = 'bg-purple-500/20 text-purple-300 border-purple-400/40';
+                    roleIcon = '💡';
+                  } else if (cleanItem.includes('비즈니스') || cleanItem.includes('리더')) {
+                    cardBg = 'bg-emerald-950/40 border-emerald-800/60 text-emerald-100';
+                    badgeBg = 'bg-emerald-500/20 text-emerald-300 border-emerald-400/40';
+                    roleIcon = '💼';
+                  } else if (cleanItem.includes('연구자') || cleanItem.includes('학계')) {
+                    cardBg = 'bg-amber-950/40 border-amber-800/60 text-amber-100';
+                    badgeBg = 'bg-amber-500/20 text-amber-300 border-amber-400/40';
+                    roleIcon = '🔬';
+                  }
+
+                  return (
+                    <div key={bi} className={`p-4 rounded-2xl border ${cardBg} shadow-lg flex flex-col justify-start space-y-2.5 transition-all hover:border-blue-500/50`}>
+                      <div className="flex items-start gap-2">
+                        <span className="text-base shrink-0 mt-0.5">{roleIcon}</span>
+                        <div className={`text-xs sm:text-sm font-black px-2.5 py-1 rounded-lg border ${badgeBg} leading-snug`}>
+                          {parseInlineMarkdown(titlePart || '핵심 기술 요소')}
+                        </div>
+                      </div>
+                      <div className="text-xs sm:text-sm leading-relaxed font-normal text-slate-300 dark:text-slate-200 pl-1">
+                        {parseInlineMarkdown(descPart)}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        } else {
+          // 불릿이 없으면 그냥 h4 헤더로
+          elements.push(
+            <h4 key={nextKey()} className="text-base sm:text-lg font-extrabold text-blue-600 dark:text-blue-400 mt-6 mb-3 flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-blue-500 shrink-0" />
+              {parseInlineMarkdown(formatTranslatedText(subheaderText))}
+            </h4>
+          );
+        }
+        continue;
+      }
+
+      // 9. 독립 불릿 리스트 (#### 헤더 없이 바로 나오는 경우)
+      if (trimmed.startsWith('* ') || trimmed.startsWith('- ')) {
+        const bulletLines: string[] = [];
+        while (i < lines.length) {
+          const bl = lines[i].trim();
+          if (bl.startsWith('* ') || bl.startsWith('- ')) { bulletLines.push(bl); i++; }
+          else if (!bl) { i++; break; }
+          else break;
+        }
+        elements.push(
+          <ul key={nextKey()} className="my-4 space-y-2 pl-2">
+            {bulletLines.map((bl, bi) => (
+              <li key={bi} className="flex items-start gap-2 text-slate-700 dark:text-slate-300 text-sm sm:text-base">
+                <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
+                <span>{parseInlineMarkdown(formatTranslatedText(bl.replace(/^[*\-]\s*/, '')))}</span>
+              </li>
+            ))}
+          </ul>
+        );
+        continue;
+      }
+
+      // 10. • 크로스 컨텍스트 블록 (• **[Source]** ...)
+      if (trimmed.startsWith('•')) {
+        const bulletLines: string[] = [];
+        while (i < lines.length) {
+          const bl = lines[i].trim();
+          if (bl.startsWith('•') || bl.startsWith('→')) { bulletLines.push(bl); i++; }
+          else if (!bl) { i++; break; }
+          else break;
+        }
+        elements.push(
+          <div key={nextKey()} className="my-3 p-4 bg-slate-900/60 rounded-xl border border-slate-800 space-y-1.5">
+            {bulletLines.map((bl, bi) => (
+              <div key={bi} className="text-xs sm:text-sm text-slate-400 leading-relaxed">{parseInlineMarkdown(formatTranslatedText(bl))}</div>
+            ))}
+          </div>
+        );
+        continue;
+      }
+
+      // 11. 일반 문단 — 번역 적용 후 렌더링
+      elements.push(
+        <p key={nextKey()} className="text-slate-700 dark:text-slate-300 leading-relaxed text-base sm:text-lg my-4 font-normal">
+          {parseInlineMarkdown(formatTranslatedText(trimmed))}
+        </p>
+      );
+      i++;
+    }
+
+    return elements;
+  };
+
+
+
+
 
       // 2. > **출처**: ... 메타 요약 카우션 바 (Verified Multi-Source Badge)
       if (trimmed.startsWith('> ')) {

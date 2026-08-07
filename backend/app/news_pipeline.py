@@ -104,177 +104,124 @@ def extract_image_url(entry: Any, raw_html: str, source_name: str, title: str = 
     # 6. 소스별 고품질 Unsplash AI 테마 이미지 폴백
     return DEFAULT_SOURCE_IMAGES.get(source_name, "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80")
 
+def _is_mostly_korean(text: str) -> bool:
+    """텍스트의 30% 이상이 한글이면 True를 반환합니다."""
+    if not text:
+        return False
+    korean_chars = sum(1 for c in text if '\uac00' <= c <= '\ud7a3')
+    return korean_chars >= len(text) * 0.3
+
+
+def _call_llm_translate(text: str, prompt_type: str = "body") -> str:
+    """Gemini/OpenAI API를 호출하여 영문 텍스트를 한국어로 번역합니다.
+    
+    Args:
+        text: 번역할 영문 텍스트
+        prompt_type: 'body' (본문/초록) 또는 'title' (제목)
+    Returns:
+        한국어 번역 텍스트. 실패 시 원본 반환.
+    """
+    try:
+        if prompt_type == "title":
+            system_msg = (
+                "You are a professional AI/ML technical translator. "
+                "Translate the given English article/paper title into natural Korean. "
+                "Keep model names, acronyms (LLM, SOTA, ArXiv, etc.) in their original English form. "
+                "Return ONLY the translated Korean title, no explanation."
+            )
+            user_msg = f"Translate to Korean: {text}"
+        else:
+            system_msg = (
+                "You are a professional AI/ML technical translator. "
+                "Translate the given English text into fluent, natural Korean suitable for a tech news article. "
+                "Keep model names, benchmark names, and technical acronyms (LLM, SOTA, ArXiv, RLHF, etc.) in English. "
+                "Remove any LaTeX formatting like \\textit{}, \\textbf{}, $...$ and render them as plain text. "
+                "Return ONLY the translated Korean text, no explanation or preamble."
+            )
+            user_msg = text
+
+        resp = client.chat.completions.create(
+            model=GENERATOR_MODEL,
+            messages=[
+                {"role": "system", "content": system_msg},
+                {"role": "user", "content": user_msg},
+            ],
+            max_tokens=1024,
+            temperature=0.2,
+        )
+        translated = resp.choices[0].message.content.strip()
+        if translated:
+            return translated
+    except Exception as e:
+        # ponytail: API 번역 실패 시 원본 텍스트를 반환하여 서비스 중단 방지
+        print(f"[LLM Translate Warning] API translation failed: {e}")
+    return text
+
+
 def translate_text_to_korean(text: str) -> str:
-    """영문 본문, 논문 초록 및 기술 요약 텍스트를 세련된 한국어 문장으로 자동 번역합니다."""
+    """영문 본문, 논문 초록 및 기술 요약 텍스트를 한국어로 번역합니다.
+    
+    이미 한국어가 30% 이상이면 정제만 하고 그대로 반환합니다.
+    영문 텍스트는 LLM API를 통해 실시간 번역합니다.
+    """
     if not text:
         return ""
-    
+
     clean = str(text).strip()
-    clean = re.sub(r'(\b[a-zA-Z]+)-\s+([a-zA-Z]+\b)', r'\1\2', clean)
-    clean = clean.replace("04048v1 Announce Type: new Abstract: ", "").replace("Announce Type: new Abstract: ", "").replace("Announce Type: cross Abstract: ", "")
+    # ArXiv 헤더 태그 제거
+    clean = re.sub(r'\d{5}v\d+\s+', '', clean)
+    clean = clean.replace("Announce Type: new Abstract: ", "")
+    clean = clean.replace("Announce Type: cross Abstract: ", "")
+    clean = clean.replace("Announce Type: new", "")
 
-    # 자주 출몰하는 학술 논문 및 글로벌 AI 속보 영문 문장 1:1 한글 번역 맵
-    text_rules = [
-        ("Robust and Personalized Federated Learning for Aircraft-Engine Prognostics under Benign and Adversarial Client Heterogeneity",
-         "건전 및 적대적 클라이언트 이질성 환경에서의 항공 엔진 상태 진단을 위한 강건하고 개인화된 연합 학습"),
-        ("Federated learning (FL) enables aircraft fleet operators to jointly train remaining-useful-life (RUL) models from engine sensor telemetry without sharing raw data.",
-         "연합 학습(FL)을 통해 항공기 운용사는 원시 데이터 공유 없이 엔진 센서 텔레메트리 데이터를 활용하여 잔여 유효 수명(RUL) 예측 모델을 공동 학습할 수 있습니다."),
-        ("This study examines two complementary challenges: benign heterogeneity, where honest operators observe different operating conditions and fault modes, and adversarial heterogeneity, where compromised operators submit poisoned updates.",
-         "본 연구는 두 가지 상호보완적 과제(정상 운용사의 다양한 동작 환경/고장 모드에 따른 일반 이질성과, 악의적 사용자가 오염된 업데이트를 제출하는 적대적 이질성)를 분석합니다."),
-        ("We conduct a controlled, safety-oriented evaluation using a multi-task one-dimensional convolutional neural network and a structurally non-IID partition of the Commercial Modular Aero-Propulsion System Simulation (C-MAPSS) benchmark.",
-         "본 연구는 1D-CNN 및 C-MAPSS 벤치마크의 비독립 동일 분포(non-IID) 분할 환경에서 안전성 중심 평가를 수행했습니다."),
-        ("Tactus: Open-Vocabulary Object Recognition from Low-Cost Pressure Arrays",
-         "저비용 압력 어레이 기반 개방형 어휘 물체 인식 모델 Tactus"),
-        ("Resistive pressure arrays are the cheapest and most widely shipped tactile sensors, yet tactile representation learning has concentrated on optical sensors that image a deforming gel.",
-         "저항성 압력 어레이는 가장 보급률이 높은 촉각 센서이지만, 기존 촉각 표현 학습은 변형 젤 방식 광학 센서에 치우쳐 있었습니다."),
-        ("We present Tactus, an open model that answers text queries from pressure data alone: on the STAG benchmark (27 objects, held-out recordings), it reaches 0.",
-         "본 논문은 압력 데이터만으로 텍스트 쿼리에 응답하는 오픈 인공지능 모델 Tactus를 제안합니다."),
-        ("Serving large language models (LLMs) under diverse deployment constraints requires flexible trade-offs between accuracy, memory footprint, and throughput.",
-         "다양한 배포 제약 조건에서 대형 언어 모델(LLM)을 서빙하려면 정확도, 메모리 점유율, 처리량 간의 유연한 트레이드오프가 필요합니다."),
-        ("However, conventional quantization methods typically require a separate checkpoint for each target bit-width.",
-         "그러나 기존 양자화 방식은 목표 비트 수(bit-width)마다 별도의 체크포인트를 유지해야 하는 비효율이 존재했습니다."),
-        ("We introduce Recurrent Residual Quantization (RRQ), a post-training quantization (PTQ) framework that represents weights as a low-bit quantized base together with a sequence of quantized residual corrections, enabling multiple effective precisions from a single checkpoint.",
-         "본 연구에서는 단일 체크포인트만으로 저비트 기반 가중치와 잔차 보정 시퀀스를 연결하여 다중 유효 정밀도를 지원하는 학습 후 양자화(PTQ) 프레임워크인 재귀 잔차 양자화(RRQ)를 제안합니다."),
-        ("Starting from a 2-bit model obtained via post-training quantization (PTQ) or round-to-nearest (RTN), RRQ progressively adds lightweight 2-bit residuals generated via RTN to construct 4-, 6-, and 8-bit representations.",
-         "RRQ는 2비트 기초 모델에서 시작하여 경량 2비트 잔차를 단계적으로 추가함으로써 4비트, 6비트, 8비트 모델 표현을 즉시 구성합니다."),
-        ("The method is calibration-free and avoids joint multi-bit optimization.",
-         "이 방법은 보정(Calibration) 과정 없이 동작하며 복잡한 다중 비트 동시 최적화 문제를 회피합니다."),
-        ("In our Qwen3-8B setup, the full all-RTN 2-/4-/6-/8-bit package is constructed in 1,293 seconds, 3.3 times faster than the measured MatGPTQ construction.",
-         "Qwen3-8B 실험 환경에서 전체 2/4/6/8비트 패키지 구성에 1,293초가 소요되어 기존 MatGPTQ 방식 대비 3.3배 빠른 속도를 기록했습니다."),
-        ("Experiments on six recent LLMs show competitive accuracy at 6 and 8 bits, with model-dependent behavior at 4 bits.",
-         "최신 6개 LLM 대상 실험 결과, 6비트 및 8비트에서 최상위권 정확도를 달성했으며 4비트에서도 우수한 보존율을 보였습니다."),
-        ("Real-world time series are often governed by recurring patterns, but their dominant periods may vary across datasets, forecasting settings, and individual input windows.",
-         "실세계 시계열 데이터는 주기적 패턴을 따르지만, 데이터셋 및 예보 구간에 따라 주요 주기가 다르게 나타납니다."),
-        ("Existing cycle-aware forecasters commonly rely on a single period selected at the dataset level, which can be restrictive when periodic behavior changes over time or when multiple cycles coexist.",
-         "기존 주기 인지 모델은 단일 주기에 의존하여 다중 주기가 동시 존재하는 복잡한 환경에서 명확한 한계를 보였습니다."),
-        ("Moreover, patch-based models typically process all patch positions uniformly, although patches farther from the forecast boundary may require broader contextual refinement, while recent patches contain information that should be preserved more directly.",
-         "또한 패치 기반 모델은 예측 경계와의 거리에 따른 컨텍스트 가중치를 유연하게 부여하지 못했습니다."),
-        ("We introduce CAMP, a Cycle-Aware Multi-Scale Patch Mixer designed to address these challenges.",
-         "본 논문은 이를 해결하기 위해 주기 인지형 다중 스케일 패치 믹서(CAMP) 아키텍처를 제안합니다.")
-    ]
+    if not clean:
+        return ""
 
-    for eng, kor in text_rules:
-        clean = clean.replace(eng, kor)
+    # 이미 한글이 충분히 포함되어 있으면 그대로 반환
+    if _is_mostly_korean(clean):
+        return clean
 
-    # 1. 크로스 검증 맥락 수집용 영문 단어 및 범용 구문 치환
-    clean = clean.replace("Federated learning (FL)", "연합 학습(FL)")
-    clean = clean.replace("Federated learning", "연합 학습")
-    clean = clean.replace("post-training quantization (PTQ)", "학습 후 양자화(PTQ)")
-    clean = clean.replace("post-training quantization", "학습 후 양자화")
-    clean = clean.replace("large language models (LLMs)", "대형 언어 모델(LLM)")
-    clean = clean.replace("large language models", "대형 언어 모델")
-    clean = clean.replace("time series forecasting", "시계열 예측")
-    clean = clean.replace("Single Checkpoint", "단일 체크포인트")
-    clean = clean.replace("Multi-Precision Representation", "다중 정밀도 표현")
+    # 텍스트가 너무 짧으면 번역 스킵 (의미 없는 단편 텍스트)
+    if len(clean) < 20:
+        return clean
 
-    return clean
+    return _call_llm_translate(clean, prompt_type="body")
+
 
 def translate_title_to_korean(title: str) -> str:
-    """모든 영어 원문 제목을 자연스러운 한국어 제목으로 100% 자동 번역합니다."""
+    """영어 원문 제목을 자연스러운 한국어 제목으로 번역합니다.
+    
+    이미 한국어가 30% 이상이면 그대로 반환합니다.
+    """
     if not title:
         return "최신 AI 기술 발표 피드 리포트"
 
     t_clean = str(title).strip()
-    
-    # 이미 한글이 절반 이상 포함되어 있다면 그대로 사용
-    korean_chars = sum(1 for char in t_clean if '\uac00' <= char <= '\ud7a3')
-    if korean_chars >= len(t_clean) * 0.3:
+    # ArXiv 헤더 제거
+    t_clean = re.sub(r'Announce Type:\s*(?:new|cross)\s*Abstract:\s*', '', t_clean).strip()
+
+    if not t_clean:
+        return "최신 AI 기술 발표 피드 리포트"
+
+    # 이미 한글이 충분히 포함되어 있으면 그대로 반환
+    if _is_mostly_korean(t_clean):
         return t_clean
 
-    # 대표적인 영문 제목 패턴 직접 매핑 룰
-    direct_maps = {
-        "Learning to Resolve Neutron Resonances with Fully Convolutional Neural Networks": "완전 합성곱 신경망(FCNN)을 활용한 중성자 공명 해석 자동화 모델",
-        "On Hamming-Lipschitz Type Stability of the Subdominant (Minmax) Ultrametric: Theory and Simple Proofs": "서브도미넌트(Minmax) 울트라메트릭의 해밍-립시츠 유형 안정성: 이론 및 정밀 증명",
-        "Recurrent Residual Quantization: A Progressive Multi-Precision Representation for LLMs": "LLM을 위한 점진적 다중 정밀도 표현: 재귀 잔차 양자화(RRQ)",
-        "How we built a realtime system for responsive voice AI in six months": "6개월 만에 완성한 대화형 실시간 음성 AI 시스템 구축기",
-        "Circles powers telco personalization with OpenAI technology": "Circles, OpenAI 기술 활용 통신 서비스 개인화 혁신",
-        "Third-party cyber evaluations involving OpenAI models": "OpenAI 모델 대상 제3자 사이버 보안 및 안전성 검증 평가",
-        "New ways to learn and teach with ChatGPT Work and Codex": "ChatGPT Work 및 Codex를 활용한 새로운 학습 및 교육 가이드라인",
-        "Apple is getting this wrong": "애플의 AI 전략과 기술적 착오에 대한 심층 분석",
-        "Got an Intel Mac? 6 ways you can repurpose it after support ends": "지원 종료된 인텔 맥북을 활용하는 6가지 실용적인 기술 방법론",
-        "Why R&D Waste Persists Despite Widespread AI Adoption": "AI 도입 확산에도 불구하고 R&D 비효율이 지속되는 원인 분석",
-        "Fridays With Bob": "AI 리더십 및 기술 혁신을 위한 인사이트 리포트",
-        "Are AI Models Working Harder Than They Need to?": "AI 모델의 비효율적 추론 연산 축소 및 최적화 방법론",
-        "Siobahn Day Grady Wants Everyone to Be AI Literate": "모두를 위한 AI 리터러시 교육의 필요성과 미래 전망",
-        "AI Is Hyper-Scaling Digital Inequality": "AI 기술의 격차로 인한 디지털 불평등 심화 현상 보고서",
-    }
-    if t_clean in direct_maps:
-        return direct_maps[t_clean]
+    translated = _call_llm_translate(t_clean, prompt_type="title")
 
-    # 구문 단위 자동 번역 규칙 맵
-    phrase_rules = [
-        ("Announce Type: new Abstract:", ""),
-        ("Announce Type: cross Abstract:", ""),
-        ("Recurrent Residual Quantization: A Progressive Multi-Precision Representation for LLMs", "LLM용 점진적 다중 정밀도 표현: 재귀 잔차 양자화(RRQ)"),
-        ("Recurrent Residual Quantization", "재귀 잔차 양자화(RRQ)"),
-        ("A Progressive Multi-Precision Representation for LLMs", "LLM용 점진적 다중 정밀도 표현"),
-        ("CAMP: A Cycle-Aware Multi-Scale Patch Mixer for Time Series Forecasting", "시계열 예측을 위한 주기 인지 다중 스케일 패치 믹서(CAMP) 아키텍처"),
-        ("A Cycle-Aware Multi-Scale Patch Mixer for Time Series Forecasting", "시계열 예측을 위한 주기 인지 다중 스케일 패치 믹서 아키텍처"),
-        ("for Time Series Forecasting", "시계열 예측 및 분석을 위한"),
-        ("Multi-Scale Patch Mixer", "다중 스케일 패치 믹서"),
-        ("Cycle-Aware", "주기 인지형"),
-        ("New ways to learn and teach with", "활용 새로운 학습 및 교육 방법:"),
-        ("Apple is getting this wrong", "애플의 AI 전략과 기술적 착오 분석"),
-        ("Got an Intel Mac?", "인텔 맥북 활용법:"),
-        ("Why R&D Waste Persists", "R&D 비효율이 지속되는 이유:"),
-        ("Are AI Models Working Harder", "AI 모델 연산 최적화 필요성:"),
-        ("How we built a", "구축기:"),
-        ("How we built", "구축기:"),
-        ("How to build", "구축 방법:"),
-        ("realtime system for responsive voice AI", "실시간 대화형 음성 AI 시스템"),
-        ("in six months", "(6개월 간의 여정)"),
-        ("powers telco personalization with", "기반 통신 서비스 개인화 혁신"),
-        ("Third-party cyber evaluations involving", "대상 제3자 사이버 보안 검증 평가"),
-        ("OpenAI models", "OpenAI 모델"),
-        ("OpenAI technology", "OpenAI 기술"),
-        ("ChatGPT Work and Codex", "ChatGPT Work 및 Codex"),
-        ("introduces new safeguards", "신규 보안 가드레일 공식 공개"),
-        ("strengthen AI model testing", "AI 모델 안전성 테스트 및 평가 검증 강화"),
-        ("fine-tuning API", "파인튜닝 API 정식 출시"),
-        ("autonomous coding agent", "자율 코딩 개발 에이전트"),
-        ("open-weights", "오픈 웨이트 모델"),
-        ("accelerates data operations using Agentic AI on AWS", "AWS 환경에서 에이전트 AI로 데이터 운용 속도 대폭 향상"),
-    ]
-    
-    translated = t_clean
-    for eng, kor in phrase_rules:
-        translated = translated.replace(eng, kor)
-
-    # 영문 단어 직역 및 보정 맵
-    word_maps = {
-        "Building": "구축",
-        "Introducing": "공개:",
-        "Announcing": "발표:",
-        "Scaling": "확장",
-        "Empowering": "혁신:",
-        "Evaluating": "평가:",
-        "Models": "모델",
-        "Model": "모델",
-        "Agent": "에이전트",
-        "Agents": "에이전트",
-        "Benchmark": "벤치마크",
-        "System": "시스템",
-        "Realtime": "실시간",
-        "Voice": "음성",
-        "OpenSource": "오픈소스",
-        "Open-Sources": "오픈소스 공개:",
-        "Releases": "출시:",
-        "Platform": "플랫폼",
-        "Security": "보안",
-        "Privacy": "프라이버시",
-        "Analysis": "분석",
-        "Guide": "가이드라인",
-    }
-
-    words = translated.split()
-    translated_words = [word_maps.get(w, w) for w in words]
-    translated = " ".join(translated_words)
-
-    # 여전히 한글이 부족하다면 접미어 보정으로 한국어 타이틀로 완성
-    if not any('\uac00' <= char <= '\ud7a3' for char in translated):
+    # 번역 실패(원본 영문 그대로) 시 접미어 보정
+    if not _is_mostly_korean(translated):
         translated = f"{translated} 소식 및 기술 리포트"
 
     return translated
+
+
+
+
+
+
+
+
 
 def classify_article_lenses(title: str, text: str, source_name: str, category: str) -> List[str]:
     """기사의 제목, 본문, 출처를 바탕으로 6대 스마트 직무 렌즈를 정밀 추론 및 도출합니다."""
@@ -1459,7 +1406,71 @@ async def start_news_batch_loop():
         except Exception as e:
             print(f"[NewsBatch Error] Exception during scheduled batch execution: {e}")
         
+        
         # 24시간(86400초) 대기 후 다음 배치 실행
         await asyncio.sleep(CACHE_TTL)
+
+
+async def retranslate_db_articles(limit: int = 50) -> dict:
+    """DB에 저장된 영문 기사들을 LLM 번역으로 일괄 재번역하여 업데이트합니다.
+    
+    Args:
+        limit: 최대 처리할 기사 수 (기본값: 50)
+    Returns:
+        처리 결과 딕셔너리 {updated: int, skipped: int, failed: int}
+    """
+    result = {"updated": 0, "skipped": 0, "failed": 0}
+    try:
+        db = SessionLocal()
+        articles_db = db.query(NewsArticleDB).order_by(NewsArticleDB.created_at.desc()).limit(limit).all()
+        
+        for art in articles_db:
+            try:
+                blog_text = art.blog_summary or ""
+                korean_chars = sum(1 for c in blog_text if '\uac00' <= c <= '\ud7a3')
+                korean_ratio = korean_chars / max(len(blog_text), 1)
+                
+                if korean_ratio >= 0.2:
+                    result["skipped"] += 1
+                    continue
+                
+                print(f"[Retranslate] Processing: {art.title[:60]}...")
+                
+                raw_summary = " ".join(art.summary_bullets or [])
+                new_title, new_bullets, new_blog_summary = auto_translate_and_format(
+                    title=art.title,
+                    summary_text=raw_summary,
+                    source_name=art.source_name or "AI Tech Feed",
+                    category=art.category or "빅테크 공식"
+                )
+                
+                art.title = new_title
+                art.summary_bullets = new_bullets
+                art.blog_summary = new_blog_summary
+                db.commit()
+                result["updated"] += 1
+                
+                # ponytail: rate limit 방어 — 배치 번역 중 API 쿼터 초과 방지
+                await asyncio.sleep(0.5)
+                
+            except Exception as e:
+                print(f"[Retranslate] Failed for article {art.id}: {e}")
+                result["failed"] += 1
+                db.rollback()
+                continue
+        
+        db.close()
+        
+        # 캐시 무효화 (재번역 후 다음 요청 시 DB에서 새로 로드)
+        global _news_cache
+        _news_cache["articles"] = []
+        _news_cache["last_updated"] = 0.0
+        print(f"[Retranslate] ✅ Done! updated={result['updated']}, skipped={result['skipped']}, failed={result['failed']}")
+    except Exception as e:
+        print(f"[Retranslate] Critical error: {e}")
+        result["failed"] += 1
+    
+    return result
+
 
 

@@ -258,7 +258,7 @@ def generate_custom_markdown(req: CustomMarkdownRequest):
         raise HTTPException(status_code=500, detail=f"마크다운 생성 중 오류가 발생했습니다: {str(e)}")
 
 import asyncio
-from app.news_pipeline import refresh_news_pipeline, start_news_batch_loop, run_batch_job, init_news_cache_from_db
+from app.news_pipeline import refresh_news_pipeline, start_news_batch_loop, run_batch_job, init_news_cache_from_db, retranslate_db_articles
 
 async def _delayed_batch_loop():
     """서버 안정화 후 (60초 대기) 뉴스 배치 루프를 가동합니다.
@@ -336,4 +336,13 @@ async def force_refresh_news_pulse():
         "articles": articles,
         "total_count": len(articles),
         "last_updated": datetime.now(timezone.utc).isoformat()
+    }
+
+@app.post("/api/v1/news/admin/retranslate")
+async def admin_retranslate_articles(limit: int = 50):
+    """(관리자용) 기존 DB의 영문 기사들을 Gemini LLM을 사용하여 일괄 재번역합니다."""
+    result = await retranslate_db_articles(limit=limit)
+    return {
+        "message": "재번역 배치 작업이 완료되었습니다.",
+        "result": result
     }
