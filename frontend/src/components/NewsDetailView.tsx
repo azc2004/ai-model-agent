@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowLeft, ExternalLink, Share2, Sparkles, Building2, Calendar, ShieldCheck } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import type { Language } from '../i18n/translations';
@@ -84,6 +84,13 @@ const MULTILINGUAL_ARTICLE_MAP: Record<string, Record<Language, string>> = {
 export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
   const [imgError, setImgError] = useState(false);
   const { language } = useLanguage();
+
+  // 🚀 기사 상세 페이지 진입/기사 변경 시 화면 최상단으로 자동 스크롤 및 포커싱
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, [article?.id]);
 
   // 텍스트 내의 **볼드** 문법을 <strong> 태그로 정밀 전환 파싱하는 인라인 마크다운 렌더러 (어두운 배경 대응)
   const parseInlineMarkdown = (text: string, isDarkBg: boolean = false) => {
