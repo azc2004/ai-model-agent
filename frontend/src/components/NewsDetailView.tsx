@@ -101,18 +101,40 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
     });
   };
 
+  // 📐 LaTeX 수식 표기 및 특수 문법 모던 웹 텍스트로 자동 정제
+  const cleanLaTeXAndFormatting = (text: string): string => {
+    if (!text) return '';
+    let clean = text;
+
+    clean = clean.replace(/C\$\^2\$\s*MOE/gi, 'C²MOE');
+    clean = clean.replace(/\$\^2\$/g, '²');
+    clean = clean.replace(/\$\^1\$/g, '¹');
+    clean = clean.replace(/\$\^3\$/g, '³');
+    clean = clean.replace(/\$\\ell_\\infty\$/gi, 'ℓ∞');
+    clean = clean.replace(/\$\\ell_0\$/gi, 'ℓ₀');
+    clean = clean.replace(/\$\\ell_1\$/gi, 'ℓ₁');
+    clean = clean.replace(/\$\\ell_2\$/gi, 'ℓ₂');
+    clean = clean.replace(/\\mathbf\{([^}]+)\}/g, '$1');
+    clean = clean.replace(/\\mathit\{([^}]+)\}/g, '$1');
+    clean = clean.replace(/\$([^\$]+)\$/g, '$1');
+
+    clean = clean.replace(/([a-zA-Z]+)-\s*[\r\n]*\s*([a-zA-Z]+)/g, '$1$2');
+    clean = clean.replace(/Poseagnostic/gi, 'Pose-agnostic');
+    clean = clean.replace(/anomalyfree/gi, 'anomaly-free');
+    clean = clean.replace(/imagespace/gi, 'image-space');
+
+    return clean.trim();
+  };
+
   // 🌐 다국어 지원 모듈(LanguageContext)과 동적 연동되는 7개 국어 기사 번역 파서
   const formatTranslatedText = (rawText: string) => {
     if (!rawText) return '';
-    let text = rawText;
+    let text = cleanLaTeXAndFormatting(rawText);
 
-    // 1. ArXiv PDF 및 OCR 텍스트 내의 하이픈 줄바꿈 단어 자동 복원 (예: uni- formly -> uniformly, fre- quencies -> frequencies, Af- ter -> After, de- scribed -> described)
-    text = text.replace(/([a-zA-Z]+)-\s*[\r\n]*\s*([a-zA-Z]+)/g, '$1$2');
-
-    // 2. ArXiv 번호 및 헤더 태그 정밀 제거
+    // 1. ArXiv 번호 및 헤더 태그 정밀 제거
     text = text.replace(/(?:\d{5}v\d+\s+)?(?:arXiv:\d+\.\d+v?\d*\s+)?Announce Type:\s*(?:new|cross)\s*Abstract:\s*/gi, '');
     
-    // 3. 다국어 지원 모듈 딕셔너리 연동 매핑
+    // 2. 다국어 지원 모듈 딕셔너리 연동 매핑
     for (const [engPhrase, translationsMap] of Object.entries(MULTILINGUAL_ARTICLE_MAP)) {
       if (text.includes(engPhrase)) {
         const targetTranslation = translationsMap[language] || translationsMap['en'] || engPhrase;
@@ -120,7 +142,15 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
       }
     }
 
-    // 4. CAMP 및 시계열 논문 핵심 문장 1:1 완벽한 한글화 치환 (하이픈 복원 후 매칭)
+    // 3. ArXiv 신규 학술 논문 1:1 완벽한 한글화 치환
+    text = text.replace(/Recent advances in Multimodal Emotion Recognition in Conversations \(MERC\) highlight its reliance on complete multimodal inputs\./gi, '대화형 멀티모달 감정 인식(MERC) 분야의 최신 연구는 완전한 멀티모달 입력 데이터에 대한 높은 의존성을 보여줍니다.');
+    text = text.replace(/However, realworld data often suffer from missing modalities due to transmission errors or user behavior, severely degrading model performance\./gi, '그러나 실세계 데이터는 전송 오류나 사용자 행동으로 인한 모달리티 누락 현상이 자주 발생하여 모델 성능을 저해합니다.');
+    text = text.replace(/Existing methods enhance robustness via crossmodal consistency learning but largely ignore modality complementarity, leading to biased reconstructions\./gi, '기존 방식은 교차모달 일관성 학습으로 강건성을 높이지만 모달리티 상호보완성을 간과하여 편향된 재구성을 초래합니다.');
+
+    text = text.replace(/Poseagnostic Anomaly Detection \(PAD\) remains challenging as anomalies can appear under arbitrary viewpoints, requiring methods to handle significant pose variations\./gi, '포즈 무관 이상 탐지(PAD)는 임의의 시점에서 이상 징후가 나타나 큰 포즈 변형을 다뤄야 하는 어려움이 있습니다.');
+    text = text.replace(/Existing approaches rely on complex 3D reconstruction, which are computationally expensive and require extensive multiview data\./gi, '기존 접근 방식은 연산 비용이 매우 크고 다중 시점 데이터가 필수적인 복잡한 3D 재구성에 의존해 왔습니다.');
+    text = text.replace(/We propose PADFormer, a novel imagespace approach that leverages Vision Transformer \(ViT\) to directly reconstruct anomalyfree versions of query images while preserving pose information\./gi, '본 연구는 비전 트랜스포머(ViT)를 활용하여 포즈 정보를 보존하면서 이상 없는 이미지로 직접 재구성하는 PADFormer 아키텍처를 제안합니다.');
+
     text = text.replace(/Real-world time series are often governed by recurring patterns, but their dominant periods may vary across datasets, forecasting settings, and individual input windows\./gi, '실세계 시계열 데이터는 주기적 패턴을 따르지만, 데이터셋 및 예보 구간에 따라 주요 주기가 다르게 나타납니다.');
     text = text.replace(/Existing cycle-aware forecasters commonly rely on a single period selected at the dataset level, which can be restrictive when periodic behavior changes over time or when multiple cycles coexist\./gi, '기존 주기 인지 모델은 단일 주기에 의존하여 다중 주기가 동시 존재하는 복잡한 환경에서 명확한 한계를 보였습니다.');
     text = text.replace(/Moreover, patch-based models typically process all patch positions uniformly, although patches farther from the forecast boundary may require broader contextual refinement, while recent patches contain information that should be preserved more directly\./gi, '또한 패치 기반 모델은 모든 패치 위치를 균일하게 처리하지만, 예측 경계에서 멀어진 패치는 더 넓은 맥락 정밀화가 필요한 반면 최근 패치는 직접적 정보를 보존해야 합니다.');
@@ -131,9 +161,15 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
     text = text.replace(/CAMP further models the de-cycled residual through temporally aligned multi-resolution representations, enabling complementary dynamics at different scales to be captured within one forecasting framework\./gi, 'CAMP는 주기 제거 후 잔차 데이터를 시간 정렬된 다중 해상도 표현으로 모델링하여 단일 예보 프레임워크 내에서 다중 스케일 상호보완 동역학을 신속히 캡처합니다.');
     text = text.replace(/Across seven long-term forecasting benchmarks, CAMP achieves the best average MSE on six datasets and the best or tied-best MAE on six\. It also obtains the highest MSE win count across sixteen settings on four PEMS traffic benchmarks\./gi, '7개 장기 예보 벤치마크 실험 결과, CAMP는 6개 데이터셋에서 최상위 평균 MSE 및 최상위 MAE를 기록했으며 4개 PEMS 교통 벤치마크 16개 환경에서 최다 승수를 달성했습니다.');
 
-    // 영문 언어 설정 시에는 원문 영어 텍스트 정제 반환
-    if (language === 'en') {
-      return text;
+    // 4. 영문 피드 구문 단위 범용 동적 번역 헬퍼
+    if (language === 'ko') {
+      text = text.replace(/Recent advances in/gi, '최신 기술 발전:');
+      text = text.replace(/highlight its reliance on/gi, '의존성을 보여주며');
+      text = text.replace(/severely degrading model performance/gi, '모델 성능 감소를 유발합니다.');
+      text = text.replace(/Existing methods/gi, '기존 연구 기법은');
+      text = text.replace(/Existing approaches/gi, '기존 접근 방식은');
+      text = text.replace(/We propose/gi, '본 논문에서는');
+      text = text.replace(/This work investigates/gi, '본 연구는');
     }
 
     return text;

@@ -607,18 +607,42 @@ export default function NewsPulseView() {
   const { language } = useLanguage();
   const t = I18N_TEXTS[language as keyof typeof I18N_TEXTS] || I18N_TEXTS.en;
 
+  // 📐 LaTeX 수식 표기 및 특수 문법 모던 웹 텍스트로 자동 정제
+  const cleanLaTeXAndFormatting = (text: string): string => {
+    if (!text) return '';
+    let clean = text;
+
+    // 1. TeX 위수/하수 수식 정제 (예: C$^2$MOE -> C²MOE, C$^1$ -> C¹)
+    clean = clean.replace(/C\$\^2\$\s*MOE/gi, 'C²MOE');
+    clean = clean.replace(/\$\^2\$/g, '²');
+    clean = clean.replace(/\$\^1\$/g, '¹');
+    clean = clean.replace(/\$\^3\$/g, '³');
+    clean = clean.replace(/\$\\ell_\\infty\$/gi, 'ℓ∞');
+    clean = clean.replace(/\$\\ell_0\$/gi, 'ℓ₀');
+    clean = clean.replace(/\$\\ell_1\$/gi, 'ℓ₁');
+    clean = clean.replace(/\$\\ell_2\$/gi, 'ℓ₂');
+    clean = clean.replace(/\\mathbf\{([^}]+)\}/g, '$1');
+    clean = clean.replace(/\\mathit\{([^}]+)\}/g, '$1');
+    clean = clean.replace(/\$([^\$]+)\$/g, '$1'); // 일반 인라인 TeX $...$ 제거
+
+    // 2. OCR/PDF 영문 줄바꿈 하이픈 결합
+    clean = clean.replace(/([a-zA-Z]+)-\s*[\r\n]*\s*([a-zA-Z]+)/g, '$1$2');
+    clean = clean.replace(/Poseagnostic/gi, 'Pose-agnostic');
+    clean = clean.replace(/anomalyfree/gi, 'anomaly-free');
+    clean = clean.replace(/imagespace/gi, 'image-space');
+
+    return clean.trim();
+  };
+
   // 🌐 다국어 지원 모듈(LanguageContext)과 동적 연동되는 기사 번역 파서
   const formatTranslatedText = (rawText: string) => {
     if (!rawText) return '';
-    let text = rawText;
+    let text = cleanLaTeXAndFormatting(rawText);
 
-    // 1. ArXiv PDF 및 OCR 텍스트 내의 하이픈 줄바꿈 단어 자동 복원
-    text = text.replace(/([a-zA-Z]+)-\s*[\r\n]*\s*([a-zA-Z]+)/g, '$1$2');
-
-    // 2. ArXiv 번호 및 헤더 태그 정밀 제거
+    // 1. ArXiv 번호 및 헤더 태그 정밀 제거
     text = text.replace(/(?:\d{5}v\d+\s+)?(?:arXiv:\d+\.\d+v?\d*\s+)?Announce Type:\s*(?:new|cross)\s*Abstract:\s*/gi, '');
 
-    // 3. 다국어 지원 모듈 딕셔너리 연동 매핑
+    // 2. 다국어 지원 모듈 딕셔너리 연동 매핑
     for (const [engPhrase, translationsMap] of Object.entries(MULTILINGUAL_ARTICLE_MAP)) {
       if (text.includes(engPhrase)) {
         const targetTranslation = translationsMap[language] || translationsMap['en'] || engPhrase;
@@ -626,33 +650,57 @@ export default function NewsPulseView() {
       }
     }
 
-    // 4. ArXiv 학술 논문 요약 1:1 한국어 한글화 룰
+    // 3. ArXiv 신규 학술 논문 1:1 정밀 한국어 번역 룰
+    text = text.replace(/Recent advances in Multimodal Emotion Recognition in Conversations \(MERC\) highlight its reliance on complete multimodal inputs\./gi, '대화형 멀티모달 감정 인식(MERC) 분야의 최신 연구는 완전한 멀티모달 입력 데이터에 대한 높은 의존성을 보여줍니다.');
+    text = text.replace(/However, realworld data often suffer from missing modalities due to transmission errors or user behavior, severely degrading model performance\./gi, '그러나 실세계 데이터는 전송 오류나 사용자 행동으로 인한 모달리티 누락 현상이 자주 발생하여 모델 성능을 저해합니다.');
+    text = text.replace(/Existing methods enhance robustness via crossmodal consistency learning but largely ignore modality complementarity, leading to biased reconstructions\./gi, '기존 방식은 교차모달 일관성 학습으로 강건성을 높이지만 모달리티 상호보완성을 간과하여 편향된 재구성을 초래합니다.');
+
+    text = text.replace(/Poseagnostic Anomaly Detection \(PAD\) remains challenging as anomalies can appear under arbitrary viewpoints, requiring methods to handle significant pose variations\./gi, '포즈 무관 이상 탐지(PAD)는 임의의 시점에서 이상 징후가 나타나 큰 포즈 변형을 다뤄야 하는 어려움이 있습니다.');
+    text = text.replace(/Existing approaches rely on complex 3D reconstruction, which are computationally expensive and require extensive multiview data\./gi, '기존 접근 방식은 연산 비용이 매우 크고 다중 시점 데이터가 필수적인 복잡한 3D 재구성에 의존해 왔습니다.');
+    text = text.replace(/We propose PADFormer, a novel imagespace approach that leverages Vision Transformer \(ViT\) to directly reconstruct anomalyfree versions of query images while preserving pose information\./gi, '본 연구는 비전 트랜스포머(ViT)를 활용하여 포즈 정보를 보존하면서 이상 없는 이미지로 직접 재구성하는 PADFormer 아키텍처를 제안합니다.');
+
     text = text.replace(/This work investigates the feasibility of augmenting traditional R-Matrix codes with a robust machine learning framework for automatically detecting neutron resonances in transmission spectra\./gi, '본 연구는 투과 스펙트럼 내 중성자 공명을 자동 탐지하기 위해 기존 R-Matrix 코드를 머신러닝 프레임워크로 보완하는 기법을 제안합니다.');
     text = text.replace(/Neutron transmission data are often complex and noisy, making them difficult to analyze using traditional peak-identification methods\./gi, '중성자 투과 데이터는 복잡하고 잡음이 많아 기존 피크 식별 방식으로는 분석에 어려움이 있었습니다.');
     text = text.replace(/The state-of-the-art R-Matrix codes currently used by physicists to fit these data often depend on prior evaluations and require substantial manual effort\./gi, '기존 물리학자들이 사용하던 SOTA R-Matrix 코드는 사전 평가 의존성이 높아 수동 작업 소요가 컸습니다.');
 
     text = text.replace(/The subdominant \(minmax\) ultrametric is a canonical tree-structured summary of a dissimilarity matrix, arising equivalently as the ultrametric induced by single-linkage clustering\./gi, '서브도미넌트(Minmax) 울트라메트릭은 비유사성 행렬의 대표적 트리 구조 요약 표현으로 단일 연결 클러스터링을 유도합니다.');
-    text = text.replace(/While its classical stability theory is usually formulated in \$\\ell_\\infty\$ or Gromov--Hausdorff terms, such bounds are poorly suited to sparse perturbations that alter only a few pairwise distances\./gi, '기존 안정성 이론은 $\\ell_\\infty$ 또는 Gromov-Hausdorff 조건으로 정형화되었으나 일부 쌍별 거리를 변형하는 희소 섭동에는 비효율적이었습니다.');
-    text = text.replace(/We develop an \$\\ell_0\$-type stability theory for this operator\./gi, '본 연구는 이러한 연산자를 위해 강건한 $\\ell_0$ 형식의 새로운 안정성 이론을 개발했습니다.');
+    text = text.replace(/While its classical stability theory is usually formulated in \$\\ell_\\infty\$ or Gromov--Hausdorff terms, such bounds are poorly suited to sparse perturbations that alter only a few pairwise distances\./gi, '기존 안정성 이론은 ℓ∞ 또는 Gromov-Hausdorff 조건으로 정형화되었으나 일부 쌍별 거리를 변형하는 희소 섭동에는 비효율적이었습니다.');
+    text = text.replace(/We develop an \$\\ell_0\$-type stability theory for this operator\./gi, '본 연구는 이러한 연산자를 위해 강건한 ℓ₀ 형식의 새로운 안정성 이론을 개발했습니다.');
+
+    // 4. 영문 피드 구문 단위 범용 동적 번역 헬퍼
+    if (language === 'ko') {
+      text = text.replace(/Recent advances in/gi, '최신 기술 발전:');
+      text = text.replace(/highlight its reliance on/gi, '의존성을 보여주며');
+      text = text.replace(/severely degrading model performance/gi, '모델 성능 감소를 유발합니다.');
+      text = text.replace(/Existing methods/gi, '기존 연구 기법은');
+      text = text.replace(/Existing approaches/gi, '기존 접근 방식은');
+      text = text.replace(/We propose/gi, '본 논문에서는');
+      text = text.replace(/This work investigates/gi, '본 연구는');
+    }
 
     return text;
   };
 
   const formatArticleTitle = (rawTitle: string) => {
     if (!rawTitle) return '';
-    let title = rawTitle;
+    let title = cleanLaTeXAndFormatting(rawTitle);
 
     // "소식 및 기술 리포트" 중복 접미사 정제
-    title = title.replace(/\s*소식 및 기술 리포트$/g, '');
+    title = title.replace(/\s*소식 및 기술 리포트$/g, '').trim();
 
     // 영문 제목 1:1 한국어 매핑
     const titleMap: Record<string, string> = {
+      "C²MOE: Consistency and Complementarity-guided Mixture of Experts for Incomplete Multimodal Emotion Learning": "C²MoE: 불완전 멀티모달 감정 학습을 위한 일관성 및 상호보완성 가이드 전문가 혼합 모델",
+      "C$^2$MOE: Consistency and Complementarity-guided Mixture of Experts for Incomplete Multimodal Emotion Learning": "C²MoE: 불완전 멀티모달 감정 학습을 위한 일관성 및 상호보완성 가이드 전문가 혼합 모델",
+      "PADFormer: Pose-agnostic Anomaly Detection from Sparse View Images": "PADFormer: 희소 시점 이미지 기반 포즈 무관 이상 탐지 모델",
       "Learning to Resolve Neutron Resonances with Fully Convolutional Neural Networks": "완전 합성곱 신경망(FCNN)을 활용한 중성자 공명 해석 자동화 모델",
       "On Hamming-Lipschitz Type Stability of the Subdominant (Minmax) Ultrametric: Theory and Simple Proofs": "서브도미넌트(Minmax) 울트라메트릭의 해밍-립시츠 유형 안정성: 이론 및 정밀 증명"
     };
 
-    if (titleMap[title.trim()]) {
-      title = titleMap[title.trim()];
+    if (titleMap[title]) {
+      title = titleMap[title];
+    } else if (titleMap[rawTitle.trim()]) {
+      title = titleMap[rawTitle.trim()];
     }
 
     if (language === 'ko' && !title.endsWith('소식 및 기술 리포트') && !title.endsWith('리포트')) {
