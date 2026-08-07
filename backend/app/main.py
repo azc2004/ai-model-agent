@@ -101,6 +101,52 @@ def init_neon_db_catalog():
 # ⚡ 서버단 인메모리(RAM) 캐시 보관함 — 디바이스 독립적 0.001초 고속 응답
 _models_cache: List[ModelSpec] = []
 
+def _enrich_model_spec(item_or_model: Any) -> ModelSpec:
+    m_id = str(getattr(item_or_model, 'id', '')).lower()
+    m_name = str(getattr(item_or_model, 'name', '')).lower()
+    
+    supports_reasoning = bool(getattr(item_or_model, 'supports_reasoning', False)) or any(
+        k in m_id or k in m_name for k in [
+            "o1", "o3", "r1", "reason", "thinking", "cot", "qwq", "deepseek-r1", "deepseek-reasoner", "claude-3-7"
+        ]
+    )
+
+    supports_web_search = bool(getattr(item_or_model, 'supports_web_search', False)) or any(
+        k in m_id or k in m_name for k in [
+            "sonar", "search", "perplexity", "online", "web", "gemini", "gpt-4o", "grok-2"
+        ]
+    )
+
+    is_verified = bool(getattr(item_or_model, 'is_verified', True))
+
+    if isinstance(item_or_model, ModelSpec):
+        item_or_model.supports_reasoning = supports_reasoning
+        item_or_model.supports_web_search = supports_web_search
+        item_or_model.is_verified = is_verified
+        return item_or_model
+
+    return ModelSpec(
+        id=item_or_model.id,
+        provider_id=item_or_model.provider_id,
+        provider_name=item_or_model.provider_name,
+        name=item_or_model.name,
+        tier=item_or_model.tier,
+        is_open_weight=item_or_model.is_open_weight,
+        license_type="Proprietary",
+        architecture=item_or_model.architecture,
+        context_window=item_or_model.context_window,
+        max_output_tokens=item_or_model.max_output_tokens,
+        modality=item_or_model.modality or ["text"],
+        description=item_or_model.description,
+        official_url=item_or_model.official_url,
+        source_docs_url=item_or_model.source_docs_url,
+        api_pricing=item_or_model.api_pricing or {},
+        benchmarks=item_or_model.benchmarks or {},
+        supports_reasoning=supports_reasoning,
+        supports_web_search=supports_web_search,
+        is_verified=is_verified
+    )
+
 def init_models_cache_from_db():
     """서버 기동 및 갱신 시 Neon DB에서 176개 전체 모델을 서버 메모리에 전량 상주(Warm-up)시킵니다."""
     global _models_cache
@@ -108,36 +154,17 @@ def init_models_cache_from_db():
         db = SessionLocal()
         db_models = db.query(LLMModelDB).all()
         if db_models and len(db_models) >= len(MODELS):
-            parsed_models = []
-            for item in db_models:
-                parsed_models.append(ModelSpec(
-                    id=item.id,
-                    provider_id=item.provider_id,
-                    provider_name=item.provider_name,
-                    name=item.name,
-                    tier=item.tier,
-                    is_open_weight=item.is_open_weight,
-                    license_type="Proprietary",
-                    architecture=item.architecture,
-                    context_window=item.context_window,
-                    max_output_tokens=item.max_output_tokens,
-                    modality=item.modality or ["text"],
-                    description=item.description,
-                    official_url=item.official_url,
-                    source_docs_url=item.source_docs_url,
-                    api_pricing=item.api_pricing or {},
-                    benchmarks=item.benchmarks or {}
-                ))
+            parsed_models = [_enrich_model_spec(item) for item in db_models]
             _models_cache.clear()
             _models_cache.extend(parsed_models)
             print(f"[ModelCache Server Warmup] ✅ Loaded {len(_models_cache)} LLM models into Server Memory!")
         else:
             _models_cache.clear()
-            _models_cache.extend(MODELS)
+            _models_cache.extend([_enrich_model_spec(m) for m in MODELS])
         db.close()
     except Exception as e:
         print(f"[ModelCache Warning] Falling back to memory MODELS: {e}")
-        _models_cache = MODELS
+        _models_cache = [_enrich_model_spec(m) for m in MODELS]
 
 @app.get("/api/v1/providers", response_model=List[Provider])
 def get_providers(response: Response):

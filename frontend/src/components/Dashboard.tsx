@@ -95,6 +95,51 @@ export const Dashboard: React.FC<DashboardProps> = ({
     fetchData();
   }, [propModels, propProviders]);
 
+  const checkSupportsReasoning = (model: ModelSpec): boolean => {
+    if (model.supports_reasoning) return true;
+    const id = (model.id || '').toLowerCase();
+    const name = (model.name || '').toLowerCase();
+    return (
+      id.includes('o1') ||
+      id.includes('o3') ||
+      id.includes('r1') ||
+      id.includes('thinking') ||
+      id.includes('reasoner') ||
+      id.includes('qwq') ||
+      id.includes('cot') ||
+      id.includes('claude-3-7') ||
+      id.includes('deepseek-r1') ||
+      name.includes('reason') ||
+      name.includes('thinking') ||
+      name.includes('cot')
+    );
+  };
+
+  const checkSupportsWebSearch = (model: ModelSpec): boolean => {
+    if (model.supports_web_search) return true;
+    const id = (model.id || '').toLowerCase();
+    const name = (model.name || '').toLowerCase();
+    return (
+      id.includes('sonar') ||
+      id.includes('search') ||
+      id.includes('perplexity') ||
+      id.includes('online') ||
+      id.includes('web') ||
+      id.includes('gemini') ||
+      id.includes('gpt-4o') ||
+      id.includes('grok-2') ||
+      name.includes('search') ||
+      name.includes('sonar') ||
+      name.includes('perplexity')
+    );
+  };
+
+  const checkIsVerified = (model: ModelSpec): boolean => {
+    if (model.is_verified) return true;
+    const p = (model.provider_id || '').toLowerCase();
+    return ['openai', 'anthropic', 'google', 'meta', 'mistral', 'deepseek', 'aws', 'aws_bedrock', 'cohere', 'perplexity', 'xai', 'alibaba', 'microsoft'].includes(p);
+  };
+
   const filteredModels = models.filter((model) => {
     const matchesSearch =
       model.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -107,9 +152,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
       selectedLicense === 'all' ||
       (selectedLicense === 'open' ? model.is_open_weight : !model.is_open_weight);
 
-    const matchesReasoning = !reasoningOnly || model.supports_reasoning;
-    const matchesWebSearch = !webSearchOnly || model.supports_web_search;
-    const matchesVerified = !verifiedOnly || model.is_verified;
+    const matchesReasoning = !reasoningOnly || checkSupportsReasoning(model);
+    const matchesWebSearch = !webSearchOnly || checkSupportsWebSearch(model);
+    const matchesVerified = !verifiedOnly || checkIsVerified(model);
 
     return matchesSearch && matchesProvider && matchesTier && matchesLicense && matchesReasoning && matchesWebSearch && matchesVerified;
   });
@@ -390,12 +435,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
                       {model.provider_name}
                     </span>
                     <div className="flex items-center gap-1.5 flex-wrap justify-end">
-                      {model.supports_reasoning && (
+                      {checkSupportsReasoning(model) && (
                         <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-500/40 font-bold" title="Reasoning / CoT 지원">
                           🧠 Reasoning
                         </span>
                       )}
-                      {model.supports_web_search && (
+                      {checkSupportsWebSearch(model) && (
                         <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-500/40 font-bold" title="실시간 웹 검색 통합">
                           🌐 Web Search
                         </span>
