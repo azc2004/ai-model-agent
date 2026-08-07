@@ -1415,20 +1415,34 @@ async def run_batch_job(force: bool = False) -> List[NewsArticle]:
 
 async def refresh_news_pipeline() -> List[NewsArticle]:
     """유저 뉴스 조회 요청 시 호출되는 캐시 웜업 & 반환 파이프라인.
-    만약 인메모리 캐시가 비어있거나, 폴백 상태(<25개)일 경우 Neon DB에서 197개 전체 실기사를 즉시 웜업합니다.
+    만약 인메모리 캐시가 비어있거나, 폴백 상태(<25개)일 경우 Neon DB 및 FALLBACK_ARTICLES에서 실기사를 즉시 웜업합니다.
     """
     global _news_cache
     
-    # 1. 인메모리 캐시가 비어있거나 기사 수가 25개 미만(폴백 상태)이면 DB에서 최신 데이터(197개)로 즉시 갱신
-    if not _news_cache["articles"] or len(_news_cache["articles"]) < 25:
-        db_articles = fetch_articles_from_db()
-        if db_articles and len(db_articles) >= 25:
-            _news_cache["articles"] = db_articles
-            _news_cache["last_updated"] = time.time()
-            print(f"[NewsCache Invalidation] ⚡ Reloaded {len(db_articles)} articles from Neon DB into Server Memory!")
-            return db_articles
+    # 1. 인메모리 캐시에 이미 25개 이상의 기사가 존재하면 0.001초 만에 리턴
+    if _news_cache.get("articles") and len(_news_cache["articles"]) >= 25:
+        return _news_cache["articles"]
 
-    return await run_batch_job(force=False)
+    # 2. Neon DB에서 25개 이상 저장 기사 조회 시 RAM 캐시로 웜업 후 즉시 리턴
+    db_articles = fetch_articles_from_db()
+    if db_articles and len(db_articles) >= 25:
+        _news_cache["articles"] = db_articles
+        _news_cache["last_updated"] = time.time()
+        print(f"[NewsCache Invalidation] ⚡ Reloaded {len(db_articles)} articles from Neon DB into Server Memory!")
+        return db_articles
+
+    # 3. DB 접속 전/후 미흡 시 인메모리 FALLBACK_ARTICLES 기본 할당으로 500 에러 및 빈 목록 완전 방지
+    _news_cache["articles"] = FALLBACK_ARTICLES
+    _news_cache["last_updated"] = time.time()
+
+    try:
+        batch_res = await run_batch_job(force=False)
+        if batch_res and len(batch_res) >= 25:
+            return batch_res
+    except Exception as e:
+        print(f"[NewsCache Warning] Batch job background trigger notice: {e}")
+
+    return FALLBACK_ARTICLES
 
 def init_news_cache_from_db():
     """서버 스타트업 시 DB에서 197개 전체 기사를 서버 RAM 메모리 캐시에 즉각 영구 상주(Warm-up) 시킵니다."""
