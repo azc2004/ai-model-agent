@@ -556,81 +556,81 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
       {/* VIEW 2: Table Mode */}
       {viewMode === 'table' && (
-        <div className="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
+        <div className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-md dark:shadow-xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs sm:text-sm">
               <thead>
-                <tr className="bg-slate-950 text-slate-400 border-b border-slate-800 text-[11px] uppercase tracking-wider">
+                <tr className="bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800 text-[11px] font-black uppercase tracking-wider">
                   <th
-                    className="py-3.5 px-4 font-semibold cursor-pointer hover:text-cyan-400 select-none transition-colors"
+                    className="py-3.5 px-4 cursor-pointer hover:text-blue-600 dark:hover:text-cyan-400 select-none transition-colors"
                     onClick={() => handleSort('name')}
                   >Model<SortIcon col="name" /></th>
                   <th
-                    className="py-3.5 px-4 font-semibold cursor-pointer hover:text-cyan-400 select-none transition-colors"
+                    className="py-3.5 px-4 cursor-pointer hover:text-blue-600 dark:hover:text-cyan-400 select-none transition-colors"
                     onClick={() => handleSort('provider')}
                   >Provider<SortIcon col="provider" /></th>
                   <th
-                    className="py-3.5 px-4 font-semibold cursor-pointer hover:text-cyan-400 select-none transition-colors"
+                    className="py-3.5 px-4 cursor-pointer hover:text-blue-600 dark:hover:text-cyan-400 select-none transition-colors"
                     onClick={() => handleSort('tier')}
                   >Tier<SortIcon col="tier" /></th>
                   <th
-                    className="py-3.5 px-4 font-semibold cursor-pointer hover:text-cyan-400 select-none transition-colors"
+                    className="py-3.5 px-4 cursor-pointer hover:text-blue-600 dark:hover:text-cyan-400 select-none transition-colors"
                     onClick={() => handleSort('context')}
                   >Context<SortIcon col="context" /></th>
                   <th
-                    className="py-3.5 px-4 font-semibold cursor-pointer hover:text-cyan-400 select-none transition-colors"
+                    className="py-3.5 px-4 cursor-pointer hover:text-blue-600 dark:hover:text-cyan-400 select-none transition-colors"
                     onClick={() => handleSort('input_price')}
                   >Input Price<SortIcon col="input_price" /></th>
                   <th
-                    className="py-3.5 px-4 font-semibold cursor-pointer hover:text-cyan-400 select-none transition-colors"
+                    className="py-3.5 px-4 cursor-pointer hover:text-blue-600 dark:hover:text-cyan-400 select-none transition-colors"
                     onClick={() => handleSort('output_price')}
                   >Output Price<SortIcon col="output_price" /></th>
                   <th
-                    className="py-3.5 px-4 font-semibold cursor-pointer hover:text-cyan-400 select-none transition-colors"
+                    className="py-3.5 px-4 cursor-pointer hover:text-blue-600 dark:hover:text-cyan-400 select-none transition-colors"
                     onClick={() => handleSort('rpm')}
                   >Quota RPM<SortIcon col="rpm" /></th>
                   <th
-                    className="py-3.5 px-4 font-semibold cursor-pointer hover:text-cyan-400 select-none transition-colors"
+                    className="py-3.5 px-4 cursor-pointer hover:text-blue-600 dark:hover:text-cyan-400 select-none transition-colors"
                     onClick={() => handleSort('arena_elo')}
                   >ELO<SortIcon col="arena_elo" /></th>
-                  <th className="py-3.5 px-4 font-semibold">Docs</th>
-                  <th className="py-3.5 px-4 font-semibold">Action</th>
+                  <th className="py-3.5 px-4">Docs</th>
+                  <th className="py-3.5 px-4">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 text-slate-200">
+              <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-slate-800 dark:text-slate-200">
                 {sortedModels.map((model) => {
                   const isSelected = effectiveCompareIds.includes(model.id);
                   return (
-                    <tr key={model.id} className="hover:bg-slate-800/40 transition-colors">
-                      <td className="py-3 px-4 font-bold text-slate-100">
+                    <tr key={model.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                      <td className="py-3 px-4 font-extrabold text-slate-900 dark:text-white">
                         {model.name}
                       </td>
-                      <td className="py-3 px-4 text-slate-400">{model.provider_name}</td>
+                      <td className="py-3 px-4 text-slate-700 dark:text-slate-300 font-semibold">{model.provider_name}</td>
                       <td className="py-3 px-4">
-                        <span className={`text-[10px] px-2 py-0.5 rounded border ${getTierBadge(model.tier)}`}>
+                        <span className={`text-[10px] px-2 py-0.5 rounded border font-bold ${getTierBadge(model.tier)}`}>
                           {model.tier}
                         </span>
                       </td>
-                      <td className="py-3 px-4 font-mono text-slate-300">
+                      <td className="py-3 px-4 font-mono font-bold text-slate-700 dark:text-slate-300">
                         {model.context_window > 0 ? `${(model.context_window / 1000).toLocaleString()}k` : '-'}
                       </td>
-                      <td className="py-3 px-4 font-mono text-emerald-400">
+                      <td className="py-3 px-4 font-mono font-extrabold text-emerald-600 dark:text-emerald-400">
                         ${model.api_pricing.input_price_per_1m.toFixed(3)}
                       </td>
-                      <td className="py-3 px-4 font-mono text-emerald-300">
+                      <td className="py-3 px-4 font-mono font-extrabold text-emerald-600 dark:text-emerald-400">
                         ${model.api_pricing.output_price_per_1m.toFixed(3)}
                       </td>
-                      <td className="py-3 px-4 font-mono text-cyan-300 text-xs">
+                      <td className="py-3 px-4 font-mono font-bold text-blue-600 dark:text-cyan-300 text-xs">
                         {model.quota ? `${model.quota.rpm.toLocaleString()}` : '-'}
                       </td>
-                      <td className="py-3 px-4 font-mono text-amber-400 text-xs">
+                      <td className="py-3 px-4 font-mono font-extrabold text-amber-600 dark:text-amber-400 text-xs">
                         {model.benchmarks.arena_elo ?? '-'}
                       </td>
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => setCodeModalModel(model)}
-                            className="px-2 py-1 bg-purple-900/50 hover:bg-purple-800 text-purple-200 border border-purple-500/40 rounded text-xs font-bold transition-colors whitespace-nowrap"
+                            className="px-2 py-1 bg-purple-50 hover:bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:hover:bg-purple-800 dark:text-purple-200 border border-purple-200 dark:border-purple-500/40 rounded-md text-xs font-bold transition-colors whitespace-nowrap"
                             title="API 연동 코드 스니펫 보기"
                           >
                             ⚡ API 코드
@@ -639,7 +639,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                             href={model.source_docs_url || model.official_url}
                             target="_blank"
                             rel="noreferrer"
-                            className="text-xs text-slate-400 hover:text-cyan-400 transition-colors whitespace-nowrap"
+                            className="text-xs font-bold text-slate-600 hover:text-blue-600 dark:text-slate-400 dark:hover:text-cyan-400 transition-colors whitespace-nowrap"
                           >
                             Docs ↗
                           </a>
@@ -648,13 +648,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
                       <td className="py-3 px-4">
                         <button
                           onClick={() => handleToggle(model.id)}
-                          className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${
+                          className={`px-3 py-1.5 rounded-lg text-xs font-extrabold transition-all shadow-sm ${
                             isSelected
-                              ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
-                              : 'bg-slate-800 hover:bg-slate-700 text-slate-200'
+                              ? 'bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-400 shadow-emerald-600/30'
+                              : 'bg-blue-600 hover:bg-blue-500 text-white shadow-blue-600/30'
                           }`}
                         >
-                          {isSelected ? 'Added' : '+ Compare'}
+                          {isSelected ? t.dashboard.compared : t.dashboard.compareButton}
                         </button>
                       </td>
                     </tr>
@@ -666,63 +666,76 @@ export const Dashboard: React.FC<DashboardProps> = ({
         </div>
       )}
 
-      {/* VIEW 3: Compact Mode */}
+      {/* VIEW 3: Compact Mode (요약 리스트) */}
       {viewMode === 'compact' && (
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           {sortedModels.map((model) => {
             const isSelected = effectiveCompareIds.includes(model.id);
             return (
               <div
                 key={model.id}
-                className="bg-slate-900/60 border border-slate-800/80 hover:border-slate-700 rounded-lg p-3 flex items-center justify-between gap-4 transition-colors"
+                className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-blue-400 dark:hover:border-cyan-500 rounded-xl p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 transition-all shadow-sm hover:shadow-md group"
               >
-                <div className="flex items-center gap-3 min-w-0">
-                  <span className="text-xs text-slate-500 font-medium w-24 shrink-0 truncate">
+                {/* Left Section: Provider, Model Name, Badges & Ctx */}
+                <div className="flex flex-wrap items-center gap-2.5 min-w-0 flex-1">
+                  <span className="text-xs font-black uppercase tracking-wider text-blue-700 dark:text-cyan-400 bg-blue-50 dark:bg-cyan-950/60 border border-blue-200 dark:border-cyan-800 px-2.5 py-1 rounded-md shrink-0">
                     {model.provider_name}
                   </span>
-                  <span className="font-bold text-sm text-slate-100 truncate w-48 sm:w-64">
+                  <span className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white truncate group-hover:text-blue-600 dark:group-hover:text-cyan-400 transition-colors">
                     {model.name}
                   </span>
-                  <span className={`hidden sm:inline-block text-[10px] px-2 py-0.5 rounded border ${getTierBadge(model.tier)}`}>
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold border shrink-0 ${getTierBadge(model.tier)}`}>
                     {model.tier}
                   </span>
-                  <span className="hidden md:inline-block text-xs font-mono text-slate-400">
-                    Ctx: {(model.context_window / 1000).toLocaleString()}k
+                  {checkSupportsReasoning(model) && (
+                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-500/40 font-bold shrink-0">
+                      🧠 Reasoning
+                    </span>
+                  )}
+                  {checkSupportsWebSearch(model) && (
+                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-500/40 font-bold shrink-0">
+                      🌐 Web Search
+                    </span>
+                  )}
+                  <span className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/80 px-2 py-0.5 rounded-md shrink-0">
+                    Ctx: {model.context_window > 0 ? `${(model.context_window / 1000).toLocaleString()}k` : '-'}
                   </span>
-                  {model.quota && (
-                    <span className="hidden lg:inline-block text-xs font-mono text-cyan-400">
-                      Quota: {model.quota.rpm.toLocaleString()} RPM
+                  {model.benchmarks.arena_elo && (
+                    <span className="text-xs font-mono font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 rounded-md shrink-0 flex items-center gap-1">
+                      🏆 {model.benchmarks.arena_elo.toFixed(0)}
                     </span>
                   )}
                 </div>
 
-                <div className="flex items-center gap-3 shrink-0">
+                {/* Right Section: Pricing & Action Buttons */}
+                <div className="flex items-center gap-2.5 shrink-0 w-full sm:w-auto justify-end pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100 dark:border-slate-800">
+                  <span className="font-mono text-xs font-black text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 px-2.5 py-1 rounded-lg">
+                    ${model.api_pricing.input_price_per_1m.toFixed(2)} <span className="text-slate-500 dark:text-slate-400 font-normal">/ 1M</span>
+                  </span>
                   <button
                     onClick={() => setCodeModalModel(model)}
-                    className="text-xs text-purple-400 hover:text-purple-300 font-bold transition-colors"
+                    className="px-2.5 py-1 rounded-lg text-xs font-bold bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 dark:bg-purple-950/60 dark:hover:bg-purple-900/80 dark:text-purple-300 dark:border-purple-800 transition-all flex items-center gap-1"
+                    title="API 연동 코드 스니펫 보기"
                   >
-                    ⚡ API 코드
+                    <span>⚡</span> API 코드
                   </button>
                   <a
                     href={model.source_docs_url || model.official_url}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-xs text-slate-400 hover:text-cyan-400 transition-colors"
+                    className="text-xs font-bold text-slate-600 hover:text-blue-600 dark:text-slate-400 dark:hover:text-cyan-400 transition-colors px-1"
                   >
                     Docs ↗
                   </a>
-                  <span className="font-mono text-xs font-semibold text-emerald-400">
-                    ${model.api_pricing.input_price_per_1m.toFixed(2)} <span className="text-slate-500">/ 1M</span>
-                  </span>
                   <button
                     onClick={() => handleToggle(model.id)}
-                    className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-extrabold transition-all shadow-sm ${
                       isSelected
-                        ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
-                        : 'bg-slate-800 hover:bg-slate-700 text-slate-200'
+                        ? 'bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-400 shadow-emerald-600/30'
+                        : 'bg-blue-600 hover:bg-blue-500 text-white shadow-blue-600/30'
                     }`}
                   >
-                    {isSelected ? 'Added' : '+ Compare'}
+                    {isSelected ? t.dashboard.compared : t.dashboard.compareButton}
                   </button>
                 </div>
               </div>
