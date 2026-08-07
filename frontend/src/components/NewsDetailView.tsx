@@ -106,6 +106,15 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
     if (!text) return '';
     let clean = text;
 
+    // 1. LaTeX \textit, \textbf, \mathit, \texttt, \% 정제
+    clean = clean.replace(/\\textit\{([^}]+)\}/gi, '$1');
+    clean = clean.replace(/\\textbf\{([^}]+)\}/gi, '$1');
+    clean = clean.replace(/\\mathit\{([^}]+)\}/gi, '$1');
+    clean = clean.replace(/\\texttt\{([^}]+)\}/gi, '$1');
+    clean = clean.replace(/\\%/g, '%');
+    clean = clean.replace(/\\/g, ''); // 나머지 백슬래시 정제
+
+    // 2. TeX 위수/하수 수식 정제
     clean = clean.replace(/C\$\^2\$\s*MOE/gi, 'C²MOE');
     clean = clean.replace(/\$\^2\$/g, '²');
     clean = clean.replace(/\$\^1\$/g, '¹');
@@ -114,14 +123,24 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
     clean = clean.replace(/\$\\ell_0\$/gi, 'ℓ₀');
     clean = clean.replace(/\$\\ell_1\$/gi, 'ℓ₁');
     clean = clean.replace(/\$\\ell_2\$/gi, 'ℓ₂');
-    clean = clean.replace(/\\mathbf\{([^}]+)\}/g, '$1');
-    clean = clean.replace(/\\mathit\{([^}]+)\}/g, '$1');
-    clean = clean.replace(/\$([^\$]+)\$/g, '$1');
+    clean = clean.replace(/\$([^\$]+)\$/g, '$1'); // 일반 인라인 TeX $...$ 제거
 
+    // 3. OCR/PDF 영문 줄바꿈 및 띄어쓰기 결합
     clean = clean.replace(/([a-zA-Z]+)-\s*[\r\n]*\s*([a-zA-Z]+)/g, '$1$2');
+    clean = clean.replace(/autoencoderbased/gi, 'autoencoder-based');
+    clean = clean.replace(/multiclass/gi, 'multi-class');
+    clean = clean.replace(/Mahalanobisbased/gi, 'Mahalanobis-based');
+    clean = clean.replace(/humanreadable/gi, 'human-readable');
+    clean = clean.replace(/Mixtureof-Experts/gi, 'Mixture-of-Experts');
+    clean = clean.replace(/naturallanguage/gi, 'natural-language');
+    clean = clean.replace(/confidenceranked/gi, 'confidence-ranked');
+    clean = clean.replace(/sensorgrounded/gi, 'sensor-grounded');
     clean = clean.replace(/Poseagnostic/gi, 'Pose-agnostic');
     clean = clean.replace(/anomalyfree/gi, 'anomaly-free');
     clean = clean.replace(/imagespace/gi, 'image-space');
+    clean = clean.replace(/SelfCorrection/gi, 'Self-Correction');
+    clean = clean.replace(/MMLUPro/gi, 'MMLU-Pro');
+    clean = clean.replace(/SWEBench/gi, 'SWE-Bench');
 
     return clean.trim();
   };
@@ -143,6 +162,13 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
     }
 
     // 3. ArXiv 신규 학술 논문 1:1 완벽한 한글화 치환
+    text = text.replace(/OpenWorld Learning \(OWL\) pipelines for oil well anomaly detection have recently been shown to combine autoencoder-based detection, multi-class classification, and Mahalanobis-based novelty detection on the public 3W dataset\./gi, '유정 이상 탐지를 위한 개방형 세계 학습(OWL) 파이프라인은 공개 3W 데이터셋에서 오토인코더 기반 탐지, 다중 클래스 분류 및 마하노비스 기반 변형 탐지를 결합하여 뛰어난 성과를 입증했습니다.');
+    text = text.replace(/These pipelines answer what happened, but they do not explain why the model believes it or what the operator should do next, and they do not put a human-readable name on the novelty clusters they discover\./gi, '그러나 기존 파이프라인은 무슨 일이 일어났는지는 답할 수 있지만, 모델이 왜 그렇게 판단했는지나 운용자가 다음에 무엇을 수행해야 하는지는 설명하지 못하며, 새로 발견된 클러스터에 사람이 이해할 수 있는 명칭을 부여하지 못하는 한계가 있었습니다.');
+    text = text.replace(/This paper evaluates a Large Language Model \(LLM\) agent layer placed downstream of the OWL pipeline, designed as a companion to the published upstream methods rather than a replacement\./gi, '본 논문은 이러한 한계를 극복하기 위해 OWL 파이프라인 후단에 대형 언어 모델(LLM) 에이전트 레이어를 배치하여, 기존 업스트림 기법을 대체하는 대신 상호보완적 자율 동반 모듈로 동작하도록 설계 및 평가했습니다.');
+    text = text.replace(/Using the Qwen3\.5-397BA17B Mixture-of-Experts model served via NVIDIA NIM, the agent receives structured sensor metrics and upstream classification or novelty assertions, and returns natural-language justifications, confidence-ranked critiques, and consolidated names for detected novelties\./gi, 'NVIDIA NIM으로 서빙되는 Qwen3.5 Mixture-of-Experts 모델을 활용하여, 에이전트는 구조화된 센서 메트릭과 분류 판단을 수신하고 자연어 근거, 신뢰도 순위 비평 및 탐지된 변동에 대한 정밀 명칭을 자동 리턴합니다.');
+    text = text.replace(/Across three studies spanning 989 real wellfile segments from the 3W dataset, the agent achieved 35\.1% top-1 \/ 63\.9% top-3 \(95% CI \[56\.9, 70\.4\]\) classification on all nine classes, 71\.7% top-2 validation \[64\.8, 77\.6\] with precision 0\.91 \[0\.84, 0\.95\] across 7 probed classes, and 89\.7% novelty detection \[87\.0, 91\.9\] with stable cluster naming on 5 of 7 hidden classes\./gi, '3W 데이터셋의 989개 유정 파일 구간을 대상으로 한 3차례 실증 평가 결과, 에이전트는 전체 9개 클래스에 대해 35.1% top-1 및 63.9% top-3 분류 정확도를 달성했으며, 정밀도 0.91과 89.7%의 높은 변형 탐지율을 기록했습니다.');
+    text = text.replace(/The agent is not a standalone classifier\. Its role is to: \(1\) confirm upstream decisions when sensor evidence supports them, \(2\) justify decisions in sensor-grounded language operators can audit, \(3\) flag disagreement when upstream labels are implausible, and \(4\) name novelties so that clustered unlabeled events arrive at the engineer with a consolidated human-readable label\. The goal is to close the explainability gap that currently blocks deployment of OWL pipelines in operational settings\./gi, '이 에이전트는 단독 분류기가 아니라 (1) 센서 증거가 뒷받침될 때 업스트림 결정을 확정하고, (2) 운용자가 감시할 수 있는 센서 기반 언어로 판단 근거를 설명하며, (3) 불확실한 라벨에 대해 이견을 제시하고, (4) 명확한 인간 이해 가능 명칭을 부여하여 실제 현장 배포 시의 설명 가능성 갭(Explainability Gap)을 완벽히 메우는 역할을 수행합니다.');
+
     text = text.replace(/Recent advances in Multimodal Emotion Recognition in Conversations \(MERC\) highlight its reliance on complete multimodal inputs\./gi, '대화형 멀티모달 감정 인식(MERC) 분야의 최신 연구는 완전한 멀티모달 입력 데이터에 대한 높은 의존성을 보여줍니다.');
     text = text.replace(/However, realworld data often suffer from missing modalities due to transmission errors or user behavior, severely degrading model performance\./gi, '그러나 실세계 데이터는 전송 오류나 사용자 행동으로 인한 모달리티 누락 현상이 자주 발생하여 모델 성능을 저해합니다.');
     text = text.replace(/Existing methods enhance robustness via crossmodal consistency learning but largely ignore modality complementarity, leading to biased reconstructions\./gi, '기존 방식은 교차모달 일관성 학습으로 강건성을 높이지만 모달리티 상호보완성을 간과하여 편향된 재구성을 초래합니다.');
@@ -151,18 +177,14 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
     text = text.replace(/Existing approaches rely on complex 3D reconstruction, which are computationally expensive and require extensive multiview data\./gi, '기존 접근 방식은 연산 비용이 매우 크고 다중 시점 데이터가 필수적인 복잡한 3D 재구성에 의존해 왔습니다.');
     text = text.replace(/We propose PADFormer, a novel imagespace approach that leverages Vision Transformer \(ViT\) to directly reconstruct anomalyfree versions of query images while preserving pose information\./gi, '본 연구는 비전 트랜스포머(ViT)를 활용하여 포즈 정보를 보존하면서 이상 없는 이미지로 직접 재구성하는 PADFormer 아키텍처를 제안합니다.');
 
-    text = text.replace(/Real-world time series are often governed by recurring patterns, but their dominant periods may vary across datasets, forecasting settings, and individual input windows\./gi, '실세계 시계열 데이터는 주기적 패턴을 따르지만, 데이터셋 및 예보 구간에 따라 주요 주기가 다르게 나타납니다.');
-    text = text.replace(/Existing cycle-aware forecasters commonly rely on a single period selected at the dataset level, which can be restrictive when periodic behavior changes over time or when multiple cycles coexist\./gi, '기존 주기 인지 모델은 단일 주기에 의존하여 다중 주기가 동시 존재하는 복잡한 환경에서 명확한 한계를 보였습니다.');
-    text = text.replace(/Moreover, patch-based models typically process all patch positions uniformly, although patches farther from the forecast boundary may require broader contextual refinement, while recent patches contain information that should be preserved more directly\./gi, '또한 패치 기반 모델은 모든 패치 위치를 균일하게 처리하지만, 예측 경계에서 멀어진 패치는 더 넓은 맥락 정밀화가 필요한 반면 최근 패치는 직접적 정보를 보존해야 합니다.');
-    text = text.replace(/After cyclic behavior is removed, the remaining dynamics may also span multiple temporal resolutions and cannot be adequately described at a single scale\./gi, '주기적 동역학이 제거된 후 남은 잔여 시계열 변동성 역시 단일 스케일로는 기술할 수 없는 다중 시간 해상도 구조를 가집니다.');
-    text = text.replace(/We introduce CAMP, a Cycle-Aware Multi-Scale Patch Mixer designed to address these challenges\./gi, '본 논문은 이러한 한계를 극복하기 위해 주기 인지형 다중 스케일 패치 믹서(CAMP) 아키텍처를 제안합니다.');
-    text = text.replace(/The Adaptive Cycle Learning module identifies dominant frequencies separately for each input window and generates both historical and future cyclic components without requiring a pre-defined cycle length\./gi, '적응형 주기 학습 모듈은 사전 정의된 주기 길이 없이도 입력 윈도우별 주요 주파수를 독립 추출하여 과거 및 미래 주기 성분을 자동 생성합니다.');
-    text = text.replace(/The Horizon-Guided Patch Mixer introduces position-dependent refinement, allowing earlier patches to incorporate broader temporal context while preserving information close to the forecast boundary\./gi, '예측 경계 가이드 패치 믹서는 위치 의존적 정밀화를 도입하여 초기 패치에 넓은 시간 맥락을 부여하는 동시에 예측 경계 부근 정보를 손실 없이 보존합니다.');
-    text = text.replace(/CAMP further models the de-cycled residual through temporally aligned multi-resolution representations, enabling complementary dynamics at different scales to be captured within one forecasting framework\./gi, 'CAMP는 주기 제거 후 잔차 데이터를 시간 정렬된 다중 해상도 표현으로 모델링하여 단일 예보 프레임워크 내에서 다중 스케일 상호보완 동역학을 신속히 캡처합니다.');
-    text = text.replace(/Across seven long-term forecasting benchmarks, CAMP achieves the best average MSE on six datasets and the best or tied-best MAE on six\. It also obtains the highest MSE win count across sixteen settings on four PEMS traffic benchmarks\./gi, '7개 장기 예보 벤치마크 실험 결과, CAMP는 6개 데이터셋에서 최상위 평균 MSE 및 최상위 MAE를 기록했으며 4개 PEMS 교통 벤치마크 16개 환경에서 최다 승수를 달성했습니다.');
-
     // 4. 영문 피드 구문 단위 범용 동적 번역 헬퍼
     if (language === 'ko') {
+      text = text.replace(/OpenWorld Learning \(OWL\) pipelines for/gi, '개방형 세계 학습(OWL) 파이프라인:');
+      text = text.replace(/These pipelines answer/gi, '이 파이프라인은 다음을 설명합니다:');
+      text = text.replace(/This paper evaluates/gi, '본 논문에서는 다음을 평가합니다:');
+      text = text.replace(/Using the/gi, '다음을 활용하여:');
+      text = text.replace(/Across three studies/gi, '실증 연구 결과:');
+      text = text.replace(/The agent is not a/gi, '에이전트 역할:');
       text = text.replace(/Recent advances in/gi, '최신 기술 발전:');
       text = text.replace(/highlight its reliance on/gi, '의존성을 보여주며');
       text = text.replace(/severely degrading model performance/gi, '모델 성능 감소를 유발합니다.');
@@ -453,9 +475,24 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
       }
 
       // 7. * **👩‍💻 개발자/엔지니어**: ... 4대 직무별 인사이트 및 🔑 주요 기술적 차별점 불릿 카드 정밀 분리 수술
-      if (trimmed.includes('* **') || trimmed.includes('* 👩‍💻') || trimmed.includes('* 💡') || trimmed.includes('* 💼') || trimmed.includes('* 🔬') || trimmed.includes('🔑') || (trimmed.startsWith('6.') && trimmed.includes('*'))) {
-        // 별표(*) 또는 개행 기준 세부 불릿 항목 정밀 분리
-        let rawItems = trimmed.split(/(?=\*\s+|\*\s*\*\*|\*\s*👩‍💻|\*\s*💡|\*\s*💼|\*\s*🔬|\*\s*🔑)/g);
+      if (
+        trimmed.includes('* **') || 
+        trimmed.includes('* 👩‍💻') || 
+        trimmed.includes('* 💡') || 
+        trimmed.includes('* 💼') || 
+        trimmed.includes('* 🔬') || 
+        trimmed.includes('🔑') || 
+        trimmed.includes('🎯') ||
+        trimmed.includes('기술적 차별점') ||
+        trimmed.includes('실전 활용 팁') ||
+        trimmed.includes('추론 지연시간') ||
+        trimmed.includes('SelfCorrection') ||
+        trimmed.includes('Self-Correction') ||
+        trimmed.includes('멀티모달 벤치마크') ||
+        (trimmed.startsWith('6.') && trimmed.includes('*'))
+      ) {
+        // 별표(*), 숫자, 키워드 또는 개행 기준 세부 불릿 항목 정밀 분리
+        let rawItems = trimmed.split(/(?=\*\s+|\*\s*\*\*|\*\s*👩‍💻|\*\s*💡|\*\s*💼|\*\s*🔬|\*\s*🔑|SelfCorrection|Self-Correction|멀티모달|추론\s*지연)/g);
         if (rawItems.length <= 1) {
           rawItems = trimmed.split('\n');
         }
