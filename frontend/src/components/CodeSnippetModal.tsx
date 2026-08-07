@@ -94,13 +94,13 @@ export const CodeSnippetModal = ({ model, onClose }: CodeSnippetModalProps) => {
         </div>
 
         {/* Tab Buttons & Copy Button */}
-        <div className="px-6 pt-4 bg-slate-900 border-b border-slate-800 flex items-center justify-between gap-2 overflow-x-auto">
-          <div className="flex items-center gap-1.5 overflow-x-auto">
+        <div className="px-4 sm:px-6 pt-3 bg-slate-900 border-b border-slate-800 flex items-center justify-between gap-2 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          <div className="flex items-center gap-1.5 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-3.5 py-2 rounded-t-xl text-xs font-bold transition-all flex items-center gap-1.5 border-t border-x ${
+                className={`px-3 py-2 rounded-t-xl text-xs font-bold transition-all flex items-center gap-1.5 border-t border-x shrink-0 whitespace-nowrap min-h-[38px] ${
                   activeTab === tab.id
                     ? 'bg-slate-950 text-cyan-400 border-cyan-500/50 border-b-slate-950 shadow-sm'
                     : 'bg-slate-800/40 text-slate-400 border-transparent hover:text-slate-200 hover:bg-slate-800'
@@ -114,7 +114,7 @@ export const CodeSnippetModal = ({ model, onClose }: CodeSnippetModalProps) => {
 
           <button
             onClick={handleCopy}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1.5 transition-all shadow-sm mb-1 ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1.5 transition-all shadow-sm mb-1 shrink-0 whitespace-nowrap min-h-[36px] ${
               copied
                 ? 'bg-emerald-500 text-slate-950'
                 : 'bg-cyan-500 hover:bg-cyan-400 text-slate-950'

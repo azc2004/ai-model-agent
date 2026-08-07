@@ -46,6 +46,12 @@ export const CompareView: React.FC<CompareViewProps> = ({
         </div>
       </div>
 
+      {/* Mobile Swipe Hint */}
+      <div className="md:hidden flex items-center justify-between text-xs font-extrabold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/60 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700">
+        <span>👈 손가락으로 좌우 스크롤하여 대조</span>
+        <span className="text-cyan-600 dark:text-cyan-400">총 {comparedModels.length}개 모델 비교 중</span>
+      </div>
+
       {/* Comparison Grid Table */}
       <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-x-auto shadow-md">
         <table className="w-full text-left border-collapse">

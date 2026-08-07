@@ -246,11 +246,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
           </div>
 
           {/* Primary Dropdown Filters */}
-          <div className="flex items-center gap-2 w-full lg:w-auto shrink-0 flex-wrap sm:flex-nowrap">
+          <div className="grid grid-cols-3 sm:flex items-center gap-2 w-full lg:w-auto shrink-0">
             <select
               value={selectedProvider}
               onChange={(e) => setSelectedProvider(e.target.value)}
-              className="flex-1 sm:flex-none bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl px-3 py-2.5 text-xs font-extrabold cursor-pointer shadow-sm"
+              className="w-full sm:w-auto bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl px-2.5 sm:px-3 py-2.5 text-xs font-extrabold cursor-pointer shadow-sm min-h-[40px]"
             >
               <option value="all">{t.dashboard.allProviders}</option>
               {providers.map((p) => (
@@ -263,7 +263,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <select
               value={selectedTier}
               onChange={(e) => setSelectedTier(e.target.value)}
-              className="flex-1 sm:flex-none bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl px-3 py-2.5 text-xs font-extrabold cursor-pointer shadow-sm"
+              className="w-full sm:w-auto bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl px-2.5 sm:px-3 py-2.5 text-xs font-extrabold cursor-pointer shadow-sm min-h-[40px]"
             >
               <option value="all">{t.dashboard.allTiers}</option>
               <option value="Frontier">Frontier</option>
@@ -275,7 +275,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <select
               value={selectedLicense}
               onChange={(e) => setSelectedLicense(e.target.value)}
-              className="flex-1 sm:flex-none bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl px-3 py-2.5 text-xs font-extrabold cursor-pointer shadow-sm"
+              className="w-full sm:w-auto bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl px-2.5 sm:px-3 py-2.5 text-xs font-extrabold cursor-pointer shadow-sm min-h-[40px]"
             >
               <option value="all">{t.dashboard.allLicenses}</option>
               <option value="open">{t.dashboard.openWeight}</option>
@@ -287,12 +287,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
         {/* Row 2: Special Feature Chips & View Mode Switcher */}
         <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           {/* Feature Filter Chips */}
-          <div className="flex flex-wrap items-center gap-2 text-xs font-medium">
-            <span className="text-slate-500 dark:text-slate-400 font-extrabold shrink-0 mr-1">⚡ 특수 기능 필터:</span>
+          <div className="w-full sm:w-auto flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden text-xs font-medium">
+            <span className="text-slate-500 dark:text-slate-400 font-extrabold shrink-0 mr-1 whitespace-nowrap">⚡ 특수 기능 필터:</span>
 
             <button
               onClick={() => setReasoningOnly(!reasoningOnly)}
-              className={`px-3 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 font-bold shadow-sm text-xs ${
+              className={`px-3 py-2 rounded-xl border transition-all flex items-center gap-1.5 font-bold shadow-sm text-xs shrink-0 whitespace-nowrap min-h-[38px] ${
                 reasoningOnly
                   ? 'bg-purple-600 text-white border-purple-500 shadow-purple-500/20 ring-2 ring-purple-500/30'
                   : 'bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-purple-400'
@@ -303,7 +303,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
             <button
               onClick={() => setWebSearchOnly(!webSearchOnly)}
-              className={`px-3 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 font-bold shadow-sm text-xs ${
+              className={`px-3 py-2 rounded-xl border transition-all flex items-center gap-1.5 font-bold shadow-sm text-xs shrink-0 whitespace-nowrap min-h-[38px] ${
                 webSearchOnly
                   ? 'bg-blue-600 text-white border-blue-500 shadow-blue-500/20 ring-2 ring-blue-500/30'
                   : 'bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-blue-400'
@@ -314,7 +314,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
             <button
               onClick={() => setVerifiedOnly(!verifiedOnly)}
-              className={`px-3 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 font-bold shadow-sm text-xs ${
+              className={`px-3 py-2 rounded-xl border transition-all flex items-center gap-1.5 font-bold shadow-sm text-xs shrink-0 whitespace-nowrap min-h-[38px] ${
                 verifiedOnly
                   ? 'bg-emerald-600 text-white border-emerald-500 shadow-emerald-500/20 ring-2 ring-emerald-500/30'
                   : 'bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-emerald-400'
@@ -334,7 +334,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   setSelectedLicense('all');
                   setSearchTerm('');
                 }}
-                className="text-red-500 hover:text-red-600 dark:text-red-400 underline text-xs font-bold ml-1"
+                className="text-red-500 hover:text-red-600 dark:text-red-400 underline text-xs font-bold ml-1 shrink-0 whitespace-nowrap"
               >
                 필터 초기화
               </button>

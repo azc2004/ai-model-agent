@@ -917,8 +917,8 @@ export default function NewsPulseView() {
           )}
         </div>
 
-        {/* Lens Tabs */}
-        <div className="flex flex-wrap gap-2">
+        {/* Lens Tabs (Horizontal scroll on mobile) */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           {LENSES.map(lens => {
             const Icon = lens.icon;
             const isActive = activeLens === lens.id;
@@ -927,14 +927,14 @@ export default function NewsPulseView() {
               <button
                 key={lens.id}
                 onClick={() => setActiveLens(lens.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 shrink-0 whitespace-nowrap min-h-[40px]
                   ${isActive 
                     ? 'bg-blue-600 text-white shadow-md scale-105' 
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600'
                   }`}
                 title={lens.desc}
               >
-                <Icon className="w-4 h-4" />
+                <Icon className="w-4 h-4 shrink-0" />
                 {labelText}
               </button>
             );
