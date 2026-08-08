@@ -365,7 +365,7 @@ def find_related_cross_context(title: str, text: str, category: str) -> tuple:
     fallback_text = f"• **[글로벌 AI Tech Feed]** '{category}' 분야 동종 파이프라인 및 커뮤니티 교차 검증 완료\n  → 관련 벤치마크 및 현업 적용 사례 3건 참조 완료"
     return fallback_text, category
 
-def auto_translate_and_format(title: str, summary_text: str, source_name: str = "AI Tech Feed", category: str = "빅테크 공식") -> tuple[str, List[str], str]:
+def auto_translate_and_format(title: str, summary_text: str, source_name: str = "AI Tech Feed", category: str = "빅테크 공식", llm_blog_summary: str = "") -> tuple[str, List[str], str]:
     """다중 소스 크로스 검증(Cross-Validation) 및 4대 맞춤형 템플릿을 조합하여 1,900자+ 기술 블로그 리포트를 생성합니다."""
     # DB에서 넘어온 제목에 이미 붙어 있는 suffix 제거 후 원제목 복원
     safe_raw_title = str(title or "최신 AI 기술 속보").strip()
@@ -413,7 +413,21 @@ def auto_translate_and_format(title: str, summary_text: str, source_name: str = 
     template_type = route_template_type(title_kr, clean_text, category)
 
     # 3. 템플릿별 1,900자+ 마크다운 리포트 가공 (시각화 마커 포함)
-    if template_type == "sota_research":
+    if llm_blog_summary and len(llm_blog_summary) > 200:
+        blog_summary = f"""# 📌 [Deep-Dive Report] {title_kr}
+
+> **주요 출처**: {all_sources} | **카테고리**: {category} | **검증**: ✅ Multi-Source Cross-Validated
+
+---
+
+{llm_blog_summary}
+
+---
+
+### 🌐 다중 소스 크로스 검증 (Cross-Validation)
+{cross_context}
+"""
+    elif template_type == "sota_research":
         blog_summary = f"""# 📌 [SOTA Research] {title_kr}
 
 > **주요 출처**: {all_sources} | **카테고리**: 🔬 SOTA 모델 & 연구 리포트 | **검증**: ✅ Multi-Source Cross-Validated
@@ -1072,19 +1086,21 @@ Title: {raw['title']}
 Source: {raw['source_name']}
 Content: {raw['summary']}
 
-이 기사를 바탕으로 다음 JSON 스키마에 정확히 맞게 분석 결과를 한국어로 응답하세요. (마크다운 ```json 등은 제외하고 순수 JSON 문자열만 반환할 것)
+이 기사의 표면적인 요약을 넘어서, 독자가 원문 기사를 전혀 읽지 않고도 모든 세부 내용(핵심 수치, 작동 원리, 기술적 특징, 한계점 등)을 완벽히 파악할 수 있도록 매우 상세하고 깊이 있는 분석을 수행하세요.
+다음 JSON 스키마에 정확히 맞게 분석 결과를 한국어로 응답하세요. (마크다운 ```json 등은 제외하고 순수 JSON 문자열만 반환할 것)
 {{
     "title_kr": "기사 제목의 자연스러운 한국어 번역",
     "summary_bullets": [
-        "한국어 핵심 요약 1",
-        "한국어 핵심 요약 2",
-        "한국어 핵심 요약 3"
+        "핵심 내용 및 배경에 대한 상세 요약 (2~3문장 분량)",
+        "주요 기술적 성과, 수치, 아키텍처 등 구체적 디테일 (2~3문장 분량)",
+        "산업적 파급력 및 향후 전망에 대한 심층 요약 (2~3문장 분량)"
     ],
+    "blog_summary": "마크다운 포맷으로 작성된 심층 분석 리포트 전문. 원문의 세부 내용, 데이터, 파급력 등을 소제목(###)과 글머리 기호 등을 활용하여 1500자 이상으로 매우 구체적이고 체계적으로 작성할 것. 가상의 데이터를 절대 쓰지 말고 오직 기사 원문의 팩트에 기반할 것.",
     "actionable_insight": {{
-        "developer": "개발자/엔지니어 입장에서의 실무 적용 팁 1~2문장 (관련없으면 null)",
-        "pm": "서비스 기획자/PM 입장에서의 팁 1~2문장 (관련없으면 null)",
-        "business": "비즈니스 리더/임원 입장에서의 팁 1~2문장 (관련없으면 null)",
-        "researcher": "연구자/학계 입장에서의 팁 1~2문장 (관련없으면 null)"
+        "developer": "개발자/엔지니어 입장에서의 실무 적용 팁 2~3문장 (관련없으면 null)",
+        "pm": "서비스 기획자/PM 입장에서의 팁 2~3문장 (관련없으면 null)",
+        "business": "비즈니스 리더/임원 입장에서의 팁 2~3문장 (관련없으면 null)",
+        "researcher": "연구자/학계 입장에서의 팁 2~3문장 (관련없으면 null)"
     }},
     "impact_score": 85,
     "tags": ["#태그1", "#태그2"],
@@ -1100,7 +1116,7 @@ Content: {raw['summary']}
                 {"role": "user", "content": prompt}
             ],
             temperature=0.3,
-            max_tokens=1024,
+            max_tokens=2500,
         )
         content = response.choices[0].message.content.strip()
         if content.startswith("```json"):
@@ -1123,7 +1139,8 @@ Content: {raw['summary']}
 
         title_kr = data.get("title_kr", raw["title"])
         summary_bullets = data.get("summary_bullets", [])
-        _, _, blog_summary = auto_translate_and_format(title_kr, " ".join(summary_bullets), raw["source_name"])
+        llm_blog_summary = data.get("blog_summary", "")
+        _, _, blog_summary = auto_translate_and_format(title_kr, " ".join(summary_bullets), raw["source_name"], raw.get("category", "빅테크 공식"), llm_blog_summary)
 
         article = NewsArticle(
             id=str(uuid.uuid5(uuid.NAMESPACE_URL, raw["link"])),
