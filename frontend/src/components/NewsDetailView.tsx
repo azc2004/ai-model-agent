@@ -451,52 +451,94 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
         continue;
       }
 
-      // 9. 독립 불릿 리스트 (#### 헤더 없이 바로 나오는 경우)
+      // 9. 독립 불릿 리스트 (* 또는 - 로 시작하는 경우)
       if (trimmed.startsWith('* ') || trimmed.startsWith('- ')) {
         const bulletLines: string[] = [];
         while (i < lines.length) {
           const bl = lines[i].trim();
-          if (bl.startsWith('* ') || bl.startsWith('- ')) { bulletLines.push(bl); i++; }
-          else if (!bl) { i++; break; }
-          else break;
+          if (bl.startsWith('* ') || bl.startsWith('- ')) {
+            bulletLines.push(bl);
+            i++;
+          } else if (!bl) {
+            let peek = i + 1;
+            while (peek < lines.length && !lines[peek].trim()) peek++;
+            if (peek < lines.length && (lines[peek].trim().startsWith('* ') || lines[peek].trim().startsWith('- '))) {
+              i = peek;
+              continue;
+            } else {
+              i++;
+              break;
+            }
+          } else {
+            break;
+          }
         }
         elements.push(
-          <ul key={nextKey()} className="my-4 space-y-2 pl-2">
+          <div key={nextKey()} className="my-6 p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3.5">
             {bulletLines.map((bl, bi) => (
-              <li key={bi} className="flex items-start gap-2 text-slate-700 dark:text-slate-300 text-sm sm:text-base">
-                <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
-                <span>{parseInlineMarkdown(formatTranslatedText(bl.replace(/^[*\-]\s*/, '')))}</span>
-              </li>
+              <div key={bi} className="flex items-start gap-3 text-slate-800 dark:text-slate-200 text-sm sm:text-base leading-relaxed pb-3 border-b border-slate-100 dark:border-slate-800/60 last:border-b-0 last:pb-0">
+                <span className="w-2 h-2 rounded-full bg-blue-500 dark:bg-blue-400 shrink-0 mt-2" />
+                <div className="flex-1 font-normal">
+                  {parseInlineMarkdown(formatTranslatedText(bl.replace(/^[*\-]\s*/, '')))}
+                </div>
+              </div>
             ))}
-          </ul>
+          </div>
         );
         continue;
       }
 
-      // 10. • 크로스 컨텍스트 블록 (• **[Source]** ...)
-      if (trimmed.startsWith('•')) {
+      // 10. • 불릿 및 크로스 컨텍스트 블록 (• 또는 → 로 시작하는 경우) → 1개 통합 블록 및 눈이 편안한 고대비 컬러
+      if (trimmed.startsWith('•') || trimmed.startsWith('→')) {
         const bulletLines: string[] = [];
         while (i < lines.length) {
           const bl = lines[i].trim();
-          if (bl.startsWith('•') || bl.startsWith('→')) { bulletLines.push(bl); i++; }
-          else if (!bl) { i++; break; }
-          else break;
+          if (bl.startsWith('•') || bl.startsWith('→')) {
+            bulletLines.push(bl);
+            i++;
+          } else if (!bl) {
+            // 빈 줄이 있더라도 다음 불릿이 이어지면 1개 통합 블록으로 연속 수집
+            let peek = i + 1;
+            while (peek < lines.length && !lines[peek].trim()) peek++;
+            if (peek < lines.length && (lines[peek].trim().startsWith('•') || lines[peek].trim().startsWith('→'))) {
+              i = peek;
+              continue;
+            } else {
+              i++;
+              break;
+            }
+          } else {
+            break;
+          }
         }
+
         elements.push(
-          <div key={nextKey()} className="my-5 p-5 rounded-2xl bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white border border-indigo-500/40 shadow-xl space-y-3">
+          <div
+            key={nextKey()}
+            className="my-6 p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4"
+          >
             {bulletLines.map((bl, bi) => {
               const translated = formatTranslatedText(bl);
               const isHeaderLine = bl.startsWith('•');
+              const cleanText = translated.replace(/^[•→]\s*/, '').trim();
+
               return (
-                <div 
-                  key={bi} 
-                  className={
-                    isHeaderLine 
-                      ? "text-sm sm:text-base font-black text-white dark:text-white flex items-start gap-2 leading-snug tracking-tight" 
-                      : "text-xs sm:text-sm font-medium text-cyan-200 dark:text-cyan-200 pl-5 flex items-start gap-1.5 leading-relaxed"
-                  }
+                <div
+                  key={bi}
+                  className={`flex items-start gap-3 leading-relaxed pb-3 border-b border-slate-100 dark:border-slate-800/60 last:border-b-0 last:pb-0 ${
+                    isHeaderLine
+                      ? "text-sm sm:text-base font-medium text-slate-800 dark:text-slate-100"
+                      : "text-xs sm:text-sm font-normal text-slate-600 dark:text-slate-300 pl-4"
+                  }`}
                 >
-                  {parseInlineMarkdown(translated, true)}
+                  <span
+                    className={`shrink-0 rounded-full mt-2 ${
+                      isHeaderLine ? "w-2 h-2 bg-blue-500 dark:bg-blue-400" : "w-1.5 h-1.5 bg-cyan-500 dark:bg-cyan-400"
+                    }`}
+                  />
+                  <div className="flex-1">
+                    {parseInlineMarkdown(cleanText, true)}
+                  </div>
                 </div>
               );
             })}
