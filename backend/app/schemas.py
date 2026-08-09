@@ -64,6 +64,7 @@ class ModelSpec(BaseModel):
     supports_reasoning: bool = False  # 추론(CoT/thinking) 모드 지원
     supports_web_search: bool = False # 실시간 웹 검색 지원
     is_deprecated: bool = False       # 서비스 종료 예정/완료
+    is_new: bool = False              # 신규 출시/업데이트 모델 여부
 
 class GPUSpec(BaseModel):
     id: str
@@ -216,6 +217,7 @@ class NewsArticle(BaseModel):
     impact_score: int = Field(0, description="산업적 영향도 점수 (1~100)")
     tags: List[str] = Field(default_factory=list, description="핵심 트렌딩 키워드 태그")
     matched_lenses: List[str] = Field(default_factory=list, description="연관된 직무 렌즈 ['developer', 'pm', 'business', 'researcher']")
+    is_new: bool = Field(False, description="신규 수집 기사 여부 (48시간 이내)")
 
 class NewsPulseResponse(BaseModel):
     articles: List[NewsArticle]

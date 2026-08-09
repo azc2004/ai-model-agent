@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Newspaper, Users, Lightbulb, Briefcase, Microscope, Activity, Hash, Clock, RefreshCw, Search, X } from 'lucide-react';
+import { Newspaper, Users, Lightbulb, Briefcase, Microscope, Activity, Hash, Clock, RefreshCw, Search, X, Sparkles } from 'lucide-react';
 import { API_BASE_URL } from '../api';
 import { useLanguage } from '../context/LanguageContext';
 import { NewsDetailView } from './NewsDetailView';
@@ -25,6 +25,7 @@ interface NewsArticle {
   impact_score: number;
   tags: string[];
   matched_lenses: string[];
+  is_new?: boolean;
 }
 
 import type { Language } from '../i18n/translations';
@@ -270,6 +271,7 @@ const I18N_TEXTS = {
 
 const LENSES = [
   { id: 'all', label: '🔥 전체', icon: Activity, desc: '주요 AI 트렌드 종합' },
+  { id: 'new', label: '✨ 최신 속보 (NEW)', icon: Sparkles, desc: '최근 72시간 이내 수집된 신규 기술 리포트만 조망' },
   { id: 'developer', label: '👩‍💻 코딩 & 프레임워크', icon: Users, desc: 'API, 파인튜닝, Coding Agent, SDK' },
   { id: 'agent', label: '🤖 Agent & 오토메이션', icon: Activity, desc: 'Agentic AI, 자율 에이전트, RAG, 멀티에이전트' },
   { id: 'pm', label: '💡 기획 & UX', icon: Lightbulb, desc: '프롬프트 엔지니어링, AI UI/UX, 대화 가드레일' },
@@ -747,6 +749,19 @@ export default function NewsPulseView() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
+  const isRecentArticle = (pubDateStr: string, isNewField?: boolean): boolean => {
+    if (isNewField) return true;
+    if (!pubDateStr) return false;
+    try {
+      const pubTime = new Date(pubDateStr).getTime();
+      if (isNaN(pubTime)) return false;
+      const diffHours = (Date.now() - pubTime) / (1000 * 60 * 60);
+      return diffHours <= 96; // 4일 이내 신규 수집 기사
+    } catch {
+      return false;
+    }
+  };
+
   const fetchNews = async (lens: string) => {
     setError(null);
     setLoading(true);
@@ -756,7 +771,7 @@ export default function NewsPulseView() {
     const timeoutId = setTimeout(() => controller.abort(), 15000);
 
     try {
-      const url = lens === 'all' 
+      const url = (lens === 'all' || lens === 'new')
         ? `${API_BASE_URL}/news/pulse`
         : `${API_BASE_URL}/news/pulse?lens=${lens}`;
       
@@ -769,7 +784,7 @@ export default function NewsPulseView() {
       if (data && data.articles && data.articles.length > 0) {
         setNewsData(data);
       } else {
-        const filteredFallback = lens === 'all' 
+        const filteredFallback = (lens === 'all' || lens === 'new')
           ? CLIENT_FALLBACK_NEWS.articles 
           : CLIENT_FALLBACK_NEWS.articles.filter(a => a.matched_lenses.includes(lens));
         setNewsData({
@@ -781,7 +796,7 @@ export default function NewsPulseView() {
     } catch (err: any) {
       clearTimeout(timeoutId);
       console.warn("Using Client Fallback News due to network or timeout:", err);
-      const filteredFallback = lens === 'all' 
+      const filteredFallback = (lens === 'all' || lens === 'new')
         ? CLIENT_FALLBACK_NEWS.articles 
         : CLIENT_FALLBACK_NEWS.articles.filter(a => a.matched_lenses.includes(lens));
       setNewsData({
@@ -798,20 +813,26 @@ export default function NewsPulseView() {
     fetchNews(activeLens);
   }, [activeLens]);
 
-  // 키워드 검색 실시간 필터링
+  // 키워드 및 렌즈 실시간 필터링
   const filteredArticles = useMemo(() => {
     if (!newsData?.articles) return [];
-    if (!searchQuery.trim()) return newsData.articles;
+    let list = newsData.articles;
+
+    if (activeLens === 'new') {
+      list = list.filter(a => isRecentArticle(a.published_at, a.is_new));
+    }
+
+    if (!searchQuery.trim()) return list;
 
     const q = searchQuery.toLowerCase().trim();
-    return newsData.articles.filter(article => {
+    return list.filter(article => {
       const titleMatch = article.title.toLowerCase().includes(q);
       const sourceMatch = article.source_name.toLowerCase().includes(q);
       const tagMatch = article.tags?.some(tag => tag.toLowerCase().includes(q));
       const summaryMatch = article.summary_bullets?.some(b => b.toLowerCase().includes(q));
       return titleMatch || sourceMatch || tagMatch || summaryMatch;
     });
-  }, [newsData, searchQuery]);
+  }, [newsData, searchQuery, activeLens]);
 
   // 날짜 포맷팅 함수
   const formatTime = (dateString: string) => {
@@ -983,6 +1004,11 @@ export default function NewsPulseView() {
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2.5 mb-2.5 flex-wrap">
+                      {isRecentArticle(article.published_at, article.is_new) && (
+                        <span className="px-2.5 py-1 text-xs font-black rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md animate-pulse flex items-center gap-1">
+                          ⚡ NEW
+                        </span>
+                      )}
                       <span className="px-2.5 py-1 text-xs font-bold rounded-lg bg-slate-100 text-slate-800 dark:bg-slate-700/80 dark:text-slate-200">
                         🏢 {article.source_name}
                       </span>

@@ -3,6 +3,7 @@ import type { ModelSpec, Provider } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import { fetchModels, fetchProviders } from '../api';
 import { CodeSnippetModal } from './CodeSnippetModal';
+import { Sparkles } from 'lucide-react';
 
 interface DashboardProps {
   onCompareSelect?: (modelId: string) => void;
@@ -37,12 +38,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const [reasoningOnly, setReasoningOnly] = useState<boolean>(false);
   const [webSearchOnly, setWebSearchOnly] = useState<boolean>(false);
   const [verifiedOnly, setVerifiedOnly] = useState<boolean>(false);
+  const [onlyNew, setOnlyNew] = useState<boolean>(false);
 
   // View Mode: 'grid' | 'table' | 'compact'
   const [viewMode, setViewMode] = useState<'grid' | 'table' | 'compact'>('grid');
 
   // Sort state: 기본값 최신 인기 대표 모델(Arena Elo high) 우선 정렬
-  type SortKey = 'name' | 'provider' | 'tier' | 'context' | 'input_price' | 'output_price' | 'arena_elo' | 'rpm';
+  type SortKey = 'name' | 'provider' | 'tier' | 'context' | 'input_price' | 'output_price' | 'arena_elo' | 'rpm' | 'is_new';
   const [sortKey, setSortKey] = useState<SortKey>('arena_elo');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
 
@@ -138,6 +140,27 @@ export const Dashboard: React.FC<DashboardProps> = ({
     return ['openai', 'anthropic', 'google', 'meta', 'mistral', 'deepseek', 'aws', 'aws_bedrock', 'cohere', 'perplexity', 'xai', 'alibaba', 'microsoft'].includes(p);
   };
 
+  const checkIsNew = (model: ModelSpec): boolean => {
+    if (model.is_new) return true;
+    const id = (model.id || '').toLowerCase();
+    const name = (model.name || '').toLowerCase();
+    return (
+      id.includes('claude-3-7') ||
+      id.includes('gpt-4.5') ||
+      id.includes('gemini-2.5') ||
+      id.includes('deepseek-r1') ||
+      id.includes('deepseek-v3') ||
+      id.includes('llama-4') ||
+      id.includes('o3-mini') ||
+      id.includes('qwen-3') ||
+      id.includes('grok-3') ||
+      name.includes('3.7') ||
+      name.includes('4.5') ||
+      name.includes('2.5') ||
+      name.includes('r1')
+    );
+  };
+
   const filteredModels = models.filter((model) => {
     const matchesSearch =
       model.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -153,14 +176,16 @@ export const Dashboard: React.FC<DashboardProps> = ({
     const matchesReasoning = !reasoningOnly || checkSupportsReasoning(model);
     const matchesWebSearch = !webSearchOnly || checkSupportsWebSearch(model);
     const matchesVerified = !verifiedOnly || checkIsVerified(model);
+    const matchesNew = !onlyNew || checkIsNew(model);
 
-    return matchesSearch && matchesProvider && matchesTier && matchesLicense && matchesReasoning && matchesWebSearch && matchesVerified;
+    return matchesSearch && matchesProvider && matchesTier && matchesLicense && matchesReasoning && matchesWebSearch && matchesVerified && matchesNew;
   });
 
   const sortedModels = [...filteredModels].sort((a, b) => {
     let av: number | string = 0;
     let bv: number | string = 0;
     switch (sortKey) {
+      case 'is_new':    av = checkIsNew(a) ? 1 : 0; bv = checkIsNew(b) ? 1 : 0; break;
       case 'name':      av = a.name; bv = b.name; break;
       case 'provider':  av = a.provider_name; bv = b.provider_name; break;
       case 'tier':      av = TIER_ORDER[a.tier] ?? 0; bv = TIER_ORDER[b.tier] ?? 0; break;
@@ -291,6 +316,18 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <span className="text-slate-500 dark:text-slate-400 font-extrabold shrink-0 mr-1 whitespace-nowrap">⚡ 특수 기능 필터:</span>
 
             <button
+              onClick={() => setOnlyNew(!onlyNew)}
+              className={`px-3 py-2 rounded-xl border transition-all flex items-center gap-1.5 font-bold shadow-sm text-xs shrink-0 whitespace-nowrap min-h-[38px] ${
+                onlyNew
+                  ? 'bg-gradient-to-r from-rose-600 to-pink-600 text-white border-rose-500 shadow-rose-500/20 ring-2 ring-rose-500/30'
+                  : 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800/80 hover:border-rose-400'
+              }`}
+            >
+              <Sparkles className="w-3.5 h-3.5 text-rose-500 dark:text-rose-400 fill-rose-500 animate-pulse" />
+              <span>✨ 신규/최신 모델만 (NEW)</span>
+            </button>
+
+            <button
               onClick={() => setReasoningOnly(!reasoningOnly)}
               className={`px-3 py-2 rounded-xl border transition-all flex items-center gap-1.5 font-bold shadow-sm text-xs shrink-0 whitespace-nowrap min-h-[38px] ${
                 reasoningOnly
@@ -323,9 +360,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
               <span>🛡️</span> LiteLLM 검증 모델만
             </button>
 
-            {(reasoningOnly || webSearchOnly || verifiedOnly || selectedProvider !== 'all' || selectedTier !== 'all' || selectedLicense !== 'all' || searchTerm) && (
+            {(onlyNew || reasoningOnly || webSearchOnly || verifiedOnly || selectedProvider !== 'all' || selectedTier !== 'all' || selectedLicense !== 'all' || searchTerm) && (
               <button
                 onClick={() => {
+                  setOnlyNew(false);
                   setReasoningOnly(false);
                   setWebSearchOnly(false);
                   setVerifiedOnly(false);
@@ -398,6 +436,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             onChange={e => setSortKey(e.target.value as SortKey)}
             className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl px-3 py-2 text-xs font-extrabold shadow-sm cursor-pointer"
           >
+            <option value="is_new">✨ 신규/최신 모델 우선</option>
             <option value="arena_elo">🏆 LMSYS Arena Elo 랭킹순</option>
             <option value="input_price">💰 입력 비용 저렴한순</option>
             <option value="output_price">💸 출력 비용 저렴한순</option>
@@ -433,6 +472,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
                       {model.provider_name}
                     </span>
                     <div className="flex items-center gap-1.5 flex-wrap justify-end">
+                      {checkIsNew(model) && (
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600 text-white font-black shadow-sm tracking-wider animate-pulse" title="2025/2026 신규 출시 모델">
+                          ✨ NEW
+                        </span>
+                      )}
                       {checkSupportsReasoning(model) && (
                         <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-500/40 font-bold" title="Reasoning / CoT 지원">
                           🧠 Reasoning
@@ -603,7 +647,14 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   return (
                     <tr key={model.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
                       <td className="py-3 px-4 font-extrabold text-slate-900 dark:text-white">
-                        {model.name}
+                        <div className="flex items-center gap-2">
+                          <span>{model.name}</span>
+                          {checkIsNew(model) && (
+                            <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-gradient-to-r from-rose-500 to-pink-500 text-white font-black shrink-0 animate-pulse">
+                              ✨ NEW
+                            </span>
+                          )}
+                        </div>
                       </td>
                       <td className="py-3 px-4 text-slate-700 dark:text-slate-300 font-semibold">{model.provider_name}</td>
                       <td className="py-3 px-4">
@@ -684,6 +735,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   <span className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white truncate group-hover:text-blue-600 dark:group-hover:text-cyan-400 transition-colors">
                     {model.name}
                   </span>
+                  {checkIsNew(model) && (
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-gradient-to-r from-rose-500 to-pink-500 text-white font-black shadow-sm shrink-0 animate-pulse">
+                      ✨ NEW
+                    </span>
+                  )}
                   <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold border shrink-0 ${getTierBadge(model.tier)}`}>
                     {model.tier}
                   </span>
