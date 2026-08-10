@@ -3,6 +3,7 @@ import re
 import time
 import uuid
 import json
+import subprocess
 import urllib.parse
 import urllib.request
 import feedparser
@@ -429,10 +430,11 @@ def auto_translate_and_format(title: str, summary_text: str, source_name: str = 
 {cross_context}
 """
     else:
-        # 가짜 하드코딩 데이터 없이 실제 기사 본문 텍스트를 파싱하여 생성하는 동적 리포트
-        paragraphs = [p.strip() for p in clean_text.split(". ") if len(p.strip()) > 10]
-        if len(paragraphs) >= 2:
-            body_text = "\n\n".join([f"• {p}." if not p.endswith('.') else f"• {p}" for p in paragraphs])
+        # 문장/단락 단위 분할 (줄바꿈 우선, 마침표/느낌표 후 공백 패턴)
+        raw_chunks = re.split(r'\n+|\s+(?<=[.!?])\s+', clean_text)
+        paragraphs = [p.strip() for p in raw_chunks if len(p.strip()) > 15]
+        if len(paragraphs) >= 1:
+            body_text = "\n\n".join([f"• {p}" if not p.startswith("•") else p for p in paragraphs])
         else:
             body_text = clean_text if len(clean_text) > 20 else f"본 리포트는 **{source_name}**을 통해 발표된 최신 AI 기술 소식을 기반으로 작성되었습니다."
 
@@ -906,6 +908,35 @@ def clean_html(raw_html: str) -> str:
     soup = BeautifulSoup(raw_html, "html.parser")
     return soup.get_text(separator=" ", strip=True)
 
+def fetch_full_article_content_curl(url: str, fallback_text: str = "") -> str:
+    """RSS 피드의 요약문이 짧거나 파편화되어 있는 경우, 원문 기사 웹페이지 URL을 직접 스크래핑하여 심층 본문 텍스트를 추출합니다."""
+    if not url or not url.startswith("http") or "ai-compass.local" in url:
+        return fallback_text
+    try:
+        cmd = ["curl", "-sL", "-A", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36", "--max-time", "6", url]
+        res = subprocess.run(cmd, capture_output=True, text=True, timeout=7)
+        html = res.stdout
+        if not html or len(html) < 200:
+            return fallback_text
+        soup = BeautifulSoup(html, "html.parser")
+        for tag in soup(["script", "style", "nav", "footer", "header", "aside", "form", "svg"]):
+            tag.extract()
+        
+        main_content = soup.find("article") or soup.find("main") or soup.find(class_=re.compile(r"content|post|entry|article|body", re.I))
+        target_soup = main_content if main_content else soup
+
+        paragraphs = [p.get_text(separator=" ", strip=True) for p in target_soup.find_all(["p", "h2", "h3", "li"]) if len(p.get_text(strip=True)) > 20]
+        full_text = " ".join(paragraphs)
+        if len(full_text) > 200:
+            return full_text[:4000]
+        
+        text = target_soup.get_text(separator=" ", strip=True)
+        if len(text) > 200:
+            return text[:4000]
+    except Exception as e:
+        print(f"[Article Web Scraper Notice] {url}: {e}")
+    return fallback_text
+
 async def fetch_rss_feeds() -> List[Dict[str, Any]]:
     """비동기적이라기 보단 백그라운드 태스크로 여러 RSS를 동시에 파싱합니다."""
     loop = asyncio.get_event_loop()
@@ -930,15 +961,22 @@ async def fetch_rss_feeds() -> List[Dict[str, Any]]:
             if not raw_title:
                 raw_title = f"{feed_info['name']} 최신 AI 기술 발표 피드"
 
+            link_url = entry.get("link", "") or ""
+            summary_text = clean_html(raw_html)
+
+            # RSS 요약문이 500자 이하로 짧은 경우, 원문 기사 URL(link_url)을 직접 스크래핑하여 딥 컨텍스트 추출
+            if len(summary_text) < 500 and link_url.startswith("http"):
+                summary_text = fetch_full_article_content_curl(link_url, fallback_text=summary_text)
+
             img_url = extract_image_url(entry, raw_html, feed_info["name"], raw_title, raw_html)
             raw_articles.append({
                 "source_name": feed_info["name"],
                 "category": feed_info["category"],
                 "title": raw_title,
-                "link": entry.get("link", "") or f"https://ai-compass.local/{hash(raw_title)}",
+                "link": link_url or f"https://ai-compass.local/{hash(raw_title)}",
                 "published": entry.get("published", str(datetime.now(timezone.utc))),
                 "image_url": img_url,
-                "summary": clean_html(raw_html)[:2000] # LLM 컨텍스트 제한을 위해 2000자 슬라이싱
+                "summary": summary_text[:4000] # LLM 및 동적 파서에 원문 4000자 전체 전달
             })
     return raw_articles
 
