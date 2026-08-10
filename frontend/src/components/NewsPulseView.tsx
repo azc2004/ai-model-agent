@@ -810,16 +810,53 @@ export default function NewsPulseView() {
     window.history.pushState({}, '', url.toString());
   };
 
+  // 🔗 기사 상세 페이지 라우트 선택 및 URL 파라미터 동기화 (공유/북마크 지원)
+  const handleSelectArticle = (article: NewsArticle) => {
+    setSelectedArticle(article);
+    const url = new URL(window.location.href);
+    url.searchParams.set('tab', 'news');
+    url.searchParams.set('article', article.id);
+    window.history.pushState({}, '', url.toString());
+  };
+
+  const handleBackFromDetail = () => {
+    setSelectedArticle(null);
+    const url = new URL(window.location.href);
+    url.searchParams.delete('article');
+    window.history.pushState({}, '', url.toString());
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // URL ?article= 파라미터 감지 및 자동 선택
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const articleId = params.get('article');
+    if (articleId && newsData?.articles) {
+      const found = newsData.articles.find(a => a.id === articleId);
+      if (found) {
+        setSelectedArticle(found);
+      }
+    }
+  }, [newsData]);
+
   // 뒤로가기/앞으로가기 popstate 감지
   useEffect(() => {
     const handlePopState = () => {
       const params = new URLSearchParams(window.location.search);
       const lensParam = params.get('lens') || 'all';
+      const articleId = params.get('article');
       setActiveLensState(lensParam);
+
+      if (articleId && newsData?.articles) {
+        const found = newsData.articles.find(a => a.id === articleId);
+        if (found) setSelectedArticle(found);
+      } else {
+        setSelectedArticle(null);
+      }
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
+  }, [newsData]);
 
   const isRecentArticle = (pubDateStr: string, isNewField?: boolean): boolean => {
     if (isNewField) return true;
@@ -941,10 +978,7 @@ export default function NewsPulseView() {
       <NewsDetailView 
         article={selectedArticle} 
         t={t} 
-        onBack={() => {
-          setSelectedArticle(null);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }} 
+        onBack={handleBackFromDetail} 
       />
     );
   }
@@ -1092,7 +1126,7 @@ export default function NewsPulseView() {
                     </div>
                     
                     <h3 
-                      onClick={() => setSelectedArticle(article)}
+                      onClick={() => handleSelectArticle(article)}
                       className="text-xl font-bold text-gray-900 dark:text-white leading-snug mb-3 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-2 group/title"
                     >
                       <span>{formatArticleTitle(article.title)}</span>
@@ -1111,7 +1145,7 @@ export default function NewsPulseView() {
 
                     {/* Summary Bullets (Click to open modal) */}
                     <div 
-                      onClick={() => setSelectedArticle(article)}
+                      onClick={() => handleSelectArticle(article)}
                       className="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4 mb-4 border border-gray-100 dark:border-gray-700 cursor-pointer hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-sm transition-all group/summary"
                     >
                       <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2 group-hover/summary:text-blue-600 transition-colors">
