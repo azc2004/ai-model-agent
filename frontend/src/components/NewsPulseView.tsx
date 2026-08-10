@@ -827,14 +827,28 @@ export default function NewsPulseView() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // URL ?article= 파라미터 감지 및 자동 선택
+  // 🚀 0초 마운트 즉시 URL ?article= 파라미터 감지 및 동기적 즉각 개방
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const articleId = params.get('article');
-    if (articleId && newsData?.articles) {
-      const found = newsData.articles.find(a => a.id === articleId);
-      if (found) {
-        setSelectedArticle(found);
+    if (articleId) {
+      const foundInFallback = CLIENT_FALLBACK_NEWS.articles.find(a => a.id === articleId);
+      if (foundInFallback) {
+        setSelectedArticle(foundInFallback);
+      }
+    }
+  }, []);
+
+  // API 데이터 로드 완료 시 갱신
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const articleId = params.get('article');
+    if (articleId) {
+      const foundInData = newsData?.articles?.find(a => a.id === articleId);
+      const foundInFallback = CLIENT_FALLBACK_NEWS.articles.find(a => a.id === articleId);
+      const target = foundInData || foundInFallback;
+      if (target) {
+        setSelectedArticle(target);
       }
     }
   }, [newsData]);
@@ -847,12 +861,16 @@ export default function NewsPulseView() {
       const articleId = params.get('article');
       setActiveLensState(lensParam);
 
-      if (articleId && newsData?.articles) {
-        const found = newsData.articles.find(a => a.id === articleId);
-        if (found) setSelectedArticle(found);
-      } else {
-        setSelectedArticle(null);
+      if (articleId) {
+        const foundInData = newsData?.articles?.find(a => a.id === articleId);
+        const foundInFallback = CLIENT_FALLBACK_NEWS.articles.find(a => a.id === articleId);
+        const target = foundInData || foundInFallback;
+        if (target) {
+          setSelectedArticle(target);
+          return;
+        }
       }
+      setSelectedArticle(null);
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);

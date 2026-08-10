@@ -14,10 +14,12 @@ import { TutorialView } from './components/TutorialView';
 import NewsPulseView from './components/NewsPulseView';
 
 export const AppContent: React.FC = () => {
-  // URL query parameter ?tab= 파싱으로 북마크/즐겨찾기 라우팅 초기화
+  // URL query parameter ?tab= 및 ?article= 파싱으로 북마크/즐겨찾기 라우팅 초기화
   const getInitialTab = () => {
     const params = new URLSearchParams(window.location.search);
     const tabParam = params.get('tab');
+    const articleParam = params.get('article');
+    if (articleParam) return 'news';
     if (tabParam && ['dashboard', 'compare', 'tco', 'advisor', 'tutorial', 'leaderboard', 'gpus', 'news'].includes(tabParam)) {
       return tabParam;
     }
