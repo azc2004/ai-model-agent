@@ -767,8 +767,7 @@ export default function NewsPulseView() {
     setLoading(true);
 
     const controller = new AbortController();
-    // 백엔드가 서버단 인메모리(RAM) 캐시 웜업 상태이므로 0.001초 만에 197개 전량 반환
-    const timeoutId = setTimeout(() => controller.abort(), 15000);
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
 
     try {
       const url = (lens === 'all' || lens === 'new')
@@ -783,26 +782,22 @@ export default function NewsPulseView() {
       const data = await res.json();
       if (data && data.articles && data.articles.length > 0) {
         setNewsData(data);
-      } else {
-        const filteredFallback = (lens === 'all' || lens === 'new')
-          ? CLIENT_FALLBACK_NEWS.articles 
-          : CLIENT_FALLBACK_NEWS.articles.filter(a => a.matched_lenses.includes(lens));
-        setNewsData({
-          articles: filteredFallback,
-          total_count: filteredFallback.length,
-          last_updated: CLIENT_FALLBACK_NEWS.last_updated
-        });
       }
     } catch (err: any) {
       clearTimeout(timeoutId);
       console.warn("Using Client Fallback News due to network or timeout:", err);
-      const filteredFallback = (lens === 'all' || lens === 'new')
-        ? CLIENT_FALLBACK_NEWS.articles 
-        : CLIENT_FALLBACK_NEWS.articles.filter(a => a.matched_lenses.includes(lens));
-      setNewsData({
-        articles: filteredFallback,
-        total_count: filteredFallback.length,
-        last_updated: CLIENT_FALLBACK_NEWS.last_updated
+      setNewsData(prev => {
+        if (prev && prev.articles && prev.articles.length > 0) {
+          return prev;
+        }
+        const filteredFallback = (lens === 'all' || lens === 'new')
+          ? CLIENT_FALLBACK_NEWS.articles 
+          : CLIENT_FALLBACK_NEWS.articles.filter(a => a.matched_lenses.includes(lens));
+        return {
+          articles: filteredFallback,
+          total_count: filteredFallback.length,
+          last_updated: CLIENT_FALLBACK_NEWS.last_updated
+        };
       });
     } finally {
       setLoading(false);

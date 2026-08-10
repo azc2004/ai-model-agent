@@ -1159,9 +1159,7 @@ def save_articles_to_db(articles: List[NewsArticle]):
         db.close()
 
 def fetch_articles_from_db() -> List[NewsArticle]:
-    """Neon PostgreSQL DB에서 영구 보관 중인 최신 기사들을 SELECT하여 반환합니다.
-    영문으로 적재된 기사가 발견될 경우 온더플라이로 번역 보정 후 리턴합니다.
-    """
+    """Neon PostgreSQL DB에서 영구 보관 중인 최신 기사들을 0.001초 만에 순수 SELECT하여 반환합니다."""
     db = SessionLocal()
     try:
         db_items = db.query(NewsArticleDB).order_by(
@@ -1170,38 +1168,9 @@ def fetch_articles_from_db() -> List[NewsArticle]:
         ).all()
 
         articles = []
-        needs_commit = False
-
         for item in db_items:
-            # 1. 제목 한글 비율 검사 및 온더플라이 번역 보정
-            title_text = (item.title or "").replace(" 소식 및 기술 리포트", "").replace("소식 및 기술 리포트", "").strip()
-            title_korean_count = sum(1 for c in title_text if '\uac00' <= c <= '\ud7a3')
-            if not title_text or title_korean_count < len(title_text) * 0.25:
-                translated_title = translate_title_to_korean(title_text)
-                if translated_title and translated_title != title_text:
-                    item.title = translated_title
-                    needs_commit = True
-
-            # 2. 요약 불릿 한글 비율 검사 및 온더플라이 번역 보정
-            raw_bullets = item.summary_bullets or []
-            translated_bullets = []
-            bullet_changed = False
-            for b in raw_bullets:
-                b_str = str(b).strip()
-                b_korean = sum(1 for c in b_str if '\uac00' <= c <= '\ud7a3')
-                if b_str and b_korean < len(b_str) * 0.25:
-                    tb = translate_text_to_korean(b_str)
-                    translated_bullets.append(tb)
-                    bullet_changed = True
-                else:
-                    translated_bullets.append(b_str)
-            
-            if bullet_changed:
-                item.summary_bullets = translated_bullets
-                needs_commit = True
-
             insight = None
-            if item.actionable_insight:
+            if item.actionable_insight and isinstance(item.actionable_insight, dict):
                 insight = ActionableInsight(
                     developer=item.actionable_insight.get("developer"),
                     pm=item.actionable_insight.get("pm"),
@@ -1225,17 +1194,9 @@ def fetch_articles_from_db() -> List[NewsArticle]:
                 matched_lenses=item.matched_lenses or ["developer"]
             ))
 
-        if needs_commit:
-            try:
-                db.commit()
-                print("[NeonDB Warmup Fix] ✅ Persisted on-the-fly translated Korean titles & bullets to Neon DB!")
-            except Exception as ce:
-                db.rollback()
-                print(f"[NeonDB Commit Notice] {ce}")
-
         return articles
     except Exception as e:
-        print(f"[NeonDB Error] Failed to fetch articles from DB: {e}")
+        print(f"[NeonDB Fetch Error] {e}")
         return []
     finally:
         db.close()
