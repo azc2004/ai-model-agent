@@ -53,22 +53,13 @@ flowchart TD
 
 ---
 
-### 4. 🎯 4대 직무별 실전 적용 가이드라인 (Actionable Insights)
+### 4. 🎯 실무 적용 핵심 체크리스트 (Actionable Checklist)
 
-#### 👩‍💻 개발자/엔지니어
-* **Tooling SDK 도입**: Anthropic Computer Use SDK를 백엔드 워크플로우에 이식하여 GUI 조작 자동화 파이프라인 구축.
-* **비전 캡처 주기 최적화**: 화면 캡처 토큰 소비 절감을 위해 변경 감지(Delta Frame) 핑퐁 알고리즘 적용.
-
-#### 💡 서비스 기획자/PM
-* **Human-in-the-loop 승인 UX 설계**: 금융 결제, 민감 데이터 변경 시 사용자 확인 모달 승인 가드레일 설계.
-* **에이전트 가시성 강화**: 에이전트의 현재 추론 단계 및 행동 이력을 실시간 타임라인으로 제공하는 UI 구축.
-
-#### 💼 비즈니스 리더
-* **사내 데이터 수집 TCO 75% 절감**: 반복적인 외부 웹 사이트 서류 조회 및 수집 업무를 자율 에이전트에 위임.
-* **IAM 보안 컴플라이언스**: 에이전트 전용 격리 브라우저 인스턴스를 부여하여 사내 보안 유출 차단.
-
-#### 🔬 연구자/학계
-* **Vision-Language-Action (VLA) 모델 탐구**: 텍스트-비전-행동 도메인 간의 그라운딩(Grounding) 오차 저감 논문 분석.
+#### 🚀 컴퓨터 조작 에이전트 이식 및 보안 통제
+* **Computer Use SDK 도입**: Anthropic 공식 SDK를 백엔드 워크플로우에 이식하여 GUI 조작 자동화 구축.
+* **Human-in-the-loop 승인 가드레일**: 금융 결제, 민감 데이터 변경 시 사용자 모달 승인 가드레일 필수 적용.
+* **비전 캡처 토큰 최적화**: 화면 캡처 토큰 소비 절감을 위해 델타 프레임(Delta Frame) 변경 감지 적용.
+* **IAM 세션 격리**: 에이전트 전용 격리 브라우저 인스턴스를 부여하여 사내 보안 유출 차단.
 """
 
 SAMPLE_2_BLOG = """# 📌 [Deep-Dive Visual Report] DeepSeek R1 / V3: 671B MoE 자율 강화학습(RL) 아키텍처 및 벤치마크 리포트
@@ -124,22 +115,13 @@ flowchart LR
 
 ---
 
-### 4. 🎯 4대 직무별 실전 적용 가이드라인 (Actionable Insights)
+### 4. 🎯 실무 적용 핵심 체크리스트 (Actionable Checklist)
 
-#### 👩‍💻 개발자/엔지니어
-* **vLLM / SGLang FP8 서빙 파이프라인**: DeepSeekMoE 전용 텐서 병렬화(TP=8) 및 EP(Expert Parallelism) 커널 설정.
-* **GRPO 보상 함수 커스텀**: 사내 코딩 지침 준수 여부를 검증하는 자체 보상 모델 구축.
-
-#### 💡 서비스 기획자/PM
-* **추론 시간 제어 (Thinking Budget) UI**: 응답 속도와 추론 깊이 사이의 밸런스를 사용자가 조절하는 슬라이더 제공.
-* **CoT 숨김/펼치기 대화 인터페이스**: 에이전트의 사고 과정(Thinking)을 유저에게 직관적으로 시각화.
-
-#### 💼 비즈니스 리더
-* **AI 도입 TCO 극대화**: 고비용 상용 API를 DeepSeek R1 로컬/오픈 API로 대체하여 월 호스팅비 80% 단축.
-* **데이터 주권 확보**: 금융·의료 온프레미스 망 내에 671B MoE 모델 이식.
-
-#### 🔬 연구자/학계
-* **Group Relative Policy Optimization (GRPO)**: Critic 모델 없이 그룹 상대 보상으로 유전자 알고리즘 학습하는 원리 분석.
+#### 🚀 추론 엔진 서빙 및 TCO 최적화
+* **vLLM / SGLang FP8 파이프라인**: DeepSeekMoE 전용 텐서 병렬화(TP=8) 및 EP(Expert Parallelism) 커널 적용.
+* **Thinking Budget 인터페이스**: 응답 속도와 추론 깊이 사이의 밸런스를 조절하는 유저 선택 UI 구성.
+* **GRPO 보상 모델 커스텀**: 사내 코딩 및 보안 지침 준수 여부를 평가하는 자체 보상 엔진 설계.
+* **온프레미스 사내망 이식**: 고비용 상용 API 대신 망분리 환경 내 671B MoE 서빙으로 월 TCO 80% 절감.
 """
 
 SAMPLE_3_BLOG = """# 📌 [Deep-Dive Visual Report] Cool URIs don't change: W3C 영구 웹 아키텍처 및 시스템 지속성 리포트
@@ -192,20 +174,12 @@ flowchart TD
 
 ---
 
-### 4. 🎯 4대 직무별 실전 적용 가이드라인 (Actionable Insights)
+### 4. 🎯 실무 적용 핵심 체크리스트 (Actionable Checklist)
 
-#### 👩‍💻 개발자/엔지니어
+#### 🚀 영구적 URI 설계 및 트래픽 보존
 * **URL 라우팅 추상화 레이어 적용**: Nginx, Cloudflare Edge Worker 등 리버스 프록시를 배치하여 주소와 내부 파일 확장자 분리.
-* **301 Moved Permanently 리디렉션 맵핑 테이블 수립**: 구주소 파손 방지를 위한 자동 301 엔진 적용.
-
-#### 💡 서비스 기획자/PM
-* **시맨틱 Slug URL 네이밍 가이드 라인 수립**: 사용자 및 검색엔진(SEO) 모두에 친화적인 직관적 URL 체계 설계.
-
-#### 💼 비즈니스 리더
-* **SEO 백링크 자산 및 브랜드 도메인 영구성 확보**: 깨진 링크로 인한 검색 노출 패널티 및 브랜드 신뢰도 하락 방지.
-
-#### 🔬 연구자/학계
-* **Digital Object Identifier (DOI) 지속성 표준 연구**: 학술 논문 및 데이터셋 지속 보관소 아키텍처 분석.
+* **301 Permanent Redirect 엔진**: 구주소 파손 방지 및 SEO 백링크 자산 유지를 위한 레거시 URL 변환 맵핑 수립.
+* **시맨틱 Slug URL 적용**: 사용자 가독성과 검색엔진 SEO에 최적화된 직관적 식별자 구조 설계.
 """
 
 def create_sample_articles():

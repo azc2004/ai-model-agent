@@ -263,20 +263,24 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
           const headers = parseRow(tableLines[0]);
           const contentRows = tableLines.slice(2).map(parseRow);
           elements.push(
-            <div key={nextKey()} className="my-6 overflow-x-auto rounded-2xl border border-slate-800 shadow-2xl bg-slate-950">
+            <div key={nextKey()} className="my-6 overflow-x-auto rounded-2xl border border-slate-700/80 shadow-2xl bg-slate-950">
               <table className="w-full text-xs sm:text-sm text-left border-collapse">
                 <thead className="bg-slate-900 text-cyan-300 border-b border-slate-800">
                   <tr>
                     {headers.map((h, hi) => (
-                      <th key={hi} className="px-4 py-3.5 font-extrabold tracking-wider">{parseInlineMarkdown(formatTranslatedText(h))}</th>
+                      <th key={hi} className="px-4 py-3.5 font-extrabold tracking-wider text-cyan-300 dark:text-cyan-300">
+                        {parseInlineMarkdown(formatTranslatedText(h), true)}
+                      </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/80">
+                <tbody className="divide-y divide-slate-800">
                   {contentRows.map((row, ri) => (
-                    <tr key={ri} className={ri % 2 === 0 ? 'bg-slate-950' : 'bg-slate-900/50'}>
+                    <tr key={ri} className={ri % 2 === 0 ? 'bg-slate-950' : 'bg-slate-900'}>
                       {row.map((cell, ci) => (
-                        <td key={ci} className="px-4 py-3 text-slate-300 font-medium">{parseInlineMarkdown(formatTranslatedText(cell))}</td>
+                        <td key={ci} className="px-4 py-3 text-slate-100 font-bold leading-normal">
+                          {parseInlineMarkdown(formatTranslatedText(cell), true)}
+                        </td>
                       ))}
                     </tr>
                   ))}
@@ -382,15 +386,25 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
         const rows: string[][] = [];
         for (let ri = colCount; ri < cells.length; ri += colCount) { rows.push(cells.slice(ri, ri + colCount)); }
         elements.push(
-          <div key={nextKey()} className="my-6 overflow-x-auto rounded-2xl border border-slate-800 shadow-xl">
-            <table className="w-full text-xs sm:text-sm text-left">
-              <thead className="bg-slate-900 text-cyan-300 border-b border-slate-700">
-                <tr>{headers.map((h, hi) => <th key={hi} className="px-4 py-3 font-black">{h}</th>)}</tr>
+          <div key={nextKey()} className="my-6 overflow-x-auto rounded-2xl border border-slate-700/80 shadow-2xl bg-slate-950">
+            <table className="w-full text-xs sm:text-sm text-left border-collapse">
+              <thead className="bg-slate-900 text-cyan-300 border-b border-slate-800">
+                <tr>
+                  {headers.map((h, hi) => (
+                    <th key={hi} className="px-4 py-3.5 font-extrabold tracking-wider text-cyan-300 dark:text-cyan-300">
+                      {parseInlineMarkdown(formatTranslatedText(h), true)}
+                    </th>
+                  ))}
+                </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-slate-800">
                 {rows.map((row, ri) => (
-                  <tr key={ri} className={ri % 2 === 0 ? 'bg-slate-950' : 'bg-slate-900/60'}>
-                    {row.map((cell, ci) => <td key={ci} className="px-4 py-3 text-slate-300 font-medium">{cell}</td>)}
+                  <tr key={ri} className={ri % 2 === 0 ? 'bg-slate-950' : 'bg-slate-900'}>
+                    {row.map((cell, ci) => (
+                      <td key={ci} className="px-4 py-3 text-slate-100 font-bold leading-normal">
+                        {parseInlineMarkdown(formatTranslatedText(cell), true)}
+                      </td>
+                    ))}
                   </tr>
                 ))}
               </tbody>
@@ -400,7 +414,7 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
         i++; continue;
       }
 
-      // 7. ### H3 섹션 헤더 → 이후 연속된 [크로스 컨텍스트 블록 • **...**] 처리
+      // 7. ### H3 섹션 헤더
       if (trimmed.startsWith('### ')) {
         const headerText = trimmed.replace(/^###\s*/, '');
         elements.push(
@@ -414,33 +428,31 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
         i++; continue;
       }
 
-      // 8. #### H4 서브헤더 → 다음 줄부터 나오는 * 불릿들을 카드 그리드로 묶어서 처리
+      // 8. #### H4 서브헤더 및 리스트 카드 렌더링
       if (trimmed.startsWith('#### ')) {
         const subheaderText = trimmed.replace(/^####\s*/, '');
         i++;
-        // 다음 줄들을 미리 살펴서 * 불릿이 있으면 카드로 처리
         const bulletLines: string[] = [];
         while (i < lines.length) {
           const nextLine = lines[i];
           const nextTrimmed = nextLine.trim();
-          if (!nextTrimmed) { i++; continue; } // 빈 줄은 스킵하되 계속 수집
+          if (!nextTrimmed) { i++; continue; }
           if (nextTrimmed.startsWith('* ') || nextTrimmed.startsWith('- ')) {
             bulletLines.push(nextTrimmed);
             i++;
           } else {
-            break; // 불릿 아닌 다른 구조가 나오면 수집 종료
+            break;
           }
         }
 
         if (bulletLines.length > 0) {
-          // 카드 그리드 렌더링
           elements.push(
             <div key={nextKey()} className="my-6 space-y-3">
-              <div className="flex items-center gap-2 text-base sm:text-lg font-black text-cyan-300 dark:text-cyan-300 border-b border-slate-800 pb-2">
-                <Sparkles className="w-4 h-4 text-cyan-400 shrink-0" />
+              <h4 className="text-base sm:text-lg font-black text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-2 flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-blue-500 shrink-0" />
                 <span>{parseInlineMarkdown(formatTranslatedText(subheaderText))}</span>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              </h4>
+              <div className="space-y-2.5">
                 {bulletLines.map((bulletLine, bi) => {
                   let cleanItem = formatTranslatedText(bulletLine.replace(/^[*\-]\s*/, '').trim());
                   cleanItem = cleanItem.replace(/^\*+|\*+$/g, '').trim();
@@ -454,37 +466,14 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
                     descPart = cleanItem.slice(colonIdx + 1).replace(/^[*\-\s]+/, '').replace(/[*\s]+$/, '').trim();
                   }
 
-                  let cardBg = 'bg-slate-900/90 border-slate-800 text-slate-200';
-                  let badgeBg = 'bg-blue-500/20 text-blue-300 border-blue-400/30';
-                  let roleIcon = '🔑';
-
-                  if (cleanItem.includes('개발자') || cleanItem.includes('엔지니어')) {
-                    cardBg = 'bg-cyan-950/40 border-cyan-800/60 text-cyan-100';
-                    badgeBg = 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40';
-                    roleIcon = '👩‍💻';
-                  } else if (cleanItem.includes('기획자') || cleanItem.includes('PM')) {
-                    cardBg = 'bg-purple-950/40 border-purple-800/60 text-purple-100';
-                    badgeBg = 'bg-purple-500/20 text-purple-300 border-purple-400/40';
-                    roleIcon = '💡';
-                  } else if (cleanItem.includes('비즈니스') || cleanItem.includes('리더')) {
-                    cardBg = 'bg-emerald-950/40 border-emerald-800/60 text-emerald-100';
-                    badgeBg = 'bg-emerald-500/20 text-emerald-300 border-emerald-400/40';
-                    roleIcon = '💼';
-                  } else if (cleanItem.includes('연구자') || cleanItem.includes('학계')) {
-                    cardBg = 'bg-amber-950/40 border-amber-800/60 text-amber-100';
-                    badgeBg = 'bg-amber-500/20 text-amber-300 border-amber-400/40';
-                    roleIcon = '🔬';
-                  }
-
                   return (
-                    <div key={bi} className={`p-4 rounded-2xl border ${cardBg} shadow-lg flex flex-col justify-start space-y-2.5 transition-all hover:border-blue-500/50`}>
-                      <div className="flex items-start gap-2">
-                        <span className="text-base shrink-0 mt-0.5">{roleIcon}</span>
-                        <div className={`text-xs sm:text-sm font-black px-2.5 py-1 rounded-lg border ${badgeBg} leading-snug`}>
-                          {parseInlineMarkdown(titlePart || '핵심 기술 요소')}
+                    <div key={bi} className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row sm:items-start gap-3 transition-all hover:border-blue-400">
+                      {titlePart && (
+                        <div className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-black bg-blue-100 text-blue-900 dark:bg-blue-950 dark:text-cyan-300 border border-blue-200 dark:border-blue-800 shrink-0">
+                          {parseInlineMarkdown(titlePart)}
                         </div>
-                      </div>
-                      <div className="text-xs sm:text-sm leading-relaxed font-normal text-slate-300 dark:text-slate-200 pl-1">
+                      )}
+                      <div className="text-xs sm:text-sm leading-relaxed font-medium text-slate-800 dark:text-slate-200 flex-1">
                         {parseInlineMarkdown(descPart)}
                       </div>
                     </div>
@@ -494,9 +483,8 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
             </div>
           );
         } else {
-          // 불릿이 없으면 그냥 h4 헤더로
           elements.push(
-            <h4 key={nextKey()} className="text-base sm:text-lg font-extrabold text-blue-600 dark:text-blue-400 mt-6 mb-3 flex items-center gap-2">
+            <h4 key={nextKey()} className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white mt-6 mb-3 flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-blue-500 shrink-0" />
               {parseInlineMarkdown(formatTranslatedText(subheaderText))}
             </h4>
