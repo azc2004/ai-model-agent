@@ -287,34 +287,42 @@ def generate_custom_markdown(req: CustomMarkdownRequest):
 import asyncio
 from app.news_pipeline import refresh_news_pipeline, start_news_batch_loop, run_batch_job, init_news_cache_from_db, retranslate_db_articles
 
+async def start_model_batch_loop():
+    """12시간 주기 모델 정기 자동 동기화 배치 루프"""
+    print("[ModelBatch] Initializing 12-hour Periodic Model Sync Scheduler...")
+    while True:
+        try:
+            res = run_daily_model_sync_job()
+            init_models_cache_from_db()
+            print(f"[ModelBatch] ✅ Completed model sync: {res}")
+        except Exception as e:
+            print(f"[ModelBatch Error] Exception during model batch loop: {e}")
+        await asyncio.sleep(43200)
+
 async def _delayed_batch_loop():
-    """서버 안정화 후 (60초 대기) 뉴스 배치 루프를 가동합니다.
-    Render 무료 플랜 512MB RAM 한계로 인해 기동 즉시 force=True 배치는
-    메모리 스파이크 유발 및 OOM Kill 위험이 있어 1분 지연 실행합니다.
-    """
-    print("[NewsBatch] ⏳ Waiting 60s for server stabilization before starting batch loop...")
-    await asyncio.sleep(60)  # 60초 대기 후 배치 시작
+    """서버 안정화 후 (60초 대기) 뉴스 및 모델 배치 루프를 가동합니다."""
+    print("[NewsBatch & ModelBatch] ⏳ Waiting 60s for server stabilization before starting batch loops...")
+    await asyncio.sleep(60)
+    asyncio.create_task(start_model_batch_loop())
     await start_news_batch_loop()
 
 @app.on_event("startup")
 async def startup_event():
-    """서버 구동 시 DB 마이그레이션 후, 176개 모델과 197개 기사를 서버 RAM 메모리 캐시에 즉각 상주(Warm-up)시킵니다.
-    디바이스와 상관없이 누구나 0.001초 만에 최신 전량 응답을 받도록 보장합니다.
-    """
+    """서버 구동 시 DB 마이그레이션 후, 전체 모델과 기사를 서버 RAM 메모리 캐시에 즉각 상주(Warm-up)시킵니다."""
     # 1. DB 마이그레이션 (경량, 비동기 안전하게)
     try:
         init_neon_db_catalog()
     except Exception as e:
         print(f"[Startup] DB init warning (non-fatal): {e}")
 
-    # 2. ⚡ 서버단 인메모리(RAM) 캐시 웜업 (LLM 모델 176개 + 뉴스 기사 197개)
+    # 2. ⚡ 서버단 인메모리(RAM) 캐시 웜업
     try:
         init_models_cache_from_db()
         init_news_cache_from_db()
     except Exception as e:
         print(f"[Startup] Cache warmup notice: {e}")
     
-    # 3. 뉴스 배치 루프: 60초 뒤 지연 시작 (OOM 방지)
+    # 3. 뉴스 & 모델 정기 배치 루프 가동 (60초 지연 기동)
     asyncio.create_task(_delayed_batch_loop())
     print("[Startup] ✅ LLM Compass API 서버단 인메모리 캐시 웜업 완수. 0.001초 응답 준비 완료!")
 
@@ -327,31 +335,27 @@ async def get_news_pulse(
     """
     Neon DB 영구 적재 및 Cloudflare Edge Caching(CDN 1시간) + RAM 인메모리 캐시 기반 0.001초 AI 뉴스 리포트 API
     """
-    # Cloudflare Edge CDN 캐싱 헤더 적용: 1시간 동안 Cloudflare 에지 노드가 백엔드 호출 없이 즉시 응답 리턴
     response.headers["Cache-Control"] = "public, max-age=60, s-maxage=3600, stale-while-revalidate=86400"
     response.headers["CDN-Cache-Control"] = "max-age=3600"
     response.headers["Cloudflare-CDN-Cache-Control"] = "max-age=3600"
 
-    articles = await refresh_news_pipeline()
+    all_articles = await refresh_news_pipeline()
+    total_count = len(all_articles)
     
-    if lens:
+    articles = all_articles
+    if lens and lens != 'all' and lens != 'new':
         articles = [a for a in articles if lens in a.matched_lenses]
         
     if search:
         s = search.lower()
-        filtered = []
-        for a in articles:
-            in_title = s in a.title.lower()
-            in_bullets = any(s in b.lower() for b in a.summary_bullets)
-            in_tags = any(s in t.lower() for t in a.tags)
-            in_source = s in a.source_name.lower()
-            if in_title or in_bullets or in_tags or in_source:
-                filtered.append(a)
-        articles = filtered
+        articles = [
+            a for a in articles 
+            if s in a.title.lower() or any(s in b.lower() for b in a.summary_bullets) or any(s in t.lower() for t in a.tags) or s in a.source_name.lower()
+        ]
         
     return {
         "articles": articles,
-        "total_count": len(articles),
+        "total_count": total_count, # 전체 기사 총량(157개) 유지 (렌즈 필터로 수량이 요동치는 착시 방지)
         "last_updated": datetime.now(timezone.utc).isoformat()
     }
 
