@@ -825,7 +825,11 @@ export default function NewsPulseView() {
       const sourceMatch = article.source_name.toLowerCase().includes(q);
       const tagMatch = article.tags?.some(tag => tag.toLowerCase().includes(q));
       const summaryMatch = article.summary_bullets?.some(b => b.toLowerCase().includes(q));
-      return titleMatch || sourceMatch || tagMatch || summaryMatch;
+      const blogMatch = article.blog_summary?.toLowerCase().includes(q);
+      const insightMatch = article.actionable_insight 
+        ? Object.values(article.actionable_insight).some(v => v && v.toLowerCase().includes(q))
+        : false;
+      return titleMatch || sourceMatch || tagMatch || summaryMatch || blogMatch || insightMatch;
     });
   }, [newsData, searchQuery, activeLens]);
 

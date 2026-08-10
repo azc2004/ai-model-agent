@@ -333,11 +333,12 @@ async def get_news_pulse(
     search: Optional[str] = Query(None, description="키워드 검색어")
 ):
     """
-    Neon DB 영구 적재 및 Cloudflare Edge Caching(CDN 1시간) + RAM 인메모리 캐시 기반 0.001초 AI 뉴스 리포트 API
+    Neon DB 영구 적재 및 실시간 최신 AI 뉴스 리포트 API (검색 및 직무 렌즈 지원)
     """
-    response.headers["Cache-Control"] = "public, max-age=60, s-maxage=3600, stale-while-revalidate=86400"
-    response.headers["CDN-Cache-Control"] = "max-age=3600"
-    response.headers["Cloudflare-CDN-Cache-Control"] = "max-age=3600"
+    # 실시간 검색 및 최신 기사 즉시 반영을 위해 캐시 무효화 헤더 설정
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
 
     all_articles = await refresh_news_pipeline()
     total_count = len(all_articles)
@@ -348,14 +349,23 @@ async def get_news_pulse(
         
     if search:
         s = search.lower()
-        articles = [
-            a for a in articles 
-            if s in a.title.lower() or any(s in b.lower() for b in a.summary_bullets) or any(s in t.lower() for t in a.tags) or s in a.source_name.lower()
-        ]
+        filtered = []
+        for a in articles:
+            in_title = s in a.title.lower()
+            in_bullets = any(s in b.lower() for b in a.summary_bullets)
+            in_tags = any(s in t.lower() for t in a.tags)
+            in_source = s in a.source_name.lower()
+            in_blog = s in (a.blog_summary or "").lower()
+            in_insight = False
+            if a.actionable_insight:
+                in_insight = any(s in str(v).lower() for v in a.actionable_insight.dict().values() if v)
+            if in_title or in_bullets or in_tags or in_source or in_blog or in_insight:
+                filtered.append(a)
+        articles = filtered
         
     return {
         "articles": articles,
-        "total_count": total_count, # 전체 기사 총량(157개) 유지 (렌즈 필터로 수량이 요동치는 착시 방지)
+        "total_count": total_count, # 전체 기사 총량 유지
         "last_updated": datetime.now(timezone.utc).isoformat()
     }
 
