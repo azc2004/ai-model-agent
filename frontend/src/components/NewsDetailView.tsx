@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { ArrowLeft, ExternalLink, Share2, Sparkles, Building2, Calendar, ShieldCheck } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import type { Language } from '../i18n/translations';
+import { MermaidRenderer } from './MermaidRenderer';
 
 interface ActionableInsight {
   developer?: string;
@@ -233,6 +234,59 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
 
       // 빈 줄 스킵
       if (!trimmed) { i++; continue; }
+
+      // 0-1. ```mermaid 코드블록 파싱
+      if (trimmed.startsWith('```mermaid')) {
+        i++;
+        const chartLines: string[] = [];
+        while (i < lines.length && !lines[i].trim().startsWith('```')) {
+          chartLines.push(lines[i]);
+          i++;
+        }
+        if (i < lines.length && lines[i].trim().startsWith('```')) {
+          i++;
+        }
+        const chartCode = chartLines.join('\n');
+        elements.push(<MermaidRenderer key={nextKey()} chart={chartCode} />);
+        continue;
+      }
+
+      // 0-2. Standard Markdown Table | Col 1 | Col 2 |
+      if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
+        const tableLines: string[] = [];
+        while (i < lines.length && lines[i].trim().startsWith('|') && lines[i].trim().endsWith('|')) {
+          tableLines.push(lines[i].trim());
+          i++;
+        }
+        if (tableLines.length >= 2) {
+          const parseRow = (rowStr: string) => rowStr.split('|').slice(1, -1).map(c => c.trim());
+          const headers = parseRow(tableLines[0]);
+          const contentRows = tableLines.slice(2).map(parseRow);
+          elements.push(
+            <div key={nextKey()} className="my-6 overflow-x-auto rounded-2xl border border-slate-800 shadow-2xl bg-slate-950">
+              <table className="w-full text-xs sm:text-sm text-left border-collapse">
+                <thead className="bg-slate-900 text-cyan-300 border-b border-slate-800">
+                  <tr>
+                    {headers.map((h, hi) => (
+                      <th key={hi} className="px-4 py-3.5 font-extrabold tracking-wider">{parseInlineMarkdown(formatTranslatedText(h))}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800/80">
+                  {contentRows.map((row, ri) => (
+                    <tr key={ri} className={ri % 2 === 0 ? 'bg-slate-950' : 'bg-slate-900/50'}>
+                      {row.map((cell, ci) => (
+                        <td key={ci} className="px-4 py-3 text-slate-300 font-medium">{parseInlineMarkdown(formatTranslatedText(cell))}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          );
+          continue;
+        }
+      }
 
       // 1. 최상단 # 헤더 스킵
       if (trimmed.startsWith('# ')) { i++; continue; }
