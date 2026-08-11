@@ -263,12 +263,12 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
           const headers = parseRow(tableLines[0]);
           const contentRows = tableLines.slice(2).map(parseRow);
           elements.push(
-            <div key={nextKey()} className="my-6 overflow-x-auto rounded-2xl border border-slate-700/80 shadow-2xl bg-slate-950">
+            <div key={nextKey()} className="my-4 sm:my-6 overflow-x-auto rounded-xl sm:rounded-2xl border border-slate-700/80 shadow-xl bg-slate-950 -mx-1 sm:mx-0">
               <table className="w-full text-xs sm:text-sm text-left border-collapse">
                 <thead className="bg-slate-900 text-cyan-300 border-b border-slate-800">
                   <tr>
                     {headers.map((h, hi) => (
-                      <th key={hi} className="px-4 py-3.5 font-extrabold tracking-wider text-cyan-300 dark:text-cyan-300">
+                      <th key={hi} className="px-2.5 sm:px-4 py-2.5 sm:py-3.5 font-extrabold tracking-wider text-cyan-300 dark:text-cyan-300">
                         {parseInlineMarkdown(formatTranslatedText(h), true)}
                       </th>
                     ))}
@@ -278,7 +278,7 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
                   {contentRows.map((row, ri) => (
                     <tr key={ri} className={ri % 2 === 0 ? 'bg-slate-950' : 'bg-slate-900'}>
                       {row.map((cell, ci) => (
-                        <td key={ci} className="px-4 py-3 text-slate-100 font-bold leading-normal">
+                        <td key={ci} className="px-2.5 sm:px-4 py-2.5 sm:py-3 text-slate-100 font-bold leading-normal text-xs sm:text-sm">
                           {parseInlineMarkdown(formatTranslatedText(cell), true)}
                         </td>
                       ))}
@@ -606,20 +606,20 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
 
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white py-6 px-4 sm:px-6 lg:px-8 animate-fade-in">
-      <div className="max-w-4xl mx-auto space-y-6">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white py-2 sm:py-6 px-1 sm:px-6 lg:px-8 animate-fade-in">
+      <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
         
         {/* Navigation Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
+        <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-slate-200 dark:border-slate-800">
           <button
             onClick={onBack}
-            className="flex items-center gap-2 text-sm font-bold text-blue-600 hover:text-blue-700 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/50 px-3.5 py-2 rounded-xl transition-all"
+            className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold text-blue-600 hover:text-blue-700 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/50 px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl transition-all"
           >
             <ArrowLeft className="w-4 h-4" /> 목록으로 돌아가기
           </button>
 
-          <div className="flex items-center gap-3">
-            <span className="px-3 py-1 text-xs font-black rounded-lg bg-blue-600 text-white shadow">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <span className="px-2.5 py-1 text-[11px] sm:text-xs font-black rounded-lg bg-blue-600 text-white shadow">
               {article.category}
             </span>
             <button
@@ -640,11 +640,11 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
         </div>
 
         {/* Article Main Card Page */}
-        <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-200/80 dark:border-slate-800/80 space-y-8">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl p-3.5 sm:p-8 md:p-10 shadow-xl border border-slate-200/80 dark:border-slate-800/80 space-y-6 sm:space-y-8">
           
           {/* Header Image */}
           {!imgError && article.image_url ? (
-            <div className="w-full h-64 sm:h-96 rounded-2xl overflow-hidden shadow-md border border-slate-100 dark:border-slate-800 relative bg-slate-950">
+            <div className="w-full h-48 sm:h-96 rounded-xl sm:rounded-2xl overflow-hidden shadow-md border border-slate-100 dark:border-slate-800 relative bg-slate-950">
               <img 
                 src={article.image_url} 
                 alt={article.title} 

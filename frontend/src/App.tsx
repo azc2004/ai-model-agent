@@ -116,7 +116,7 @@ export const AppContent: React.FC = () => {
         compareCount={selectedModelIds.length}
       />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-6 py-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-2.5 sm:px-6 py-4 sm:py-8">
         {activeTab === 'dashboard' && (
           <Dashboard
             models={models}
