@@ -38,9 +38,26 @@ jobs:
         env:
           VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
 
-      - name: ☁️ Deploy to Cloudflare Workers
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: deploy
+      - name: 🔍 Verify Deployment Environment & Secrets
+        run: |
+          echo "Checking Secrets configuration..."
+          if [ -z "${{ secrets.CLOUDFLARE_API_TOKEN }}" ]; then
+            echo "❌ [FATAL ERROR] secret 'CLOUDFLARE_API_TOKEN' is not defined or empty in GitHub Repository Secrets!"
+            echo "👉 Fix: Go to GitHub Repo -> Settings -> Secrets and variables -> Actions -> Add 'CLOUDFLARE_API_TOKEN'"
+            exit 1
+          fi
+          if [ -z "${{ secrets.CLOUDFLARE_ACCOUNT_ID }}" ]; then
+            echo "❌ [FATAL ERROR] secret 'CLOUDFLARE_ACCOUNT_ID' is not defined or empty in GitHub Repository Secrets!"
+            echo "👉 Fix: Go to GitHub Repo -> Settings -> Secrets and variables -> Actions -> Add 'CLOUDFLARE_ACCOUNT_ID'"
+            exit 1
+          fi
+          echo "✅ Secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID are present."
+          echo "Checking frontend build dist folder..."
+          ls -la frontend/dist
+
+      - name: ☁️ Deploy to Cloudflare Workers via Wrangler CLI
+        run: |
+          npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
