@@ -1,3 +1,4 @@
+// 🚀 Cloudflare Workers CI/CD Pipeline Active
 import React, { useState, useEffect } from 'react';
 import type { ModelSpec, Provider } from './types';
 import { fetchModels, fetchProviders } from './api';
