@@ -1,132 +1,6 @@
-import type { ModelSpec } from '../types';
+import type { ModelSpec } from "../types";
 
 export const FALLBACK_MODELS: ModelSpec[] = [
-  {
-    "id": "claude-3-7-sonnet-thinking",
-    "provider_id": "anthropic",
-    "provider_name": "Anthropic",
-    "name": "Claude 3.7 Sonnet (Thinking Mode)",
-    "tier": "Frontier",
-    "is_open_weight": false,
-    "license_type": "Proprietary",
-    "architecture": "Chain-of-Thought RL",
-    "context_window": 200000,
-    "max_output_tokens": 64000,
-    "modality": [
-      "text",
-      "vision"
-    ],
-    "description": "Claude 3.7 Sonnet 사고 과정(Extended Thinking) 최대 가동 추론 스펙",
-    "official_url": "https://docs.anthropic.com/en/docs/about-claude/models",
-    "source_docs_url": "https://docs.anthropic.com/en/docs/about-claude/models",
-    "api_pricing": {
-      "input_price_per_1m": 3.0,
-      "output_price_per_1m": 15.0,
-      "cached_input_price_per_1m": 0.75,
-      "batch_discount_percent": 0.0
-    },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
-    "benchmarks": {
-      "arena_elo": 1405,
-      "mmlu_pro": 92.5,
-      "gpqa": 86.2,
-      "swe_bench": 70.3
-    },
-    "hardware_requirements": [],
-    "is_verified": true,
-    "supports_reasoning": true,
-    "supports_web_search": false,
-    "is_deprecated": false
-  },
-  {
-    "id": "claude-3-7-sonnet-20250219",
-    "provider_id": "anthropic",
-    "provider_name": "Anthropic",
-    "name": "Claude 3.7 Sonnet (20250219)",
-    "tier": "Frontier",
-    "is_open_weight": false,
-    "license_type": "Proprietary",
-    "architecture": "Hybrid Reasoning (Thinking Mode)",
-    "context_window": 200000,
-    "max_output_tokens": 64000,
-    "modality": [
-      "text",
-      "vision"
-    ],
-    "description": "Anthropic 최초 하이브리드 추론 플래그십. 일반 응답 및 Extended Thinking 선택 가동. SWE-bench 및 코딩 SOTA",
-    "official_url": "https://docs.anthropic.com/en/docs/about-claude/models",
-    "source_docs_url": "https://docs.anthropic.com/en/docs/about-claude/models",
-    "api_pricing": {
-      "input_price_per_1m": 3.0,
-      "output_price_per_1m": 15.0,
-      "cached_input_price_per_1m": 0.75,
-      "batch_discount_percent": 0.0
-    },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
-    "benchmarks": {
-      "arena_elo": 1395,
-      "mmlu_pro": 91.2,
-      "gpqa": 84.8,
-      "swe_bench": 70.3
-    },
-    "hardware_requirements": [],
-    "is_verified": true,
-    "supports_reasoning": true,
-    "supports_web_search": false,
-    "is_deprecated": false
-  },
-  {
-    "id": "claude-3-7-sonnet",
-    "provider_id": "anthropic",
-    "provider_name": "Anthropic",
-    "name": "Claude 3.7 Sonnet (Latest)",
-    "tier": "Frontier",
-    "is_open_weight": false,
-    "license_type": "Proprietary",
-    "architecture": "Hybrid Reasoning (Thinking Mode)",
-    "context_window": 200000,
-    "max_output_tokens": 64000,
-    "modality": [
-      "text",
-      "vision"
-    ],
-    "description": "Claude 3.7 Sonnet 공식 최신 엔드포인트 파이프라인",
-    "official_url": "https://docs.anthropic.com/en/docs/about-claude/models",
-    "source_docs_url": "https://docs.anthropic.com/en/docs/about-claude/models",
-    "api_pricing": {
-      "input_price_per_1m": 3.0,
-      "output_price_per_1m": 15.0,
-      "cached_input_price_per_1m": 0.75,
-      "batch_discount_percent": 0.0
-    },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
-    "benchmarks": {
-      "arena_elo": 1395,
-      "mmlu_pro": 91.2,
-      "gpqa": 84.8,
-      "swe_bench": 70.3
-    },
-    "hardware_requirements": [],
-    "is_verified": true,
-    "supports_reasoning": true,
-    "supports_web_search": false,
-    "is_deprecated": false
-  },
   {
     "id": "claude-opus-5",
     "provider_id": "anthropic",
@@ -151,12 +25,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 1.25,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1392,
       "mmlu_pro": 90.1,
@@ -167,49 +35,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
-  },
-  {
-    "id": "o1-pro",
-    "provider_id": "openai",
-    "provider_name": "OpenAI",
-    "name": "o1 Pro",
-    "tier": "Frontier",
-    "is_open_weight": false,
-    "license_type": "Proprietary",
-    "architecture": "Chain-of-Thought RL",
-    "context_window": 200000,
-    "max_output_tokens": 100000,
-    "modality": [
-      "text",
-      "vision"
-    ],
-    "description": "o1 컴퓨팅 연산 자원 증대 버전. 고난도 수학·과학 연구 최상위",
-    "official_url": "https://platform.openai.com/docs/models/o1",
-    "source_docs_url": "https://platform.openai.com/docs/models/o1",
-    "api_pricing": {
-      "input_price_per_1m": 150.0,
-      "output_price_per_1m": 600.0,
-      "cached_input_price_per_1m": 75.0,
-      "batch_discount_percent": 0.0
-    },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
-    "benchmarks": {
-      "arena_elo": 1390,
-      "mmlu_pro": 91.5,
-      "gpqa": 83.0,
-      "swe_bench": 68.0
-    },
-    "hardware_requirements": [],
-    "is_verified": true,
-    "supports_reasoning": true,
-    "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gpt-5.6-sol",
@@ -236,12 +63,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 2.5,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1385,
       "mmlu_pro": 89.4,
@@ -252,7 +73,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gpt-4-5-preview",
@@ -278,12 +100,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 37.5,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1380,
       "mmlu_pro": 90.5,
@@ -294,7 +110,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "claude-opus-4-1",
@@ -320,12 +137,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 1.5,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1380,
       "mmlu_pro": 91.0,
@@ -336,7 +147,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "deepseek-reasoner",
@@ -345,7 +157,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "DeepSeek-R1 (reasoner alias)",
     "tier": "Frontier",
     "is_open_weight": true,
-    "license_type": "MIT",
+    "license_type": "Proprietary",
     "architecture": "MoE CoT",
     "context_window": 131072,
     "max_output_tokens": 16384,
@@ -361,12 +173,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.07,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1375,
       "mmlu_pro": 90.0,
@@ -375,9 +181,10 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     },
     "hardware_requirements": [],
     "is_verified": true,
-    "supports_reasoning": true,
+    "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "deepseek-v4-pro",
@@ -386,8 +193,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "DeepSeek V4 Pro",
     "tier": "Frontier",
     "is_open_weight": true,
-    "license_type": "MIT",
-    "parameter_count_b": 671.0,
+    "license_type": "Proprietary",
     "architecture": "MoE (Active 37B)",
     "context_window": 128000,
     "max_output_tokens": 8192,
@@ -403,12 +209,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.14,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1370,
       "mmlu_pro": 88.5,
@@ -419,7 +219,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "o3",
@@ -445,12 +246,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 2.5,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1370,
       "mmlu_pro": 91.0,
@@ -459,9 +254,10 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     },
     "hardware_requirements": [],
     "is_verified": true,
-    "supports_reasoning": true,
+    "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "grok-4",
@@ -487,12 +283,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.75,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1370,
       "mmlu_pro": 88.0,
@@ -503,7 +293,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gemini-2-5-pro",
@@ -530,12 +321,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.31,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1370,
       "mmlu_pro": 90.0,
@@ -545,8 +330,9 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "claude-opus-4-5",
@@ -572,12 +358,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.5,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1370,
       "mmlu_pro": 89.0,
@@ -588,51 +368,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
-  },
-  {
-    "id": "gemini-2-0-pro-exp",
-    "provider_id": "google",
-    "provider_name": "Google AI",
-    "name": "Gemini 2.0 Pro (Experimental)",
-    "tier": "Frontier",
-    "is_open_weight": false,
-    "license_type": "Proprietary",
-    "architecture": "Native Multimodal",
-    "context_window": 2097152,
-    "max_output_tokens": 8192,
-    "modality": [
-      "text",
-      "vision",
-      "audio",
-      "video"
-    ],
-    "description": "Google 2.0 세대 200만 컨텍스트 플래그십 실험 모델. 복잡 코드 추론 및 옴니 분석",
-    "official_url": "https://ai.google.dev/gemini-api/docs/models/gemini",
-    "source_docs_url": "https://ai.google.dev/gemini-api/docs/models/gemini",
-    "api_pricing": {
-      "input_price_per_1m": 2.0,
-      "output_price_per_1m": 10.0,
-      "cached_input_price_per_1m": 0.5,
-      "batch_discount_percent": 0.0
-    },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
-    "benchmarks": {
-      "arena_elo": 1365,
-      "mmlu_pro": 88.5,
-      "gpqa": 76.2,
-      "swe_bench": 59.0
-    },
-    "hardware_requirements": [],
-    "is_verified": true,
-    "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "glm-5-2",
@@ -641,7 +378,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "GLM-5.2",
     "tier": "Frontier",
     "is_open_weight": true,
-    "license_type": "MIT",
+    "license_type": "Proprietary",
     "architecture": "Dense/MoE",
     "context_window": 128000,
     "max_output_tokens": 8192,
@@ -658,12 +395,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.15,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1362,
       "mmlu_pro": 87.0,
@@ -674,7 +405,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gemini-3.1-pro",
@@ -702,12 +434,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.5,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1360,
       "mmlu_pro": 87.2,
@@ -717,8 +443,9 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "perplexity-sonar-deep-research",
@@ -727,7 +454,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Sonar Deep Research",
     "tier": "Frontier",
     "is_open_weight": false,
-    "license_type": "Proprietary API",
+    "license_type": "Proprietary",
     "architecture": "Web+Deep Reasoning",
     "context_window": 128000,
     "max_output_tokens": 8192,
@@ -743,12 +470,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.5,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1360,
       "mmlu_pro": 87.0,
@@ -758,8 +479,9 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "fireworks-deepseek-r1",
@@ -768,7 +490,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "DeepSeek R1 (Fireworks)",
     "tier": "Frontier",
     "is_open_weight": true,
-    "license_type": "MIT",
+    "license_type": "Proprietary",
     "architecture": "MoE CoT",
     "context_window": 65536,
     "max_output_tokens": 16384,
@@ -784,12 +506,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.75,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1360,
       "mmlu_pro": 88.0,
@@ -798,9 +514,10 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     },
     "hardware_requirements": [],
     "is_verified": true,
-    "supports_reasoning": true,
+    "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "deepseek-r1",
@@ -809,15 +526,14 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "DeepSeek R1 (Reasoning)",
     "tier": "Frontier",
     "is_open_weight": true,
-    "license_type": "MIT",
-    "parameter_count_b": 671.0,
+    "license_type": "Proprietary",
     "architecture": "MoE RL Reasoning",
     "context_window": 128000,
     "max_output_tokens": 8192,
     "modality": [
       "text"
     ],
-    "description": "o1 수준 강화학습 심층 추론 671B 오픈웨이트 모델",
+    "description": "o1 수준 강화학습 심층 추론 모델",
     "official_url": "https://api-docs.deepseek.com",
     "source_docs_url": "https://api-docs.deepseek.com",
     "api_pricing": {
@@ -825,12 +541,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "output_price_per_1m": 2.19,
       "cached_input_price_per_1m": 0.14,
       "batch_discount_percent": 0.0
-    },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
     },
     "benchmarks": {
       "arena_elo": 1358,
@@ -840,9 +550,10 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     },
     "hardware_requirements": [],
     "is_verified": true,
-    "supports_reasoning": true,
+    "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "o1",
@@ -868,12 +579,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 7.5,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1355,
       "mmlu_pro": 89.0,
@@ -882,9 +587,10 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     },
     "hardware_requirements": [],
     "is_verified": true,
-    "supports_reasoning": true,
+    "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "o1-2024-12-17",
@@ -910,12 +616,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 7.5,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1355,
       "mmlu_pro": 89.0,
@@ -924,9 +624,10 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     },
     "hardware_requirements": [],
     "is_verified": true,
-    "supports_reasoning": true,
+    "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "fireworks-qwen-3-235b",
@@ -935,8 +636,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Qwen 3 235B A22B (Fireworks)",
     "tier": "Frontier",
     "is_open_weight": true,
-    "license_type": "Qwen License",
-    "parameter_count_b": 235.0,
+    "license_type": "Proprietary",
     "architecture": "MoE (A22B)",
     "context_window": 131072,
     "max_output_tokens": 8192,
@@ -952,12 +652,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.055,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1355,
       "mmlu_pro": 87.0,
@@ -968,7 +662,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "amazon-nova-premier",
@@ -977,7 +672,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Amazon Nova Premier",
     "tier": "Frontier",
     "is_open_weight": false,
-    "license_type": "Proprietary (AWS)",
+    "license_type": "Proprietary",
     "architecture": "Native Multimodal",
     "context_window": 1000000,
     "max_output_tokens": 8192,
@@ -994,12 +689,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.5,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1352,
       "mmlu_pro": 85.2,
@@ -1010,7 +699,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "kimi-k2-7",
@@ -1019,8 +709,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Kimi K2.7",
     "tier": "Frontier",
     "is_open_weight": true,
-    "license_type": "Modified MIT",
-    "parameter_count_b": 1000.0,
+    "license_type": "Proprietary",
     "architecture": "MoE Ultra-Long Context",
     "context_window": 2000000,
     "max_output_tokens": 16384,
@@ -1037,12 +726,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.25,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1350,
       "mmlu_pro": 85.5,
@@ -1053,7 +736,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "llama-4-maverick",
@@ -1062,8 +746,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Llama 4 Maverick",
     "tier": "Frontier",
     "is_open_weight": true,
-    "license_type": "Llama Community",
-    "parameter_count_b": 400.0,
+    "license_type": "Proprietary",
     "architecture": "MoE (Early Fusion)",
     "context_window": 1000000,
     "max_output_tokens": 8192,
@@ -1080,12 +763,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.12,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1350,
       "mmlu_pro": 86.0,
@@ -1096,7 +773,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "claude-sonnet-4-5",
@@ -1122,12 +800,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.3,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1350,
       "mmlu_pro": 86.0,
@@ -1138,7 +810,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "perplexity-sonar-reasoning-pro",
@@ -1147,7 +820,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Sonar Reasoning Pro",
     "tier": "Frontier",
     "is_open_weight": false,
-    "license_type": "Proprietary API",
+    "license_type": "Proprietary",
     "architecture": "Web+CoT",
     "context_window": 128000,
     "max_output_tokens": 8192,
@@ -1163,12 +836,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.5,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1350,
       "mmlu_pro": 86.0,
@@ -1177,9 +844,10 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     },
     "hardware_requirements": [],
     "is_verified": true,
-    "supports_reasoning": true,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "deepseek-chat",
@@ -1188,7 +856,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "DeepSeek-V3 (chat alias)",
     "tier": "Frontier",
     "is_open_weight": true,
-    "license_type": "MIT",
+    "license_type": "Proprietary",
     "architecture": "MoE",
     "context_window": 131072,
     "max_output_tokens": 8192,
@@ -1204,12 +872,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.07,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1350,
       "mmlu_pro": 84.0,
@@ -1220,7 +882,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "claude-sonnet-5",
@@ -1246,12 +909,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.5,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1345,
       "mmlu_pro": 84.8,
@@ -1262,7 +919,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gemini-3-flash-preview",
@@ -1289,12 +947,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.125,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1345,
       "mmlu_pro": 87.0,
@@ -1304,8 +956,9 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "qwen-2-5-max",
@@ -1314,7 +967,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Qwen 2.5 Max",
     "tier": "Frontier",
     "is_open_weight": false,
-    "license_type": "Proprietary API",
+    "license_type": "Proprietary",
     "architecture": "MoE",
     "context_window": 128000,
     "max_output_tokens": 8192,
@@ -1331,12 +984,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.4,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1342,
       "mmlu_pro": 85.0,
@@ -1347,7 +994,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gpt-5.6-terra",
@@ -1373,12 +1021,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 1.25,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1340,
       "mmlu_pro": 83.5,
@@ -1389,7 +1031,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "perplexity-sonar-reasoning",
@@ -1398,7 +1041,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Sonar Reasoning",
     "tier": "Frontier",
     "is_open_weight": false,
-    "license_type": "Proprietary API",
+    "license_type": "Proprietary",
     "architecture": "DeepSeek R1 Web-Integrated",
     "context_window": 128000,
     "max_output_tokens": 8192,
@@ -1414,12 +1057,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.25,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1340,
       "mmlu_pro": 86.5,
@@ -1428,9 +1065,10 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     },
     "hardware_requirements": [],
     "is_verified": true,
-    "supports_reasoning": true,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "o4-mini",
@@ -1456,12 +1094,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.275,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1340,
       "mmlu_pro": 88.0,
@@ -1472,7 +1104,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "grok-3",
@@ -1498,12 +1131,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.75,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1340,
       "mmlu_pro": 85.0,
@@ -1514,7 +1141,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gemini-2-5-flash",
@@ -1541,12 +1169,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.075,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1340,
       "mmlu_pro": 86.0,
@@ -1556,8 +1178,9 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "together-deepseek-v3",
@@ -1566,7 +1189,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "DeepSeek-V3 (Together)",
     "tier": "Frontier",
     "is_open_weight": true,
-    "license_type": "MIT",
+    "license_type": "Proprietary",
     "architecture": "MoE",
     "context_window": 65536,
     "max_output_tokens": 8192,
@@ -1582,12 +1205,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.31,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1340,
       "mmlu_pro": 84.0,
@@ -1598,7 +1215,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gemini-2.0-flash-thinking-exp",
@@ -1624,12 +1242,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.035,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1335,
       "mmlu_pro": 84.0,
@@ -1638,9 +1250,10 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     },
     "hardware_requirements": [],
     "is_verified": true,
-    "supports_reasoning": true,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "o1-preview",
@@ -1665,12 +1278,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 7.5,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1330,
       "mmlu_pro": 85.0,
@@ -1679,9 +1286,10 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     },
     "hardware_requirements": [],
     "is_verified": true,
-    "supports_reasoning": true,
+    "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "llama-4-70b",
@@ -1690,8 +1298,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Llama 4 Scout 70B",
     "tier": "Mid",
     "is_open_weight": true,
-    "license_type": "Llama Community",
-    "parameter_count_b": 70.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 10000000,
     "max_output_tokens": 8192,
@@ -1708,12 +1315,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.15,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1330,
       "mmlu_pro": 83.0,
@@ -1724,7 +1325,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "deepseek-v4-flash",
@@ -1733,7 +1335,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "DeepSeek-V4 Flash",
     "tier": "Mid",
     "is_open_weight": true,
-    "license_type": "MIT",
+    "license_type": "Proprietary",
     "architecture": "MoE Ultra-Long",
     "context_window": 1000000,
     "max_output_tokens": 8192,
@@ -1749,12 +1351,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.035,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1330,
       "mmlu_pro": 83.0,
@@ -1765,7 +1361,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "qwen-3.6-72b",
@@ -1774,8 +1371,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Qwen 3.6 72B",
     "tier": "Mid",
     "is_open_weight": true,
-    "license_type": "Apache 2.0",
-    "parameter_count_b": 72.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 128000,
     "max_output_tokens": 8192,
@@ -1792,12 +1388,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.1,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1325,
       "mmlu_pro": 82.1,
@@ -1808,7 +1398,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "mistral-large-3",
@@ -1817,8 +1408,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Mistral Large 3",
     "tier": "Frontier",
     "is_open_weight": true,
-    "license_type": "Apache 2.0",
-    "parameter_count_b": 123.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 128000,
     "max_output_tokens": 8192,
@@ -1835,12 +1425,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.5,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1320,
       "mmlu_pro": 81.2,
@@ -1851,7 +1435,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "grok-4-1-fast",
@@ -1877,12 +1462,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.05,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1320,
       "mmlu_pro": 82.0,
@@ -1893,7 +1472,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gemini-3.6-flash",
@@ -1920,12 +1500,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.38,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1315,
       "mmlu_pro": 80.5,
@@ -1935,52 +1509,9 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
-  },
-  {
-    "id": "gemini-2-0-flash",
-    "provider_id": "google",
-    "provider_name": "Google AI",
-    "name": "Gemini 2.0 Flash (GA)",
-    "tier": "Mid",
-    "is_open_weight": false,
-    "license_type": "Proprietary",
-    "architecture": "Native Multimodal",
-    "context_window": 1048576,
-    "max_output_tokens": 8192,
-    "modality": [
-      "text",
-      "vision",
-      "audio",
-      "video"
-    ],
-    "description": "Google 2.0 세대 차세대 고속 옴니 멀티모달 정식 버전. 100만 컨텍스트",
-    "official_url": "https://ai.google.dev/gemini-api/docs/models/gemini",
-    "source_docs_url": "https://ai.google.dev/gemini-api/docs/models/gemini",
-    "api_pricing": {
-      "input_price_per_1m": 0.1,
-      "output_price_per_1m": 0.4,
-      "cached_input_price_per_1m": 0.025,
-      "batch_discount_percent": 0.0
-    },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
-    "benchmarks": {
-      "arena_elo": 1310,
-      "mmlu_pro": 80.0,
-      "gpqa": 62.5,
-      "swe_bench": 45.0
-    },
-    "hardware_requirements": [],
-    "is_verified": true,
-    "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "deepseek-v3",
@@ -1989,15 +1520,14 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "DeepSeek V3",
     "tier": "Mid",
     "is_open_weight": true,
-    "license_type": "MIT",
-    "parameter_count_b": 671.0,
+    "license_type": "Proprietary",
     "architecture": "MoE (Active 37B)",
     "context_window": 128000,
     "max_output_tokens": 8192,
     "modality": [
       "text"
     ],
-    "description": "671B 오픈소스 기준 표준 모델. GPT-4o급 성능",
+    "description": "671B 오픈소스 기준 표준 모델",
     "official_url": "https://api-docs.deepseek.com",
     "source_docs_url": "https://api-docs.deepseek.com",
     "api_pricing": {
@@ -2005,12 +1535,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "output_price_per_1m": 1.1,
       "cached_input_price_per_1m": 0.07,
       "batch_discount_percent": 0.0
-    },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
     },
     "benchmarks": {
       "arena_elo": 1310,
@@ -2022,7 +1546,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "qwq-32b-preview",
@@ -2031,8 +1556,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "QwQ 32B Preview (Reasoning)",
     "tier": "Mid",
     "is_open_weight": true,
-    "license_type": "Apache 2.0",
-    "parameter_count_b": 32.0,
+    "license_type": "Proprietary",
     "architecture": "Chain-of-Thought RL",
     "context_window": 32000,
     "max_output_tokens": 8192,
@@ -2048,12 +1572,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.06,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1310,
       "mmlu_pro": 82.0,
@@ -2062,9 +1580,10 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     },
     "hardware_requirements": [],
     "is_verified": true,
-    "supports_reasoning": true,
+    "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "pixtral-large",
@@ -2074,7 +1593,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "tier": "Frontier",
     "is_open_weight": false,
     "license_type": "Proprietary",
-    "parameter_count_b": 123.0,
     "architecture": "Multimodal",
     "context_window": 128000,
     "max_output_tokens": 8192,
@@ -2091,12 +1609,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.5,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1310,
       "mmlu_pro": 80.0,
@@ -2107,7 +1619,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "perplexity-sonar-pro",
@@ -2116,7 +1629,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Sonar Pro",
     "tier": "Mid",
     "is_open_weight": false,
-    "license_type": "Proprietary API",
+    "license_type": "Proprietary",
     "architecture": "Web Search Fine-Tuned",
     "context_window": 200000,
     "max_output_tokens": 8192,
@@ -2133,12 +1646,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.75,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1310,
       "mmlu_pro": 80.0,
@@ -2148,8 +1655,9 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "grok-2-vision",
@@ -2175,12 +1683,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.5,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1310,
       "mmlu_pro": 81.0,
@@ -2190,8 +1692,9 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "together-llama-3-1-405b",
@@ -2200,8 +1703,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Meta Llama 3.1 405B (Together)",
     "tier": "Frontier",
     "is_open_weight": true,
-    "license_type": "Llama Community",
-    "parameter_count_b": 405.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 131072,
     "max_output_tokens": 8192,
@@ -2217,12 +1719,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.875,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1310,
       "mmlu_pro": 82.0,
@@ -2233,7 +1729,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "amazon-nova-pro",
@@ -2242,7 +1739,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Amazon Nova Pro",
     "tier": "Mid",
     "is_open_weight": false,
-    "license_type": "Proprietary (AWS)",
+    "license_type": "Proprietary",
     "architecture": "Native Multimodal",
     "context_window": 300000,
     "max_output_tokens": 5000,
@@ -2260,12 +1757,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.2,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1308,
       "mmlu_pro": 79.4,
@@ -2276,7 +1767,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "o3-mini",
@@ -2301,12 +1793,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.55,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1305,
       "mmlu_pro": 79.5,
@@ -2315,9 +1801,10 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     },
     "hardware_requirements": [],
     "is_verified": true,
-    "supports_reasoning": true,
+    "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "o3-mini-2025-01-31",
@@ -2342,12 +1829,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.55,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1305,
       "mmlu_pro": 79.5,
@@ -2356,9 +1837,10 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     },
     "hardware_requirements": [],
     "is_verified": true,
-    "supports_reasoning": true,
+    "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "fireworks-llama-3-1-405b",
@@ -2367,8 +1849,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Llama 3.1 405B (Fireworks)",
     "tier": "Frontier",
     "is_open_weight": true,
-    "license_type": "Llama Community",
-    "parameter_count_b": 405.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 131072,
     "max_output_tokens": 8192,
@@ -2384,12 +1865,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.75,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1305,
       "mmlu_pro": 81.0,
@@ -2400,7 +1875,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gemini-2.0-flash-exp",
@@ -2427,12 +1903,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.025,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1300,
       "mmlu_pro": 79.0,
@@ -2442,8 +1912,9 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "qwen-2-5-vl-72b",
@@ -2452,8 +1923,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Qwen 2.5 VL 72B",
     "tier": "Mid",
     "is_open_weight": true,
-    "license_type": "Apache 2.0",
-    "parameter_count_b": 72.0,
+    "license_type": "Proprietary",
     "architecture": "Multimodal",
     "context_window": 128000,
     "max_output_tokens": 8192,
@@ -2471,12 +1941,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.11,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1300,
       "mmlu_pro": 80.0,
@@ -2487,7 +1951,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "cohere-command-a",
@@ -2512,12 +1977,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.625,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1300,
       "mmlu_pro": 79.0,
@@ -2528,7 +1987,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gemini-3-1-flash-lite",
@@ -2554,12 +2014,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.063,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1300,
       "mmlu_pro": 80.0,
@@ -2569,8 +2023,9 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "claude-haiku-4.5",
@@ -2596,12 +2051,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.25,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1295,
       "mmlu_pro": 78.8,
@@ -2612,49 +2061,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
-  },
-  {
-    "id": "deepseek-r1-distill-llama-70b",
-    "provider_id": "deepseek",
-    "provider_name": "DeepSeek",
-    "name": "DeepSeek R1 Distill Llama 70B",
-    "tier": "Mid",
-    "is_open_weight": true,
-    "license_type": "MIT",
-    "parameter_count_b": 70.0,
-    "architecture": "Dense Distilled RL",
-    "context_window": 128000,
-    "max_output_tokens": 8192,
-    "modality": [
-      "text"
-    ],
-    "description": "Llama 3.3 70B 기반 DeepSeek R1 추론 증류 모델. 온프레미스 단일 서버 호스팅",
-    "official_url": "https://api-docs.deepseek.com",
-    "source_docs_url": "https://api-docs.deepseek.com",
-    "api_pricing": {
-      "input_price_per_1m": 0.75,
-      "output_price_per_1m": 0.99,
-      "cached_input_price_per_1m": 0.18,
-      "batch_discount_percent": 0.0
-    },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
-    "benchmarks": {
-      "arena_elo": 1295,
-      "mmlu_pro": 78.2,
-      "gpqa": 65.5,
-      "swe_bench": 49.0
-    },
-    "hardware_requirements": [],
-    "is_verified": true,
-    "supports_reasoning": true,
-    "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "qwen-2-5-plus",
@@ -2663,7 +2071,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Qwen 2.5 Plus",
     "tier": "Mid",
     "is_open_weight": false,
-    "license_type": "Proprietary API",
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 128000,
     "max_output_tokens": 8192,
@@ -2679,12 +2087,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.1,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1295,
       "mmlu_pro": 78.5,
@@ -2695,7 +2097,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "claude-haiku-4-5",
@@ -2721,12 +2124,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.1,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1295,
       "mmlu_pro": 76.0,
@@ -2737,7 +2134,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gpt-5.6-luna",
@@ -2763,12 +2161,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.5,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1290,
       "mmlu_pro": 78.2,
@@ -2779,7 +2171,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "o1-mini",
@@ -2804,12 +2197,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 1.5,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1290,
       "mmlu_pro": 77.0,
@@ -2818,9 +2205,10 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     },
     "hardware_requirements": [],
     "is_verified": true,
-    "supports_reasoning": true,
+    "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "o1-mini-2024-09-12",
@@ -2845,12 +2233,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 1.5,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1290,
       "mmlu_pro": 77.0,
@@ -2859,9 +2241,10 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     },
     "hardware_requirements": [],
     "is_verified": true,
-    "supports_reasoning": true,
+    "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "grok-3-mini",
@@ -2886,12 +2269,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.07,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1290,
       "mmlu_pro": 78.0,
@@ -2902,7 +2279,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "groq-deepseek-r1-distill-70b",
@@ -2911,8 +2289,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "DeepSeek R1 Distill 70B (Groq)",
     "tier": "Mid",
     "is_open_weight": true,
-    "license_type": "MIT",
-    "parameter_count_b": 70.0,
+    "license_type": "Proprietary",
     "architecture": "Dense Distilled",
     "context_window": 131072,
     "max_output_tokens": 8192,
@@ -2928,12 +2305,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.18,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1290,
       "mmlu_pro": 77.0,
@@ -2942,9 +2313,10 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     },
     "hardware_requirements": [],
     "is_verified": true,
-    "supports_reasoning": true,
+    "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gemini-2-5-flash-lite",
@@ -2970,12 +2342,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.025,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1290,
       "mmlu_pro": 78.0,
@@ -2985,8 +2351,9 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "together-qwen-2-5-72b",
@@ -2995,8 +2362,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Qwen 2.5 72B Instruct (Together)",
     "tier": "Mid",
     "is_open_weight": true,
-    "license_type": "Qwen License",
-    "parameter_count_b": 72.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 131072,
     "max_output_tokens": 8192,
@@ -3012,12 +2378,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.3,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1290,
       "mmlu_pro": 79.0,
@@ -3028,7 +2388,44 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "deepseek-llm-67b",
+    "provider_id": "deepseek",
+    "provider_name": "DeepSeek",
+    "name": "DeepSeek LLM 67B",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense",
+    "context_window": 4096,
+    "max_output_tokens": 4096,
+    "modality": [
+      "text"
+    ],
+    "description": "초기 67B 오리지널 모델",
+    "official_url": "https://api-docs.deepseek.com",
+    "source_docs_url": "https://api-docs.deepseek.com",
+    "api_pricing": {
+      "input_price_per_1m": 0.2,
+      "output_price_per_1m": 0.4,
+      "cached_input_price_per_1m": 0.05,
+      "batch_discount_percent": 0.0
+    },
+    "benchmarks": {
+      "arena_elo": 1225,
+      "mmlu_pro": 68.0,
+      "gpqa": 41.0,
+      "swe_bench": 26.0
+    },
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gpt-4o",
@@ -3055,12 +2452,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 1.25,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1286,
       "mmlu_pro": 77.0,
@@ -3070,8 +2461,9 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gpt-4o-2024-11-20",
@@ -3098,12 +2490,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 1.25,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1286,
       "mmlu_pro": 77.0,
@@ -3113,8 +2499,9 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "llama-3-1-405b-bedrock",
@@ -3123,8 +2510,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Llama 3.1 405B (on Bedrock)",
     "tier": "Frontier",
     "is_open_weight": false,
-    "license_type": "Llama Community (Hosted)",
-    "parameter_count_b": 405.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 128000,
     "max_output_tokens": 4096,
@@ -3140,12 +2526,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.6,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1285,
       "mmlu_pro": 78.2,
@@ -3156,7 +2536,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "llama-3-1-405b-instruct",
@@ -3165,8 +2546,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Llama 3.1 405B Instruct",
     "tier": "Frontier",
     "is_open_weight": true,
-    "license_type": "Llama Community",
-    "parameter_count_b": 405.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 128000,
     "max_output_tokens": 4096,
@@ -3182,12 +2562,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.5,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1285,
       "mmlu_pro": 78.2,
@@ -3198,7 +2572,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "claude-3-5-sonnet-20241022",
@@ -3224,12 +2599,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.75,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1282,
       "mmlu_pro": 77.5,
@@ -3240,7 +2609,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "claude-3-5-sonnet-bedrock",
@@ -3249,7 +2619,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Claude 3.5 Sonnet v2 (on Bedrock)",
     "tier": "Mid",
     "is_open_weight": false,
-    "license_type": "Proprietary (Hosted)",
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 200000,
     "max_output_tokens": 8192,
@@ -3266,12 +2636,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.75,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1282,
       "mmlu_pro": 77.5,
@@ -3282,7 +2646,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "qwen-2-5-72b",
@@ -3291,8 +2656,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Qwen 2.5 72B",
     "tier": "Mid",
     "is_open_weight": true,
-    "license_type": "Apache 2.0",
-    "parameter_count_b": 72.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 128000,
     "max_output_tokens": 8192,
@@ -3308,12 +2672,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.08,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1282,
       "mmlu_pro": 77.0,
@@ -3324,7 +2682,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gpt-4o-2024-08-06",
@@ -3350,12 +2709,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 1.25,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1280,
       "mmlu_pro": 76.5,
@@ -3365,8 +2718,9 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "llama-3-3-70b-bedrock",
@@ -3375,8 +2729,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Llama 3.3 70B (on Bedrock)",
     "tier": "Mid",
     "is_open_weight": false,
-    "license_type": "Llama Community (Hosted)",
-    "parameter_count_b": 70.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 128000,
     "max_output_tokens": 4096,
@@ -3392,12 +2745,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.18,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1280,
       "mmlu_pro": 76.8,
@@ -3408,7 +2755,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "llama-3-3-70b-instruct",
@@ -3417,8 +2765,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Llama 3.3 70B Instruct",
     "tier": "Mid",
     "is_open_weight": true,
-    "license_type": "Llama Community",
-    "parameter_count_b": 70.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 128000,
     "max_output_tokens": 8192,
@@ -3434,12 +2781,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.1,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1280,
       "mmlu_pro": 76.8,
@@ -3450,7 +2791,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "mistral-large-2407",
@@ -3460,7 +2802,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "tier": "Frontier",
     "is_open_weight": false,
     "license_type": "Proprietary",
-    "parameter_count_b": 123.0,
     "architecture": "Dense",
     "context_window": 128000,
     "max_output_tokens": 4096,
@@ -3476,12 +2817,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.5,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1280,
       "mmlu_pro": 77.0,
@@ -3492,7 +2827,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "claude-haiku-3-5",
@@ -3518,12 +2854,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.08,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1280,
       "mmlu_pro": 75.0,
@@ -3534,7 +2864,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gpt-4o-realtime-preview",
@@ -3560,12 +2891,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 2.5,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1275,
       "mmlu_pro": 74.0,
@@ -3575,8 +2900,9 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "claude-3-5-sonnet-20240620",
@@ -3602,12 +2928,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.75,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1275,
       "mmlu_pro": 76.8,
@@ -3618,49 +2938,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
-  },
-  {
-    "id": "deepseek-r1-distill-qwen-32b",
-    "provider_id": "deepseek",
-    "provider_name": "DeepSeek",
-    "name": "DeepSeek R1 Distill Qwen 32B",
-    "tier": "Small",
-    "is_open_weight": true,
-    "license_type": "MIT",
-    "parameter_count_b": 32.0,
-    "architecture": "Dense Distilled RL",
-    "context_window": 128000,
-    "max_output_tokens": 8192,
-    "modality": [
-      "text"
-    ],
-    "description": "Qwen 2.5 32B 기반 R1 추론 증류 모델. RTX 4090/A100 단일 GPU 호스팅 최적화",
-    "official_url": "https://api-docs.deepseek.com",
-    "source_docs_url": "https://api-docs.deepseek.com",
-    "api_pricing": {
-      "input_price_per_1m": 0.3,
-      "output_price_per_1m": 0.6,
-      "cached_input_price_per_1m": 0.075,
-      "batch_discount_percent": 0.0
-    },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
-    "benchmarks": {
-      "arena_elo": 1275,
-      "mmlu_pro": 75.0,
-      "gpqa": 61.0,
-      "swe_bench": 44.0
-    },
-    "hardware_requirements": [],
-    "is_verified": true,
-    "supports_reasoning": true,
-    "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "qwen-2-5-coder-32b",
@@ -3669,8 +2948,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Qwen 2.5 Coder 32B",
     "tier": "Mid",
     "is_open_weight": true,
-    "license_type": "Apache 2.0",
-    "parameter_count_b": 32.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 128000,
     "max_output_tokens": 8192,
@@ -3686,12 +2964,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.05,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1275,
       "mmlu_pro": 76.2,
@@ -3702,7 +2974,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gpt-4o-2024-05-13",
@@ -3728,12 +3001,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 2.5,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1270,
       "mmlu_pro": 75.0,
@@ -3743,8 +3010,9 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gpt-4o-audio-preview",
@@ -3770,12 +3038,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 1.25,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1270,
       "mmlu_pro": 74.0,
@@ -3785,8 +3047,9 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "llama-3-2-90b-vision-bedrock",
@@ -3795,8 +3058,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Llama 3.2 90B Vision (on Bedrock)",
     "tier": "Mid",
     "is_open_weight": false,
-    "license_type": "Llama Community (Hosted)",
-    "parameter_count_b": 90.0,
+    "license_type": "Proprietary",
     "architecture": "Multimodal",
     "context_window": 128000,
     "max_output_tokens": 4096,
@@ -3813,12 +3075,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.22,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1270,
       "mmlu_pro": 75.0,
@@ -3829,7 +3085,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "mistral-large-2-bedrock",
@@ -3838,8 +3095,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Mistral Large 2 (on Bedrock)",
     "tier": "Frontier",
     "is_open_weight": false,
-    "license_type": "Proprietary (Hosted)",
-    "parameter_count_b": 123.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 128000,
     "max_output_tokens": 4096,
@@ -3855,12 +3111,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.5,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1270,
       "mmlu_pro": 75.5,
@@ -3871,7 +3121,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "deepseek-v2-5",
@@ -3880,8 +3131,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "DeepSeek V2.5",
     "tier": "Mid",
     "is_open_weight": true,
-    "license_type": "MIT",
-    "parameter_count_b": 236.0,
+    "license_type": "Proprietary",
     "architecture": "MoE",
     "context_window": 128000,
     "max_output_tokens": 8192,
@@ -3897,12 +3147,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.03,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1270,
       "mmlu_pro": 75.0,
@@ -3913,7 +3157,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "llama-3-2-90b-vision",
@@ -3922,8 +3167,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Llama 3.2 90B Vision",
     "tier": "Mid",
     "is_open_weight": true,
-    "license_type": "Llama Community",
-    "parameter_count_b": 90.0,
+    "license_type": "Proprietary",
     "architecture": "Multimodal",
     "context_window": 128000,
     "max_output_tokens": 4096,
@@ -3940,12 +3184,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.22,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1270,
       "mmlu_pro": 75.0,
@@ -3956,7 +3194,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "groq-llama-3-3-70b",
@@ -3965,8 +3204,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Llama 3.3 70B (Groq LPU)",
     "tier": "Mid",
     "is_open_weight": true,
-    "license_type": "Llama Community",
-    "parameter_count_b": 70.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 128000,
     "max_output_tokens": 8192,
@@ -3982,12 +3220,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.14,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1270,
       "mmlu_pro": 72.0,
@@ -3998,7 +3230,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "deepseek-coder-v2",
@@ -4007,8 +3240,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "DeepSeek Coder V2 (236B)",
     "tier": "Mid",
     "is_open_weight": true,
-    "license_type": "MIT",
-    "parameter_count_b": 236.0,
+    "license_type": "Proprietary",
     "architecture": "MoE (Active 21B)",
     "context_window": 128000,
     "max_output_tokens": 8192,
@@ -4024,12 +3256,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.03,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1268,
       "mmlu_pro": 74.8,
@@ -4040,7 +3266,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "phi-4-14b",
@@ -4049,8 +3276,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Phi-4 14B",
     "tier": "Small",
     "is_open_weight": true,
-    "license_type": "MIT",
-    "parameter_count_b": 14.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 64000,
     "max_output_tokens": 4096,
@@ -4066,12 +3292,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.04,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1265,
       "mmlu_pro": 76.0,
@@ -4082,7 +3302,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gemini-1.5-pro-002",
@@ -4110,12 +3331,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.875,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1262,
       "mmlu_pro": 74.5,
@@ -4125,8 +3340,9 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "mixtral-8x22b",
@@ -4135,8 +3351,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Mixtral 8x22B",
     "tier": "Mid",
     "is_open_weight": true,
-    "license_type": "Apache 2.0",
-    "parameter_count_b": 141.0,
+    "license_type": "Proprietary",
     "architecture": "MoE (Active 39B)",
     "context_window": 64000,
     "max_output_tokens": 4096,
@@ -4152,12 +3367,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.22,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1262,
       "mmlu_pro": 73.5,
@@ -4168,7 +3377,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gemini-3.5-flash-lite",
@@ -4194,12 +3404,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.08,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1260,
       "mmlu_pro": 74.1,
@@ -4209,8 +3413,9 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "llama-3-1-70b-instruct",
@@ -4219,8 +3424,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Llama 3.1 70B Instruct",
     "tier": "Mid",
     "is_open_weight": true,
-    "license_type": "Llama Community",
-    "parameter_count_b": 70.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 128000,
     "max_output_tokens": 4096,
@@ -4236,12 +3440,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.11,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1260,
       "mmlu_pro": 74.0,
@@ -4252,7 +3450,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "cohere-command-r-plus-bedrock",
@@ -4261,8 +3460,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Command R+ (on Bedrock)",
     "tier": "Frontier",
     "is_open_weight": false,
-    "license_type": "CC-BY-NC-4.0 (Hosted)",
-    "parameter_count_b": 104.0,
+    "license_type": "Proprietary",
     "architecture": "Dense RAG",
     "context_window": 128000,
     "max_output_tokens": 4096,
@@ -4278,12 +3476,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.75,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1258,
       "mmlu_pro": 74.2,
@@ -4294,7 +3486,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "cohere-command-r-plus",
@@ -4303,8 +3496,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Command R+",
     "tier": "Frontier",
     "is_open_weight": true,
-    "license_type": "CC-BY-NC-4.0",
-    "parameter_count_b": 104.0,
+    "license_type": "Proprietary",
     "architecture": "Dense RAG",
     "context_window": 128000,
     "max_output_tokens": 4096,
@@ -4320,12 +3512,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.625,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1258,
       "mmlu_pro": 74.2,
@@ -4336,7 +3522,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "claude-3-opus-20240229",
@@ -4362,12 +3549,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 3.75,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1256,
       "mmlu_pro": 75.0,
@@ -4378,7 +3559,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "claude-3-opus-bedrock",
@@ -4387,7 +3569,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Claude 3 Opus (on Bedrock)",
     "tier": "Frontier",
     "is_open_weight": false,
-    "license_type": "Proprietary (Hosted)",
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 200000,
     "max_output_tokens": 4096,
@@ -4404,12 +3586,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 3.75,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 10000,
-      "tpm": 2000000,
-      "rpd": 100000,
-      "concurrency_limit": 500
-    },
     "benchmarks": {
       "arena_elo": 1256,
       "mmlu_pro": 75.0,
@@ -4420,7 +3596,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gemini-1.5-pro-001",
@@ -4447,12 +3624,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.875,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1255,
       "mmlu_pro": 73.5,
@@ -4462,8 +3633,9 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "codestral-22b",
@@ -4472,8 +3644,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Codestral 22B",
     "tier": "Mid",
     "is_open_weight": true,
-    "license_type": "MNPL",
-    "parameter_count_b": 22.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 32000,
     "max_output_tokens": 4096,
@@ -4489,12 +3660,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.08,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1255,
       "mmlu_pro": 72.0,
@@ -4505,7 +3670,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gpt-4-turbo",
@@ -4531,12 +3697,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 5.0,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1250,
       "mmlu_pro": 73.2,
@@ -4547,7 +3707,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gpt-4-turbo-2024-04-09",
@@ -4573,12 +3734,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 5.0,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1250,
       "mmlu_pro": 73.2,
@@ -4589,7 +3744,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "groq-llama-3-1-70b",
@@ -4598,8 +3754,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Llama 3.1 70B (Groq LPU)",
     "tier": "Mid",
     "is_open_weight": true,
-    "license_type": "Llama Community",
-    "parameter_count_b": 70.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 131072,
     "max_output_tokens": 8192,
@@ -4615,12 +3770,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.14,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1250,
       "mmlu_pro": 70.0,
@@ -4631,7 +3780,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gpt-4-0125-preview",
@@ -4656,12 +3806,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 5.0,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1245,
       "mmlu_pro": 72.5,
@@ -4672,7 +3816,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gpt-4-1106-preview",
@@ -4697,12 +3842,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 5.0,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1240,
       "mmlu_pro": 72.0,
@@ -4713,7 +3852,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "claude-3-5-haiku-20241022",
@@ -4738,12 +3878,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.2,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1240,
       "mmlu_pro": 71.2,
@@ -4754,7 +3888,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gemma-2-27b",
@@ -4763,8 +3898,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Gemma 2 27B",
     "tier": "Mid",
     "is_open_weight": true,
-    "license_type": "Gemma Terms",
-    "parameter_count_b": 27.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 8192,
     "max_output_tokens": 4096,
@@ -4780,12 +3914,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.06,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1240,
       "mmlu_pro": 71.0,
@@ -4796,7 +3924,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "llama-3-70b-instruct",
@@ -4805,8 +3934,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Llama 3 70B Instruct",
     "tier": "Mid",
     "is_open_weight": true,
-    "license_type": "Llama Community",
-    "parameter_count_b": 70.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 8192,
     "max_output_tokens": 2048,
@@ -4822,12 +3950,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.12,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1240,
       "mmlu_pro": 71.0,
@@ -4838,7 +3960,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "qwen-2-5-turbo",
@@ -4847,7 +3970,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Qwen 2.5 Turbo",
     "tier": "Small",
     "is_open_weight": false,
-    "license_type": "Proprietary API",
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 1000000,
     "max_output_tokens": 8192,
@@ -4863,12 +3986,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.01,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1240,
       "mmlu_pro": 70.0,
@@ -4879,7 +3996,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "qwen-2-5-32b",
@@ -4888,8 +4006,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Qwen 2.5 32B",
     "tier": "Mid",
     "is_open_weight": true,
-    "license_type": "Apache 2.0",
-    "parameter_count_b": 32.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 128000,
     "max_output_tokens": 8192,
@@ -4905,12 +4022,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.05,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1240,
       "mmlu_pro": 71.0,
@@ -4921,7 +4032,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "perplexity-sonar",
@@ -4930,7 +4042,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Sonar",
     "tier": "Small",
     "is_open_weight": false,
-    "license_type": "Proprietary API",
+    "license_type": "Proprietary",
     "architecture": "Web Search Fine-Tuned",
     "context_window": 128000,
     "max_output_tokens": 8192,
@@ -4946,12 +4058,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.25,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1240,
       "mmlu_pro": 68.0,
@@ -4961,8 +4067,9 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gpt-4-vision-preview",
@@ -4988,12 +4095,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 5.0,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1235,
       "mmlu_pro": 71.0,
@@ -5004,7 +4105,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "amazon-nova-lite",
@@ -5013,7 +4115,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Amazon Nova Lite",
     "tier": "Small",
     "is_open_weight": false,
-    "license_type": "Proprietary (AWS)",
+    "license_type": "Proprietary",
     "architecture": "Native Multimodal",
     "context_window": 300000,
     "max_output_tokens": 5000,
@@ -5030,12 +4132,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.015,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1235,
       "mmlu_pro": 68.0,
@@ -5046,49 +4142,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
-  },
-  {
-    "id": "deepseek-r1-distill-qwen-14b",
-    "provider_id": "deepseek",
-    "provider_name": "DeepSeek",
-    "name": "DeepSeek R1 Distill Qwen 14B",
-    "tier": "Small",
-    "is_open_weight": true,
-    "license_type": "MIT",
-    "parameter_count_b": 14.0,
-    "architecture": "Dense Distilled RL",
-    "context_window": 128000,
-    "max_output_tokens": 8192,
-    "modality": [
-      "text"
-    ],
-    "description": "Qwen 2.5 14B 기반 경량 R1 추론 증류 모델",
-    "official_url": "https://api-docs.deepseek.com",
-    "source_docs_url": "https://api-docs.deepseek.com",
-    "api_pricing": {
-      "input_price_per_1m": 0.15,
-      "output_price_per_1m": 0.3,
-      "cached_input_price_per_1m": 0.03,
-      "batch_discount_percent": 0.0
-    },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
-    "benchmarks": {
-      "arena_elo": 1235,
-      "mmlu_pro": 70.0,
-      "gpqa": 52.0,
-      "swe_bench": 36.0
-    },
-    "hardware_requirements": [],
-    "is_verified": true,
-    "supports_reasoning": true,
-    "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "mistral-small-2409",
@@ -5097,8 +4152,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Mistral Small (2409)",
     "tier": "Small",
     "is_open_weight": true,
-    "license_type": "Apache 2.0",
-    "parameter_count_b": 24.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 32000,
     "max_output_tokens": 4096,
@@ -5114,12 +4168,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.05,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1230,
       "mmlu_pro": 69.0,
@@ -5130,7 +4178,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "phi-3-5-moe",
@@ -5139,8 +4188,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Phi-3.5 MoE (16B)",
     "tier": "Small",
     "is_open_weight": true,
-    "license_type": "MIT",
-    "parameter_count_b": 16.0,
+    "license_type": "Proprietary",
     "architecture": "MoE (Active 6.6B)",
     "context_window": 128000,
     "max_output_tokens": 4096,
@@ -5156,12 +4204,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.03,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1230,
       "mmlu_pro": 69.0,
@@ -5172,49 +4214,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
-  },
-  {
-    "id": "deepseek-llm-67b",
-    "provider_id": "deepseek",
-    "provider_name": "DeepSeek",
-    "name": "DeepSeek LLM 67B",
-    "tier": "Mid",
-    "is_open_weight": true,
-    "license_type": "MIT",
-    "parameter_count_b": 67.0,
-    "architecture": "Dense",
-    "context_window": 4096,
-    "max_output_tokens": 4096,
-    "modality": [
-      "text"
-    ],
-    "description": "초기 67B 오리지널 모델",
-    "official_url": "https://api-docs.deepseek.com",
-    "source_docs_url": "https://api-docs.deepseek.com",
-    "api_pricing": {
-      "input_price_per_1m": 0.2,
-      "output_price_per_1m": 0.4,
-      "cached_input_price_per_1m": 0.05,
-      "batch_discount_percent": 0.0
-    },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
-    "benchmarks": {
-      "arena_elo": 1225,
-      "mmlu_pro": 68.0,
-      "gpqa": 41.0,
-      "swe_bench": 26.0
-    },
-    "hardware_requirements": [],
-    "is_verified": true,
-    "supports_reasoning": false,
-    "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gpt-4o-mini",
@@ -5240,12 +4241,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.075,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1220,
       "mmlu_pro": 65.2,
@@ -5255,8 +4250,9 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gpt-4o-mini-2024-07-18",
@@ -5282,12 +4278,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.075,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1220,
       "mmlu_pro": 65.2,
@@ -5297,8 +4287,9 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "qwen-2-5-coder-14b",
@@ -5307,8 +4298,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Qwen 2.5 Coder 14B",
     "tier": "Small",
     "is_open_weight": true,
-    "license_type": "Apache 2.0",
-    "parameter_count_b": 14.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 128000,
     "max_output_tokens": 8192,
@@ -5324,12 +4314,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.02,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1220,
       "mmlu_pro": 68.0,
@@ -5340,7 +4324,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "phi-4-multimodal-5.6b",
@@ -5349,8 +4334,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Phi-4 Multimodal (5.6B)",
     "tier": "Micro",
     "is_open_weight": true,
-    "license_type": "MIT",
-    "parameter_count_b": 5.6,
+    "license_type": "Proprietary",
     "architecture": "Multimodal",
     "context_window": 128000,
     "max_output_tokens": 4096,
@@ -5368,12 +4352,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.02,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 1000,
-      "tpm": 150000,
-      "rpd": 10000,
-      "concurrency_limit": 50
-    },
     "benchmarks": {
       "arena_elo": 1220,
       "mmlu_pro": 67.0,
@@ -5384,7 +4362,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "groq-gemma2-9b",
@@ -5393,8 +4372,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Gemma 2 9B (Groq LPU)",
     "tier": "Small",
     "is_open_weight": true,
-    "license_type": "Gemma License",
-    "parameter_count_b": 9.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 8192,
     "max_output_tokens": 4096,
@@ -5410,12 +4388,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.05,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1220,
       "mmlu_pro": 65.0,
@@ -5426,7 +4398,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "mistral-nemo-12b",
@@ -5435,8 +4408,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Mistral NeMo 12B",
     "tier": "Small",
     "is_open_weight": true,
-    "license_type": "Apache 2.0",
-    "parameter_count_b": 12.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 128000,
     "max_output_tokens": 4096,
@@ -5452,12 +4424,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.03,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1215,
       "mmlu_pro": 66.5,
@@ -5468,7 +4434,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gpt-4o-mini-realtime-preview",
@@ -5494,12 +4461,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.3,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1210,
       "mmlu_pro": 63.0,
@@ -5509,8 +4470,9 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "deepseek-math-7b",
@@ -5519,8 +4481,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "DeepSeek Math 7B",
     "tier": "Small",
     "is_open_weight": true,
-    "license_type": "MIT",
-    "parameter_count_b": 7.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 4096,
     "max_output_tokens": 2048,
@@ -5536,12 +4497,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.01,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1210,
       "mmlu_pro": 65.0,
@@ -5552,7 +4507,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "qwen-2-5-14b",
@@ -5561,8 +4517,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Qwen 2.5 14B",
     "tier": "Small",
     "is_open_weight": true,
-    "license_type": "Apache 2.0",
-    "parameter_count_b": 14.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 128000,
     "max_output_tokens": 8192,
@@ -5578,12 +4533,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.02,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1210,
       "mmlu_pro": 65.0,
@@ -5594,7 +4543,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "pixtral-12b",
@@ -5603,8 +4553,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Pixtral 12B",
     "tier": "Small",
     "is_open_weight": true,
-    "license_type": "Apache 2.0",
-    "parameter_count_b": 12.0,
+    "license_type": "Proprietary",
     "architecture": "Multimodal",
     "context_window": 128000,
     "max_output_tokens": 4096,
@@ -5621,12 +4570,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.03,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1210,
       "mmlu_pro": 65.0,
@@ -5637,7 +4580,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "phi-4-mini-3.8b",
@@ -5646,8 +4590,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Phi-4 mini (3.8B)",
     "tier": "Micro",
     "is_open_weight": true,
-    "license_type": "MIT",
-    "parameter_count_b": 3.8,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 128000,
     "max_output_tokens": 4096,
@@ -5663,12 +4606,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.01,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 1000,
-      "tpm": 150000,
-      "rpd": 10000,
-      "concurrency_limit": 50
-    },
     "benchmarks": {
       "arena_elo": 1210,
       "mmlu_pro": 65.0,
@@ -5679,7 +4616,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gemini-1.5-flash-002",
@@ -5706,12 +4644,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.018,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1205,
       "mmlu_pro": 64.0,
@@ -5721,8 +4653,9 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "cohere-command-r",
@@ -5731,8 +4664,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Command R",
     "tier": "Mid",
     "is_open_weight": true,
-    "license_type": "CC-BY-NC-4.0",
-    "parameter_count_b": 35.0,
+    "license_type": "Proprietary",
     "architecture": "Dense RAG",
     "context_window": 128000,
     "max_output_tokens": 4096,
@@ -5748,12 +4680,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.125,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1205,
       "mmlu_pro": 65.0,
@@ -5764,7 +4690,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "claude-3-sonnet-20240229",
@@ -5790,12 +4717,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.75,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1200,
       "mmlu_pro": 65.0,
@@ -5806,7 +4727,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "deepseek-coder-33b",
@@ -5815,8 +4737,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "DeepSeek Coder 33B",
     "tier": "Small",
     "is_open_weight": true,
-    "license_type": "MIT",
-    "parameter_count_b": 33.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 16384,
     "max_output_tokens": 4096,
@@ -5832,12 +4753,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.03,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1200,
       "mmlu_pro": 63.0,
@@ -5848,7 +4763,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "llama-3-2-11b-vision",
@@ -5857,8 +4773,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Llama 3.2 11B Vision",
     "tier": "Small",
     "is_open_weight": true,
-    "license_type": "Llama Community",
-    "parameter_count_b": 11.0,
+    "license_type": "Proprietary",
     "architecture": "Multimodal",
     "context_window": 128000,
     "max_output_tokens": 4096,
@@ -5875,12 +4790,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.04,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1200,
       "mmlu_pro": 61.0,
@@ -5891,7 +4800,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "qwen-2-5-vl-7b",
@@ -5900,8 +4810,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Qwen 2.5 VL 7B",
     "tier": "Small",
     "is_open_weight": true,
-    "license_type": "Apache 2.0",
-    "parameter_count_b": 7.0,
+    "license_type": "Proprietary",
     "architecture": "Multimodal",
     "context_window": 128000,
     "max_output_tokens": 8192,
@@ -5918,12 +4827,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.02,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1200,
       "mmlu_pro": 63.0,
@@ -5934,7 +4837,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gpt-4-32k-0613",
@@ -5959,12 +4863,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 30.0,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1190,
       "mmlu_pro": 65.0,
@@ -5975,7 +4873,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "qwen-2-5-7b",
@@ -5984,8 +4883,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Qwen 2.5 7B",
     "tier": "Small",
     "is_open_weight": true,
-    "license_type": "Apache 2.0",
-    "parameter_count_b": 7.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 128000,
     "max_output_tokens": 8192,
@@ -6001,12 +4899,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.01,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1190,
       "mmlu_pro": 61.0,
@@ -6017,7 +4909,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "codestral-mamba-7b",
@@ -6026,8 +4919,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Codestral Mamba 7B",
     "tier": "Small",
     "is_open_weight": true,
-    "license_type": "Apache 2.0",
-    "parameter_count_b": 7.0,
+    "license_type": "Proprietary",
     "architecture": "Mamba (SSM)",
     "context_window": 256000,
     "max_output_tokens": 4096,
@@ -6043,12 +4935,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.03,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1190,
       "mmlu_pro": 60.0,
@@ -6059,7 +4945,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "groq-mixtral-8x7b",
@@ -6068,8 +4955,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Mixtral 8x7B (Groq LPU)",
     "tier": "Small",
     "is_open_weight": true,
-    "license_type": "Apache 2.0",
-    "parameter_count_b": 56.0,
+    "license_type": "Proprietary",
     "architecture": "MoE",
     "context_window": 32768,
     "max_output_tokens": 4096,
@@ -6085,12 +4971,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.06,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1190,
       "mmlu_pro": 60.0,
@@ -6101,7 +4981,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "cohere-command-r7b",
@@ -6126,12 +5007,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.009,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 1000,
-      "tpm": 150000,
-      "rpd": 10000,
-      "concurrency_limit": 50
-    },
     "benchmarks": {
       "arena_elo": 1190,
       "mmlu_pro": 58.0,
@@ -6142,7 +5017,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gpt-4-0613",
@@ -6167,12 +5043,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 15.0,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1185,
       "mmlu_pro": 64.8,
@@ -6183,7 +5053,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "claude-3-haiku-20240307",
@@ -6209,12 +5080,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.06,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1180,
       "mmlu_pro": 59.0,
@@ -6225,7 +5090,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gemma-2-9b",
@@ -6234,8 +5100,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Gemma 2 9B",
     "tier": "Small",
     "is_open_weight": true,
-    "license_type": "Gemma Terms",
-    "parameter_count_b": 9.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 8192,
     "max_output_tokens": 4096,
@@ -6251,12 +5116,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.02,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1180,
       "mmlu_pro": 59.5,
@@ -6267,7 +5126,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "claude-3-haiku-bedrock",
@@ -6276,7 +5136,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Claude 3 Haiku (on Bedrock)",
     "tier": "Small",
     "is_open_weight": false,
-    "license_type": "Proprietary (Hosted)",
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 200000,
     "max_output_tokens": 4096,
@@ -6293,12 +5153,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.06,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1180,
       "mmlu_pro": 59.0,
@@ -6309,7 +5163,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "llama-3-1-8b-instruct",
@@ -6318,8 +5173,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Llama 3.1 8B Instruct",
     "tier": "Small",
     "is_open_weight": true,
-    "license_type": "Llama Community",
-    "parameter_count_b": 8.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 128000,
     "max_output_tokens": 4096,
@@ -6335,12 +5189,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.01,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1180,
       "mmlu_pro": 58.2,
@@ -6351,7 +5199,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "mixtral-8x7b",
@@ -6360,8 +5209,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Mixtral 8x7B",
     "tier": "Small",
     "is_open_weight": true,
-    "license_type": "Apache 2.0",
-    "parameter_count_b": 47.0,
+    "license_type": "Proprietary",
     "architecture": "MoE (Active 13B)",
     "context_window": 32000,
     "max_output_tokens": 4096,
@@ -6377,12 +5225,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.1,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1180,
       "mmlu_pro": 60.0,
@@ -6393,7 +5235,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "amazon-nova-micro",
@@ -6402,7 +5245,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Amazon Nova Micro",
     "tier": "Micro",
     "is_open_weight": false,
-    "license_type": "Proprietary (AWS)",
+    "license_type": "Proprietary",
     "architecture": "Text-only Dense",
     "context_window": 128000,
     "max_output_tokens": 5000,
@@ -6418,12 +5261,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.009,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 1000,
-      "tpm": 150000,
-      "rpd": 10000,
-      "concurrency_limit": 50
-    },
     "benchmarks": {
       "arena_elo": 1175,
       "mmlu_pro": 57.5,
@@ -6434,7 +5271,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gemini-1.5-flash-8b",
@@ -6460,12 +5298,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.01,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 1000,
-      "tpm": 150000,
-      "rpd": 10000,
-      "concurrency_limit": 50
-    },
     "benchmarks": {
       "arena_elo": 1170,
       "mmlu_pro": 56.0,
@@ -6475,8 +5307,9 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "qwen-2-5-coder-7b",
@@ -6485,8 +5318,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Qwen 2.5 Coder 7B",
     "tier": "Small",
     "is_open_weight": true,
-    "license_type": "Apache 2.0",
-    "parameter_count_b": 7.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 128000,
     "max_output_tokens": 8192,
@@ -6502,12 +5334,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.01,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1170,
       "mmlu_pro": 58.0,
@@ -6518,7 +5344,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "phi-3-5-vision",
@@ -6527,8 +5354,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Phi-3.5 Vision (4.2B)",
     "tier": "Micro",
     "is_open_weight": true,
-    "license_type": "MIT",
-    "parameter_count_b": 4.2,
+    "license_type": "Proprietary",
     "architecture": "Multimodal",
     "context_window": 128000,
     "max_output_tokens": 4096,
@@ -6545,12 +5371,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.01,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 1000,
-      "tpm": 150000,
-      "rpd": 10000,
-      "concurrency_limit": 50
-    },
     "benchmarks": {
       "arena_elo": 1170,
       "mmlu_pro": 56.0,
@@ -6561,7 +5381,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "phi-3-5-mini",
@@ -6570,8 +5391,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Phi-3.5 mini (3.8B)",
     "tier": "Micro",
     "is_open_weight": true,
-    "license_type": "MIT",
-    "parameter_count_b": 3.8,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 128000,
     "max_output_tokens": 4096,
@@ -6587,12 +5407,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.01,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 1000,
-      "tpm": 150000,
-      "rpd": 10000,
-      "concurrency_limit": 50
-    },
     "benchmarks": {
       "arena_elo": 1160,
       "mmlu_pro": 54.0,
@@ -6603,7 +5417,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "claude-2.1",
@@ -6628,12 +5443,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 2.0,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1150,
       "mmlu_pro": 55.0,
@@ -6644,7 +5453,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "llama-3-8b-instruct",
@@ -6653,8 +5463,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Llama 3 8B Instruct",
     "tier": "Small",
     "is_open_weight": true,
-    "license_type": "Llama Community",
-    "parameter_count_b": 8.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 8192,
     "max_output_tokens": 2048,
@@ -6670,12 +5479,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.01,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1150,
       "mmlu_pro": 53.0,
@@ -6686,7 +5489,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "code-llama-70b",
@@ -6695,8 +5499,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Code Llama 70B",
     "tier": "Mid",
     "is_open_weight": true,
-    "license_type": "Llama 2 License",
-    "parameter_count_b": 70.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 16384,
     "max_output_tokens": 4096,
@@ -6712,12 +5515,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.15,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1150,
       "mmlu_pro": 55.0,
@@ -6728,7 +5525,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "llama-3-2-3b",
@@ -6737,8 +5535,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Llama 3.2 3B",
     "tier": "Micro",
     "is_open_weight": true,
-    "license_type": "Llama Community",
-    "parameter_count_b": 3.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 128000,
     "max_output_tokens": 4096,
@@ -6754,12 +5551,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.01,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 1000,
-      "tpm": 150000,
-      "rpd": 10000,
-      "concurrency_limit": 50
-    },
     "benchmarks": {
       "arena_elo": 1140,
       "mmlu_pro": 50.0,
@@ -6770,7 +5561,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "claude-2.0",
@@ -6795,12 +5587,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 2.0,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1130,
       "mmlu_pro": 52.0,
@@ -6811,7 +5597,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "amazon-titan-text-express",
@@ -6820,7 +5607,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Amazon Titan Text Express",
     "tier": "Small",
     "is_open_weight": false,
-    "license_type": "Proprietary (AWS)",
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 8192,
     "max_output_tokens": 4096,
@@ -6836,12 +5623,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.05,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1130,
       "mmlu_pro": 53.0,
@@ -6852,7 +5633,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gemini-1.0-pro-001",
@@ -6877,12 +5659,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.25,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1120,
       "mmlu_pro": 53.0,
@@ -6892,8 +5668,9 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
-    "supports_web_search": true,
-    "is_deprecated": false
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gemma-7b",
@@ -6902,8 +5679,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Gemma 1.0 7B",
     "tier": "Small",
     "is_open_weight": true,
-    "license_type": "Gemma Terms",
-    "parameter_count_b": 7.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 8192,
     "max_output_tokens": 2048,
@@ -6919,12 +5695,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.01,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1120,
       "mmlu_pro": 50.0,
@@ -6935,7 +5705,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "qwen-2-5-3b",
@@ -6944,8 +5715,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Qwen 2.5 3B",
     "tier": "Micro",
     "is_open_weight": true,
-    "license_type": "Apache 2.0",
-    "parameter_count_b": 3.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 32000,
     "max_output_tokens": 4096,
@@ -6961,12 +5731,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.005,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 1000,
-      "tpm": 150000,
-      "rpd": 10000,
-      "concurrency_limit": 50
-    },
     "benchmarks": {
       "arena_elo": 1120,
       "mmlu_pro": 48.0,
@@ -6977,7 +5741,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gpt-3.5-turbo-0125",
@@ -7002,12 +5767,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.25,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1115,
       "mmlu_pro": 52.0,
@@ -7018,7 +5777,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gpt-3.5-turbo-1106",
@@ -7043,12 +5803,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.5,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1110,
       "mmlu_pro": 51.0,
@@ -7059,7 +5813,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "claude-instant-1.2",
@@ -7084,12 +5839,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.2,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 1000,
-      "tpm": 150000,
-      "rpd": 10000,
-      "concurrency_limit": 50
-    },
     "benchmarks": {
       "arena_elo": 1110,
       "mmlu_pro": 48.0,
@@ -7100,7 +5849,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gpt-3.5-turbo-instruct",
@@ -7125,12 +5875,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.75,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 3000,
-      "tpm": 400000,
-      "rpd": 30000,
-      "concurrency_limit": 100
-    },
     "benchmarks": {
       "arena_elo": 1100,
       "mmlu_pro": 49.0,
@@ -7141,7 +5885,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "gemma-2-2b",
@@ -7150,8 +5895,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Gemma 2 2B",
     "tier": "Micro",
     "is_open_weight": true,
-    "license_type": "Gemma Terms",
-    "parameter_count_b": 2.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 8192,
     "max_output_tokens": 4096,
@@ -7167,12 +5911,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.005,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 1000,
-      "tpm": 150000,
-      "rpd": 10000,
-      "concurrency_limit": 50
-    },
     "benchmarks": {
       "arena_elo": 1100,
       "mmlu_pro": 45.0,
@@ -7183,7 +5921,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "llama-2-70b-chat",
@@ -7192,8 +5931,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Llama 2 70B Chat",
     "tier": "Mid",
     "is_open_weight": true,
-    "license_type": "Llama 2 License",
-    "parameter_count_b": 70.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 4096,
     "max_output_tokens": 2048,
@@ -7209,12 +5947,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.15,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 5000,
-      "tpm": 800000,
-      "rpd": 50000,
-      "concurrency_limit": 200
-    },
     "benchmarks": {
       "arena_elo": 1100,
       "mmlu_pro": 49.0,
@@ -7225,7 +5957,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "amazon-titan-text-lite",
@@ -7234,7 +5967,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Amazon Titan Text Lite",
     "tier": "Micro",
     "is_open_weight": false,
-    "license_type": "Proprietary (AWS)",
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 4096,
     "max_output_tokens": 2048,
@@ -7250,12 +5983,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.03,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 1000,
-      "tpm": 150000,
-      "rpd": 10000,
-      "concurrency_limit": 50
-    },
     "benchmarks": {
       "arena_elo": 1090,
       "mmlu_pro": 44.0,
@@ -7266,7 +5993,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "llama-3-2-1b",
@@ -7275,8 +6003,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "name": "Llama 3.2 1B",
     "tier": "Micro",
     "is_open_weight": true,
-    "license_type": "Llama Community",
-    "parameter_count_b": 1.0,
+    "license_type": "Proprietary",
     "architecture": "Dense",
     "context_window": 128000,
     "max_output_tokens": 4096,
@@ -7292,12 +6019,6 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.005,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 1000,
-      "tpm": 150000,
-      "rpd": 10000,
-      "concurrency_limit": 50
-    },
     "benchmarks": {
       "arena_elo": 1080,
       "mmlu_pro": 40.0,
@@ -7308,7 +6029,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "text-embedding-3-large",
@@ -7320,7 +6042,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "license_type": "Proprietary",
     "architecture": "Embedding",
     "context_window": 8191,
-    "max_output_tokens": 0,
+    "max_output_tokens": 4096,
     "modality": [
       "text"
     ],
@@ -7333,18 +6055,13 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.06,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 1000,
-      "tpm": 150000,
-      "rpd": 10000,
-      "concurrency_limit": 50
-    },
     "benchmarks": {},
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "whisper-1",
@@ -7355,8 +6072,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_open_weight": false,
     "license_type": "Proprietary",
     "architecture": "Speech-to-Text",
-    "context_window": 0,
-    "max_output_tokens": 0,
+    "context_window": 128000,
+    "max_output_tokens": 4096,
     "modality": [
       "audio"
     ],
@@ -7369,18 +6086,13 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.006,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 1000,
-      "tpm": 150000,
-      "rpd": 10000,
-      "concurrency_limit": 50
-    },
     "benchmarks": {},
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "dall-e-3",
@@ -7391,8 +6103,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_open_weight": false,
     "license_type": "Proprietary",
     "architecture": "Image Generation",
-    "context_window": 0,
-    "max_output_tokens": 0,
+    "context_window": 128000,
+    "max_output_tokens": 4096,
     "modality": [
       "image"
     ],
@@ -7405,18 +6117,13 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.04,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 1000,
-      "tpm": 150000,
-      "rpd": 10000,
-      "concurrency_limit": 50
-    },
     "benchmarks": {},
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "dall-e-2",
@@ -7427,8 +6134,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_open_weight": false,
     "license_type": "Proprietary",
     "architecture": "Image Generation",
-    "context_window": 0,
-    "max_output_tokens": 0,
+    "context_window": 128000,
+    "max_output_tokens": 4096,
     "modality": [
       "image"
     ],
@@ -7441,18 +6148,13 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.02,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 1000,
-      "tpm": 150000,
-      "rpd": 10000,
-      "concurrency_limit": 50
-    },
     "benchmarks": {},
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "tts-1",
@@ -7463,8 +6165,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_open_weight": false,
     "license_type": "Proprietary",
     "architecture": "Text-to-Speech",
-    "context_window": 0,
-    "max_output_tokens": 0,
+    "context_window": 128000,
+    "max_output_tokens": 4096,
     "modality": [
       "audio"
     ],
@@ -7477,18 +6179,13 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 15.0,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 1000,
-      "tpm": 150000,
-      "rpd": 10000,
-      "concurrency_limit": 50
-    },
     "benchmarks": {},
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "tts-1-hd",
@@ -7499,8 +6196,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_open_weight": false,
     "license_type": "Proprietary",
     "architecture": "Text-to-Speech HD",
-    "context_window": 0,
-    "max_output_tokens": 0,
+    "context_window": 128000,
+    "max_output_tokens": 4096,
     "modality": [
       "audio"
     ],
@@ -7513,18 +6210,13 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 30.0,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 1000,
-      "tpm": 150000,
-      "rpd": 10000,
-      "concurrency_limit": 50
-    },
     "benchmarks": {},
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "text-embedding-3-small",
@@ -7536,7 +6228,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "license_type": "Proprietary",
     "architecture": "Embedding",
     "context_window": 8191,
-    "max_output_tokens": 0,
+    "max_output_tokens": 4096,
     "modality": [
       "text"
     ],
@@ -7549,18 +6241,13 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.01,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 1000,
-      "tpm": 150000,
-      "rpd": 10000,
-      "concurrency_limit": 50
-    },
     "benchmarks": {},
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "text-embedding-ada-002",
@@ -7572,7 +6259,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "license_type": "Proprietary",
     "architecture": "Embedding",
     "context_window": 8191,
-    "max_output_tokens": 0,
+    "max_output_tokens": 4096,
     "modality": [
       "text"
     ],
@@ -7585,18 +6272,13 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.05,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 1000,
-      "tpm": 150000,
-      "rpd": 10000,
-      "concurrency_limit": 50
-    },
     "benchmarks": {},
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "omni-moderation-latest",
@@ -7607,8 +6289,8 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "is_open_weight": false,
     "license_type": "Proprietary",
     "architecture": "Classifier",
-    "context_window": 0,
-    "max_output_tokens": 0,
+    "context_window": 128000,
+    "max_output_tokens": 4096,
     "modality": [
       "text",
       "image"
@@ -7622,18 +6304,13 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.0,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 1000,
-      "tpm": 150000,
-      "rpd": 10000,
-      "concurrency_limit": 50
-    },
     "benchmarks": {},
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "cohere-embed-v3-english",
@@ -7645,7 +6322,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "license_type": "Proprietary",
     "architecture": "Embedding",
     "context_window": 512,
-    "max_output_tokens": 0,
+    "max_output_tokens": 4096,
     "modality": [
       "text"
     ],
@@ -7658,18 +6335,13 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.025,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 1000,
-      "tpm": 150000,
-      "rpd": 10000,
-      "concurrency_limit": 50
-    },
     "benchmarks": {},
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
   },
   {
     "id": "cohere-embed-v3-multilingual",
@@ -7681,7 +6353,7 @@ export const FALLBACK_MODELS: ModelSpec[] = [
     "license_type": "Proprietary",
     "architecture": "Embedding",
     "context_window": 512,
-    "max_output_tokens": 0,
+    "max_output_tokens": 4096,
     "modality": [
       "text"
     ],
@@ -7694,17 +6366,12035 @@ export const FALLBACK_MODELS: ModelSpec[] = [
       "cached_input_price_per_1m": 0.025,
       "batch_discount_percent": 0.0
     },
-    "quota": {
-      "rpm": 1000,
-      "tpm": 150000,
-      "rpd": 10000,
-      "concurrency_limit": 50
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "claude-3-7-sonnet-thinking",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Claude 3.7 Sonnet (Thinking Mode)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Chain-of-Thought RL",
+    "context_window": 200000,
+    "max_output_tokens": 64000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Claude 3.7 Sonnet 사고 과정(Extended Thinking) 최대 가동 추론 스펙",
+    "official_url": "https://docs.anthropic.com/en/docs/about-claude/models",
+    "source_docs_url": "https://docs.anthropic.com/en/docs/about-claude/models",
+    "api_pricing": {
+      "input_price_per_1m": 3.0,
+      "output_price_per_1m": 15.0,
+      "cached_input_price_per_1m": 0.75,
+      "batch_discount_percent": 0.0
+    },
+    "benchmarks": {
+      "arena_elo": 1405,
+      "mmlu_pro": 92.5,
+      "gpqa": 86.2,
+      "swe_bench": 70.3
+    },
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "claude-3-7-sonnet-20250219",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Claude 3.7 Sonnet (20250219)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Hybrid Reasoning (Thinking Mode)",
+    "context_window": 200000,
+    "max_output_tokens": 64000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Anthropic 최초 하이브리드 추론 플래그십. 일반 응답 및 Extended Thinking 선택 가동. SWE-bench 및 코딩 SOTA",
+    "official_url": "https://docs.anthropic.com/en/docs/about-claude/models",
+    "source_docs_url": "https://docs.anthropic.com/en/docs/about-claude/models",
+    "api_pricing": {
+      "input_price_per_1m": 3.0,
+      "output_price_per_1m": 15.0,
+      "cached_input_price_per_1m": 0.75,
+      "batch_discount_percent": 0.0
+    },
+    "benchmarks": {
+      "arena_elo": 1395,
+      "mmlu_pro": 91.2,
+      "gpqa": 84.8,
+      "swe_bench": 70.3
+    },
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "claude-3-7-sonnet",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Claude 3.7 Sonnet (Latest)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Hybrid Reasoning (Thinking Mode)",
+    "context_window": 200000,
+    "max_output_tokens": 64000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Claude 3.7 Sonnet 공식 최신 엔드포인트 파이프라인",
+    "official_url": "https://docs.anthropic.com/en/docs/about-claude/models",
+    "source_docs_url": "https://docs.anthropic.com/en/docs/about-claude/models",
+    "api_pricing": {
+      "input_price_per_1m": 3.0,
+      "output_price_per_1m": 15.0,
+      "cached_input_price_per_1m": 0.75,
+      "batch_discount_percent": 0.0
+    },
+    "benchmarks": {
+      "arena_elo": 1395,
+      "mmlu_pro": 91.2,
+      "gpqa": 84.8,
+      "swe_bench": 70.3
+    },
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "gemini-2-0-pro-exp",
+    "provider_id": "google",
+    "provider_name": "Google AI",
+    "name": "Gemini 2.0 Pro (Experimental)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Native Multimodal",
+    "context_window": 2097152,
+    "max_output_tokens": 8192,
+    "modality": [
+      "text",
+      "vision",
+      "audio",
+      "video"
+    ],
+    "description": "Google 2.0 세대 200만 컨텍스트 플래그십 실험 모델. 복잡 코드 추론 및 옴니 분석",
+    "official_url": "https://ai.google.dev/gemini-api/docs/models/gemini",
+    "source_docs_url": "https://ai.google.dev/gemini-api/docs/models/gemini",
+    "api_pricing": {
+      "input_price_per_1m": 2.0,
+      "output_price_per_1m": 10.0,
+      "cached_input_price_per_1m": 0.5,
+      "batch_discount_percent": 0.0
+    },
+    "benchmarks": {
+      "arena_elo": 1365,
+      "mmlu_pro": 88.5,
+      "gpqa": 76.2,
+      "swe_bench": 59.0
+    },
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "gemini-2-0-flash",
+    "provider_id": "google",
+    "provider_name": "Google AI",
+    "name": "Gemini 2.0 Flash (GA)",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Native Multimodal",
+    "context_window": 1048576,
+    "max_output_tokens": 8192,
+    "modality": [
+      "text",
+      "vision",
+      "audio",
+      "video"
+    ],
+    "description": "Google 2.0 세대 차세대 고속 옴니 멀티모달 정식 버전. 100만 컨텍스트",
+    "official_url": "https://ai.google.dev/gemini-api/docs/models/gemini",
+    "source_docs_url": "https://ai.google.dev/gemini-api/docs/models/gemini",
+    "api_pricing": {
+      "input_price_per_1m": 0.1,
+      "output_price_per_1m": 0.4,
+      "cached_input_price_per_1m": 0.025,
+      "batch_discount_percent": 0.0
+    },
+    "benchmarks": {
+      "arena_elo": 1310,
+      "mmlu_pro": 80.0,
+      "gpqa": 62.5,
+      "swe_bench": 45.0
+    },
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "deepseek-r1-distill-llama-70b",
+    "provider_id": "deepseek",
+    "provider_name": "DeepSeek",
+    "name": "DeepSeek R1 Distill Llama 70B",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense Distilled RL",
+    "context_window": 128000,
+    "max_output_tokens": 8192,
+    "modality": [
+      "text"
+    ],
+    "description": "Llama 3.3 70B 기반 DeepSeek R1 추론 증류 모델. 온프레미스 단일 서버 호스팅",
+    "official_url": "https://api-docs.deepseek.com",
+    "source_docs_url": "https://api-docs.deepseek.com",
+    "api_pricing": {
+      "input_price_per_1m": 0.75,
+      "output_price_per_1m": 0.99,
+      "cached_input_price_per_1m": 0.18,
+      "batch_discount_percent": 0.0
+    },
+    "benchmarks": {
+      "arena_elo": 1295,
+      "mmlu_pro": 78.2,
+      "gpqa": 65.5,
+      "swe_bench": 49.0
+    },
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "deepseek-r1-distill-qwen-32b",
+    "provider_id": "deepseek",
+    "provider_name": "DeepSeek",
+    "name": "DeepSeek R1 Distill Qwen 32B",
+    "tier": "Small",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense Distilled RL",
+    "context_window": 128000,
+    "max_output_tokens": 8192,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen 2.5 32B 기반 R1 추론 증류 모델. RTX 4090/A100 단일 GPU 호스팅 최적화",
+    "official_url": "https://api-docs.deepseek.com",
+    "source_docs_url": "https://api-docs.deepseek.com",
+    "api_pricing": {
+      "input_price_per_1m": 0.3,
+      "output_price_per_1m": 0.6,
+      "cached_input_price_per_1m": 0.075,
+      "batch_discount_percent": 0.0
+    },
+    "benchmarks": {
+      "arena_elo": 1275,
+      "mmlu_pro": 75.0,
+      "gpqa": 61.0,
+      "swe_bench": 44.0
+    },
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "deepseek-r1-distill-qwen-14b",
+    "provider_id": "deepseek",
+    "provider_name": "DeepSeek",
+    "name": "DeepSeek R1 Distill Qwen 14B",
+    "tier": "Small",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense Distilled RL",
+    "context_window": 128000,
+    "max_output_tokens": 8192,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen 2.5 14B 기반 경량 R1 추론 증류 모델",
+    "official_url": "https://api-docs.deepseek.com",
+    "source_docs_url": "https://api-docs.deepseek.com",
+    "api_pricing": {
+      "input_price_per_1m": 0.15,
+      "output_price_per_1m": 0.3,
+      "cached_input_price_per_1m": 0.03,
+      "batch_discount_percent": 0.0
+    },
+    "benchmarks": {
+      "arena_elo": 1235,
+      "mmlu_pro": 70.0,
+      "gpqa": 52.0,
+      "swe_bench": 36.0
+    },
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "o1-pro",
+    "provider_id": "openai",
+    "provider_name": "OpenAI",
+    "name": "o1 Pro",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Chain-of-Thought RL",
+    "context_window": 200000,
+    "max_output_tokens": 100000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "o1 컴퓨팅 연산 자원 증대 버전. 고난도 수학·과학 연구 최상위",
+    "official_url": "https://platform.openai.com/docs/models/o1",
+    "source_docs_url": "https://platform.openai.com/docs/models/o1",
+    "api_pricing": {
+      "input_price_per_1m": 150.0,
+      "output_price_per_1m": 600.0,
+      "cached_input_price_per_1m": 75.0,
+      "batch_discount_percent": 0.0
+    },
+    "benchmarks": {
+      "arena_elo": 1390,
+      "mmlu_pro": 91.5,
+      "gpqa": 83.0,
+      "swe_bench": 68.0
+    },
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "inclusionai-ling-3.0-tiny:free",
+    "provider_id": "inclusionai",
+    "provider_name": "Inclusionai",
+    "name": "inclusionAI: Ling 3.0 Tiny (free)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text"
+    ],
+    "description": "Ling 3.0 Tiny is a mixture-of-experts model from InclusionAI, with 1.3B active parameters out of 7.9B total. It is designed for responsive agents, instruction following, and multi-turn conversations, with switchable...",
+    "official_url": "https://openrouter.ai/models/inclusionai/ling-3.0-tiny:free",
+    "source_docs_url": "https://openrouter.ai/playground?model=inclusionai/ling-3.0-tiny:free",
+    "api_pricing": {
+      "input_price_per_1m": 0.0,
+      "output_price_per_1m": 0.0
     },
     "benchmarks": {},
     "hardware_requirements": [],
     "is_verified": true,
     "supports_reasoning": false,
     "supports_web_search": false,
-    "is_deprecated": false
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "meta-muse-spark-1.2",
+    "provider_id": "meta",
+    "provider_name": "Meta",
+    "name": "Meta: Muse Spark 1.2",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Muse Spark 1.2 is a reasoning model from Meta, designed for complex agentic tasks. It accepts text, images, video, audio, and PDF documents, returns text, and offers a 1M-token context...",
+    "official_url": "https://openrouter.ai/models/meta/muse-spark-1.2",
+    "source_docs_url": "https://openrouter.ai/playground?model=meta/muse-spark-1.2",
+    "api_pricing": {
+      "input_price_per_1m": 1.25,
+      "output_price_per_1m": 4.25
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3.8-max",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3.8 Max",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 131072,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Qwen3.8 Max is the flagship model in Alibaba's Qwen3.8 series, the general-availability successor to the Qwen3.8 Max Preview. It is a multimodal reasoning model intended for complex reasoning, visual understanding,...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3.8-max",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3.8-max",
+    "api_pricing": {
+      "input_price_per_1m": 2.0,
+      "output_price_per_1m": 6.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "~deepseek-deepseek-v4-flash-latest",
+    "provider_id": "~deepseek",
+    "provider_name": "~deepseek",
+    "name": "DeepSeek V4 Flash Latest",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "This model always redirects to the latest model in the DeepSeek V4 Flash family.",
+    "official_url": "https://openrouter.ai/models/~deepseek/deepseek-v4-flash-latest",
+    "source_docs_url": "https://openrouter.ai/playground?model=~deepseek/deepseek-v4-flash-latest",
+    "api_pricing": {
+      "input_price_per_1m": 0.08,
+      "output_price_per_1m": 0.252
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "deepseek-deepseek-v4-flash-0731",
+    "provider_id": "deepseek",
+    "provider_name": "Deepseek",
+    "name": "DeepSeek: DeepSeek V4 Flash 0731",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 384000,
+    "modality": [
+      "text"
+    ],
+    "description": "DeepSeek V4 Flash 0731 is a sparse mixture-of-experts model from DeepSeek, with 13B active parameters out of 284B total. This re-post-trained revision is suited for coding, reasoning, and agent workflows.",
+    "official_url": "https://openrouter.ai/models/deepseek/deepseek-v4-flash-0731",
+    "source_docs_url": "https://openrouter.ai/playground?model=deepseek/deepseek-v4-flash-0731",
+    "api_pricing": {
+      "input_price_per_1m": 0.09,
+      "output_price_per_1m": 0.18
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "thinkingmachines-inkling-small",
+    "provider_id": "thinkingmachines",
+    "provider_name": "Thinkingmachines",
+    "name": "Thinking Machines: Inkling Small",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 524288,
+    "max_output_tokens": 262144,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Inkling Small is an open-weight multimodal mixture-of-experts model from Thinking Machines Lab, with 12B active parameters out of 276B total. It is positioned as the smaller, more efficient member of...",
+    "official_url": "https://openrouter.ai/models/thinkingmachines/inkling-small",
+    "source_docs_url": "https://openrouter.ai/playground?model=thinkingmachines/inkling-small",
+    "api_pricing": {
+      "input_price_per_1m": 0.45,
+      "output_price_per_1m": 1.2
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3.7-flash",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3.7 Flash",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Qwen3.7 Flash is a vision-language reasoning model from Alibaba. It is suited for multimodal agents, visual coding, search, and computer interaction, with strengths in object recognition, spatial understanding, and real-world...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3.7-flash",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3.7-flash",
+    "api_pricing": {
+      "input_price_per_1m": 0.03,
+      "output_price_per_1m": 0.13
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-opus-5-fast",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Claude Opus 5 (Fast)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Fast-mode variant of [Opus 5](/anthropic/claude-opus-5) - identical capabilities with higher output speed at 2x pricing relative to regular Opus 5.\n\nLearn more in Anthropic's docs: https://platform.claude.com/docs/en/build-with-claude/fast-mode",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-opus-5-fast",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-opus-5-fast",
+    "api_pricing": {
+      "input_price_per_1m": 10.0,
+      "output_price_per_1m": 50.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-opus-5",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Claude Opus 5",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Claude Opus 5 is Anthropic’s flagship model for demanding reasoning, coding, and long-horizon agentic work. It is particularly strong at end-to-end software tasks, code review and bug finding, visual analysis...",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-opus-5",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-opus-5",
+    "api_pricing": {
+      "input_price_per_1m": 5.0,
+      "output_price_per_1m": 25.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-opus-5:batch",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Claude Opus 5 (batch)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Claude Opus 5 is Anthropic’s flagship model for demanding reasoning, coding, and long-horizon agentic work. It is particularly strong at end-to-end software tasks, code review and bug finding, visual analysis...",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-opus-5:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-opus-5:batch",
+    "api_pricing": {
+      "input_price_per_1m": 2.5,
+      "output_price_per_1m": 12.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "inclusionai-ling-3.0-flash",
+    "provider_id": "inclusionai",
+    "provider_name": "Inclusionai",
+    "name": "Ling-3.0-flash",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text"
+    ],
+    "description": "*Ling-3.0-flash* is a *124B-parameter Mixture-of-Experts (MoE) model*, with approximately *5.1B parameters activated per token*. The model is designed with *token efficiency and production-scale agentic inference* as key priorities, enabling developers...",
+    "official_url": "https://openrouter.ai/models/inclusionai/ling-3.0-flash",
+    "source_docs_url": "https://openrouter.ai/playground?model=inclusionai/ling-3.0-flash",
+    "api_pricing": {
+      "input_price_per_1m": 0.021,
+      "output_price_per_1m": 0.063
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "poolside-laguna-s-2.1",
+    "provider_id": "poolside",
+    "provider_name": "Poolside",
+    "name": "Poolside: Laguna S 2.1",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 131072,
+    "modality": [
+      "text"
+    ],
+    "description": "Laguna S 2.1 is the latest coding agent model from [Poolside](<https://poolside.ai/>). Laguna S 2.1 is a 118B total parameter model with 8B active parameters, scoring 70.2% on Terminal-Bench 2.1 and...",
+    "official_url": "https://openrouter.ai/models/poolside/laguna-s-2.1",
+    "source_docs_url": "https://openrouter.ai/playground?model=poolside/laguna-s-2.1",
+    "api_pricing": {
+      "input_price_per_1m": 0.09,
+      "output_price_per_1m": 0.18
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "poolside-laguna-s-2.1:free",
+    "provider_id": "poolside",
+    "provider_name": "Poolside",
+    "name": "Poolside: Laguna S 2.1 (free)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text"
+    ],
+    "description": "Laguna S 2.1 is the latest coding agent model from [Poolside](<https://poolside.ai/>). Laguna S 2.1 is a 118B total parameter model with 8B active parameters, scoring 70.2% on Terminal-Bench 2.1 and...",
+    "official_url": "https://openrouter.ai/models/poolside/laguna-s-2.1:free",
+    "source_docs_url": "https://openrouter.ai/playground?model=poolside/laguna-s-2.1:free",
+    "api_pricing": {
+      "input_price_per_1m": 0.0,
+      "output_price_per_1m": 0.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-3.6-flash",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemini 3.6 Flash",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemini 3.6 Flash is a high-efficiency model from Google for coding, agentic workflows, and web and app development. It is designed to produce polished outputs with fewer unnecessary edits and...",
+    "official_url": "https://openrouter.ai/models/google/gemini-3.6-flash",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-3.6-flash",
+    "api_pricing": {
+      "input_price_per_1m": 1.5,
+      "output_price_per_1m": 7.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-3.6-flash:batch",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemini 3.6 Flash (batch)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemini 3.6 Flash is a high-efficiency model from Google for coding, agentic workflows, and web and app development. It is designed to produce polished outputs with fewer unnecessary edits and...",
+    "official_url": "https://openrouter.ai/models/google/gemini-3.6-flash:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-3.6-flash:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.75,
+      "output_price_per_1m": 3.75
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-3.5-flash-lite",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemini 3.5 Flash Lite",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemini 3.5 Flash Lite is a high-efficiency model from Google with upgraded agentic capabilities. It is suited for subagents that execute focused tasks within complex, multi-agent workflows.",
+    "official_url": "https://openrouter.ai/models/google/gemini-3.5-flash-lite",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-3.5-flash-lite",
+    "api_pricing": {
+      "input_price_per_1m": 0.3,
+      "output_price_per_1m": 2.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-3.5-flash-lite:batch",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemini 3.5 Flash Lite (batch)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemini 3.5 Flash Lite is a high-efficiency model from Google with upgraded agentic capabilities. It is suited for subagents that execute focused tasks within complex, multi-agent workflows.",
+    "official_url": "https://openrouter.ai/models/google/gemini-3.5-flash-lite:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-3.5-flash-lite:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.15,
+      "output_price_per_1m": 1.25
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "meituan-longcat-2.0",
+    "provider_id": "meituan",
+    "provider_name": "Meituan",
+    "name": "Meituan: LongCat 2.0",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048756,
+    "max_output_tokens": 262144,
+    "modality": [
+      "text"
+    ],
+    "description": "LongCat 2.0 is a sparse mixture-of-experts language model from Meituan, with 48B active parameters out of 1.6T total. It is suited for coding, repository-level changes, long-horizon problem solving, and agentic...",
+    "official_url": "https://openrouter.ai/models/meituan/longcat-2.0",
+    "source_docs_url": "https://openrouter.ai/playground?model=meituan/longcat-2.0",
+    "api_pricing": {
+      "input_price_per_1m": 0.3,
+      "output_price_per_1m": 1.2
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "thinkingmachines-inkling",
+    "provider_id": "thinkingmachines",
+    "provider_name": "Thinkingmachines",
+    "name": "Thinking Machines: Inkling",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 262144,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Inkling is an open-weight multimodal mixture-of-experts model from Thinking Machines Lab, with 41B active parameters out of 975B total. It is designed for general-purpose reasoning, coding, agentic and tool-use systems,...",
+    "official_url": "https://openrouter.ai/models/thinkingmachines/inkling",
+    "source_docs_url": "https://openrouter.ai/playground?model=thinkingmachines/inkling",
+    "api_pricing": {
+      "input_price_per_1m": 0.95,
+      "output_price_per_1m": 4.05
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "thinkingmachines-inkling:batch",
+    "provider_id": "thinkingmachines",
+    "provider_name": "Thinkingmachines",
+    "name": "Thinking Machines: Inkling (batch)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 524288,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Inkling is an open-weight multimodal mixture-of-experts model from Thinking Machines Lab, with 41B active parameters out of 975B total. It is designed for general-purpose reasoning, coding, agentic and tool-use systems,...",
+    "official_url": "https://openrouter.ai/models/thinkingmachines/inkling:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=thinkingmachines/inkling:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.5,
+      "output_price_per_1m": 2.025
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openrouter-auto-beta",
+    "provider_id": "openrouter",
+    "provider_name": "Openrouter",
+    "name": "Auto Router (Beta)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 2000000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Auto Router (Beta) is a task-aware router from OpenRouter. It classifies each request, then routes it the [most popular model](/rankings#task-spend) for that task based on aggregate spend, filtered by your...",
+    "official_url": "https://openrouter.ai/models/openrouter/auto-beta",
+    "source_docs_url": "https://openrouter.ai/playground?model=openrouter/auto-beta",
+    "api_pricing": {
+      "input_price_per_1m": -1000000.0,
+      "output_price_per_1m": -1000000.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "moonshotai-kimi-k3",
+    "provider_id": "moonshotai",
+    "provider_name": "Moonshotai",
+    "name": "MoonshotAI: Kimi K3",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Kimi K3 is a 2.8T parameter open-weight multimodal reasoning model from Moonshot AI. It is suited for complex coding, knowledge work, and long-horizon agentic workflows, and is particularly strong at...",
+    "official_url": "https://openrouter.ai/models/moonshotai/kimi-k3",
+    "source_docs_url": "https://openrouter.ai/playground?model=moonshotai/kimi-k3",
+    "api_pricing": {
+      "input_price_per_1m": 3.0,
+      "output_price_per_1m": 15.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "meta-muse-spark-1.1",
+    "provider_id": "meta",
+    "provider_name": "Meta",
+    "name": "Meta: Muse Spark 1.1",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Muse Spark 1.1 is a multimodal reasoning model from Meta, built for agentic tasks. It accepts text, images, video, audio, and PDF documents and returns text, with a 1M-token context...",
+    "official_url": "https://openrouter.ai/models/meta/muse-spark-1.1",
+    "source_docs_url": "https://openrouter.ai/playground?model=meta/muse-spark-1.1",
+    "api_pricing": {
+      "input_price_per_1m": 1.25,
+      "output_price_per_1m": 4.25
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "kwaipilot-kat-coder-air-v2.5",
+    "provider_id": "kwaipilot",
+    "provider_name": "Kwaipilot",
+    "name": "Kwaipilot: KAT-Coder-Air V2.5",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 256000,
+    "max_output_tokens": 80000,
+    "modality": [
+      "text"
+    ],
+    "description": "KAT-Coder-Air V2.5 is a flagship-level Agentic Coding model that can directly hand over an entire issue or an entire business workflow to it, allowing it to autonomously locate and make...",
+    "official_url": "https://openrouter.ai/models/kwaipilot/kat-coder-air-v2.5",
+    "source_docs_url": "https://openrouter.ai/playground?model=kwaipilot/kat-coder-air-v2.5",
+    "api_pricing": {
+      "input_price_per_1m": 0.15,
+      "output_price_per_1m": 0.6
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "kwaipilot-kat-coder-pro-v2.5",
+    "provider_id": "kwaipilot",
+    "provider_name": "Kwaipilot",
+    "name": "Kwaipilot: KAT-Coder-Pro V2.5",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 256000,
+    "max_output_tokens": 80000,
+    "modality": [
+      "text"
+    ],
+    "description": "KAT-Coder-Pro V2.5 is a flagship-level Agentic Coding model that can directly hand over an entire issue or an entire business workflow to it, allowing it to autonomously locate and make...",
+    "official_url": "https://openrouter.ai/models/kwaipilot/kat-coder-pro-v2.5",
+    "source_docs_url": "https://openrouter.ai/playground?model=kwaipilot/kat-coder-pro-v2.5",
+    "api_pricing": {
+      "input_price_per_1m": 0.74,
+      "output_price_per_1m": 2.96
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.6-luna-pro",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.6 Luna Pro",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1050000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.6 Luna Pro is the same underlying model as [GPT-5.6 Luna](https://openrouter.ai/openai/gpt-5.6-luna), served with `reasoning.mode` set to `pro` for higher-quality responses on complex tasks.\n\nLearn more in OpenAI's docs: https://developers.openai.com/api/docs/guides/reasoning#reasoning-mode",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.6-luna-pro",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.6-luna-pro",
+    "api_pricing": {
+      "input_price_per_1m": 0.1,
+      "output_price_per_1m": 0.6
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.6-luna-pro:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.6 Luna Pro (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1050000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.6 Luna Pro is the same underlying model as [GPT-5.6 Luna](https://openrouter.ai/openai/gpt-5.6-luna), served with `reasoning.mode` set to `pro` for higher-quality responses on complex tasks.\n\nLearn more in OpenAI's docs: https://developers.openai.com/api/docs/guides/reasoning#reasoning-mode",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.6-luna-pro:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.6-luna-pro:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.1,
+      "output_price_per_1m": 0.6
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.6-luna",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.6 Luna",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1050000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.6 Luna is a fast, cost-efficient model in OpenAI's GPT-5.6 series. It is suited for high-volume, latency-sensitive tasks such as chat, classification, and lightweight agentic workflows, providing capable reasoning for...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.6-luna",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.6-luna",
+    "api_pricing": {
+      "input_price_per_1m": 0.1,
+      "output_price_per_1m": 0.6
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.6-luna:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.6 Luna (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1050000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.6 Luna is a fast, cost-efficient model in OpenAI's GPT-5.6 series. It is suited for high-volume, latency-sensitive tasks such as chat, classification, and lightweight agentic workflows, providing capable reasoning for...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.6-luna:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.6-luna:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.1,
+      "output_price_per_1m": 0.6
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.6-terra-pro",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.6 Terra Pro",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1050000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.6 Terra Pro is the same underlying model as [GPT-5.6 Terra](https://openrouter.ai/openai/gpt-5.6-terra), served with `reasoning.mode` set to `pro` for higher-quality responses on complex tasks.\n\nLearn more in OpenAI's docs: https://developers.openai.com/api/docs/guides/reasoning#reasoning-mode",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.6-terra-pro",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.6-terra-pro",
+    "api_pricing": {
+      "input_price_per_1m": 1.0,
+      "output_price_per_1m": 6.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.6-terra-pro:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.6 Terra Pro (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1050000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.6 Terra Pro is the same underlying model as [GPT-5.6 Terra](https://openrouter.ai/openai/gpt-5.6-terra), served with `reasoning.mode` set to `pro` for higher-quality responses on complex tasks.\n\nLearn more in OpenAI's docs: https://developers.openai.com/api/docs/guides/reasoning#reasoning-mode",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.6-terra-pro:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.6-terra-pro:batch",
+    "api_pricing": {
+      "input_price_per_1m": 1.0,
+      "output_price_per_1m": 6.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.6-terra",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.6 Terra",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1050000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.6 Terra is a balanced model in OpenAI's GPT-5.6 series, positioned between the flagship Sol tier and the cost-efficient Luna tier. It is suited for everyday coding, reasoning, and agentic...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.6-terra",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.6-terra",
+    "api_pricing": {
+      "input_price_per_1m": 1.0,
+      "output_price_per_1m": 6.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.6-terra:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.6 Terra (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1050000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.6 Terra is a balanced model in OpenAI's GPT-5.6 series, positioned between the flagship Sol tier and the cost-efficient Luna tier. It is suited for everyday coding, reasoning, and agentic...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.6-terra:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.6-terra:batch",
+    "api_pricing": {
+      "input_price_per_1m": 1.0,
+      "output_price_per_1m": 6.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.6-sol-pro",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.6 Sol Pro",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1050000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.6 Sol Pro is the same underlying model as [GPT-5.6 Sol](https://openrouter.ai/openai/gpt-5.6-sol), served with `reasoning.mode` set to `pro` for higher-quality responses on complex tasks.\n\nLearn more in OpenAI's docs: https://developers.openai.com/api/docs/guides/reasoning#reasoning-mode",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.6-sol-pro",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.6-sol-pro",
+    "api_pricing": {
+      "input_price_per_1m": 5.0,
+      "output_price_per_1m": 30.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.6-sol-pro:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.6 Sol Pro (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1050000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.6 Sol Pro is the same underlying model as [GPT-5.6 Sol](https://openrouter.ai/openai/gpt-5.6-sol), served with `reasoning.mode` set to `pro` for higher-quality responses on complex tasks.\n\nLearn more in OpenAI's docs: https://developers.openai.com/api/docs/guides/reasoning#reasoning-mode",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.6-sol-pro:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.6-sol-pro:batch",
+    "api_pricing": {
+      "input_price_per_1m": 2.5,
+      "output_price_per_1m": 15.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.6-sol",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.6 Sol",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1050000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.6 Sol is the flagship model in OpenAI's GPT-5.6 series. It is suited for complex reasoning, coding, and agentic workflows, and is particularly strong at command-line and multi-step coding tasks...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.6-sol",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.6-sol",
+    "api_pricing": {
+      "input_price_per_1m": 5.0,
+      "output_price_per_1m": 30.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.6-sol:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.6 Sol (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1050000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.6 Sol is the flagship model in OpenAI's GPT-5.6 series. It is suited for complex reasoning, coding, and agentic workflows, and is particularly strong at command-line and multi-step coding tasks...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.6-sol:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.6-sol:batch",
+    "api_pricing": {
+      "input_price_per_1m": 2.5,
+      "output_price_per_1m": 15.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "x-ai-grok-4.5",
+    "provider_id": "x-ai",
+    "provider_name": "X-ai",
+    "name": "SpaceXAI: Grok 4.5",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 500000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Grok 4.5 is SpaceXAI's smartest model with frontier performance on coding, knowledge work, and STEM.",
+    "official_url": "https://openrouter.ai/models/x-ai/grok-4.5",
+    "source_docs_url": "https://openrouter.ai/playground?model=x-ai/grok-4.5",
+    "api_pricing": {
+      "input_price_per_1m": 2.0,
+      "output_price_per_1m": 6.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "~x-ai-grok-latest",
+    "provider_id": "~x-ai",
+    "provider_name": "~x-ai",
+    "name": "xAI: Grok Latest",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 500000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "This model always redirects to the latest Grok model from xAI.",
+    "official_url": "https://openrouter.ai/models/~x-ai/grok-latest",
+    "source_docs_url": "https://openrouter.ai/playground?model=~x-ai/grok-latest",
+    "api_pricing": {
+      "input_price_per_1m": 2.0,
+      "output_price_per_1m": 6.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "aion-labs-aion-3.0-mini",
+    "provider_id": "aion-labs",
+    "provider_name": "Aion-labs",
+    "name": "AionLabs: Aion-3.0-Mini",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text"
+    ],
+    "description": "Aion-3.0 Mini is a multi-model roleplaying and storytelling system from AionLabs, built on the DeepSeek family of models. It uses a collaborative generation process in which multiple specialized models each...",
+    "official_url": "https://openrouter.ai/models/aion-labs/aion-3.0-mini",
+    "source_docs_url": "https://openrouter.ai/playground?model=aion-labs/aion-3.0-mini",
+    "api_pricing": {
+      "input_price_per_1m": 0.7,
+      "output_price_per_1m": 1.4
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "aion-labs-aion-3.0",
+    "provider_id": "aion-labs",
+    "provider_name": "Aion-labs",
+    "name": "AionLabs: Aion-3.0",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text"
+    ],
+    "description": "Aion-3.0 is a multi-model roleplaying and storytelling system from AionLabs, built on the GLM family of models. It uses a collaborative generation process in which multiple specialized models each contribute...",
+    "official_url": "https://openrouter.ai/models/aion-labs/aion-3.0",
+    "source_docs_url": "https://openrouter.ai/playground?model=aion-labs/aion-3.0",
+    "api_pricing": {
+      "input_price_per_1m": 3.0,
+      "output_price_per_1m": 6.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "tencent-hy3",
+    "provider_id": "tencent",
+    "provider_name": "Tencent",
+    "name": "Tencent: Hy3",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text"
+    ],
+    "description": "Hy3 is a 295B-parameter Mixture-of-Experts model from Tencent (21B active, 192 experts with top-8 routing) built for reasoning, agentic workflows, and real-world production use. It supports a configurable reasoning effort:...",
+    "official_url": "https://openrouter.ai/models/tencent/hy3",
+    "source_docs_url": "https://openrouter.ai/playground?model=tencent/hy3",
+    "api_pricing": {
+      "input_price_per_1m": 0.132,
+      "output_price_per_1m": 0.528
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "poolside-laguna-xs-2.1",
+    "provider_id": "poolside",
+    "provider_name": "Poolside",
+    "name": "Poolside: Laguna XS 2.1",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text"
+    ],
+    "description": "Laguna XS 2.1 is the latest coding agent model in the 33B-A3B category from [Poolside](https://poolside.ai/) and a step forward from their Laguna XS.2 model (released in April 2026). It combines...",
+    "official_url": "https://openrouter.ai/models/poolside/laguna-xs-2.1",
+    "source_docs_url": "https://openrouter.ai/playground?model=poolside/laguna-xs-2.1",
+    "api_pricing": {
+      "input_price_per_1m": 0.06,
+      "output_price_per_1m": 0.12
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "poolside-laguna-xs-2.1:free",
+    "provider_id": "poolside",
+    "provider_name": "Poolside",
+    "name": "Poolside: Laguna XS 2.1 (free)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text"
+    ],
+    "description": "Laguna XS 2.1 is the latest coding agent model in the 33B-A3B category from [Poolside](https://poolside.ai/) and a step forward from their Laguna XS.2 model (released in April 2026). It combines...",
+    "official_url": "https://openrouter.ai/models/poolside/laguna-xs-2.1:free",
+    "source_docs_url": "https://openrouter.ai/playground?model=poolside/laguna-xs-2.1:free",
+    "api_pricing": {
+      "input_price_per_1m": 0.0,
+      "output_price_per_1m": 0.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-sonnet-5",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Anthropic: Claude Sonnet 5",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Sonnet 5 is Anthropic's most capable Sonnet-class model, with frontier performance across coding, agents, and professional work. It supports adaptive thinking with selectable reasoning effort levels (low, medium, high, max,...",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-sonnet-5",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-sonnet-5",
+    "api_pricing": {
+      "input_price_per_1m": 2.0,
+      "output_price_per_1m": 10.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-sonnet-5:batch",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Anthropic: Claude Sonnet 5 (batch)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Sonnet 5 is Anthropic's most capable Sonnet-class model, with frontier performance across coding, agents, and professional work. It supports adaptive thinking with selectable reasoning effort levels (low, medium, high, max,...",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-sonnet-5:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-sonnet-5:batch",
+    "api_pricing": {
+      "input_price_per_1m": 1.0,
+      "output_price_per_1m": 5.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-3.1-flash-lite-image",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Nano Banana 2 Lite (Gemini 3.1 Flash Lite Image)",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 65536,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Nano Banana 2 Lite (Gemini 3.1 Flash Lite Image) is Google's fastest, most cost-efficient Gemini image model, built for high-velocity developer pipelines and rapid-fire visual exploration. It delivers text-to-image generation...",
+    "official_url": "https://openrouter.ai/models/google/gemini-3.1-flash-lite-image",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-3.1-flash-lite-image",
+    "api_pricing": {
+      "input_price_per_1m": 0.25,
+      "output_price_per_1m": 1.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "nex-agi-nex-n2-mini",
+    "provider_id": "nex-agi",
+    "provider_name": "Nex-agi",
+    "name": "Nex AGI: Nex-N2-Mini",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 262144,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Nex-N2-Mini is an open-source agentic mixture-of-experts model from Nex AGI, the smaller sibling in the Nex-N2 series. It accepts text and image input and is built for coding, tool use,...",
+    "official_url": "https://openrouter.ai/models/nex-agi/nex-n2-mini",
+    "source_docs_url": "https://openrouter.ai/playground?model=nex-agi/nex-n2-mini",
+    "api_pricing": {
+      "input_price_per_1m": 0.025,
+      "output_price_per_1m": 0.1
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "sakana-fugu-ultra",
+    "provider_id": "sakana",
+    "provider_name": "Sakana",
+    "name": "Sakana: Fugu Ultra",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Fugu Ultra is the higher-performance model in Sakana AI's Fugu family. Rather than a single monolithic model, Fugu is a learned multi-agent orchestration system: a language model trained to route...",
+    "official_url": "https://openrouter.ai/models/sakana/fugu-ultra",
+    "source_docs_url": "https://openrouter.ai/playground?model=sakana/fugu-ultra",
+    "api_pricing": {
+      "input_price_per_1m": 5.0,
+      "output_price_per_1m": 30.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-3.1-flash-image",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Nano Banana 2 (Gemini 3.1 Flash Image)",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemini 3.1 Flash Image, a.k.a. \"Nano Banana 2,\" is Google’s latest state of the art image generation and editing model, delivering Pro-level visual quality at Flash speed. It combines advanced...",
+    "official_url": "https://openrouter.ai/models/google/gemini-3.1-flash-image",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-3.1-flash-image",
+    "api_pricing": {
+      "input_price_per_1m": 0.5,
+      "output_price_per_1m": 3.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-3-pro-image",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Nano Banana Pro (Gemini 3 Pro Image)",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Nano Banana Pro is Google’s most advanced image-generation and editing model, built on Gemini 3 Pro. It extends the original Nano Banana with significantly improved multimodal reasoning, real-world grounding, and...",
+    "official_url": "https://openrouter.ai/models/google/gemini-3-pro-image",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-3-pro-image",
+    "api_pricing": {
+      "input_price_per_1m": 2.0,
+      "output_price_per_1m": 12.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "cohere-north-mini-code:free",
+    "provider_id": "cohere",
+    "provider_name": "Cohere",
+    "name": "Cohere: North Mini Code (free)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 256000,
+    "max_output_tokens": 64000,
+    "modality": [
+      "text"
+    ],
+    "description": "North Mini Code is Cohere's first agentic coding model and the debut of its North family. A sparse mixture-of-experts model with 30B total parameters and 3B active, it is optimized...",
+    "official_url": "https://openrouter.ai/models/cohere/north-mini-code:free",
+    "source_docs_url": "https://openrouter.ai/playground?model=cohere/north-mini-code:free",
+    "api_pricing": {
+      "input_price_per_1m": 0.0,
+      "output_price_per_1m": 0.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "z-ai-glm-5.2",
+    "provider_id": "z-ai",
+    "provider_name": "Z-ai",
+    "name": "Z.ai: GLM 5.2",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 262144,
+    "modality": [
+      "text"
+    ],
+    "description": "GLM 5.2 is a large-scale reasoning model from Z.ai. It supports text input and output with a 1M-token context window, and is suited for long-horizon agent workflows, project-level software engineering,...",
+    "official_url": "https://openrouter.ai/models/z-ai/glm-5.2",
+    "source_docs_url": "https://openrouter.ai/playground?model=z-ai/glm-5.2",
+    "api_pricing": {
+      "input_price_per_1m": 0.76,
+      "output_price_per_1m": 2.42
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "z-ai-glm-5.2:batch",
+    "provider_id": "z-ai",
+    "provider_name": "Z-ai",
+    "name": "Z.ai: GLM 5.2 (batch)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 512000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "GLM 5.2 is a large-scale reasoning model from Z.ai. It supports text input and output with a 1M-token context window, and is suited for long-horizon agent workflows, project-level software engineering,...",
+    "official_url": "https://openrouter.ai/models/z-ai/glm-5.2:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=z-ai/glm-5.2:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.7,
+      "output_price_per_1m": 2.2
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openrouter-fusion",
+    "provider_id": "openrouter",
+    "provider_name": "Openrouter",
+    "name": "OpenRouter: Fusion",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "Fusion turns your prompt into a small multi-model deliberation. A panel of expert models (see below) analyzes your prompt in parallel with web search and web fetch enabled, then a...",
+    "official_url": "https://openrouter.ai/models/openrouter/fusion",
+    "source_docs_url": "https://openrouter.ai/playground?model=openrouter/fusion",
+    "api_pricing": {
+      "input_price_per_1m": -1000000.0,
+      "output_price_per_1m": -1000000.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "moonshotai-kimi-k2.7-code",
+    "provider_id": "moonshotai",
+    "provider_name": "Moonshotai",
+    "name": "MoonshotAI: Kimi K2.7 Code",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 262144,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "MoonshotAI: Kimi K2.7 Code is a coding-focused model in Moonshot AI's Kimi K2 family, built to complete end-to-end programming tasks reliably over long contexts. It uses a native multimodal mixture-of-experts...",
+    "official_url": "https://openrouter.ai/models/moonshotai/kimi-k2.7-code",
+    "source_docs_url": "https://openrouter.ai/playground?model=moonshotai/kimi-k2.7-code",
+    "api_pricing": {
+      "input_price_per_1m": 0.7,
+      "output_price_per_1m": 3.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "moonshotai-kimi-k2.7-code:batch",
+    "provider_id": "moonshotai",
+    "provider_name": "Moonshotai",
+    "name": "MoonshotAI: Kimi K2.7 Code (batch)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "MoonshotAI: Kimi K2.7 Code is a coding-focused model in Moonshot AI's Kimi K2 family, built to complete end-to-end programming tasks reliably over long contexts. It uses a native multimodal mixture-of-experts...",
+    "official_url": "https://openrouter.ai/models/moonshotai/kimi-k2.7-code:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=moonshotai/kimi-k2.7-code:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.475,
+      "output_price_per_1m": 2.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "~anthropic-claude-fable-latest",
+    "provider_id": "~anthropic",
+    "provider_name": "~anthropic",
+    "name": "Anthropic: Claude Fable Latest",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "This model always redirects to the latest model in the Claude Fable family.",
+    "official_url": "https://openrouter.ai/models/~anthropic/claude-fable-latest",
+    "source_docs_url": "https://openrouter.ai/playground?model=~anthropic/claude-fable-latest",
+    "api_pricing": {
+      "input_price_per_1m": 10.0,
+      "output_price_per_1m": 50.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-fable-5",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Anthropic: Claude Fable 5",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Claude Fable 5 is a Mythos-class model from Anthropic, built for autonomous knowledge work and coding. It supports text, image, and file inputs with text output, with reasoning support and...",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-fable-5",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-fable-5",
+    "api_pricing": {
+      "input_price_per_1m": 10.0,
+      "output_price_per_1m": 50.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-fable-5:batch",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Anthropic: Claude Fable 5 (batch)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Claude Fable 5 is a Mythos-class model from Anthropic, built for autonomous knowledge work and coding. It supports text, image, and file inputs with text output, with reasoning support and...",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-fable-5:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-fable-5:batch",
+    "api_pricing": {
+      "input_price_per_1m": 5.0,
+      "output_price_per_1m": 25.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "nex-agi-nex-n2-pro",
+    "provider_id": "nex-agi",
+    "provider_name": "Nex-agi",
+    "name": "Nex AGI: Nex-N2-Pro",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 262144,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Nex-N2-Pro is an agentic mixture-of-experts model from Nex AGI, with 17B active parameters out of 397B total. Built on the Qwen3.5 architecture, it accepts text and image input and produces...",
+    "official_url": "https://openrouter.ai/models/nex-agi/nex-n2-pro",
+    "source_docs_url": "https://openrouter.ai/playground?model=nex-agi/nex-n2-pro",
+    "api_pricing": {
+      "input_price_per_1m": 0.25,
+      "output_price_per_1m": 1.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "nvidia-nemotron-3.5-content-safety:free",
+    "provider_id": "nvidia",
+    "provider_name": "Nvidia",
+    "name": "NVIDIA: Nemotron 3.5 Content Safety (free)",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 8192,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "NVIDIA Nemotron 3.5 Content Safety is a compact 4B-parameter multimodal guardrail model from NVIDIA, fine-tuned from Google Gemma-3-4B. It moderates both inputs to and responses from LLMs and VLMs, accepting...",
+    "official_url": "https://openrouter.ai/models/nvidia/nemotron-3.5-content-safety:free",
+    "source_docs_url": "https://openrouter.ai/playground?model=nvidia/nemotron-3.5-content-safety:free",
+    "api_pricing": {
+      "input_price_per_1m": 0.0,
+      "output_price_per_1m": 0.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "nvidia-nemotron-3-ultra-550b-a55b",
+    "provider_id": "nvidia",
+    "provider_name": "Nvidia",
+    "name": "NVIDIA: Nemotron 3 Ultra",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 512288,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "NVIDIA Nemotron 3 Ultra is an open frontier-reasoning and orchestration model from NVIDIA, with 55B active parameters out of 550B total (MoE). Built on a hybrid Transformer-Mamba mixture-of-experts architecture, it...",
+    "official_url": "https://openrouter.ai/models/nvidia/nemotron-3-ultra-550b-a55b",
+    "source_docs_url": "https://openrouter.ai/playground?model=nvidia/nemotron-3-ultra-550b-a55b",
+    "api_pricing": {
+      "input_price_per_1m": 0.6,
+      "output_price_per_1m": 3.6
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "nvidia-nemotron-3-ultra-550b-a55b:batch",
+    "provider_id": "nvidia",
+    "provider_name": "Nvidia",
+    "name": "NVIDIA: Nemotron 3 Ultra (batch)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 512288,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "NVIDIA Nemotron 3 Ultra is an open frontier-reasoning and orchestration model from NVIDIA, with 55B active parameters out of 550B total (MoE). Built on a hybrid Transformer-Mamba mixture-of-experts architecture, it...",
+    "official_url": "https://openrouter.ai/models/nvidia/nemotron-3-ultra-550b-a55b:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=nvidia/nemotron-3-ultra-550b-a55b:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.3,
+      "output_price_per_1m": 1.8
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "nvidia-nemotron-3-ultra-550b-a55b:free",
+    "provider_id": "nvidia",
+    "provider_name": "Nvidia",
+    "name": "NVIDIA: Nemotron 3 Ultra (free)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text"
+    ],
+    "description": "NVIDIA Nemotron 3 Ultra is an open frontier-reasoning and orchestration model from NVIDIA, with 55B active parameters out of 550B total (MoE). Built on a hybrid Transformer-Mamba mixture-of-experts architecture, it...",
+    "official_url": "https://openrouter.ai/models/nvidia/nemotron-3-ultra-550b-a55b:free",
+    "source_docs_url": "https://openrouter.ai/playground?model=nvidia/nemotron-3-ultra-550b-a55b:free",
+    "api_pricing": {
+      "input_price_per_1m": 0.0,
+      "output_price_per_1m": 0.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3.7-plus",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3.7 Plus",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 131072,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Qwen3.7-Plus is a cost-effective model in Alibaba's Qwen3.7 series. It supports text and image input with text output, building on the series' text capabilities with a comprehensive upgrade to its...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3.7-plus",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3.7-plus",
+    "api_pricing": {
+      "input_price_per_1m": 0.32,
+      "output_price_per_1m": 1.28
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "minimax-minimax-m3",
+    "provider_id": "minimax",
+    "provider_name": "Minimax",
+    "name": "MiniMax: MiniMax M3",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 512000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "MiniMax-M3 is a multimodal foundation model from MiniMax. It supports text, image, and video inputs with text output, a 1M-token context window, and is suited for long-horizon agentic work, coding,...",
+    "official_url": "https://openrouter.ai/models/minimax/minimax-m3",
+    "source_docs_url": "https://openrouter.ai/playground?model=minimax/minimax-m3",
+    "api_pricing": {
+      "input_price_per_1m": 0.3,
+      "output_price_per_1m": 1.2
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "minimax-minimax-m3:batch",
+    "provider_id": "minimax",
+    "provider_name": "Minimax",
+    "name": "MiniMax: MiniMax M3 (batch)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 524288,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "MiniMax-M3 is a multimodal foundation model from MiniMax. It supports text, image, and video inputs with text output, a 1M-token context window, and is suited for long-horizon agentic work, coding,...",
+    "official_url": "https://openrouter.ai/models/minimax/minimax-m3:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=minimax/minimax-m3:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.15,
+      "output_price_per_1m": 0.6
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "stepfun-step-3.7-flash",
+    "provider_id": "stepfun",
+    "provider_name": "Stepfun",
+    "name": "StepFun: Step 3.7 Flash",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 256000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Step 3.7 Flash is StepFun's latest high-efficiency multimodal Mixture-of-Experts model. It pairs a 196B-parameter language backbone with a vision encoder for native image and video understanding, activating roughly 11B parameters...",
+    "official_url": "https://openrouter.ai/models/stepfun/step-3.7-flash",
+    "source_docs_url": "https://openrouter.ai/playground?model=stepfun/step-3.7-flash",
+    "api_pricing": {
+      "input_price_per_1m": 0.2,
+      "output_price_per_1m": 1.15
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-opus-4.8-fast",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Anthropic: Claude Opus 4.8 (Fast)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Fast-mode variant of [Opus 4.8](/anthropic/claude-opus-4.8) - identical capabilities with higher output speed at 2x pricing relative to regular Opus 4.8.\n\nLearn more in Anthropic's docs: https://platform.claude.com/docs/en/build-with-claude/fast-mode",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-opus-4.8-fast",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-opus-4.8-fast",
+    "api_pricing": {
+      "input_price_per_1m": 10.0,
+      "output_price_per_1m": 50.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-opus-4.8",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Anthropic: Claude Opus 4.8",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Claude Opus 4.8 is Anthropic's most capable generally available model in the Opus family. It supports text, image, and file inputs with text output, with reasoning support and a 1M-token...",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-opus-4.8",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-opus-4.8",
+    "api_pricing": {
+      "input_price_per_1m": 5.0,
+      "output_price_per_1m": 25.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-opus-4.8:batch",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Anthropic: Claude Opus 4.8 (batch)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Claude Opus 4.8 is Anthropic's most capable generally available model in the Opus family. It supports text, image, and file inputs with text output, with reasoning support and a 1M-token...",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-opus-4.8:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-opus-4.8:batch",
+    "api_pricing": {
+      "input_price_per_1m": 2.5,
+      "output_price_per_1m": 12.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3.7-max",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3.7 Max",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 131072,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen3.7-Max is the flagship model in Alibaba's Qwen3.7 series. It supports text input and output and is designed for agent-centric workloads, with particular strengths in coding, office and productivity tasks,...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3.7-max",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3.7-max",
+    "api_pricing": {
+      "input_price_per_1m": 1.475,
+      "output_price_per_1m": 4.425
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "x-ai-grok-build-0.1",
+    "provider_id": "x-ai",
+    "provider_name": "X-ai",
+    "name": "SpaceXAI: Grok Build 0.1",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 256000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Grok Build 0.1 is SpaceXAI’s fast coding model trained specifically for agentic software engineering workflows. It supports text and image inputs with text output, and is optimized for interactive coding...",
+    "official_url": "https://openrouter.ai/models/x-ai/grok-build-0.1",
+    "source_docs_url": "https://openrouter.ai/playground?model=x-ai/grok-build-0.1",
+    "api_pricing": {
+      "input_price_per_1m": 1.0,
+      "output_price_per_1m": 2.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-3.5-flash",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemini 3.5 Flash",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemini 3.5 Flash is Google's high-efficiency multimodal model, bringing near-Pro level coding and reasoning at Flash-tier cost and speed. It is highly optimized for coding proficiency and parallel agentic execution...",
+    "official_url": "https://openrouter.ai/models/google/gemini-3.5-flash",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-3.5-flash",
+    "api_pricing": {
+      "input_price_per_1m": 1.5,
+      "output_price_per_1m": 9.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-3.5-flash:batch",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemini 3.5 Flash (batch)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemini 3.5 Flash is Google's high-efficiency multimodal model, bringing near-Pro level coding and reasoning at Flash-tier cost and speed. It is highly optimized for coding proficiency and parallel agentic execution...",
+    "official_url": "https://openrouter.ai/models/google/gemini-3.5-flash:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-3.5-flash:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.75,
+      "output_price_per_1m": 4.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-opus-4.7-fast",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Anthropic: Claude Opus 4.7 (Fast)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Fast-mode variant of [Opus 4.7](/anthropic/claude-opus-4.7) - identical capabilities with higher output speed at premium 6x pricing.\n\nLearn more in Anthropic's docs: https://platform.claude.com/docs/en/build-with-claude/fast-mode",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-opus-4.7-fast",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-opus-4.7-fast",
+    "api_pricing": {
+      "input_price_per_1m": 30.0,
+      "output_price_per_1m": 150.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "perceptron-perceptron-mk1",
+    "provider_id": "perceptron",
+    "provider_name": "Perceptron",
+    "name": "Perceptron: Perceptron Mk1",
+    "tier": "Small",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 32768,
+    "max_output_tokens": 8192,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Perceptron Mk1 (Mark One) is Perceptron's highest-quality vision-language model for video and embodied reasoning.** It accepts image and video inputs paired with natural language queries, and produces detailed visual understanding...",
+    "official_url": "https://openrouter.ai/models/perceptron/perceptron-mk1",
+    "source_docs_url": "https://openrouter.ai/playground?model=perceptron/perceptron-mk1",
+    "api_pricing": {
+      "input_price_per_1m": 0.15,
+      "output_price_per_1m": 1.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "inclusionai-ring-2.6-1t",
+    "provider_id": "inclusionai",
+    "provider_name": "Inclusionai",
+    "name": "inclusionAI: Ring-2.6-1T",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text"
+    ],
+    "description": "Ring-2.6-1T is a 1T-parameter-scale thinking model with 63B active parameters, built for real-world agent workflows that require both strong capability and operational efficiency. It is optimized for coding agents, tool...",
+    "official_url": "https://openrouter.ai/models/inclusionai/ring-2.6-1t",
+    "source_docs_url": "https://openrouter.ai/playground?model=inclusionai/ring-2.6-1t",
+    "api_pricing": {
+      "input_price_per_1m": 0.075,
+      "output_price_per_1m": 0.625
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-3.1-flash-lite",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemini 3.1 Flash Lite",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemini 3.1 Flash Lite is Google’s GA high-efficiency multimodal model optimized for low-latency, high-volume workloads. It supports text, image, video, audio, and PDF inputs, and is designed for lightweight agentic...",
+    "official_url": "https://openrouter.ai/models/google/gemini-3.1-flash-lite",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-3.1-flash-lite",
+    "api_pricing": {
+      "input_price_per_1m": 0.25,
+      "output_price_per_1m": 1.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-3.1-flash-lite:batch",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemini 3.1 Flash Lite (batch)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemini 3.1 Flash Lite is Google’s GA high-efficiency multimodal model optimized for low-latency, high-volume workloads. It supports text, image, video, audio, and PDF inputs, and is designed for lightweight agentic...",
+    "official_url": "https://openrouter.ai/models/google/gemini-3.1-flash-lite:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-3.1-flash-lite:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.125,
+      "output_price_per_1m": 0.75
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-chat-latest",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT Chat Latest",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT Chat Latest points to OpenAI's stable API alias `chat-latest` that always resolves to the latest Instant chat model used in ChatGPT. As OpenAI rolls out new Instant model updates...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-chat-latest",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-chat-latest",
+    "api_pricing": {
+      "input_price_per_1m": 5.0,
+      "output_price_per_1m": 30.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "x-ai-grok-4.3",
+    "provider_id": "x-ai",
+    "provider_name": "X-ai",
+    "name": "SpaceXAI: Grok 4.3",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Grok 4.3 is a reasoning model from SpaceXAI. It accepts text and image inputs with text output, and is suited for agentic workflows, instruction-following tasks, and applications requiring high factual...",
+    "official_url": "https://openrouter.ai/models/x-ai/grok-4.3",
+    "source_docs_url": "https://openrouter.ai/playground?model=x-ai/grok-4.3",
+    "api_pricing": {
+      "input_price_per_1m": 1.25,
+      "output_price_per_1m": 2.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "ibm-granite-granite-4.1-8b",
+    "provider_id": "ibm-granite",
+    "provider_name": "Ibm-granite",
+    "name": "IBM: Granite 4.1 8B",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 131072,
+    "modality": [
+      "text"
+    ],
+    "description": "Granite 4.1 8B is a dense, decoder-only 8-billion-parameter language model from IBM, part of the Granite 4.1 family. It supports a 131K-token context window and is designed for enterprise tasks...",
+    "official_url": "https://openrouter.ai/models/ibm-granite/granite-4.1-8b",
+    "source_docs_url": "https://openrouter.ai/playground?model=ibm-granite/granite-4.1-8b",
+    "api_pricing": {
+      "input_price_per_1m": 0.05,
+      "output_price_per_1m": 0.1
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "mistralai-mistral-medium-3-5",
+    "provider_id": "mistralai",
+    "provider_name": "Mistralai",
+    "name": "Mistral: Mistral Medium 3.5",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Mistral Medium 3.5 is a dense 128B instruction-following model from Mistral AI. It supports text and image inputs with text output, and is designed for agentic workflows, coding, and complex...",
+    "official_url": "https://openrouter.ai/models/mistralai/mistral-medium-3-5",
+    "source_docs_url": "https://openrouter.ai/playground?model=mistralai/mistral-medium-3-5",
+    "api_pricing": {
+      "input_price_per_1m": 1.5,
+      "output_price_per_1m": 7.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "nvidia-nemotron-3-nano-omni-30b-a3b-reasoning:free",
+    "provider_id": "nvidia",
+    "provider_name": "Nvidia",
+    "name": "NVIDIA: Nemotron 3 Nano Omni (free)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 256000,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "NVIDIA Nemotron™ 3 Nano Omni is a 30B-A3B open multimodal model designed to function as a perception and context sub-agent in enterprise agent systems. It accepts text, image, video, and...",
+    "official_url": "https://openrouter.ai/models/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+    "source_docs_url": "https://openrouter.ai/playground?model=nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+    "api_pricing": {
+      "input_price_per_1m": 0.0,
+      "output_price_per_1m": 0.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "~anthropic-claude-haiku-latest",
+    "provider_id": "~anthropic",
+    "provider_name": "~anthropic",
+    "name": "Anthropic Claude Haiku Latest",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 200000,
+    "max_output_tokens": 64000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "This model always redirects to the latest model in the Anthropic Claude Haiku family.",
+    "official_url": "https://openrouter.ai/models/~anthropic/claude-haiku-latest",
+    "source_docs_url": "https://openrouter.ai/playground?model=~anthropic/claude-haiku-latest",
+    "api_pricing": {
+      "input_price_per_1m": 1.0,
+      "output_price_per_1m": 5.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "~openai-gpt-mini-latest",
+    "provider_id": "~openai",
+    "provider_name": "~openai",
+    "name": "OpenAI GPT Mini Latest",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "This model always redirects to the latest model in the OpenAI GPT Mini family.",
+    "official_url": "https://openrouter.ai/models/~openai/gpt-mini-latest",
+    "source_docs_url": "https://openrouter.ai/playground?model=~openai/gpt-mini-latest",
+    "api_pricing": {
+      "input_price_per_1m": 0.75,
+      "output_price_per_1m": 4.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "~google-gemini-pro-latest",
+    "provider_id": "~google",
+    "provider_name": "~google",
+    "name": "Google Gemini Pro Latest",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "This model always redirects to the latest model in the Google Gemini Pro family.",
+    "official_url": "https://openrouter.ai/models/~google/gemini-pro-latest",
+    "source_docs_url": "https://openrouter.ai/playground?model=~google/gemini-pro-latest",
+    "api_pricing": {
+      "input_price_per_1m": 2.0,
+      "output_price_per_1m": 12.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "~moonshotai-kimi-latest",
+    "provider_id": "~moonshotai",
+    "provider_name": "~moonshotai",
+    "name": "MoonshotAI Kimi Latest",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 1048576,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "This model always redirects to the latest model in the MoonshotAI Kimi family.",
+    "official_url": "https://openrouter.ai/models/~moonshotai/kimi-latest",
+    "source_docs_url": "https://openrouter.ai/playground?model=~moonshotai/kimi-latest",
+    "api_pricing": {
+      "input_price_per_1m": 2.8,
+      "output_price_per_1m": 14.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "~google-gemini-flash-latest",
+    "provider_id": "~google",
+    "provider_name": "~google",
+    "name": "Google Gemini Flash Latest",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "This model always redirects to the latest model in the Google Gemini Flash family.",
+    "official_url": "https://openrouter.ai/models/~google/gemini-flash-latest",
+    "source_docs_url": "https://openrouter.ai/playground?model=~google/gemini-flash-latest",
+    "api_pricing": {
+      "input_price_per_1m": 1.5,
+      "output_price_per_1m": 7.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "~anthropic-claude-sonnet-latest",
+    "provider_id": "~anthropic",
+    "provider_name": "~anthropic",
+    "name": "Anthropic Claude Sonnet Latest",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "This model always redirects to the latest model in the Anthropic Claude Sonnet family.",
+    "official_url": "https://openrouter.ai/models/~anthropic/claude-sonnet-latest",
+    "source_docs_url": "https://openrouter.ai/playground?model=~anthropic/claude-sonnet-latest",
+    "api_pricing": {
+      "input_price_per_1m": 2.0,
+      "output_price_per_1m": 10.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "~openai-gpt-latest",
+    "provider_id": "~openai",
+    "provider_name": "~openai",
+    "name": "OpenAI GPT Latest",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1050000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "This model always redirects to the latest model in the OpenAI GPT family.",
+    "official_url": "https://openrouter.ai/models/~openai/gpt-latest",
+    "source_docs_url": "https://openrouter.ai/playground?model=~openai/gpt-latest",
+    "api_pricing": {
+      "input_price_per_1m": 5.0,
+      "output_price_per_1m": 30.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3.5-plus-20260420",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3.5 Plus 2026-04-20",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Qwen3.5 Plus (April 2026) is a large-scale multimodal language model from Alibaba. It accepts text, image, and video input and produces text output, with a 1M token context window. This...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3.5-plus-20260420",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3.5-plus-20260420",
+    "api_pricing": {
+      "input_price_per_1m": 0.3,
+      "output_price_per_1m": 1.8
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3.6-flash",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3.6 Flash",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Qwen3.6 Flash is a fast, efficient language model from Alibaba's Qwen 3.6 series. It supports text, image, and video input with a 1M token context window. Tiered pricing kicks in...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3.6-flash",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3.6-flash",
+    "api_pricing": {
+      "input_price_per_1m": 0.188,
+      "output_price_per_1m": 1.125
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3.6-35b-a3b",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3.6 35B A3B",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 262144,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Qwen3.6-35B-A3B is an open-weight multimodal model from Alibaba Cloud with 35 billion total parameters and 3 billion active parameters per token. It uses a hybrid sparse mixture-of-experts architecture combining Gated...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3.6-35b-a3b",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3.6-35b-a3b",
+    "api_pricing": {
+      "input_price_per_1m": 0.15,
+      "output_price_per_1m": 1.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3.6-max-preview",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3.6 Max Preview",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen3.6-Max-Preview is a proprietary frontier model from Alibaba Cloud built on a sparse mixture-of-experts architecture with approximately 1 trillion total parameters. It is optimized for agentic coding, tool use, and...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3.6-max-preview",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3.6-max-preview",
+    "api_pricing": {
+      "input_price_per_1m": 1.027,
+      "output_price_per_1m": 6.162
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3.6-27b",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3.6 27B",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 262144,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Qwen3.6 27B is a dense 27-billion-parameter language model from the Qwen Team at Alibaba, released in April 2026. It features hybrid multimodal capabilities — accepting text, image, and video inputs...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3.6-27b",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3.6-27b",
+    "api_pricing": {
+      "input_price_per_1m": 0.6,
+      "output_price_per_1m": 3.6
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.5-pro",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.5 Pro",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1050000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.5 Pro is OpenAI’s high-capability model optimized for deep reasoning and accuracy on complex, high-stakes workloads. It features a 1M+ token context window (922K input, 128K output) with support for...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.5-pro",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.5-pro",
+    "api_pricing": {
+      "input_price_per_1m": 30.0,
+      "output_price_per_1m": 180.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.5-pro:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.5 Pro (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1050000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.5 Pro is OpenAI’s high-capability model optimized for deep reasoning and accuracy on complex, high-stakes workloads. It features a 1M+ token context window (922K input, 128K output) with support for...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.5-pro:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.5-pro:batch",
+    "api_pricing": {
+      "input_price_per_1m": 15.0,
+      "output_price_per_1m": 90.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.5",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.5",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1050000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.5 is OpenAI’s frontier model designed for complex professional workloads, building on GPT-5.4 with stronger reasoning, higher reliability, and improved token efficiency on hard tasks. It features a 1M+ token...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.5",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.5",
+    "api_pricing": {
+      "input_price_per_1m": 5.0,
+      "output_price_per_1m": 30.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.5:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.5 (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1050000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.5 is OpenAI’s frontier model designed for complex professional workloads, building on GPT-5.4 with stronger reasoning, higher reliability, and improved token efficiency on hard tasks. It features a 1M+ token...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.5:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.5:batch",
+    "api_pricing": {
+      "input_price_per_1m": 2.5,
+      "output_price_per_1m": 15.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "deepseek-deepseek-v4-pro",
+    "provider_id": "deepseek",
+    "provider_name": "Deepseek",
+    "name": "DeepSeek: DeepSeek V4 Pro",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 384000,
+    "modality": [
+      "text"
+    ],
+    "description": "DeepSeek V4 Pro is a large-scale Mixture-of-Experts model from DeepSeek with 1.6T total parameters and 49B activated parameters, supporting a 1M-token context window. It is designed for advanced reasoning, coding,...",
+    "official_url": "https://openrouter.ai/models/deepseek/deepseek-v4-pro",
+    "source_docs_url": "https://openrouter.ai/playground?model=deepseek/deepseek-v4-pro",
+    "api_pricing": {
+      "input_price_per_1m": 0.435,
+      "output_price_per_1m": 0.87
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "deepseek-deepseek-v4-flash",
+    "provider_id": "deepseek",
+    "provider_name": "Deepseek",
+    "name": "DeepSeek: DeepSeek V4 Flash 0423",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 393216,
+    "modality": [
+      "text"
+    ],
+    "description": "DeepSeek V4 Flash is an efficiency-optimized Mixture-of-Experts model from DeepSeek with 284B total parameters and 13B activated parameters, supporting a 1M-token context window. It is designed for fast inference and...",
+    "official_url": "https://openrouter.ai/models/deepseek/deepseek-v4-flash",
+    "source_docs_url": "https://openrouter.ai/playground?model=deepseek/deepseek-v4-flash",
+    "api_pricing": {
+      "input_price_per_1m": 0.14,
+      "output_price_per_1m": 0.28
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "inclusionai-ling-2.6-1t",
+    "provider_id": "inclusionai",
+    "provider_name": "Inclusionai",
+    "name": "inclusionAI: Ling-2.6-1T",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text"
+    ],
+    "description": "Ling-2.6-1T is an instant (instruct) model from inclusionAI and the company’s trillion-parameter flagship, designed for real-world agents that require fast execution and high efficiency at scale. It uses a “fast...",
+    "official_url": "https://openrouter.ai/models/inclusionai/ling-2.6-1t",
+    "source_docs_url": "https://openrouter.ai/playground?model=inclusionai/ling-2.6-1t",
+    "api_pricing": {
+      "input_price_per_1m": 0.075,
+      "output_price_per_1m": 0.625
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "tencent-hy3-preview",
+    "provider_id": "tencent",
+    "provider_name": "Tencent",
+    "name": "Tencent: Hy3 preview",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "Hy3 preview is a high-efficiency Mixture-of-Experts model from Tencent designed for agentic workflows and production use. It supports configurable reasoning levels across disabled, low, and high modes, allowing it to...",
+    "official_url": "https://openrouter.ai/models/tencent/hy3-preview",
+    "source_docs_url": "https://openrouter.ai/playground?model=tencent/hy3-preview",
+    "api_pricing": {
+      "input_price_per_1m": 0.063,
+      "output_price_per_1m": 0.21
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "xiaomi-mimo-v2.5-pro",
+    "provider_id": "xiaomi",
+    "provider_name": "Xiaomi",
+    "name": "Xiaomi: MiMo-V2.5-Pro",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1050000,
+    "max_output_tokens": 131072,
+    "modality": [
+      "text"
+    ],
+    "description": "MiMo-V2.5-Pro is Xiaomi’s flagship model, delivering strong performance in general agentic capabilities, complex software engineering, and long-horizon tasks, with top rankings on benchmarks such as ClawEval, GDPVal, and SWE-bench Pro....",
+    "official_url": "https://openrouter.ai/models/xiaomi/mimo-v2.5-pro",
+    "source_docs_url": "https://openrouter.ai/playground?model=xiaomi/mimo-v2.5-pro",
+    "api_pricing": {
+      "input_price_per_1m": 0.435,
+      "output_price_per_1m": 0.87
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "xiaomi-mimo-v2.5",
+    "provider_id": "xiaomi",
+    "provider_name": "Xiaomi",
+    "name": "Xiaomi: MiMo-V2.5",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1050000,
+    "max_output_tokens": 131072,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "MiMo-V2.5 is a native omnimodal model by Xiaomi. It delivers Pro-level agentic performance at roughly half the inference cost, while surpassing MiMo-V2-Omni in multimodal perception across image and video understanding...",
+    "official_url": "https://openrouter.ai/models/xiaomi/mimo-v2.5",
+    "source_docs_url": "https://openrouter.ai/playground?model=xiaomi/mimo-v2.5",
+    "api_pricing": {
+      "input_price_per_1m": 0.14,
+      "output_price_per_1m": 0.28
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.4-image-2",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.4 Image 2",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 272000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "[GPT-5.4](https://openrouter.ai/openai/gpt-5.4) Image 2 combines OpenAI's GPT-5.4 model with state-of-the-art image generation capabilities from GPT Image 2. It enables rich multimodal workflows, allowing users to seamlessly move between reasoning, coding, and...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.4-image-2",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.4-image-2",
+    "api_pricing": {
+      "input_price_per_1m": 8.0,
+      "output_price_per_1m": 15.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "inclusionai-ling-2.6-flash",
+    "provider_id": "inclusionai",
+    "provider_name": "Inclusionai",
+    "name": "inclusionAI: Ling-2.6-flash",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text"
+    ],
+    "description": "Ling-2.6-flash is an instant (instruct) model from inclusionAI with 104B total parameters and 7.4B active parameters, designed for real-world agents that require fast responses, strong execution, and high token efficiency....",
+    "official_url": "https://openrouter.ai/models/inclusionai/ling-2.6-flash",
+    "source_docs_url": "https://openrouter.ai/playground?model=inclusionai/ling-2.6-flash",
+    "api_pricing": {
+      "input_price_per_1m": 0.01,
+      "output_price_per_1m": 0.03
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "~anthropic-claude-opus-latest",
+    "provider_id": "~anthropic",
+    "provider_name": "~anthropic",
+    "name": "Anthropic: Claude Opus Latest",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "This model always redirects to the latest model in the Claude Opus family.",
+    "official_url": "https://openrouter.ai/models/~anthropic/claude-opus-latest",
+    "source_docs_url": "https://openrouter.ai/playground?model=~anthropic/claude-opus-latest",
+    "api_pricing": {
+      "input_price_per_1m": 5.0,
+      "output_price_per_1m": 25.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openrouter-pareto-code",
+    "provider_id": "openrouter",
+    "provider_name": "Openrouter",
+    "name": "Pareto Code Router",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 2000000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "The Pareto Router maintains a tiered shortlist of strong coding models, ranked by [Artificial Analysis](https://artificialanalysis.ai/) coding percentiles. Set min_coding_score between 0 and 1 on the [pareto-router plugin](https://openrouter.ai/docs/guides/routing/routers/pareto-router#the-min_coding_score-parameter) to control how...",
+    "official_url": "https://openrouter.ai/models/openrouter/pareto-code",
+    "source_docs_url": "https://openrouter.ai/playground?model=openrouter/pareto-code",
+    "api_pricing": {
+      "input_price_per_1m": -1000000.0,
+      "output_price_per_1m": -1000000.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "moonshotai-kimi-k2.6",
+    "provider_id": "moonshotai",
+    "provider_name": "Moonshotai",
+    "name": "MoonshotAI: Kimi K2.6",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 262144,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Kimi K2.6 is Moonshot AI's next-generation multimodal model, designed for long-horizon coding, coding-driven UI/UX generation, and multi-agent orchestration. It handles complex end-to-end coding tasks across Python, Rust, and Go, and...",
+    "official_url": "https://openrouter.ai/models/moonshotai/kimi-k2.6",
+    "source_docs_url": "https://openrouter.ai/playground?model=moonshotai/kimi-k2.6",
+    "api_pricing": {
+      "input_price_per_1m": 0.95,
+      "output_price_per_1m": 4.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-opus-4.7",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Anthropic: Claude Opus 4.7",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Opus 4.7 is the next generation of Anthropic's Opus family, built for long-running, asynchronous agents. Building on the coding and agentic strengths of Opus 4.6, it delivers stronger performance on...",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-opus-4.7",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-opus-4.7",
+    "api_pricing": {
+      "input_price_per_1m": 5.0,
+      "output_price_per_1m": 25.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-opus-4.7:batch",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Anthropic: Claude Opus 4.7 (batch)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Opus 4.7 is the next generation of Anthropic's Opus family, built for long-running, asynchronous agents. Building on the coding and agentic strengths of Opus 4.6, it delivers stronger performance on...",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-opus-4.7:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-opus-4.7:batch",
+    "api_pricing": {
+      "input_price_per_1m": 2.5,
+      "output_price_per_1m": 12.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "z-ai-glm-5.1",
+    "provider_id": "z-ai",
+    "provider_name": "Z-ai",
+    "name": "Z.ai: GLM 5.1",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 204800,
+    "max_output_tokens": 131072,
+    "modality": [
+      "text"
+    ],
+    "description": "GLM-5.1 delivers a major leap in coding capability, with particularly significant gains in handling long-horizon tasks. Unlike previous models built around minute-level interactions, GLM-5.1 can work independently and continuously on...",
+    "official_url": "https://openrouter.ai/models/z-ai/glm-5.1",
+    "source_docs_url": "https://openrouter.ai/playground?model=z-ai/glm-5.1",
+    "api_pricing": {
+      "input_price_per_1m": 1.4,
+      "output_price_per_1m": 4.4
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemma-4-26b-a4b-it",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemma 4 26B A4B ",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 262144,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemma 4 26B A4B IT is an instruction-tuned Mixture-of-Experts (MoE) model from Google DeepMind. Despite 25.2B total parameters, only 3.8B activate per token during inference — delivering near-31B quality at...",
+    "official_url": "https://openrouter.ai/models/google/gemma-4-26b-a4b-it",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemma-4-26b-a4b-it",
+    "api_pricing": {
+      "input_price_per_1m": 0.12,
+      "output_price_per_1m": 0.4
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemma-4-26b-a4b-it:free",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemma 4 26B A4B  (free)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemma 4 26B A4B IT is an instruction-tuned Mixture-of-Experts (MoE) model from Google DeepMind. Despite 25.2B total parameters, only 3.8B activate per token during inference — delivering near-31B quality at...",
+    "official_url": "https://openrouter.ai/models/google/gemma-4-26b-a4b-it:free",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemma-4-26b-a4b-it:free",
+    "api_pricing": {
+      "input_price_per_1m": 0.0,
+      "output_price_per_1m": 0.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemma-4-31b-it",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemma 4 31B",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 262144,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemma 4 31B Instruct is Google DeepMind's 30.7B dense multimodal model supporting text and image input with text output. Features a 256K token context window, configurable thinking/reasoning mode, native function...",
+    "official_url": "https://openrouter.ai/models/google/gemma-4-31b-it",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemma-4-31b-it",
+    "api_pricing": {
+      "input_price_per_1m": 0.1,
+      "output_price_per_1m": 0.34
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemma-4-31b-it:free",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemma 4 31B (free)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemma 4 31B Instruct is Google DeepMind's 30.7B dense multimodal model supporting text and image input with text output. Features a 256K token context window, configurable thinking/reasoning mode, native function...",
+    "official_url": "https://openrouter.ai/models/google/gemma-4-31b-it:free",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemma-4-31b-it:free",
+    "api_pricing": {
+      "input_price_per_1m": 0.0,
+      "output_price_per_1m": 0.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3.6-plus",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3.6 Plus",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Qwen 3.6 Plus builds on a hybrid architecture that combines efficient linear attention with sparse mixture-of-experts routing, enabling strong scalability and high-performance inference. Compared to the 3.5 series, it delivers...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3.6-plus",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3.6-plus",
+    "api_pricing": {
+      "input_price_per_1m": 0.325,
+      "output_price_per_1m": 1.95
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "z-ai-glm-5v-turbo",
+    "provider_id": "z-ai",
+    "provider_name": "Z-ai",
+    "name": "Z.ai: GLM 5V Turbo",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 202752,
+    "max_output_tokens": 131072,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GLM-5V-Turbo is Z.ai’s first native multimodal agent foundation model, built for vision-based coding and agent-driven tasks. It natively handles image, video, and text inputs, excels at long-horizon planning, complex coding,...",
+    "official_url": "https://openrouter.ai/models/z-ai/glm-5v-turbo",
+    "source_docs_url": "https://openrouter.ai/playground?model=z-ai/glm-5v-turbo",
+    "api_pricing": {
+      "input_price_per_1m": 1.2,
+      "output_price_per_1m": 4.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "arcee-ai-trinity-large-thinking",
+    "provider_id": "arcee-ai",
+    "provider_name": "Arcee-ai",
+    "name": "Arcee AI: Trinity Large Thinking",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 262144,
+    "modality": [
+      "text"
+    ],
+    "description": "Trinity Large Thinking is a powerful open source reasoning model from the team at Arcee AI. It shows strong performance in PinchBench, agentic workloads, and reasoning tasks. Launch video: https://youtu.be/Gc82AXLa0Rg?si=4RLn6WBz33qT--B7...",
+    "official_url": "https://openrouter.ai/models/arcee-ai/trinity-large-thinking",
+    "source_docs_url": "https://openrouter.ai/playground?model=arcee-ai/trinity-large-thinking",
+    "api_pricing": {
+      "input_price_per_1m": 0.22,
+      "output_price_per_1m": 0.85
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "x-ai-grok-4.20-multi-agent",
+    "provider_id": "x-ai",
+    "provider_name": "X-ai",
+    "name": "SpaceXAI: Grok 4.20 Multi-Agent",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 2000000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Grok 4.20 Multi-Agent is a variant of SpaceXAI’s Grok 4.20 designed for collaborative, agent-based workflows. Multiple agents operate in parallel to conduct deep research, coordinate tool use, and synthesize information...",
+    "official_url": "https://openrouter.ai/models/x-ai/grok-4.20-multi-agent",
+    "source_docs_url": "https://openrouter.ai/playground?model=x-ai/grok-4.20-multi-agent",
+    "api_pricing": {
+      "input_price_per_1m": 1.25,
+      "output_price_per_1m": 2.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "x-ai-grok-4.20",
+    "provider_id": "x-ai",
+    "provider_name": "X-ai",
+    "name": "SpaceXAI: Grok 4.20",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 2000000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Grok 4.20 is a reasoning model from SpaceXAI with industry-leading speed and agentic tool calling capabilities. It combines the lowest hallucination rate on the market with strict prompt adherance, delivering...",
+    "official_url": "https://openrouter.ai/models/x-ai/grok-4.20",
+    "source_docs_url": "https://openrouter.ai/playground?model=x-ai/grok-4.20",
+    "api_pricing": {
+      "input_price_per_1m": 1.25,
+      "output_price_per_1m": 2.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-lyria-3-pro-preview",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Lyria 3 Pro Preview",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Full-length songs are priced at $0.08 per song. Lyria 3 is Google's family of music generation models, available through the Gemini API. With Lyria 3, you can generate high-quality, 48kHz...",
+    "official_url": "https://openrouter.ai/models/google/lyria-3-pro-preview",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/lyria-3-pro-preview",
+    "api_pricing": {
+      "input_price_per_1m": 0.0,
+      "output_price_per_1m": 0.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-lyria-3-clip-preview",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Lyria 3 Clip Preview",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "30 second duration clips are priced at $0.04 per clip. Lyria 3 is Google's family of music generation models, available through the Gemini API. With Lyria 3, you can generate...",
+    "official_url": "https://openrouter.ai/models/google/lyria-3-clip-preview",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/lyria-3-clip-preview",
+    "api_pricing": {
+      "input_price_per_1m": 0.0,
+      "output_price_per_1m": 0.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "kwaipilot-kat-coder-pro-v2",
+    "provider_id": "kwaipilot",
+    "provider_name": "Kwaipilot",
+    "name": "Kwaipilot: KAT-Coder-Pro V2",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 80000,
+    "modality": [
+      "text"
+    ],
+    "description": "KAT-Coder-Pro V2 is the latest high-performance model in KwaiKAT’s KAT-Coder series, designed for complex enterprise-grade software engineering and SaaS integration. It builds on the agentic coding strengths of earlier versions,...",
+    "official_url": "https://openrouter.ai/models/kwaipilot/kat-coder-pro-v2",
+    "source_docs_url": "https://openrouter.ai/playground?model=kwaipilot/kat-coder-pro-v2",
+    "api_pricing": {
+      "input_price_per_1m": 0.3,
+      "output_price_per_1m": 1.2
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "rekaai-reka-edge",
+    "provider_id": "rekaai",
+    "provider_name": "Rekaai",
+    "name": "Reka Edge",
+    "tier": "Small",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 16384,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Reka Edge is an extremely efficient 7B multimodal vision-language model that accepts image/video+text inputs and generates text outputs. This model is optimized specifically to deliver industry-leading performance in image understanding,...",
+    "official_url": "https://openrouter.ai/models/rekaai/reka-edge",
+    "source_docs_url": "https://openrouter.ai/playground?model=rekaai/reka-edge",
+    "api_pricing": {
+      "input_price_per_1m": 0.1,
+      "output_price_per_1m": 0.1
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "minimax-minimax-m2.7",
+    "provider_id": "minimax",
+    "provider_name": "Minimax",
+    "name": "MiniMax: MiniMax M2.7",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 204800,
+    "max_output_tokens": 131072,
+    "modality": [
+      "text"
+    ],
+    "description": "MiniMax-M2.7 is a next-generation large language model designed for autonomous, real-world productivity and continuous improvement. Built to actively participate in its own evolution, M2.7 integrates advanced agentic capabilities through multi-agent...",
+    "official_url": "https://openrouter.ai/models/minimax/minimax-m2.7",
+    "source_docs_url": "https://openrouter.ai/playground?model=minimax/minimax-m2.7",
+    "api_pricing": {
+      "input_price_per_1m": 0.3,
+      "output_price_per_1m": 1.2
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.4-nano",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.4 Nano",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.4 nano is the most lightweight and cost-efficient variant of the GPT-5.4 family, optimized for speed-critical and high-volume tasks. It supports text and image inputs and is designed for low-latency...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.4-nano",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.4-nano",
+    "api_pricing": {
+      "input_price_per_1m": 0.2,
+      "output_price_per_1m": 1.25
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.4-nano:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.4 Nano (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.4 nano is the most lightweight and cost-efficient variant of the GPT-5.4 family, optimized for speed-critical and high-volume tasks. It supports text and image inputs and is designed for low-latency...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.4-nano:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.4-nano:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.1,
+      "output_price_per_1m": 0.625
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.4-mini",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.4 Mini",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.4 mini brings the core capabilities of GPT-5.4 to a faster, more efficient model optimized for high-throughput workloads. It supports text and image inputs with strong performance across reasoning, coding,...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.4-mini",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.4-mini",
+    "api_pricing": {
+      "input_price_per_1m": 0.75,
+      "output_price_per_1m": 4.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.4-mini:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.4 Mini (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.4 mini brings the core capabilities of GPT-5.4 to a faster, more efficient model optimized for high-throughput workloads. It supports text and image inputs with strong performance across reasoning, coding,...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.4-mini:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.4-mini:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.375,
+      "output_price_per_1m": 2.25
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "mistralai-mistral-small-2603",
+    "provider_id": "mistralai",
+    "provider_name": "Mistralai",
+    "name": "Mistral: Mistral Small 4",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Mistral Small 4 is the next major release in the Mistral Small family, unifying the capabilities of several flagship Mistral models into a single system. It combines strong reasoning from...",
+    "official_url": "https://openrouter.ai/models/mistralai/mistral-small-2603",
+    "source_docs_url": "https://openrouter.ai/playground?model=mistralai/mistral-small-2603",
+    "api_pricing": {
+      "input_price_per_1m": 0.15,
+      "output_price_per_1m": 0.6
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "z-ai-glm-5-turbo",
+    "provider_id": "z-ai",
+    "provider_name": "Z-ai",
+    "name": "Z.ai: GLM 5 Turbo",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 202752,
+    "max_output_tokens": 131072,
+    "modality": [
+      "text"
+    ],
+    "description": "GLM-5 Turbo is a new model from Z.ai designed for fast inference and strong performance in agent-driven environments such as OpenClaw scenarios. It is deeply optimized for real-world agent workflows...",
+    "official_url": "https://openrouter.ai/models/z-ai/glm-5-turbo",
+    "source_docs_url": "https://openrouter.ai/playground?model=z-ai/glm-5-turbo",
+    "api_pricing": {
+      "input_price_per_1m": 1.2,
+      "output_price_per_1m": 4.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "nvidia-nemotron-3-super-120b-a12b",
+    "provider_id": "nvidia",
+    "provider_name": "Nvidia",
+    "name": "NVIDIA: Nemotron 3 Super",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "NVIDIA Nemotron 3 Super is a 120B-parameter open hybrid MoE model, activating just 12B parameters for maximum compute efficiency and accuracy in complex multi-agent applications. Built on a hybrid Mamba-Transformer...",
+    "official_url": "https://openrouter.ai/models/nvidia/nemotron-3-super-120b-a12b",
+    "source_docs_url": "https://openrouter.ai/playground?model=nvidia/nemotron-3-super-120b-a12b",
+    "api_pricing": {
+      "input_price_per_1m": 0.085,
+      "output_price_per_1m": 0.4
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "nvidia-nemotron-3-super-120b-a12b:free",
+    "provider_id": "nvidia",
+    "provider_name": "Nvidia",
+    "name": "NVIDIA: Nemotron 3 Super (free)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 262144,
+    "modality": [
+      "text"
+    ],
+    "description": "NVIDIA Nemotron 3 Super is a 120B-parameter open hybrid MoE model, activating just 12B parameters for maximum compute efficiency and accuracy in complex multi-agent applications. Built on a hybrid Mamba-Transformer...",
+    "official_url": "https://openrouter.ai/models/nvidia/nemotron-3-super-120b-a12b:free",
+    "source_docs_url": "https://openrouter.ai/playground?model=nvidia/nemotron-3-super-120b-a12b:free",
+    "api_pricing": {
+      "input_price_per_1m": 0.0,
+      "output_price_per_1m": 0.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "bytedance-seed-seed-2.0-lite",
+    "provider_id": "bytedance-seed",
+    "provider_name": "Bytedance-seed",
+    "name": "ByteDance Seed: Seed-2.0-Lite",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 131072,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Seed-2.0-Lite is a versatile, cost‑efficient enterprise workhorse that delivers strong multimodal and agent capabilities while offering noticeably lower latency, making it a practical default choice for most production workloads across...",
+    "official_url": "https://openrouter.ai/models/bytedance-seed/seed-2.0-lite",
+    "source_docs_url": "https://openrouter.ai/playground?model=bytedance-seed/seed-2.0-lite",
+    "api_pricing": {
+      "input_price_per_1m": 0.25,
+      "output_price_per_1m": 2.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3.5-9b",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3.5-9B",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 262144,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Qwen3.5-9B is a multimodal foundation model from the Qwen3.5 family, designed to deliver strong reasoning, coding, and visual understanding in an efficient 9B-parameter architecture. It uses a unified vision-language design...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3.5-9b",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3.5-9b",
+    "api_pricing": {
+      "input_price_per_1m": 0.1,
+      "output_price_per_1m": 0.15
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.4-pro",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.4 Pro",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1050000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.4 Pro is OpenAI's most advanced model, building on GPT-5.4's unified architecture with enhanced reasoning capabilities for complex, high-stakes tasks. It features a 1M+ token context window (922K input, 128K...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.4-pro",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.4-pro",
+    "api_pricing": {
+      "input_price_per_1m": 30.0,
+      "output_price_per_1m": 180.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.4-pro:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.4 Pro (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1050000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.4 Pro is OpenAI's most advanced model, building on GPT-5.4's unified architecture with enhanced reasoning capabilities for complex, high-stakes tasks. It features a 1M+ token context window (922K input, 128K...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.4-pro:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.4-pro:batch",
+    "api_pricing": {
+      "input_price_per_1m": 15.0,
+      "output_price_per_1m": 90.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.4",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.4",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1050000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.4 is OpenAI’s latest frontier model, unifying the Codex and GPT lines into a single system. It features a 1M+ token context window (922K input, 128K output) with support for...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.4",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.4",
+    "api_pricing": {
+      "input_price_per_1m": 2.5,
+      "output_price_per_1m": 15.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.4:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.4 (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1050000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.4 is OpenAI’s latest frontier model, unifying the Codex and GPT lines into a single system. It features a 1M+ token context window (922K input, 128K output) with support for...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.4:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.4:batch",
+    "api_pricing": {
+      "input_price_per_1m": 1.25,
+      "output_price_per_1m": 7.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "inception-mercury-2",
+    "provider_id": "inception",
+    "provider_name": "Inception",
+    "name": "Inception: Mercury 2",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 50000,
+    "modality": [
+      "text"
+    ],
+    "description": "Mercury 2 is an extremely fast reasoning LLM, and the first reasoning diffusion LLM (dLLM). Instead of generating tokens sequentially, Mercury 2 produces and refines multiple tokens in parallel, achieving...",
+    "official_url": "https://openrouter.ai/models/inception/mercury-2",
+    "source_docs_url": "https://openrouter.ai/playground?model=inception/mercury-2",
+    "api_pricing": {
+      "input_price_per_1m": 0.25,
+      "output_price_per_1m": 0.75
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.3-chat",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.3 Chat",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.3 Chat is an update to ChatGPT's most-used model that makes everyday conversations smoother, more useful, and more directly helpful. It delivers more accurate answers with better contextualization and significantly...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.3-chat",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.3-chat",
+    "api_pricing": {
+      "input_price_per_1m": 1.75,
+      "output_price_per_1m": 14.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-3.1-flash-lite-preview",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemini 3.1 Flash Lite Preview",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemini 3.1 Flash Lite Preview is Google's high-efficiency model optimized for high-volume use cases. It outperforms Gemini 2.5 Flash Lite on overall quality and approaches Gemini 2.5 Flash performance across...",
+    "official_url": "https://openrouter.ai/models/google/gemini-3.1-flash-lite-preview",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-3.1-flash-lite-preview",
+    "api_pricing": {
+      "input_price_per_1m": 0.25,
+      "output_price_per_1m": 1.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "bytedance-seed-seed-2.0-mini",
+    "provider_id": "bytedance-seed",
+    "provider_name": "Bytedance-seed",
+    "name": "ByteDance Seed: Seed-2.0-Mini",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 131072,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Seed-2.0-mini targets latency-sensitive, high-concurrency, and cost-sensitive scenarios, emphasizing fast response and flexible inference deployment. It delivers performance comparable to ByteDance-Seed-1.6, supports 256k context, four reasoning effort modes (minimal/low/medium/high), multimodal understanding,...",
+    "official_url": "https://openrouter.ai/models/bytedance-seed/seed-2.0-mini",
+    "source_docs_url": "https://openrouter.ai/playground?model=bytedance-seed/seed-2.0-mini",
+    "api_pricing": {
+      "input_price_per_1m": 0.1,
+      "output_price_per_1m": 0.4
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-3.1-flash-image-preview",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Nano Banana 2 (Gemini 3.1 Flash Image Preview)",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 65536,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemini 3.1 Flash Image Preview, a.k.a. \"Nano Banana 2,\" is Google’s latest state of the art image generation and editing model, delivering Pro-level visual quality at Flash speed. It combines...",
+    "official_url": "https://openrouter.ai/models/google/gemini-3.1-flash-image-preview",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-3.1-flash-image-preview",
+    "api_pricing": {
+      "input_price_per_1m": 0.5,
+      "output_price_per_1m": 3.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3.5-35b-a3b",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3.5-35B-A3B",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 262144,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "The Qwen3.5 Series 35B-A3B is a native vision-language model designed with a hybrid architecture that integrates linear attention mechanisms and a sparse mixture-of-experts model, achieving higher inference efficiency. Its overall...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3.5-35b-a3b",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3.5-35b-a3b",
+    "api_pricing": {
+      "input_price_per_1m": 0.14,
+      "output_price_per_1m": 1.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3.5-27b",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3.5-27B",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "The Qwen3.5 27B native vision-language Dense model incorporates a linear attention mechanism, delivering fast response times while balancing inference speed and performance. Its overall capabilities are comparable to those of...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3.5-27b",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3.5-27b",
+    "api_pricing": {
+      "input_price_per_1m": 0.195,
+      "output_price_per_1m": 1.56
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3.5-122b-a10b",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3.5-122B-A10B",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 81920,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "The Qwen3.5 122B-A10B native vision-language model is built on a hybrid architecture that integrates a linear attention mechanism with a sparse mixture-of-experts model, achieving higher inference efficiency. In terms of...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3.5-122b-a10b",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3.5-122b-a10b",
+    "api_pricing": {
+      "input_price_per_1m": 0.29,
+      "output_price_per_1m": 2.4
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3.5-flash-02-23",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3.5-Flash",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "The Qwen3.5 native vision-language Flash models are built on a hybrid architecture that integrates a linear attention mechanism with a sparse mixture-of-experts model, achieving higher inference efficiency. Compared to the...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3.5-flash-02-23",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3.5-flash-02-23",
+    "api_pricing": {
+      "input_price_per_1m": 0.065,
+      "output_price_per_1m": 0.26
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-3.1-pro-preview-customtools",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemini 3.1 Pro Preview Custom Tools",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemini 3.1 Pro Preview Custom Tools is a variant of Gemini 3.1 Pro that improves tool selection behavior by preventing overuse of a general bash tool when more efficient third-party...",
+    "official_url": "https://openrouter.ai/models/google/gemini-3.1-pro-preview-customtools",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-3.1-pro-preview-customtools",
+    "api_pricing": {
+      "input_price_per_1m": 2.0,
+      "output_price_per_1m": 12.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.3-codex",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.3-Codex",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.3-Codex is OpenAI’s most advanced agentic coding model, combining the frontier software engineering performance of GPT-5.2-Codex with the broader reasoning and professional knowledge capabilities of GPT-5.2. It achieves state-of-the-art results...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.3-codex",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.3-codex",
+    "api_pricing": {
+      "input_price_per_1m": 1.75,
+      "output_price_per_1m": 14.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "aion-labs-aion-2.0",
+    "provider_id": "aion-labs",
+    "provider_name": "Aion-labs",
+    "name": "AionLabs: Aion-2.0",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text"
+    ],
+    "description": "Aion-2.0 is a variant of DeepSeek V3.2 optimized for immersive roleplaying and storytelling. It is particularly strong at introducing tension, crises, and conflict into stories, making narratives feel more engaging....",
+    "official_url": "https://openrouter.ai/models/aion-labs/aion-2.0",
+    "source_docs_url": "https://openrouter.ai/playground?model=aion-labs/aion-2.0",
+    "api_pricing": {
+      "input_price_per_1m": 0.8,
+      "output_price_per_1m": 1.6
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-3.1-pro-preview",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemini 3.1 Pro Preview",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemini 3.1 Pro Preview is Google’s frontier reasoning model, delivering enhanced software engineering performance, improved agentic reliability, and more efficient token usage across complex workflows. Building on the multimodal foundation...",
+    "official_url": "https://openrouter.ai/models/google/gemini-3.1-pro-preview",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-3.1-pro-preview",
+    "api_pricing": {
+      "input_price_per_1m": 2.0,
+      "output_price_per_1m": 12.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-3.1-pro-preview:batch",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemini 3.1 Pro Preview (batch)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemini 3.1 Pro Preview is Google’s frontier reasoning model, delivering enhanced software engineering performance, improved agentic reliability, and more efficient token usage across complex workflows. Building on the multimodal foundation...",
+    "official_url": "https://openrouter.ai/models/google/gemini-3.1-pro-preview:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-3.1-pro-preview:batch",
+    "api_pricing": {
+      "input_price_per_1m": 1.0,
+      "output_price_per_1m": 6.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-sonnet-4.6",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Anthropic: Claude Sonnet 4.6",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Sonnet 4.6 is Anthropic's most capable Sonnet-class model yet, with frontier performance across coding, agents, and professional work. It excels at iterative development, complex codebase navigation, end-to-end project management with...",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-sonnet-4.6",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-sonnet-4.6",
+    "api_pricing": {
+      "input_price_per_1m": 3.0,
+      "output_price_per_1m": 15.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-sonnet-4.6:batch",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Anthropic: Claude Sonnet 4.6 (batch)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Sonnet 4.6 is Anthropic's most capable Sonnet-class model yet, with frontier performance across coding, agents, and professional work. It excels at iterative development, complex codebase navigation, end-to-end project management with...",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-sonnet-4.6:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-sonnet-4.6:batch",
+    "api_pricing": {
+      "input_price_per_1m": 1.5,
+      "output_price_per_1m": 7.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3.5-plus-02-15",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3.5 Plus 2026-02-15",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "The Qwen3.5 native vision-language series Plus models are built on a hybrid architecture that integrates linear attention mechanisms with sparse mixture-of-experts models, achieving higher inference efficiency. In a variety of...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3.5-plus-02-15",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3.5-plus-02-15",
+    "api_pricing": {
+      "input_price_per_1m": 0.26,
+      "output_price_per_1m": 1.56
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3.5-397b-a17b",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3.5 397B A17B",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "The Qwen3.5 series 397B-A17B native vision-language model is built on a hybrid architecture that integrates a linear attention mechanism with a sparse mixture-of-experts model, achieving higher inference efficiency. It delivers...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3.5-397b-a17b",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3.5-397b-a17b",
+    "api_pricing": {
+      "input_price_per_1m": 0.39,
+      "output_price_per_1m": 2.34
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "minimax-minimax-m2.5",
+    "provider_id": "minimax",
+    "provider_name": "Minimax",
+    "name": "MiniMax: MiniMax M2.5",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 204800,
+    "max_output_tokens": 196608,
+    "modality": [
+      "text"
+    ],
+    "description": "MiniMax-M2.5 is a SOTA large language model designed for real-world productivity. Trained in a diverse range of complex real-world digital working environments, M2.5 builds upon the coding expertise of M2.1...",
+    "official_url": "https://openrouter.ai/models/minimax/minimax-m2.5",
+    "source_docs_url": "https://openrouter.ai/playground?model=minimax/minimax-m2.5",
+    "api_pricing": {
+      "input_price_per_1m": 0.22,
+      "output_price_per_1m": 0.9
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "z-ai-glm-5",
+    "provider_id": "z-ai",
+    "provider_name": "Z-ai",
+    "name": "Z.ai: GLM 5",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 204800,
+    "max_output_tokens": 131072,
+    "modality": [
+      "text"
+    ],
+    "description": "GLM-5 is Z.ai’s flagship open-source foundation model engineered for complex systems design and long-horizon agent workflows. Built for expert developers, it delivers production-grade performance on large-scale programming tasks, rivaling leading...",
+    "official_url": "https://openrouter.ai/models/z-ai/glm-5",
+    "source_docs_url": "https://openrouter.ai/playground?model=z-ai/glm-5",
+    "api_pricing": {
+      "input_price_per_1m": 0.95,
+      "output_price_per_1m": 2.55
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3-max-thinking",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3 Max Thinking",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen3-Max-Thinking is the flagship reasoning model in the Qwen3 series, designed for high-stakes cognitive tasks that require deep, multi-step reasoning. By significantly scaling model capacity and reinforcement learning compute, it...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3-max-thinking",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3-max-thinking",
+    "api_pricing": {
+      "input_price_per_1m": 0.78,
+      "output_price_per_1m": 3.9
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-opus-4.6",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Anthropic: Claude Opus 4.6",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Opus 4.6 is Anthropic’s strongest model for coding and long-running professional tasks. It is built for agents that operate across entire workflows rather than single prompts, making it especially effective...",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-opus-4.6",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-opus-4.6",
+    "api_pricing": {
+      "input_price_per_1m": 5.0,
+      "output_price_per_1m": 25.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "z-ai-glm-4.6",
+    "provider_id": "z-ai",
+    "provider_name": "Z-ai",
+    "name": "Z.ai: GLM 4.6",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 204800,
+    "max_output_tokens": 131072,
+    "modality": [
+      "text"
+    ],
+    "description": "Compared with GLM-4.5, this generation brings several key improvements: Longer context window: The context window has been expanded from 128K to 200K tokens, enabling the model to handle more complex...",
+    "official_url": "https://openrouter.ai/models/z-ai/glm-4.6",
+    "source_docs_url": "https://openrouter.ai/playground?model=z-ai/glm-4.6",
+    "api_pricing": {
+      "input_price_per_1m": 0.5,
+      "output_price_per_1m": 2.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-opus-4.6:batch",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Anthropic: Claude Opus 4.6 (batch)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Opus 4.6 is Anthropic’s strongest model for coding and long-running professional tasks. It is built for agents that operate across entire workflows rather than single prompts, making it especially effective...",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-opus-4.6:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-opus-4.6:batch",
+    "api_pricing": {
+      "input_price_per_1m": 2.5,
+      "output_price_per_1m": 12.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3-coder-next",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3 Coder Next",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 262144,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen3-Coder-Next is an open-weight causal language model optimized for coding agents and local development workflows. It uses a sparse MoE design with 80B total parameters and only 3B activated per...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3-coder-next",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3-coder-next",
+    "api_pricing": {
+      "input_price_per_1m": 0.12,
+      "output_price_per_1m": 0.8
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openrouter-free",
+    "provider_id": "openrouter",
+    "provider_name": "Openrouter",
+    "name": "Free Models Router",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 200000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "The simplest way to get free inference. openrouter/free is a router that selects free models at random from the models available on OpenRouter. The router smartly filters for models that...",
+    "official_url": "https://openrouter.ai/models/openrouter/free",
+    "source_docs_url": "https://openrouter.ai/playground?model=openrouter/free",
+    "api_pricing": {
+      "input_price_per_1m": 0.0,
+      "output_price_per_1m": 0.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "stepfun-step-3.5-flash",
+    "provider_id": "stepfun",
+    "provider_name": "Stepfun",
+    "name": "StepFun: Step 3.5 Flash",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text"
+    ],
+    "description": "Step 3.5 Flash is StepFun's most capable open-source foundation model. Built on a sparse Mixture of Experts (MoE) architecture, it selectively activates only 11B of its 196B parameters per token....",
+    "official_url": "https://openrouter.ai/models/stepfun/step-3.5-flash",
+    "source_docs_url": "https://openrouter.ai/playground?model=stepfun/step-3.5-flash",
+    "api_pricing": {
+      "input_price_per_1m": 0.1,
+      "output_price_per_1m": 0.3
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "moonshotai-kimi-k2.5",
+    "provider_id": "moonshotai",
+    "provider_name": "Moonshotai",
+    "name": "MoonshotAI: Kimi K2.5",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 262144,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Kimi K2.5 is Moonshot AI's native multimodal model, delivering state-of-the-art visual coding capability and a self-directed agent swarm paradigm. Built on Kimi K2 with continued pretraining over approximately 15T mixed...",
+    "official_url": "https://openrouter.ai/models/moonshotai/kimi-k2.5",
+    "source_docs_url": "https://openrouter.ai/playground?model=moonshotai/kimi-k2.5",
+    "api_pricing": {
+      "input_price_per_1m": 0.57,
+      "output_price_per_1m": 2.85
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "upstage-solar-pro-3",
+    "provider_id": "upstage",
+    "provider_name": "Upstage",
+    "name": "Upstage: Solar Pro 3",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 131072,
+    "modality": [
+      "text"
+    ],
+    "description": "Solar Pro 3 is Upstage's powerful Mixture-of-Experts (MoE) language model. With 102B total parameters and 12B active parameters per forward pass, it delivers exceptional performance while maintaining computational efficiency. Optimized...",
+    "official_url": "https://openrouter.ai/models/upstage/solar-pro-3",
+    "source_docs_url": "https://openrouter.ai/playground?model=upstage/solar-pro-3",
+    "api_pricing": {
+      "input_price_per_1m": 0.15,
+      "output_price_per_1m": 0.6
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "minimax-minimax-m2-her",
+    "provider_id": "minimax",
+    "provider_name": "Minimax",
+    "name": "MiniMax: MiniMax M2-her",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 65536,
+    "max_output_tokens": 2048,
+    "modality": [
+      "text"
+    ],
+    "description": "MiniMax M2-her is a dialogue-first large language model built for immersive roleplay, character-driven chat, and expressive multi-turn conversations. Designed to stay consistent in tone and personality, it supports rich message...",
+    "official_url": "https://openrouter.ai/models/minimax/minimax-m2-her",
+    "source_docs_url": "https://openrouter.ai/playground?model=minimax/minimax-m2-her",
+    "api_pricing": {
+      "input_price_per_1m": 0.3,
+      "output_price_per_1m": 1.2
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "writer-palmyra-x5",
+    "provider_id": "writer",
+    "provider_name": "Writer",
+    "name": "Writer: Palmyra X5",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1040000,
+    "max_output_tokens": 8192,
+    "modality": [
+      "text"
+    ],
+    "description": "Palmyra X5 is Writer's most advanced model, purpose-built for building and scaling AI agents across the enterprise. It delivers industry-leading speed and efficiency on context windows up to 1 million...",
+    "official_url": "https://openrouter.ai/models/writer/palmyra-x5",
+    "source_docs_url": "https://openrouter.ai/playground?model=writer/palmyra-x5",
+    "api_pricing": {
+      "input_price_per_1m": 0.6,
+      "output_price_per_1m": 6.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-audio",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT Audio",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "The gpt-audio model is OpenAI's first generally available audio model. The new snapshot features an upgraded decoder for more natural sounding voices and maintains better voice consistency. Audio is priced...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-audio",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-audio",
+    "api_pricing": {
+      "input_price_per_1m": 2.5,
+      "output_price_per_1m": 10.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-audio-mini",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT Audio Mini",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "A cost-efficient version of GPT Audio. The new snapshot features an upgraded decoder for more natural sounding voices and maintains better voice consistency. Input is priced at $0.60 per million...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-audio-mini",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-audio-mini",
+    "api_pricing": {
+      "input_price_per_1m": 0.6,
+      "output_price_per_1m": 2.4
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "z-ai-glm-4.7-flash",
+    "provider_id": "z-ai",
+    "provider_name": "Z-ai",
+    "name": "Z.ai: GLM 4.7 Flash",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 202752,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "As a 30B-class SOTA model, GLM-4.7-Flash offers a new option that balances performance and efficiency. It is further optimized for agentic coding use cases, strengthening coding capabilities, long-horizon task planning,...",
+    "official_url": "https://openrouter.ai/models/z-ai/glm-4.7-flash",
+    "source_docs_url": "https://openrouter.ai/playground?model=z-ai/glm-4.7-flash",
+    "api_pricing": {
+      "input_price_per_1m": 0.06,
+      "output_price_per_1m": 0.4
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.2-codex",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.2-Codex",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.2-Codex is an upgraded version of GPT-5.1-Codex optimized for software engineering and coding workflows. It is designed for both interactive development sessions and long, independent execution of complex engineering tasks....",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.2-codex",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.2-codex",
+    "api_pricing": {
+      "input_price_per_1m": 1.75,
+      "output_price_per_1m": 14.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "bytedance-seed-seed-1.6-flash",
+    "provider_id": "bytedance-seed",
+    "provider_name": "Bytedance-seed",
+    "name": "ByteDance Seed: Seed 1.6 Flash",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Seed 1.6 Flash is an ultra-fast multimodal deep thinking model by ByteDance Seed, supporting both text and visual understanding. It features a 256k context window and can generate outputs of...",
+    "official_url": "https://openrouter.ai/models/bytedance-seed/seed-1.6-flash",
+    "source_docs_url": "https://openrouter.ai/playground?model=bytedance-seed/seed-1.6-flash",
+    "api_pricing": {
+      "input_price_per_1m": 0.075,
+      "output_price_per_1m": 0.3
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "bytedance-seed-seed-1.6",
+    "provider_id": "bytedance-seed",
+    "provider_name": "Bytedance-seed",
+    "name": "ByteDance Seed: Seed 1.6",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Seed 1.6 is a general-purpose model released by the ByteDance Seed team. It incorporates multimodal capabilities and adaptive deep thinking with a 256K context window.",
+    "official_url": "https://openrouter.ai/models/bytedance-seed/seed-1.6",
+    "source_docs_url": "https://openrouter.ai/playground?model=bytedance-seed/seed-1.6",
+    "api_pricing": {
+      "input_price_per_1m": 0.25,
+      "output_price_per_1m": 2.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "minimax-minimax-m2.1",
+    "provider_id": "minimax",
+    "provider_name": "Minimax",
+    "name": "MiniMax: MiniMax M2.1",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 204800,
+    "max_output_tokens": 131072,
+    "modality": [
+      "text"
+    ],
+    "description": "MiniMax-M2.1 is a lightweight, state-of-the-art large language model optimized for coding, agentic workflows, and modern application development. With only 10 billion activated parameters, it delivers a major jump in real-world...",
+    "official_url": "https://openrouter.ai/models/minimax/minimax-m2.1",
+    "source_docs_url": "https://openrouter.ai/playground?model=minimax/minimax-m2.1",
+    "api_pricing": {
+      "input_price_per_1m": 0.3,
+      "output_price_per_1m": 1.2
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "z-ai-glm-4.7",
+    "provider_id": "z-ai",
+    "provider_name": "Z-ai",
+    "name": "Z.ai: GLM 4.7",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 204800,
+    "max_output_tokens": 131072,
+    "modality": [
+      "text"
+    ],
+    "description": "GLM-4.7 is Z.ai’s latest flagship model, featuring upgrades in two key areas: enhanced programming capabilities and more stable multi-step reasoning/execution. It demonstrates significant improvements in executing complex agent tasks while...",
+    "official_url": "https://openrouter.ai/models/z-ai/glm-4.7",
+    "source_docs_url": "https://openrouter.ai/playground?model=z-ai/glm-4.7",
+    "api_pricing": {
+      "input_price_per_1m": 0.4,
+      "output_price_per_1m": 1.75
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-3-flash-preview",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemini 3 Flash Preview",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemini 3 Flash Preview is a high speed, high value thinking model designed for agentic workflows, multi turn chat, and coding assistance. It delivers near Pro level reasoning and tool...",
+    "official_url": "https://openrouter.ai/models/google/gemini-3-flash-preview",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-3-flash-preview",
+    "api_pricing": {
+      "input_price_per_1m": 0.5,
+      "output_price_per_1m": 3.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-3-flash-preview:batch",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemini 3 Flash Preview (batch)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemini 3 Flash Preview is a high speed, high value thinking model designed for agentic workflows, multi turn chat, and coding assistance. It delivers near Pro level reasoning and tool...",
+    "official_url": "https://openrouter.ai/models/google/gemini-3-flash-preview:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-3-flash-preview:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.25,
+      "output_price_per_1m": 1.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "nvidia-nemotron-3-nano-30b-a3b",
+    "provider_id": "nvidia",
+    "provider_name": "Nvidia",
+    "name": "NVIDIA: Nemotron 3 Nano 30B A3B",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 228000,
+    "modality": [
+      "text"
+    ],
+    "description": "NVIDIA Nemotron 3 Nano 30B A3B is a small language MoE model with highest compute efficiency and accuracy for developers to build specialized agentic AI systems. The model is fully...",
+    "official_url": "https://openrouter.ai/models/nvidia/nemotron-3-nano-30b-a3b",
+    "source_docs_url": "https://openrouter.ai/playground?model=nvidia/nemotron-3-nano-30b-a3b",
+    "api_pricing": {
+      "input_price_per_1m": 0.05,
+      "output_price_per_1m": 0.2
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "nvidia-nemotron-3-nano-30b-a3b:free",
+    "provider_id": "nvidia",
+    "provider_name": "Nvidia",
+    "name": "NVIDIA: Nemotron 3 Nano 30B A3B (free)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 256000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "NVIDIA Nemotron 3 Nano 30B A3B is a small language MoE model with highest compute efficiency and accuracy for developers to build specialized agentic AI systems. The model is fully...",
+    "official_url": "https://openrouter.ai/models/nvidia/nemotron-3-nano-30b-a3b:free",
+    "source_docs_url": "https://openrouter.ai/playground?model=nvidia/nemotron-3-nano-30b-a3b:free",
+    "api_pricing": {
+      "input_price_per_1m": 0.0,
+      "output_price_per_1m": 0.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.2-chat",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.2 Chat",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.2 Chat (AKA Instant) is the fast, lightweight member of the 5.2 family, optimized for low-latency chat while retaining strong general intelligence. It uses adaptive reasoning to selectively “think” on...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.2-chat",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.2-chat",
+    "api_pricing": {
+      "input_price_per_1m": 1.75,
+      "output_price_per_1m": 14.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.2-pro",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.2 Pro",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.2 Pro is OpenAI’s most advanced model, offering major improvements in agentic coding and long context performance over GPT-5 Pro. It is optimized for complex tasks that require step-by-step reasoning,...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.2-pro",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.2-pro",
+    "api_pricing": {
+      "input_price_per_1m": 21.0,
+      "output_price_per_1m": 168.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.2-pro:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.2 Pro (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.2 Pro is OpenAI’s most advanced model, offering major improvements in agentic coding and long context performance over GPT-5 Pro. It is optimized for complex tasks that require step-by-step reasoning,...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.2-pro:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.2-pro:batch",
+    "api_pricing": {
+      "input_price_per_1m": 10.5,
+      "output_price_per_1m": 84.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.2",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.2",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.2 is the latest frontier-grade model in the GPT-5 series, offering stronger agentic and long context perfomance compared to GPT-5.1. It uses adaptive reasoning to allocate computation dynamically, responding quickly...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.2",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.2",
+    "api_pricing": {
+      "input_price_per_1m": 1.75,
+      "output_price_per_1m": 14.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.2:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.2 (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.2 is the latest frontier-grade model in the GPT-5 series, offering stronger agentic and long context perfomance compared to GPT-5.1. It uses adaptive reasoning to allocate computation dynamically, responding quickly...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.2:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.2:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.875,
+      "output_price_per_1m": 7.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "relace-relace-search",
+    "provider_id": "relace",
+    "provider_name": "Relace",
+    "name": "Relace: Relace Search",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 256000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text"
+    ],
+    "description": "The relace-search model uses 4-12 `view_file` and `grep` tools in parallel to explore a codebase and return relevant files to the user request. In contrast to RAG, relace-search performs agentic...",
+    "official_url": "https://openrouter.ai/models/relace/relace-search",
+    "source_docs_url": "https://openrouter.ai/playground?model=relace/relace-search",
+    "api_pricing": {
+      "input_price_per_1m": 1.0,
+      "output_price_per_1m": 3.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "z-ai-glm-4.6v",
+    "provider_id": "z-ai",
+    "provider_name": "Z-ai",
+    "name": "Z.ai: GLM 4.6V",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GLM-4.6V is a large multimodal model designed for high-fidelity visual understanding and long-context reasoning across images, documents, and mixed media. It supports up to 128K tokens, processes complex page layouts...",
+    "official_url": "https://openrouter.ai/models/z-ai/glm-4.6v",
+    "source_docs_url": "https://openrouter.ai/playground?model=z-ai/glm-4.6v",
+    "api_pricing": {
+      "input_price_per_1m": 0.3,
+      "output_price_per_1m": 0.9
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openrouter-bodybuilder",
+    "provider_id": "openrouter",
+    "provider_name": "Openrouter",
+    "name": "Body Builder (beta)",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "Transform your natural language requests into structured OpenRouter API request objects. Describe what you want to accomplish with AI models, and Body Builder will construct the appropriate API calls. Example:...",
+    "official_url": "https://openrouter.ai/models/openrouter/bodybuilder",
+    "source_docs_url": "https://openrouter.ai/playground?model=openrouter/bodybuilder",
+    "api_pricing": {
+      "input_price_per_1m": -1000000.0,
+      "output_price_per_1m": -1000000.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.1-codex-max",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.1-Codex-Max",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.1-Codex-Max is OpenAI’s latest agentic coding model, designed for long-running, high-context software development tasks. It is based on an updated version of the 5.1 reasoning stack and trained on agentic...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.1-codex-max",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.1-codex-max",
+    "api_pricing": {
+      "input_price_per_1m": 1.25,
+      "output_price_per_1m": 10.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "amazon-nova-2-lite-v1",
+    "provider_id": "amazon",
+    "provider_name": "Amazon",
+    "name": "Amazon: Nova 2 Lite",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 65535,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Nova 2 Lite is a fast, cost-effective reasoning model for everyday workloads that can process text, images, and videos to generate text. Nova 2 Lite demonstrates standout capabilities in processing...",
+    "official_url": "https://openrouter.ai/models/amazon/nova-2-lite-v1",
+    "source_docs_url": "https://openrouter.ai/playground?model=amazon/nova-2-lite-v1",
+    "api_pricing": {
+      "input_price_per_1m": 0.3,
+      "output_price_per_1m": 2.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "mistralai-ministral-14b-2512",
+    "provider_id": "mistralai",
+    "provider_name": "Mistralai",
+    "name": "Mistral: Ministral 3 14B 2512",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "The largest model in the Ministral 3 family, Ministral 3 14B offers frontier capabilities and performance comparable to its larger Mistral Small 3.2 24B counterpart. A powerful and efficient language...",
+    "official_url": "https://openrouter.ai/models/mistralai/ministral-14b-2512",
+    "source_docs_url": "https://openrouter.ai/playground?model=mistralai/ministral-14b-2512",
+    "api_pricing": {
+      "input_price_per_1m": 0.2,
+      "output_price_per_1m": 0.2
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "mistralai-ministral-8b-2512",
+    "provider_id": "mistralai",
+    "provider_name": "Mistralai",
+    "name": "Mistral: Ministral 3 8B 2512",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "A balanced model in the Ministral 3 family, Ministral 3 8B is a powerful, efficient tiny language model with vision capabilities.",
+    "official_url": "https://openrouter.ai/models/mistralai/ministral-8b-2512",
+    "source_docs_url": "https://openrouter.ai/playground?model=mistralai/ministral-8b-2512",
+    "api_pricing": {
+      "input_price_per_1m": 0.15,
+      "output_price_per_1m": 0.15
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "mistralai-ministral-3b-2512",
+    "provider_id": "mistralai",
+    "provider_name": "Mistralai",
+    "name": "Mistral: Ministral 3 3B 2512",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "The smallest model in the Ministral 3 family, Ministral 3 3B is a powerful, efficient tiny language model with vision capabilities.",
+    "official_url": "https://openrouter.ai/models/mistralai/ministral-3b-2512",
+    "source_docs_url": "https://openrouter.ai/playground?model=mistralai/ministral-3b-2512",
+    "api_pricing": {
+      "input_price_per_1m": 0.1,
+      "output_price_per_1m": 0.1
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "mistralai-mistral-large-2512",
+    "provider_id": "mistralai",
+    "provider_name": "Mistralai",
+    "name": "Mistral: Mistral Large 3 2512",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Mistral Large 3 2512 is Mistral’s most capable model to date, featuring a sparse mixture-of-experts architecture with 41B active parameters (675B total), and released under the Apache 2.0 license.",
+    "official_url": "https://openrouter.ai/models/mistralai/mistral-large-2512",
+    "source_docs_url": "https://openrouter.ai/playground?model=mistralai/mistral-large-2512",
+    "api_pricing": {
+      "input_price_per_1m": 0.5,
+      "output_price_per_1m": 1.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "deepseek-deepseek-v3.2",
+    "provider_id": "deepseek",
+    "provider_name": "Deepseek",
+    "name": "DeepSeek: DeepSeek V3.2",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 163840,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text"
+    ],
+    "description": "DeepSeek-V3.2 is a large language model designed to harmonize high computational efficiency with strong reasoning and agentic tool-use performance. It introduces DeepSeek Sparse Attention (DSA), a fine-grained sparse attention mechanism...",
+    "official_url": "https://openrouter.ai/models/deepseek/deepseek-v3.2",
+    "source_docs_url": "https://openrouter.ai/playground?model=deepseek/deepseek-v3.2",
+    "api_pricing": {
+      "input_price_per_1m": 0.269,
+      "output_price_per_1m": 0.4
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-opus-4.5",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Anthropic: Claude Opus 4.5",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 200000,
+    "max_output_tokens": 64000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Claude Opus 4.5 is Anthropic’s frontier reasoning model optimized for complex software engineering, agentic workflows, and long-horizon computer use. It offers strong multimodal capabilities, competitive performance across real-world coding and...",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-opus-4.5",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-opus-4.5",
+    "api_pricing": {
+      "input_price_per_1m": 5.0,
+      "output_price_per_1m": 25.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-opus-4.5:batch",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Anthropic: Claude Opus 4.5 (batch)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 200000,
+    "max_output_tokens": 64000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Claude Opus 4.5 is Anthropic’s frontier reasoning model optimized for complex software engineering, agentic workflows, and long-horizon computer use. It offers strong multimodal capabilities, competitive performance across real-world coding and...",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-opus-4.5:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-opus-4.5:batch",
+    "api_pricing": {
+      "input_price_per_1m": 2.5,
+      "output_price_per_1m": 12.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "allenai-olmo-3-32b-think",
+    "provider_id": "allenai",
+    "provider_name": "Allenai",
+    "name": "AllenAI: Olmo 3 32B Think",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 65536,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text"
+    ],
+    "description": "Olmo 3 32B Think is a large-scale, 32-billion-parameter model purpose-built for deep reasoning, complex logic chains and advanced instruction-following scenarios. Its capacity enables strong performance on demanding evaluation tasks and...",
+    "official_url": "https://openrouter.ai/models/allenai/olmo-3-32b-think",
+    "source_docs_url": "https://openrouter.ai/playground?model=allenai/olmo-3-32b-think",
+    "api_pricing": {
+      "input_price_per_1m": 0.15,
+      "output_price_per_1m": 0.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-3-pro-image-preview",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Nano Banana Pro (Gemini 3 Pro Image Preview)",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 65536,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Nano Banana Pro is Google’s most advanced image-generation and editing model, built on Gemini 3 Pro. It extends the original Nano Banana with significantly improved multimodal reasoning, real-world grounding, and...",
+    "official_url": "https://openrouter.ai/models/google/gemini-3-pro-image-preview",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-3-pro-image-preview",
+    "api_pricing": {
+      "input_price_per_1m": 2.0,
+      "output_price_per_1m": 12.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "deepcogito-cogito-v2.1-671b",
+    "provider_id": "deepcogito",
+    "provider_name": "Deepcogito",
+    "name": "Deep Cogito: Cogito v2.1 671B",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "Cogito v2.1 671B MoE represents one of the strongest open models globally, matching performance of frontier closed and open models. This model is trained using self play with reinforcement learning...",
+    "official_url": "https://openrouter.ai/models/deepcogito/cogito-v2.1-671b",
+    "source_docs_url": "https://openrouter.ai/playground?model=deepcogito/cogito-v2.1-671b",
+    "api_pricing": {
+      "input_price_per_1m": 1.25,
+      "output_price_per_1m": 1.25
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.1",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.1",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.1 is the latest frontier-grade model in the GPT-5 series, offering stronger general-purpose reasoning, improved instruction adherence, and a more natural conversational style compared to GPT-5. It uses adaptive reasoning...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.1",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.1",
+    "api_pricing": {
+      "input_price_per_1m": 1.25,
+      "output_price_per_1m": 10.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.1:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.1 (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.1 is the latest frontier-grade model in the GPT-5 series, offering stronger general-purpose reasoning, improved instruction adherence, and a more natural conversational style compared to GPT-5. It uses adaptive reasoning...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.1:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.1:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.625,
+      "output_price_per_1m": 5.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.1-codex",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.1-Codex",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.1-Codex is a specialized version of GPT-5.1 optimized for software engineering and coding workflows. It is designed for both interactive development sessions and long, independent execution of complex engineering tasks....",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.1-codex",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.1-codex",
+    "api_pricing": {
+      "input_price_per_1m": 1.25,
+      "output_price_per_1m": 10.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5.1-codex-mini",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5.1-Codex-Mini",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5.1-Codex-Mini is a smaller and faster version of GPT-5.1-Codex",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5.1-codex-mini",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5.1-codex-mini",
+    "api_pricing": {
+      "input_price_per_1m": 0.25,
+      "output_price_per_1m": 2.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "moonshotai-kimi-k2-thinking",
+    "provider_id": "moonshotai",
+    "provider_name": "Moonshotai",
+    "name": "MoonshotAI: Kimi K2 Thinking",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 100352,
+    "modality": [
+      "text"
+    ],
+    "description": "Kimi K2 Thinking is Moonshot AI’s most advanced open reasoning model to date, extending the K2 series into agentic, long-horizon reasoning. Built on the trillion-parameter Mixture-of-Experts (MoE) architecture introduced in...",
+    "official_url": "https://openrouter.ai/models/moonshotai/kimi-k2-thinking",
+    "source_docs_url": "https://openrouter.ai/playground?model=moonshotai/kimi-k2-thinking",
+    "api_pricing": {
+      "input_price_per_1m": 0.6,
+      "output_price_per_1m": 2.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "amazon-nova-premier-v1",
+    "provider_id": "amazon",
+    "provider_name": "Amazon",
+    "name": "Amazon: Nova Premier 1.0",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 32000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Amazon Nova Premier is the most capable of Amazon’s multimodal models for complex reasoning tasks and for use as the best teacher for distilling custom models.",
+    "official_url": "https://openrouter.ai/models/amazon/nova-premier-v1",
+    "source_docs_url": "https://openrouter.ai/playground?model=amazon/nova-premier-v1",
+    "api_pricing": {
+      "input_price_per_1m": 2.5,
+      "output_price_per_1m": 12.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "perplexity-sonar-pro-search",
+    "provider_id": "perplexity",
+    "provider_name": "Perplexity",
+    "name": "Perplexity: Sonar Pro Search",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 200000,
+    "max_output_tokens": 8000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Exclusively available on the OpenRouter API, Sonar Pro's new Pro Search mode is Perplexity's most advanced agentic search system. It is designed for deeper reasoning and analysis. Pricing is based...",
+    "official_url": "https://openrouter.ai/models/perplexity/sonar-pro-search",
+    "source_docs_url": "https://openrouter.ai/playground?model=perplexity/sonar-pro-search",
+    "api_pricing": {
+      "input_price_per_1m": 3.0,
+      "output_price_per_1m": 15.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "mistralai-voxtral-small-24b-2507",
+    "provider_id": "mistralai",
+    "provider_name": "Mistralai",
+    "name": "Mistral: Voxtral Small 24B 2507",
+    "tier": "Small",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 32000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "Voxtral Small is an enhancement of Mistral Small 3, incorporating state-of-the-art audio input capabilities while retaining best-in-class text performance. It excels at speech transcription, translation and audio understanding. Input audio...",
+    "official_url": "https://openrouter.ai/models/mistralai/voxtral-small-24b-2507",
+    "source_docs_url": "https://openrouter.ai/playground?model=mistralai/voxtral-small-24b-2507",
+    "api_pricing": {
+      "input_price_per_1m": 0.1,
+      "output_price_per_1m": 0.3
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-oss-safeguard-20b",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: gpt-oss-safeguard-20b",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text"
+    ],
+    "description": "gpt-oss-safeguard-20b is a safety reasoning model from OpenAI built upon gpt-oss-20b. This open-weight, 21B-parameter Mixture-of-Experts (MoE) model offers lower latency for safety tasks like content classification, LLM filtering, and trust...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-oss-safeguard-20b",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-oss-safeguard-20b",
+    "api_pricing": {
+      "input_price_per_1m": 0.075,
+      "output_price_per_1m": 0.3
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "nvidia-nemotron-nano-12b-v2-vl:free",
+    "provider_id": "nvidia",
+    "provider_name": "Nvidia",
+    "name": "NVIDIA: Nemotron Nano 12B 2 VL (free)",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "NVIDIA Nemotron Nano 2 VL is a 12-billion-parameter open multimodal reasoning model designed for video understanding and document intelligence. It introduces a hybrid Transformer-Mamba architecture, combining transformer-level accuracy with Mamba’s...",
+    "official_url": "https://openrouter.ai/models/nvidia/nemotron-nano-12b-v2-vl:free",
+    "source_docs_url": "https://openrouter.ai/playground?model=nvidia/nemotron-nano-12b-v2-vl:free",
+    "api_pricing": {
+      "input_price_per_1m": 0.0,
+      "output_price_per_1m": 0.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "minimax-minimax-m2",
+    "provider_id": "minimax",
+    "provider_name": "Minimax",
+    "name": "MiniMax: MiniMax M2",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 204800,
+    "max_output_tokens": 131072,
+    "modality": [
+      "text"
+    ],
+    "description": "MiniMax-M2 is a compact, high-efficiency large language model optimized for end-to-end coding and agentic workflows. With 10 billion activated parameters (230 billion total), it delivers near-frontier intelligence across general reasoning,...",
+    "official_url": "https://openrouter.ai/models/minimax/minimax-m2",
+    "source_docs_url": "https://openrouter.ai/playground?model=minimax/minimax-m2",
+    "api_pricing": {
+      "input_price_per_1m": 0.255,
+      "output_price_per_1m": 1.02
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3-vl-32b-instruct",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3 VL 32B Instruct",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Qwen3-VL-32B-Instruct is a large-scale multimodal vision-language model designed for high-precision understanding and reasoning across text, images, and video. With 32 billion parameters, it combines deep visual perception with advanced text...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3-vl-32b-instruct",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3-vl-32b-instruct",
+    "api_pricing": {
+      "input_price_per_1m": 0.104,
+      "output_price_per_1m": 0.416
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "ibm-granite-granite-4.0-h-micro",
+    "provider_id": "ibm-granite",
+    "provider_name": "Ibm-granite",
+    "name": "IBM: Granite 4.0 Micro",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131000,
+    "max_output_tokens": 131000,
+    "modality": [
+      "text"
+    ],
+    "description": "Granite-4.0-H-Micro is a 3B parameter from the Granite 4 family of models. These models are the latest in a series of models released by IBM. They are fine-tuned for long...",
+    "official_url": "https://openrouter.ai/models/ibm-granite/granite-4.0-h-micro",
+    "source_docs_url": "https://openrouter.ai/playground?model=ibm-granite/granite-4.0-h-micro",
+    "api_pricing": {
+      "input_price_per_1m": 0.017,
+      "output_price_per_1m": 0.112
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5-image-mini",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5 Image Mini",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5 Image Mini combines OpenAI's advanced language capabilities, powered by [GPT-5 Mini](https://openrouter.ai/openai/gpt-5-mini), with GPT Image 1 Mini for efficient image generation. This natively multimodal model features superior instruction following, text...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5-image-mini",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5-image-mini",
+    "api_pricing": {
+      "input_price_per_1m": 2.5,
+      "output_price_per_1m": 2.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-haiku-4.5",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Anthropic: Claude Haiku 4.5",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 200000,
+    "max_output_tokens": 64000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Claude Haiku 4.5 is Anthropic’s fastest and most efficient model, delivering near-frontier intelligence at a fraction of the cost and latency of larger Claude models. Matching Claude Sonnet 4’s performance...",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-haiku-4.5",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-haiku-4.5",
+    "api_pricing": {
+      "input_price_per_1m": 1.0,
+      "output_price_per_1m": 5.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-haiku-4.5:batch",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Anthropic: Claude Haiku 4.5 (batch)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 200000,
+    "max_output_tokens": 64000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Claude Haiku 4.5 is Anthropic’s fastest and most efficient model, delivering near-frontier intelligence at a fraction of the cost and latency of larger Claude models. Matching Claude Sonnet 4’s performance...",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-haiku-4.5:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-haiku-4.5:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.5,
+      "output_price_per_1m": 2.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3-vl-8b-thinking",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3 VL 8B Thinking",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Qwen3-VL-8B-Thinking is the reasoning-optimized variant of the Qwen3-VL-8B multimodal model, designed for advanced visual and textual reasoning across complex scenes, documents, and temporal sequences. It integrates enhanced multimodal alignment and...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3-vl-8b-thinking",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3-vl-8b-thinking",
+    "api_pricing": {
+      "input_price_per_1m": 0.18,
+      "output_price_per_1m": 2.1
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3-vl-8b-instruct",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3 VL 8B Instruct",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Qwen3-VL-8B-Instruct is a multimodal vision-language model from the Qwen3-VL series, built for high-fidelity understanding and reasoning across text, images, and video. It features improved multimodal fusion with Interleaved-MRoPE for long-horizon...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3-vl-8b-instruct",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3-vl-8b-instruct",
+    "api_pricing": {
+      "input_price_per_1m": 0.117,
+      "output_price_per_1m": 0.455
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5-image",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5 Image",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "[GPT-5](https://openrouter.ai/openai/gpt-5) Image combines OpenAI's GPT-5 model with state-of-the-art image generation capabilities. It offers major improvements in reasoning, code quality, and user experience while incorporating GPT Image 1's superior instruction following,...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5-image",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5-image",
+    "api_pricing": {
+      "input_price_per_1m": 10.0,
+      "output_price_per_1m": 10.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-2.5-flash-image",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Nano Banana (Gemini 2.5 Flash Image)",
+    "tier": "Small",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 32768,
+    "max_output_tokens": 8192,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemini 2.5 Flash Image, a.k.a. \"Nano Banana,\" is now generally available. It is a state of the art image generation model with contextual understanding. It is capable of image generation,...",
+    "official_url": "https://openrouter.ai/models/google/gemini-2.5-flash-image",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-2.5-flash-image",
+    "api_pricing": {
+      "input_price_per_1m": 0.3,
+      "output_price_per_1m": 2.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3-vl-30b-a3b-thinking",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3 VL 30B A3B Thinking",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Qwen3-VL-30B-A3B-Thinking is a multimodal model that unifies strong text generation with visual understanding for images and videos. Its Thinking variant enhances reasoning in STEM, math, and complex tasks. It excels...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3-vl-30b-a3b-thinking",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3-vl-30b-a3b-thinking",
+    "api_pricing": {
+      "input_price_per_1m": 0.2,
+      "output_price_per_1m": 2.4
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3-vl-30b-a3b-instruct",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3 VL 30B A3B Instruct",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Qwen3-VL-30B-A3B-Instruct is a multimodal model that unifies strong text generation with visual understanding for images and videos. Its Instruct variant optimizes instruction-following for general multimodal tasks. It excels in perception...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3-vl-30b-a3b-instruct",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3-vl-30b-a3b-instruct",
+    "api_pricing": {
+      "input_price_per_1m": 0.15,
+      "output_price_per_1m": 0.6
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5-pro",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5 Pro",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5 Pro is OpenAI’s most advanced model, offering major improvements in reasoning, code quality, and user experience. It is optimized for complex tasks that require step-by-step reasoning, instruction following, and...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5-pro",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5-pro",
+    "api_pricing": {
+      "input_price_per_1m": 15.0,
+      "output_price_per_1m": 120.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5-pro:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5 Pro (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5 Pro is OpenAI’s most advanced model, offering major improvements in reasoning, code quality, and user experience. It is optimized for complex tasks that require step-by-step reasoning, instruction following, and...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5-pro:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5-pro:batch",
+    "api_pricing": {
+      "input_price_per_1m": 7.5,
+      "output_price_per_1m": 60.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-sonnet-4.5",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Anthropic: Claude Sonnet 4.5",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 64000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Claude Sonnet 4.5 is Anthropic’s most advanced Sonnet model to date, optimized for real-world agents and coding workflows. It delivers state-of-the-art performance on coding benchmarks such as SWE-bench Verified, with...",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-sonnet-4.5",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-sonnet-4.5",
+    "api_pricing": {
+      "input_price_per_1m": 3.0,
+      "output_price_per_1m": 15.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-sonnet-4.5:batch",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Anthropic: Claude Sonnet 4.5 (batch)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 64000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Claude Sonnet 4.5 is Anthropic’s most advanced Sonnet model to date, optimized for real-world agents and coding workflows. It delivers state-of-the-art performance on coding benchmarks such as SWE-bench Verified, with...",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-sonnet-4.5:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-sonnet-4.5:batch",
+    "api_pricing": {
+      "input_price_per_1m": 1.5,
+      "output_price_per_1m": 7.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "deepseek-deepseek-v3.2-exp",
+    "provider_id": "deepseek",
+    "provider_name": "Deepseek",
+    "name": "DeepSeek: DeepSeek V3.2 Exp",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 163840,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text"
+    ],
+    "description": "DeepSeek-V3.2-Exp is an experimental large language model released by DeepSeek as an intermediate step between V3.1 and future architectures. It introduces DeepSeek Sparse Attention (DSA), a fine-grained sparse attention mechanism...",
+    "official_url": "https://openrouter.ai/models/deepseek/deepseek-v3.2-exp",
+    "source_docs_url": "https://openrouter.ai/playground?model=deepseek/deepseek-v3.2-exp",
+    "api_pricing": {
+      "input_price_per_1m": 0.27,
+      "output_price_per_1m": 0.41
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "thedrummer-cydonia-24b-v4.1",
+    "provider_id": "thedrummer",
+    "provider_name": "Thedrummer",
+    "name": "TheDrummer: Cydonia 24B V4.1",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 131072,
+    "modality": [
+      "text"
+    ],
+    "description": "Uncensored and creative writing model based on Mistral Small 3.2 24B with good recall, prompt adherence, and intelligence.",
+    "official_url": "https://openrouter.ai/models/thedrummer/cydonia-24b-v4.1",
+    "source_docs_url": "https://openrouter.ai/playground?model=thedrummer/cydonia-24b-v4.1",
+    "api_pricing": {
+      "input_price_per_1m": 0.3,
+      "output_price_per_1m": 0.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "relace-relace-apply-3",
+    "provider_id": "relace",
+    "provider_name": "Relace",
+    "name": "Relace: Relace Apply 3",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 256000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text"
+    ],
+    "description": "Relace Apply 3 is a specialized code-patching LLM that merges AI-suggested edits straight into your source files. It can apply updates from GPT-4o, Claude, and others into your files at...",
+    "official_url": "https://openrouter.ai/models/relace/relace-apply-3",
+    "source_docs_url": "https://openrouter.ai/playground?model=relace/relace-apply-3",
+    "api_pricing": {
+      "input_price_per_1m": 0.85,
+      "output_price_per_1m": 1.25
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3-vl-235b-a22b-thinking",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3 VL 235B A22B Thinking",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Qwen3-VL-235B-A22B Thinking is a multimodal model that unifies strong text generation with visual understanding across images and video. The Thinking model is optimized for multimodal reasoning in STEM and math....",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3-vl-235b-a22b-thinking",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3-vl-235b-a22b-thinking",
+    "api_pricing": {
+      "input_price_per_1m": 0.4,
+      "output_price_per_1m": 4.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3-vl-235b-a22b-instruct",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3 VL 235B A22B Instruct",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Qwen3-VL-235B-A22B Instruct is an open-weight multimodal model that unifies strong text generation with visual understanding across images and video. The Instruct model targets general vision-language use (VQA, document parsing, chart/table...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3-vl-235b-a22b-instruct",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3-vl-235b-a22b-instruct",
+    "api_pricing": {
+      "input_price_per_1m": 0.21,
+      "output_price_per_1m": 1.9
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3-max",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3 Max",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen3-Max is an updated release built on the Qwen3 series, offering major improvements in reasoning, instruction following, multilingual support, and long-tail knowledge coverage compared to the January 2025 version. It...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3-max",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3-max",
+    "api_pricing": {
+      "input_price_per_1m": 0.78,
+      "output_price_per_1m": 3.9
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3-coder-plus",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3 Coder Plus",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen3 Coder Plus is Alibaba's proprietary version of the Open Source Qwen3 Coder 480B A35B. It is a powerful coding agent model specializing in autonomous programming via tool calling and...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3-coder-plus",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3-coder-plus",
+    "api_pricing": {
+      "input_price_per_1m": 0.65,
+      "output_price_per_1m": 3.25
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5-codex:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5 Codex (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5-Codex is a specialized version of GPT-5 optimized for software engineering and coding workflows. It is designed for both interactive development sessions and long, independent execution of complex engineering tasks....",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5-codex:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5-codex:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.625,
+      "output_price_per_1m": 5.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "deepseek-deepseek-v3.1-terminus",
+    "provider_id": "deepseek",
+    "provider_name": "Deepseek",
+    "name": "DeepSeek: DeepSeek V3.1 Terminus",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 163840,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text"
+    ],
+    "description": "DeepSeek-V3.1 Terminus is an update to [DeepSeek V3.1](/deepseek/deepseek-chat-v3.1) that maintains the model's original capabilities while addressing issues reported by users, including language consistency and agent capabilities, further optimizing the model's...",
+    "official_url": "https://openrouter.ai/models/deepseek/deepseek-v3.1-terminus",
+    "source_docs_url": "https://openrouter.ai/playground?model=deepseek/deepseek-v3.1-terminus",
+    "api_pricing": {
+      "input_price_per_1m": 0.27,
+      "output_price_per_1m": 1.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3-coder-flash",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3 Coder Flash",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen3 Coder Flash is Alibaba's fast and cost efficient version of their proprietary Qwen3 Coder Plus. It is a powerful coding agent model specializing in autonomous programming via tool calling...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3-coder-flash",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3-coder-flash",
+    "api_pricing": {
+      "input_price_per_1m": 0.195,
+      "output_price_per_1m": 0.975
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3-next-80b-a3b-thinking",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3 Next 80B A3B Thinking",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen3-Next-80B-A3B-Thinking is a reasoning-first chat model in the Qwen3-Next line that outputs structured “thinking” traces by default. It’s designed for hard multi-step problems; math proofs, code synthesis/debugging, logic, and agentic...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3-next-80b-a3b-thinking",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3-next-80b-a3b-thinking",
+    "api_pricing": {
+      "input_price_per_1m": 0.15,
+      "output_price_per_1m": 1.2
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3-next-80b-a3b-instruct",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3 Next 80B A3B Instruct",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen3-Next-80B-A3B-Instruct is an instruction-tuned chat model in the Qwen3-Next series optimized for fast, stable responses without “thinking” traces. It targets complex tasks across reasoning, code generation, knowledge QA, and multilingual...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3-next-80b-a3b-instruct",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3-next-80b-a3b-instruct",
+    "api_pricing": {
+      "input_price_per_1m": 0.09,
+      "output_price_per_1m": 1.1
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen-plus-2025-07-28",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen Plus 0728",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen Plus 0728, based on the Qwen3 foundation model, is a 1 million context hybrid reasoning model with a balanced performance, speed, and cost combination.",
+    "official_url": "https://openrouter.ai/models/qwen/qwen-plus-2025-07-28",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen-plus-2025-07-28",
+    "api_pricing": {
+      "input_price_per_1m": 0.26,
+      "output_price_per_1m": 0.78
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen-plus-2025-07-28:thinking",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen Plus 0728 (thinking)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen Plus 0728, based on the Qwen3 foundation model, is a 1 million context hybrid reasoning model with a balanced performance, speed, and cost combination.",
+    "official_url": "https://openrouter.ai/models/qwen/qwen-plus-2025-07-28:thinking",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen-plus-2025-07-28:thinking",
+    "api_pricing": {
+      "input_price_per_1m": 0.4,
+      "output_price_per_1m": 1.2
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "nvidia-nemotron-nano-9b-v2:free",
+    "provider_id": "nvidia",
+    "provider_name": "Nvidia",
+    "name": "NVIDIA: Nemotron Nano 9B V2 (free)",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "NVIDIA-Nemotron-Nano-9B-v2 is a large language model (LLM) trained from scratch by NVIDIA, and designed as a unified model for both reasoning and non-reasoning tasks. It responds to user queries and...",
+    "official_url": "https://openrouter.ai/models/nvidia/nemotron-nano-9b-v2:free",
+    "source_docs_url": "https://openrouter.ai/playground?model=nvidia/nemotron-nano-9b-v2:free",
+    "api_pricing": {
+      "input_price_per_1m": 0.0,
+      "output_price_per_1m": 0.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "moonshotai-kimi-k2-0905",
+    "provider_id": "moonshotai",
+    "provider_name": "Moonshotai",
+    "name": "MoonshotAI: Kimi K2 0905",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 100352,
+    "modality": [
+      "text"
+    ],
+    "description": "Kimi K2 0905 is the September update of [Kimi K2 0711](moonshotai/kimi-k2). It is a large-scale Mixture-of-Experts (MoE) language model developed by Moonshot AI, featuring 1 trillion total parameters with 32...",
+    "official_url": "https://openrouter.ai/models/moonshotai/kimi-k2-0905",
+    "source_docs_url": "https://openrouter.ai/playground?model=moonshotai/kimi-k2-0905",
+    "api_pricing": {
+      "input_price_per_1m": 0.6,
+      "output_price_per_1m": 2.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3-30b-a3b-thinking-2507",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3 30B A3B Thinking 2507",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 81920,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen3-30B-A3B-Thinking-2507 is a 30B parameter Mixture-of-Experts reasoning model optimized for complex tasks requiring extended multi-step thinking. The model is designed specifically for “thinking mode,” where internal reasoning traces are separated...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3-30b-a3b-thinking-2507",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3-30b-a3b-thinking-2507",
+    "api_pricing": {
+      "input_price_per_1m": 0.2,
+      "output_price_per_1m": 2.4
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "nousresearch-hermes-4-70b",
+    "provider_id": "nousresearch",
+    "provider_name": "Nousresearch",
+    "name": "Nous: Hermes 4 70B",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "Hermes 4 70B is a hybrid reasoning model from Nous Research, built on Meta-Llama-3.1-70B. It introduces the same hybrid mode as the larger 405B release, allowing the model to either...",
+    "official_url": "https://openrouter.ai/models/nousresearch/hermes-4-70b",
+    "source_docs_url": "https://openrouter.ai/playground?model=nousresearch/hermes-4-70b",
+    "api_pricing": {
+      "input_price_per_1m": 0.13,
+      "output_price_per_1m": 0.4
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "nousresearch-hermes-4-405b",
+    "provider_id": "nousresearch",
+    "provider_name": "Nousresearch",
+    "name": "Nous: Hermes 4 405B",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "Hermes 4 is a large-scale reasoning model built on Meta-Llama-3.1-405B and released by Nous Research. It introduces a hybrid reasoning mode, where the model can choose to deliberate internally with...",
+    "official_url": "https://openrouter.ai/models/nousresearch/hermes-4-405b",
+    "source_docs_url": "https://openrouter.ai/playground?model=nousresearch/hermes-4-405b",
+    "api_pricing": {
+      "input_price_per_1m": 1.0,
+      "output_price_per_1m": 3.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "deepseek-deepseek-chat-v3.1",
+    "provider_id": "deepseek",
+    "provider_name": "Deepseek",
+    "name": "DeepSeek: DeepSeek V3.1",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 163840,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text"
+    ],
+    "description": "DeepSeek-V3.1 is a large hybrid reasoning model (671B parameters, 37B active) that supports both thinking and non-thinking modes via prompt templates. It extends the DeepSeek-V3 base with a two-phase long-context...",
+    "official_url": "https://openrouter.ai/models/deepseek/deepseek-chat-v3.1",
+    "source_docs_url": "https://openrouter.ai/playground?model=deepseek/deepseek-chat-v3.1",
+    "api_pricing": {
+      "input_price_per_1m": 0.25,
+      "output_price_per_1m": 0.95
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "mistralai-mistral-medium-3.1",
+    "provider_id": "mistralai",
+    "provider_name": "Mistralai",
+    "name": "Mistral: Mistral Medium 3.1",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Mistral Medium 3.1 is an updated version of Mistral Medium 3, which is a high-performance enterprise-grade language model designed to deliver frontier-level capabilities at significantly reduced operational cost. It balances...",
+    "official_url": "https://openrouter.ai/models/mistralai/mistral-medium-3.1",
+    "source_docs_url": "https://openrouter.ai/playground?model=mistralai/mistral-medium-3.1",
+    "api_pricing": {
+      "input_price_per_1m": 0.4,
+      "output_price_per_1m": 2.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "z-ai-glm-4.5v",
+    "provider_id": "z-ai",
+    "provider_name": "Z-ai",
+    "name": "Z.ai: GLM 4.5V",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 65536,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GLM-4.5V is a vision-language foundation model for multimodal agent applications. Built on a Mixture-of-Experts (MoE) architecture with 106B parameters and 12B activated parameters, it achieves state-of-the-art results in video understanding,...",
+    "official_url": "https://openrouter.ai/models/z-ai/glm-4.5v",
+    "source_docs_url": "https://openrouter.ai/playground?model=z-ai/glm-4.5v",
+    "api_pricing": {
+      "input_price_per_1m": 0.6,
+      "output_price_per_1m": 1.8
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "ai21-jamba-large-1.7",
+    "provider_id": "ai21",
+    "provider_name": "Ai21",
+    "name": "AI21: Jamba Large 1.7",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 256000,
+    "max_output_tokens": 4096,
+    "modality": [
+      "text"
+    ],
+    "description": "Jamba Large 1.7 is the latest model in the Jamba open family, offering improvements in grounding, instruction-following, and overall efficiency. Built on a hybrid SSM-Transformer architecture with a 256K context...",
+    "official_url": "https://openrouter.ai/models/ai21/jamba-large-1.7",
+    "source_docs_url": "https://openrouter.ai/playground?model=ai21/jamba-large-1.7",
+    "api_pricing": {
+      "input_price_per_1m": 2.0,
+      "output_price_per_1m": 8.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5 is OpenAI’s most advanced model, offering major improvements in reasoning, code quality, and user experience. It is optimized for complex tasks that require step-by-step reasoning, instruction following, and accuracy...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5",
+    "api_pricing": {
+      "input_price_per_1m": 1.25,
+      "output_price_per_1m": 10.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5 (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5 is OpenAI’s most advanced model, offering major improvements in reasoning, code quality, and user experience. It is optimized for complex tasks that require step-by-step reasoning, instruction following, and accuracy...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.625,
+      "output_price_per_1m": 5.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5-mini",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5 Mini",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5 Mini is a compact version of GPT-5, designed to handle lighter-weight reasoning tasks. It provides the same instruction-following and safety-tuning benefits as GPT-5, but with reduced latency and cost....",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5-mini",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5-mini",
+    "api_pricing": {
+      "input_price_per_1m": 0.25,
+      "output_price_per_1m": 2.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5-mini:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5 Mini (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5 Mini is a compact version of GPT-5, designed to handle lighter-weight reasoning tasks. It provides the same instruction-following and safety-tuning benefits as GPT-5, but with reduced latency and cost....",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5-mini:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5-mini:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.125,
+      "output_price_per_1m": 1.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5-nano",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5 Nano",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5-Nano is the smallest and fastest variant in the GPT-5 system, optimized for developer tools, rapid interactions, and ultra-low latency environments. While limited in reasoning depth compared to its larger...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5-nano",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5-nano",
+    "api_pricing": {
+      "input_price_per_1m": 0.05,
+      "output_price_per_1m": 0.4
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-5-nano:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-5 Nano (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-5-Nano is the smallest and fastest variant in the GPT-5 system, optimized for developer tools, rapid interactions, and ultra-low latency environments. While limited in reasoning depth compared to its larger...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-5-nano:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-5-nano:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.025,
+      "output_price_per_1m": 0.2
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-oss-120b",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: gpt-oss-120b",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 131072,
+    "modality": [
+      "text"
+    ],
+    "description": "gpt-oss-120b is an open-weight, 117B-parameter Mixture-of-Experts (MoE) language model from OpenAI designed for high-reasoning, agentic, and general-purpose production use cases. It activates 5.1B parameters per forward pass and is optimized...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-oss-120b",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-oss-120b",
+    "api_pricing": {
+      "input_price_per_1m": 0.037,
+      "output_price_per_1m": 0.17
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-oss-20b",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: gpt-oss-20b",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 131072,
+    "modality": [
+      "text"
+    ],
+    "description": "gpt-oss-20b is an open-weight 21B parameter model released by OpenAI under the Apache 2.0 license. It uses a Mixture-of-Experts (MoE) architecture with 3.6B active parameters per forward pass, optimized for...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-oss-20b",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-oss-20b",
+    "api_pricing": {
+      "input_price_per_1m": 0.03,
+      "output_price_per_1m": 0.13
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-oss-20b:free",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: gpt-oss-20b (free)",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text"
+    ],
+    "description": "gpt-oss-20b is an open-weight 21B parameter model released by OpenAI under the Apache 2.0 license. It uses a Mixture-of-Experts (MoE) architecture with 3.6B active parameters per forward pass, optimized for...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-oss-20b:free",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-oss-20b:free",
+    "api_pricing": {
+      "input_price_per_1m": 0.0,
+      "output_price_per_1m": 0.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-opus-4.1",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Anthropic: Claude Opus 4.1",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 200000,
+    "max_output_tokens": 32000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Claude Opus 4.1 is an updated version of Anthropic’s flagship model, offering improved performance in coding, reasoning, and agentic tasks. It achieves 74.5% on SWE-bench Verified and shows notable gains...",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-opus-4.1",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-opus-4.1",
+    "api_pricing": {
+      "input_price_per_1m": 15.0,
+      "output_price_per_1m": 75.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-opus-4.1:batch",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Anthropic: Claude Opus 4.1 (batch)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 200000,
+    "max_output_tokens": 32000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Claude Opus 4.1 is an updated version of Anthropic’s flagship model, offering improved performance in coding, reasoning, and agentic tasks. It achieves 74.5% on SWE-bench Verified and shows notable gains...",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-opus-4.1:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-opus-4.1:batch",
+    "api_pricing": {
+      "input_price_per_1m": 7.5,
+      "output_price_per_1m": 37.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "mistralai-codestral-2508",
+    "provider_id": "mistralai",
+    "provider_name": "Mistralai",
+    "name": "Mistral: Codestral 2508",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 256000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "Mistral's cutting-edge language model for coding released end of July 2025. Codestral specializes in low-latency, high-frequency tasks such as fill-in-the-middle (FIM), code correction and test generation.\n\n[Blog Post](https://mistral.ai/news/codestral-25-08)",
+    "official_url": "https://openrouter.ai/models/mistralai/codestral-2508",
+    "source_docs_url": "https://openrouter.ai/playground?model=mistralai/codestral-2508",
+    "api_pricing": {
+      "input_price_per_1m": 0.3,
+      "output_price_per_1m": 0.9
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3-coder-30b-a3b-instruct",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3 Coder 30B A3B Instruct",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen3-Coder-30B-A3B-Instruct is a 30.5B parameter Mixture-of-Experts (MoE) model with 128 experts (8 active per forward pass), designed for advanced code generation, repository-scale understanding, and agentic tool use. Built on the...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3-coder-30b-a3b-instruct",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3-coder-30b-a3b-instruct",
+    "api_pricing": {
+      "input_price_per_1m": 0.07,
+      "output_price_per_1m": 0.27
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3-30b-a3b-instruct-2507",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3 30B A3B Instruct 2507",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 32000,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen3-30B-A3B-Instruct-2507 is a 30.5B-parameter mixture-of-experts language model from Qwen, with 3.3B active parameters per inference. It operates in non-thinking mode and is designed for high-quality instruction following, multilingual understanding, and...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3-30b-a3b-instruct-2507",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3-30b-a3b-instruct-2507",
+    "api_pricing": {
+      "input_price_per_1m": 0.048,
+      "output_price_per_1m": 0.193
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "z-ai-glm-4.5",
+    "provider_id": "z-ai",
+    "provider_name": "Z-ai",
+    "name": "Z.ai: GLM 4.5",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 98304,
+    "modality": [
+      "text"
+    ],
+    "description": "GLM-4.5 is our latest flagship foundation model, purpose-built for agent-based applications. It leverages a Mixture-of-Experts (MoE) architecture and supports a context length of up to 128k tokens. GLM-4.5 delivers significantly...",
+    "official_url": "https://openrouter.ai/models/z-ai/glm-4.5",
+    "source_docs_url": "https://openrouter.ai/playground?model=z-ai/glm-4.5",
+    "api_pricing": {
+      "input_price_per_1m": 0.6,
+      "output_price_per_1m": 2.2
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "z-ai-glm-4.5-air",
+    "provider_id": "z-ai",
+    "provider_name": "Z-ai",
+    "name": "Z.ai: GLM 4.5 Air",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 98304,
+    "modality": [
+      "text"
+    ],
+    "description": "GLM-4.5-Air is the lightweight variant of our latest flagship model family, also purpose-built for agent-centric applications. Like GLM-4.5, it adopts the Mixture-of-Experts (MoE) architecture but with a more compact parameter...",
+    "official_url": "https://openrouter.ai/models/z-ai/glm-4.5-air",
+    "source_docs_url": "https://openrouter.ai/playground?model=z-ai/glm-4.5-air",
+    "api_pricing": {
+      "input_price_per_1m": 0.13,
+      "output_price_per_1m": 0.85
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3-235b-a22b-thinking-2507",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3 235B A22B Thinking 2507",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen3-235B-A22B-Thinking-2507 is a high-performance, open-weight Mixture-of-Experts (MoE) language model optimized for complex reasoning tasks. It activates 22B of its 235B parameters per forward pass and natively supports up to 262,144...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3-235b-a22b-thinking-2507",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3-235b-a22b-thinking-2507",
+    "api_pricing": {
+      "input_price_per_1m": 0.23,
+      "output_price_per_1m": 2.3
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3-coder",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3 Coder 480B A35B",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen3-Coder-480B-A35B-Instruct is a Mixture-of-Experts (MoE) code generation model developed by the Qwen team. It is optimized for agentic coding tasks such as function calling, tool use, and long-context reasoning over...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3-coder",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3-coder",
+    "api_pricing": {
+      "input_price_per_1m": 0.3,
+      "output_price_per_1m": 1.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "bytedance-ui-tars-1.5-7b",
+    "provider_id": "bytedance",
+    "provider_name": "Bytedance",
+    "name": "ByteDance: UI-TARS 7B ",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 2048,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "UI-TARS-1.5 is a multimodal vision-language agent optimized for GUI-based environments, including desktop interfaces, web browsers, mobile systems, and games. Built by ByteDance, it builds upon the UI-TARS framework with reinforcement...",
+    "official_url": "https://openrouter.ai/models/bytedance/ui-tars-1.5-7b",
+    "source_docs_url": "https://openrouter.ai/playground?model=bytedance/ui-tars-1.5-7b",
+    "api_pricing": {
+      "input_price_per_1m": 0.1,
+      "output_price_per_1m": 0.2
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-2.5-flash-lite",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemini 2.5 Flash Lite",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 65535,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemini 2.5 Flash-Lite is a lightweight reasoning model in the Gemini 2.5 family, optimized for ultra-low latency and cost efficiency. It offers improved throughput, faster token generation, and better performance...",
+    "official_url": "https://openrouter.ai/models/google/gemini-2.5-flash-lite",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-2.5-flash-lite",
+    "api_pricing": {
+      "input_price_per_1m": 0.1,
+      "output_price_per_1m": 0.4
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-2.5-flash-lite:batch",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemini 2.5 Flash Lite (batch)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 65535,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemini 2.5 Flash-Lite is a lightweight reasoning model in the Gemini 2.5 family, optimized for ultra-low latency and cost efficiency. It offers improved throughput, faster token generation, and better performance...",
+    "official_url": "https://openrouter.ai/models/google/gemini-2.5-flash-lite:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-2.5-flash-lite:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.05,
+      "output_price_per_1m": 0.2
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3-235b-a22b-2507",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3 235B A22B Instruct 2507",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen3-235B-A22B-Instruct-2507 is a multilingual, instruction-tuned mixture-of-experts language model based on the Qwen3-235B architecture, with 22B active parameters per forward pass. It is optimized for general-purpose text generation, including instruction following,...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3-235b-a22b-2507",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3-235b-a22b-2507",
+    "api_pricing": {
+      "input_price_per_1m": 0.09,
+      "output_price_per_1m": 0.55
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "moonshotai-kimi-k2",
+    "provider_id": "moonshotai",
+    "provider_name": "Moonshotai",
+    "name": "MoonshotAI: Kimi K2 0711",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 100352,
+    "modality": [
+      "text"
+    ],
+    "description": "Kimi K2 Instruct is a large-scale Mixture-of-Experts (MoE) language model developed by Moonshot AI, featuring 1 trillion total parameters with 32 billion active per forward pass. It is optimized for...",
+    "official_url": "https://openrouter.ai/models/moonshotai/kimi-k2",
+    "source_docs_url": "https://openrouter.ai/playground?model=moonshotai/kimi-k2",
+    "api_pricing": {
+      "input_price_per_1m": 0.57,
+      "output_price_per_1m": 2.3
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "cognitivecomputations-dolphin-mistral-24b-venice-edition",
+    "provider_id": "cognitivecomputations",
+    "provider_name": "Cognitivecomputations",
+    "name": "Venice: Uncensored",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 8192,
+    "modality": [
+      "text"
+    ],
+    "description": "Venice Uncensored Dolphin Mistral 24B Venice Edition is a fine-tuned variant of Mistral-Small-24B-Instruct-2501, developed by dphn.ai in collaboration with Venice.ai. This model is designed as an “uncensored” instruct-tuned LLM, preserving...",
+    "official_url": "https://openrouter.ai/models/cognitivecomputations/dolphin-mistral-24b-venice-edition",
+    "source_docs_url": "https://openrouter.ai/playground?model=cognitivecomputations/dolphin-mistral-24b-venice-edition",
+    "api_pricing": {
+      "input_price_per_1m": 0.2,
+      "output_price_per_1m": 0.9
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "tencent-hunyuan-a13b-instruct",
+    "provider_id": "tencent",
+    "provider_name": "Tencent",
+    "name": "Tencent: Hunyuan A13B Instruct",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 131072,
+    "modality": [
+      "text"
+    ],
+    "description": "Hunyuan-A13B is a 13B active parameter Mixture-of-Experts (MoE) language model developed by Tencent, with a total parameter count of 80B and support for reasoning via Chain-of-Thought. It offers competitive benchmark...",
+    "official_url": "https://openrouter.ai/models/tencent/hunyuan-a13b-instruct",
+    "source_docs_url": "https://openrouter.ai/playground?model=tencent/hunyuan-a13b-instruct",
+    "api_pricing": {
+      "input_price_per_1m": 0.14,
+      "output_price_per_1m": 0.57
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "morph-morph-v3-large",
+    "provider_id": "morph",
+    "provider_name": "Morph",
+    "name": "Morph: Morph V3 Large",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 131072,
+    "modality": [
+      "text"
+    ],
+    "description": "Morph's high-accuracy apply model for complex code edits. ~4,500 tokens/sec with 98% accuracy for precise code transformations. The model requires the prompt to be in the following format: <instruction>{instruction}</instruction> <code>{initial_code}</code>...",
+    "official_url": "https://openrouter.ai/models/morph/morph-v3-large",
+    "source_docs_url": "https://openrouter.ai/playground?model=morph/morph-v3-large",
+    "api_pricing": {
+      "input_price_per_1m": 0.9,
+      "output_price_per_1m": 1.9
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "morph-morph-v3-fast",
+    "provider_id": "morph",
+    "provider_name": "Morph",
+    "name": "Morph: Morph V3 Fast",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 81920,
+    "max_output_tokens": 38000,
+    "modality": [
+      "text"
+    ],
+    "description": "Morph's fastest apply model for code edits. ~10,500 tokens/sec with 96% accuracy for rapid code transformations. The model requires the prompt to be in the following format: <instruction>{instruction}</instruction> <code>{initial_code}</code> <update>{edit_snippet}</update>...",
+    "official_url": "https://openrouter.ai/models/morph/morph-v3-fast",
+    "source_docs_url": "https://openrouter.ai/playground?model=morph/morph-v3-fast",
+    "api_pricing": {
+      "input_price_per_1m": 0.8,
+      "output_price_per_1m": 1.2
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "baidu-ernie-4.5-vl-424b-a47b",
+    "provider_id": "baidu",
+    "provider_name": "Baidu",
+    "name": "Baidu: ERNIE 4.5 VL 424B A47B ",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 123000,
+    "max_output_tokens": 16000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "ERNIE-4.5-VL-424B-A47B is a multimodal Mixture-of-Experts (MoE) model from Baidu’s ERNIE 4.5 series, featuring 424B total parameters with 47B active per token. It is trained jointly on text and image data...",
+    "official_url": "https://openrouter.ai/models/baidu/ernie-4.5-vl-424b-a47b",
+    "source_docs_url": "https://openrouter.ai/playground?model=baidu/ernie-4.5-vl-424b-a47b",
+    "api_pricing": {
+      "input_price_per_1m": 0.42,
+      "output_price_per_1m": 1.25
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "mistralai-mistral-small-3.2-24b-instruct",
+    "provider_id": "mistralai",
+    "provider_name": "Mistralai",
+    "name": "Mistral: Mistral Small 3.2 24B",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 256000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Mistral-Small-3.2-24B-Instruct-2506 is an updated 24B parameter model from Mistral optimized for instruction following, repetition reduction, and improved function calling. Compared to the 3.1 release, version 3.2 significantly improves accuracy on...",
+    "official_url": "https://openrouter.ai/models/mistralai/mistral-small-3.2-24b-instruct",
+    "source_docs_url": "https://openrouter.ai/playground?model=mistralai/mistral-small-3.2-24b-instruct",
+    "api_pricing": {
+      "input_price_per_1m": 0.094,
+      "output_price_per_1m": 0.25
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "minimax-minimax-m1",
+    "provider_id": "minimax",
+    "provider_name": "Minimax",
+    "name": "MiniMax: MiniMax M1",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 40000,
+    "modality": [
+      "text"
+    ],
+    "description": "MiniMax-M1 is a large-scale, open-weight reasoning model designed for extended context and high-efficiency inference. It leverages a hybrid Mixture-of-Experts (MoE) architecture paired with a custom \"lightning attention\" mechanism, allowing it...",
+    "official_url": "https://openrouter.ai/models/minimax/minimax-m1",
+    "source_docs_url": "https://openrouter.ai/playground?model=minimax/minimax-m1",
+    "api_pricing": {
+      "input_price_per_1m": 0.55,
+      "output_price_per_1m": 2.2
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-2.5-flash",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemini 2.5 Flash",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 65535,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemini 2.5 Flash is Google's state-of-the-art workhorse model, specifically designed for advanced reasoning, coding, mathematics, and scientific tasks. It includes built-in \"thinking\" capabilities, enabling it to provide responses with greater...",
+    "official_url": "https://openrouter.ai/models/google/gemini-2.5-flash",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-2.5-flash",
+    "api_pricing": {
+      "input_price_per_1m": 0.3,
+      "output_price_per_1m": 2.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-2.5-flash:batch",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemini 2.5 Flash (batch)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 65535,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemini 2.5 Flash is Google's state-of-the-art workhorse model, specifically designed for advanced reasoning, coding, mathematics, and scientific tasks. It includes built-in \"thinking\" capabilities, enabling it to provide responses with greater...",
+    "official_url": "https://openrouter.ai/models/google/gemini-2.5-flash:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-2.5-flash:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.15,
+      "output_price_per_1m": 1.25
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-2.5-pro",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemini 2.5 Pro",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemini 2.5 Pro is Google’s state-of-the-art AI model designed for advanced reasoning, coding, mathematics, and scientific tasks. It employs “thinking” capabilities, enabling it to reason through responses with enhanced accuracy...",
+    "official_url": "https://openrouter.ai/models/google/gemini-2.5-pro",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-2.5-pro",
+    "api_pricing": {
+      "input_price_per_1m": 1.25,
+      "output_price_per_1m": 10.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-2.5-pro:batch",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemini 2.5 Pro (batch)",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemini 2.5 Pro is Google’s state-of-the-art AI model designed for advanced reasoning, coding, mathematics, and scientific tasks. It employs “thinking” capabilities, enabling it to reason through responses with enhanced accuracy...",
+    "official_url": "https://openrouter.ai/models/google/gemini-2.5-pro:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-2.5-pro:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.625,
+      "output_price_per_1m": 5.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-o3-pro",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: o3 Pro",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 200000,
+    "max_output_tokens": 100000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "The o-series of models are trained with reinforcement learning to think before they answer and perform complex reasoning. The o3-pro model uses more compute to think harder and provide consistently...",
+    "official_url": "https://openrouter.ai/models/openai/o3-pro",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/o3-pro",
+    "api_pricing": {
+      "input_price_per_1m": 20.0,
+      "output_price_per_1m": 80.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-o3-pro:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: o3 Pro (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 200000,
+    "max_output_tokens": 100000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "The o-series of models are trained with reinforcement learning to think before they answer and perform complex reasoning. The o3-pro model uses more compute to think harder and provide consistently...",
+    "official_url": "https://openrouter.ai/models/openai/o3-pro:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/o3-pro:batch",
+    "api_pricing": {
+      "input_price_per_1m": 10.0,
+      "output_price_per_1m": 40.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-2.5-pro-preview",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemini 2.5 Pro Preview 06-05",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemini 2.5 Pro is Google’s state-of-the-art AI model designed for advanced reasoning, coding, mathematics, and scientific tasks. It employs “thinking” capabilities, enabling it to reason through responses with enhanced accuracy...",
+    "official_url": "https://openrouter.ai/models/google/gemini-2.5-pro-preview",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-2.5-pro-preview",
+    "api_pricing": {
+      "input_price_per_1m": 1.25,
+      "output_price_per_1m": 10.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "deepseek-deepseek-r1-0528",
+    "provider_id": "deepseek",
+    "provider_name": "Deepseek",
+    "name": "DeepSeek: R1 0528",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 163840,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text"
+    ],
+    "description": "May 28th update to the [original DeepSeek R1](/deepseek/deepseek-r1) Performance on par with [OpenAI o1](/openai/o1), but open-sourced and with fully open reasoning tokens. It's 671B parameters in size, with 37B active...",
+    "official_url": "https://openrouter.ai/models/deepseek/deepseek-r1-0528",
+    "source_docs_url": "https://openrouter.ai/playground?model=deepseek/deepseek-r1-0528",
+    "api_pricing": {
+      "input_price_per_1m": 0.5,
+      "output_price_per_1m": 2.15
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-opus-4",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Anthropic: Claude Opus 4",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 200000,
+    "max_output_tokens": 32000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Claude Opus 4 is benchmarked as the world’s best coding model, at time of release, bringing sustained performance on complex, long-running tasks and agent workflows. It sets new benchmarks in...",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-opus-4",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-opus-4",
+    "api_pricing": {
+      "input_price_per_1m": 15.0,
+      "output_price_per_1m": 75.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-sonnet-4",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Anthropic: Claude Sonnet 4",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 64000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Claude Sonnet 4 significantly enhances the capabilities of its predecessor, Sonnet 3.7, excelling in both coding and reasoning tasks with improved precision and controllability. Achieving state-of-the-art performance on SWE-bench (72.7%),...",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-sonnet-4",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-sonnet-4",
+    "api_pricing": {
+      "input_price_per_1m": 3.0,
+      "output_price_per_1m": 15.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemma-3n-e4b-it",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemma 3n 4B",
+    "tier": "Small",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 32768,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "Gemma 3n E4B-it is optimized for efficient execution on mobile and low-resource devices, such as phones, laptops, and tablets. It supports multimodal inputs—including text, visual data, and audio—enabling diverse tasks...",
+    "official_url": "https://openrouter.ai/models/google/gemma-3n-e4b-it",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemma-3n-e4b-it",
+    "api_pricing": {
+      "input_price_per_1m": 0.06,
+      "output_price_per_1m": 0.12
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "mistralai-mistral-medium-3",
+    "provider_id": "mistralai",
+    "provider_name": "Mistralai",
+    "name": "Mistral: Mistral Medium 3",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Mistral Medium 3 is a high-performance enterprise-grade language model designed to deliver frontier-level capabilities at significantly reduced operational cost. It balances state-of-the-art reasoning and multimodal performance with 8× lower cost...",
+    "official_url": "https://openrouter.ai/models/mistralai/mistral-medium-3",
+    "source_docs_url": "https://openrouter.ai/playground?model=mistralai/mistral-medium-3",
+    "api_pricing": {
+      "input_price_per_1m": 0.4,
+      "output_price_per_1m": 2.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemini-2.5-pro-preview-05-06",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemini 2.5 Pro Preview 05-06",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 65535,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemini 2.5 Pro is Google’s state-of-the-art AI model designed for advanced reasoning, coding, mathematics, and scientific tasks. It employs “thinking” capabilities, enabling it to reason through responses with enhanced accuracy...",
+    "official_url": "https://openrouter.ai/models/google/gemini-2.5-pro-preview-05-06",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemini-2.5-pro-preview-05-06",
+    "api_pricing": {
+      "input_price_per_1m": 1.25,
+      "output_price_per_1m": 10.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "arcee-ai-virtuoso-large",
+    "provider_id": "arcee-ai",
+    "provider_name": "Arcee-ai",
+    "name": "Arcee AI: Virtuoso Large",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 64000,
+    "modality": [
+      "text"
+    ],
+    "description": "Virtuoso‑Large is Arcee's top‑tier general‑purpose LLM at 72 B parameters, tuned to tackle cross‑domain reasoning, creative writing and enterprise QA. Unlike many 70 B peers, it retains the 128 k...",
+    "official_url": "https://openrouter.ai/models/arcee-ai/virtuoso-large",
+    "source_docs_url": "https://openrouter.ai/playground?model=arcee-ai/virtuoso-large",
+    "api_pricing": {
+      "input_price_per_1m": 0.75,
+      "output_price_per_1m": 1.2
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "meta-llama-llama-guard-4-12b",
+    "provider_id": "meta-llama",
+    "provider_name": "Meta-llama",
+    "name": "Meta: Llama Guard 4 12B",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Llama Guard 4 is a Llama 4 Scout-derived multimodal pretrained model, fine-tuned for content safety classification. Similar to previous versions, it can be used to classify content in both LLM...",
+    "official_url": "https://openrouter.ai/models/meta-llama/llama-guard-4-12b",
+    "source_docs_url": "https://openrouter.ai/playground?model=meta-llama/llama-guard-4-12b",
+    "api_pricing": {
+      "input_price_per_1m": 0.18,
+      "output_price_per_1m": 0.18
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3-30b-a3b",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3 30B A3B",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen3, the latest generation in the Qwen large language model series, features both dense and mixture-of-experts (MoE) architectures to excel in reasoning, multilingual support, and advanced agent tasks. Its unique...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3-30b-a3b",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3-30b-a3b",
+    "api_pricing": {
+      "input_price_per_1m": 0.12,
+      "output_price_per_1m": 0.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3-8b",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3 8B",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 8192,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen3-8B is a dense 8.2B parameter causal language model from the Qwen3 series, designed for both reasoning-heavy tasks and efficient dialogue. It supports seamless switching between \"thinking\" mode for math,...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3-8b",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3-8b",
+    "api_pricing": {
+      "input_price_per_1m": 0.117,
+      "output_price_per_1m": 0.455
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3-14b",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3 14B",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen3-14B is a dense 14.8B parameter causal language model from the Qwen3 series, designed for both complex reasoning and efficient dialogue. It supports seamless switching between a \"thinking\" mode for...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3-14b",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3-14b",
+    "api_pricing": {
+      "input_price_per_1m": 0.12,
+      "output_price_per_1m": 0.24
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3-32b",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3 32B",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen3-32B is a dense 32.8B parameter causal language model from the Qwen3 series, optimized for both complex reasoning and efficient dialogue. It supports seamless switching between a \"thinking\" mode for...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3-32b",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3-32b",
+    "api_pricing": {
+      "input_price_per_1m": 0.08,
+      "output_price_per_1m": 0.28
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen3-235b-a22b",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen3 235B A22B",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 8192,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen3-235B-A22B is a 235B parameter mixture-of-experts (MoE) model developed by Qwen, activating 22B parameters per forward pass. It supports seamless switching between a \"thinking\" mode for complex reasoning, math, and...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen3-235b-a22b",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen3-235b-a22b",
+    "api_pricing": {
+      "input_price_per_1m": 0.455,
+      "output_price_per_1m": 1.82
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-o4-mini-high",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: o4 Mini High",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 200000,
+    "max_output_tokens": 100000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "OpenAI o4-mini-high is the same model as [o4-mini](/openai/o4-mini) with reasoning_effort set to high. OpenAI o4-mini is a compact reasoning model in the o-series, optimized for fast, cost-efficient performance while retaining...",
+    "official_url": "https://openrouter.ai/models/openai/o4-mini-high",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/o4-mini-high",
+    "api_pricing": {
+      "input_price_per_1m": 1.1,
+      "output_price_per_1m": 4.4
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-o4-mini-high:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: o4 Mini High (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 200000,
+    "max_output_tokens": 100000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "OpenAI o4-mini-high is the same model as [o4-mini](/openai/o4-mini) with reasoning_effort set to high. OpenAI o4-mini is a compact reasoning model in the o-series, optimized for fast, cost-efficient performance while retaining...",
+    "official_url": "https://openrouter.ai/models/openai/o4-mini-high:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/o4-mini-high:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.55,
+      "output_price_per_1m": 2.2
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-o3",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: o3",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 200000,
+    "max_output_tokens": 100000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "o3 is a well-rounded and powerful model across domains. It sets a new standard for math, science, coding, and visual reasoning tasks. It also excels at technical writing and instruction-following....",
+    "official_url": "https://openrouter.ai/models/openai/o3",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/o3",
+    "api_pricing": {
+      "input_price_per_1m": 2.0,
+      "output_price_per_1m": 8.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-o3:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: o3 (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 200000,
+    "max_output_tokens": 100000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "o3 is a well-rounded and powerful model across domains. It sets a new standard for math, science, coding, and visual reasoning tasks. It also excels at technical writing and instruction-following....",
+    "official_url": "https://openrouter.ai/models/openai/o3:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/o3:batch",
+    "api_pricing": {
+      "input_price_per_1m": 1.0,
+      "output_price_per_1m": 4.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-o4-mini",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: o4 Mini",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 200000,
+    "max_output_tokens": 100000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "OpenAI o4-mini is a compact reasoning model in the o-series, optimized for fast, cost-efficient performance while retaining strong multimodal and agentic capabilities. It supports tool use and demonstrates competitive reasoning...",
+    "official_url": "https://openrouter.ai/models/openai/o4-mini",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/o4-mini",
+    "api_pricing": {
+      "input_price_per_1m": 1.1,
+      "output_price_per_1m": 4.4
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-o4-mini:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: o4 Mini (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 200000,
+    "max_output_tokens": 100000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "OpenAI o4-mini is a compact reasoning model in the o-series, optimized for fast, cost-efficient performance while retaining strong multimodal and agentic capabilities. It supports tool use and demonstrates competitive reasoning...",
+    "official_url": "https://openrouter.ai/models/openai/o4-mini:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/o4-mini:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.55,
+      "output_price_per_1m": 2.2
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-4.1",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-4.1",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1047576,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-4.1 is a flagship large language model optimized for advanced instruction following, real-world software engineering, and long-context reasoning. It supports a 1 million token context window and outperforms GPT-4o and...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-4.1",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-4.1",
+    "api_pricing": {
+      "input_price_per_1m": 2.0,
+      "output_price_per_1m": 8.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-4.1:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-4.1 (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1047576,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-4.1 is a flagship large language model optimized for advanced instruction following, real-world software engineering, and long-context reasoning. It supports a 1 million token context window and outperforms GPT-4o and...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-4.1:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-4.1:batch",
+    "api_pricing": {
+      "input_price_per_1m": 1.0,
+      "output_price_per_1m": 4.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-4.1-mini",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-4.1 Mini",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1047576,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-4.1 Mini is a mid-sized model delivering performance competitive with GPT-4o at substantially lower latency and cost. It retains a 1 million token context window and scores 45.1% on hard...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-4.1-mini",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-4.1-mini",
+    "api_pricing": {
+      "input_price_per_1m": 0.4,
+      "output_price_per_1m": 1.6
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-4.1-mini:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-4.1 Mini (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1047576,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-4.1 Mini is a mid-sized model delivering performance competitive with GPT-4o at substantially lower latency and cost. It retains a 1 million token context window and scores 45.1% on hard...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-4.1-mini:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-4.1-mini:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.2,
+      "output_price_per_1m": 0.8
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-4.1-nano",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-4.1 Nano",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1047576,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "For tasks that demand low latency, GPT‑4.1 nano is the fastest and cheapest model in the GPT-4.1 series. It delivers exceptional performance at a small size with its 1 million...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-4.1-nano",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-4.1-nano",
+    "api_pricing": {
+      "input_price_per_1m": 0.1,
+      "output_price_per_1m": 0.4
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-4.1-nano:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-4.1 Nano (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1047576,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "For tasks that demand low latency, GPT‑4.1 nano is the fastest and cheapest model in the GPT-4.1 series. It delivers exceptional performance at a small size with its 1 million...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-4.1-nano:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-4.1-nano:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.05,
+      "output_price_per_1m": 0.2
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "meta-llama-llama-4-maverick",
+    "provider_id": "meta-llama",
+    "provider_name": "Meta-llama",
+    "name": "Meta: Llama 4 Maverick",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1048576,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Llama 4 Maverick 17B Instruct (128E) is a high-capacity multimodal language model from Meta, built on a mixture-of-experts (MoE) architecture with 128 experts and 17 billion active parameters per forward...",
+    "official_url": "https://openrouter.ai/models/meta-llama/llama-4-maverick",
+    "source_docs_url": "https://openrouter.ai/playground?model=meta-llama/llama-4-maverick",
+    "api_pricing": {
+      "input_price_per_1m": 0.2,
+      "output_price_per_1m": 0.696
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "meta-llama-llama-4-scout",
+    "provider_id": "meta-llama",
+    "provider_name": "Meta-llama",
+    "name": "Meta: Llama 4 Scout",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1310720,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Llama 4 Scout 17B Instruct (16E) is a mixture-of-experts (MoE) language model developed by Meta, activating 17 billion parameters out of a total of 109B. It supports native multimodal input...",
+    "official_url": "https://openrouter.ai/models/meta-llama/llama-4-scout",
+    "source_docs_url": "https://openrouter.ai/playground?model=meta-llama/llama-4-scout",
+    "api_pricing": {
+      "input_price_per_1m": 0.1,
+      "output_price_per_1m": 0.3
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "deepseek-deepseek-chat-v3-0324",
+    "provider_id": "deepseek",
+    "provider_name": "Deepseek",
+    "name": "DeepSeek: DeepSeek V3 0324",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 163840,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text"
+    ],
+    "description": "DeepSeek V3, a 685B-parameter, mixture-of-experts model, is the latest iteration of the flagship chat model family from the DeepSeek team. It succeeds the [DeepSeek V3](/deepseek/deepseek-chat-v3) model and performs really well...",
+    "official_url": "https://openrouter.ai/models/deepseek/deepseek-chat-v3-0324",
+    "source_docs_url": "https://openrouter.ai/playground?model=deepseek/deepseek-chat-v3-0324",
+    "api_pricing": {
+      "input_price_per_1m": 0.27,
+      "output_price_per_1m": 1.12
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-o1-pro",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: o1-pro",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 200000,
+    "max_output_tokens": 100000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "The o1 series of models are trained with reinforcement learning to think before they answer and perform complex reasoning. The o1-pro model uses more compute to think harder and provide...",
+    "official_url": "https://openrouter.ai/models/openai/o1-pro",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/o1-pro",
+    "api_pricing": {
+      "input_price_per_1m": 150.0,
+      "output_price_per_1m": 600.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-o1-pro:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: o1-pro (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 200000,
+    "max_output_tokens": 100000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "The o1 series of models are trained with reinforcement learning to think before they answer and perform complex reasoning. The o1-pro model uses more compute to think harder and provide...",
+    "official_url": "https://openrouter.ai/models/openai/o1-pro:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/o1-pro:batch",
+    "api_pricing": {
+      "input_price_per_1m": 75.0,
+      "output_price_per_1m": 300.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "mistralai-mistral-small-3.1-24b-instruct",
+    "provider_id": "mistralai",
+    "provider_name": "Mistralai",
+    "name": "Mistral: Mistral Small 3.1 24B",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 128000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Mistral Small 3.1 24B Instruct is an upgraded variant of Mistral Small 3 (2501), featuring 24 billion parameters with advanced multimodal capabilities. It provides state-of-the-art performance in text-based reasoning and...",
+    "official_url": "https://openrouter.ai/models/mistralai/mistral-small-3.1-24b-instruct",
+    "source_docs_url": "https://openrouter.ai/playground?model=mistralai/mistral-small-3.1-24b-instruct",
+    "api_pricing": {
+      "input_price_per_1m": 0.351,
+      "output_price_per_1m": 0.555
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemma-3-4b-it",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemma 3 4B",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to 128k tokens, understands over 140 languages, and offers improved math, reasoning, and chat capabilities,...",
+    "official_url": "https://openrouter.ai/models/google/gemma-3-4b-it",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemma-3-4b-it",
+    "api_pricing": {
+      "input_price_per_1m": 0.05,
+      "output_price_per_1m": 0.1
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemma-3-12b-it",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemma 3 12B",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to 128k tokens, understands over 140 languages, and offers improved math, reasoning, and chat capabilities,...",
+    "official_url": "https://openrouter.ai/models/google/gemma-3-12b-it",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemma-3-12b-it",
+    "api_pricing": {
+      "input_price_per_1m": 0.05,
+      "output_price_per_1m": 0.15
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "rekaai-reka-flash-3",
+    "provider_id": "rekaai",
+    "provider_name": "Rekaai",
+    "name": "Reka Flash 3",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 65536,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text"
+    ],
+    "description": "Reka Flash 3 is a general-purpose, instruction-tuned large language model with 21 billion parameters, developed by Reka. It excels at general chat, coding tasks, instruction-following, and function calling. Featuring a...",
+    "official_url": "https://openrouter.ai/models/rekaai/reka-flash-3",
+    "source_docs_url": "https://openrouter.ai/playground?model=rekaai/reka-flash-3",
+    "api_pricing": {
+      "input_price_per_1m": 0.1,
+      "output_price_per_1m": 0.2
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemma-3-27b-it",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemma 3 27B",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 262144,
+    "max_output_tokens": 131072,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to 128k tokens, understands over 140 languages, and offers improved math, reasoning, and chat capabilities,...",
+    "official_url": "https://openrouter.ai/models/google/gemma-3-27b-it",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemma-3-27b-it",
+    "api_pricing": {
+      "input_price_per_1m": 0.08,
+      "output_price_per_1m": 0.45
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "thedrummer-skyfall-36b-v2",
+    "provider_id": "thedrummer",
+    "provider_name": "Thedrummer",
+    "name": "TheDrummer: Skyfall 36B V2",
+    "tier": "Small",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 32768,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text"
+    ],
+    "description": "Skyfall 36B v2 is an enhanced iteration of Mistral Small 2501, specifically fine-tuned for improved creativity, nuanced writing, role-playing, and coherent storytelling.",
+    "official_url": "https://openrouter.ai/models/thedrummer/skyfall-36b-v2",
+    "source_docs_url": "https://openrouter.ai/playground?model=thedrummer/skyfall-36b-v2",
+    "api_pricing": {
+      "input_price_per_1m": 0.55,
+      "output_price_per_1m": 0.8
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "mistralai-mistral-saba",
+    "provider_id": "mistralai",
+    "provider_name": "Mistralai",
+    "name": "Mistral: Saba",
+    "tier": "Small",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 32768,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "Mistral Saba is a 24B-parameter language model specifically designed for the Middle East and South Asia, delivering accurate and contextually relevant responses while maintaining efficient performance. Trained on curated regional...",
+    "official_url": "https://openrouter.ai/models/mistralai/mistral-saba",
+    "source_docs_url": "https://openrouter.ai/playground?model=mistralai/mistral-saba",
+    "api_pricing": {
+      "input_price_per_1m": 0.2,
+      "output_price_per_1m": 0.6
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-o3-mini-high",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: o3 Mini High",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 200000,
+    "max_output_tokens": 100000,
+    "modality": [
+      "text"
+    ],
+    "description": "OpenAI o3-mini-high is the same model as [o3-mini](/openai/o3-mini) with reasoning_effort set to high. o3-mini is a cost-efficient language model optimized for STEM reasoning tasks, particularly excelling in science, mathematics, and...",
+    "official_url": "https://openrouter.ai/models/openai/o3-mini-high",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/o3-mini-high",
+    "api_pricing": {
+      "input_price_per_1m": 1.1,
+      "output_price_per_1m": 4.4
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-o3-mini-high:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: o3 Mini High (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 200000,
+    "max_output_tokens": 100000,
+    "modality": [
+      "text"
+    ],
+    "description": "OpenAI o3-mini-high is the same model as [o3-mini](/openai/o3-mini) with reasoning_effort set to high. o3-mini is a cost-efficient language model optimized for STEM reasoning tasks, particularly excelling in science, mathematics, and...",
+    "official_url": "https://openrouter.ai/models/openai/o3-mini-high:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/o3-mini-high:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.55,
+      "output_price_per_1m": 2.2
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "aion-labs-aion-rp-llama-3.1-8b",
+    "provider_id": "aion-labs",
+    "provider_name": "Aion-labs",
+    "name": "AionLabs: Aion-RP 1.0 (8B)",
+    "tier": "Small",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 32768,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text"
+    ],
+    "description": "Aion-RP-Llama-3.1-8B ranks the highest in the character evaluation portion of the RPBench-Auto benchmark, a roleplaying-specific variant of Arena-Hard-Auto, where LLMs evaluate each other’s responses. It is a fine-tuned base model...",
+    "official_url": "https://openrouter.ai/models/aion-labs/aion-rp-llama-3.1-8b",
+    "source_docs_url": "https://openrouter.ai/playground?model=aion-labs/aion-rp-llama-3.1-8b",
+    "api_pricing": {
+      "input_price_per_1m": 0.8,
+      "output_price_per_1m": 1.6
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen2.5-vl-72b-instruct",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen2.5 VL 72B Instruct",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Qwen2.5-VL is proficient in recognizing common objects such as flowers, birds, fish, and insects. It is also highly capable of analyzing texts, charts, icons, graphics, and layouts within images.",
+    "official_url": "https://openrouter.ai/models/qwen/qwen2.5-vl-72b-instruct",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen2.5-vl-72b-instruct",
+    "api_pricing": {
+      "input_price_per_1m": 0.25,
+      "output_price_per_1m": 0.75
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen-plus",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen-Plus",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000000,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen-Plus, based on the Qwen2.5 foundation model, is a 131K context model with a balanced performance, speed, and cost combination.",
+    "official_url": "https://openrouter.ai/models/qwen/qwen-plus",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen-plus",
+    "api_pricing": {
+      "input_price_per_1m": 0.26,
+      "output_price_per_1m": 0.78
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-o3-mini",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: o3 Mini",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 200000,
+    "max_output_tokens": 100000,
+    "modality": [
+      "text"
+    ],
+    "description": "OpenAI o3-mini is a cost-efficient language model optimized for STEM reasoning tasks, particularly excelling in science, mathematics, and coding. This model supports the `reasoning_effort` parameter, which can be set to...",
+    "official_url": "https://openrouter.ai/models/openai/o3-mini",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/o3-mini",
+    "api_pricing": {
+      "input_price_per_1m": 1.1,
+      "output_price_per_1m": 4.4
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-o3-mini:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: o3 Mini (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 200000,
+    "max_output_tokens": 100000,
+    "modality": [
+      "text"
+    ],
+    "description": "OpenAI o3-mini is a cost-efficient language model optimized for STEM reasoning tasks, particularly excelling in science, mathematics, and coding. This model supports the `reasoning_effort` parameter, which can be set to...",
+    "official_url": "https://openrouter.ai/models/openai/o3-mini:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/o3-mini:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.55,
+      "output_price_per_1m": 2.2
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "mistralai-mistral-small-24b-instruct-2501",
+    "provider_id": "mistralai",
+    "provider_name": "Mistralai",
+    "name": "Mistral: Mistral Small 3",
+    "tier": "Small",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 32768,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "Mistral Small 3 is a 24B-parameter language model optimized for low-latency performance across common AI tasks. Released under the Apache 2.0 license, it features both pre-trained and instruction-tuned versions designed...",
+    "official_url": "https://openrouter.ai/models/mistralai/mistral-small-24b-instruct-2501",
+    "source_docs_url": "https://openrouter.ai/playground?model=mistralai/mistral-small-24b-instruct-2501",
+    "api_pricing": {
+      "input_price_per_1m": 0.05,
+      "output_price_per_1m": 0.08
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "deepseek-deepseek-r1-distill-llama-70b",
+    "provider_id": "deepseek",
+    "provider_name": "Deepseek",
+    "name": "DeepSeek: R1 Distill Llama 70B",
+    "tier": "Small",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 8192,
+    "max_output_tokens": 8192,
+    "modality": [
+      "text"
+    ],
+    "description": "DeepSeek R1 Distill Llama 70B is a distilled large language model based on [Llama-3.3-70B-Instruct](/meta-llama/llama-3.3-70b-instruct), using outputs from [DeepSeek R1](/deepseek/deepseek-r1). The model combines advanced distillation techniques to achieve high performance across...",
+    "official_url": "https://openrouter.ai/models/deepseek/deepseek-r1-distill-llama-70b",
+    "source_docs_url": "https://openrouter.ai/playground?model=deepseek/deepseek-r1-distill-llama-70b",
+    "api_pricing": {
+      "input_price_per_1m": 0.8,
+      "output_price_per_1m": 0.8
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "deepseek-deepseek-r1",
+    "provider_id": "deepseek",
+    "provider_name": "Deepseek",
+    "name": "DeepSeek: R1",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 163840,
+    "max_output_tokens": 16000,
+    "modality": [
+      "text"
+    ],
+    "description": "DeepSeek R1 is here: Performance on par with [OpenAI o1](/openai/o1), but open-sourced and with fully open reasoning tokens. It's 671B parameters in size, with 37B active in an inference pass....",
+    "official_url": "https://openrouter.ai/models/deepseek/deepseek-r1",
+    "source_docs_url": "https://openrouter.ai/playground?model=deepseek/deepseek-r1",
+    "api_pricing": {
+      "input_price_per_1m": 0.7,
+      "output_price_per_1m": 2.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "minimax-minimax-01",
+    "provider_id": "minimax",
+    "provider_name": "Minimax",
+    "name": "MiniMax: MiniMax-01",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1000192,
+    "max_output_tokens": 1000192,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "MiniMax-01 is a combines MiniMax-Text-01 for text generation and MiniMax-VL-01 for image understanding. It has 456 billion parameters, with 45.9 billion parameters activated per inference, and can handle a context...",
+    "official_url": "https://openrouter.ai/models/minimax/minimax-01",
+    "source_docs_url": "https://openrouter.ai/playground?model=minimax/minimax-01",
+    "api_pricing": {
+      "input_price_per_1m": 0.2,
+      "output_price_per_1m": 1.1
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "microsoft-phi-4",
+    "provider_id": "microsoft",
+    "provider_name": "Microsoft",
+    "name": "Microsoft: Phi 4",
+    "tier": "Small",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 16384,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "[Microsoft Research](/microsoft) Phi-4 is designed to perform well in complex reasoning tasks and can operate efficiently in situations with limited memory or where quick responses are needed. At 14 billion...",
+    "official_url": "https://openrouter.ai/models/microsoft/phi-4",
+    "source_docs_url": "https://openrouter.ai/playground?model=microsoft/phi-4",
+    "api_pricing": {
+      "input_price_per_1m": 0.07,
+      "output_price_per_1m": 0.14
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "deepseek-deepseek-chat",
+    "provider_id": "deepseek",
+    "provider_name": "Deepseek",
+    "name": "DeepSeek: DeepSeek V3",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 163840,
+    "max_output_tokens": 16000,
+    "modality": [
+      "text"
+    ],
+    "description": "DeepSeek-V3 is the latest model from the DeepSeek team, building upon the instruction following and coding abilities of the previous versions. Pre-trained on nearly 15 trillion tokens, the reported evaluations...",
+    "official_url": "https://openrouter.ai/models/deepseek/deepseek-chat",
+    "source_docs_url": "https://openrouter.ai/playground?model=deepseek/deepseek-chat",
+    "api_pricing": {
+      "input_price_per_1m": 0.257,
+      "output_price_per_1m": 1.029
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "sao10k-l3.3-euryale-70b",
+    "provider_id": "sao10k",
+    "provider_name": "Sao10k",
+    "name": "Sao10K: Llama 3.3 Euryale 70B",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "Euryale L3.3 70B is a model focused on creative roleplay from [Sao10k](https://ko-fi.com/sao10k). It is the successor of [Euryale L3 70B v2.2](/models/sao10k/l3-euryale-70b).",
+    "official_url": "https://openrouter.ai/models/sao10k/l3.3-euryale-70b",
+    "source_docs_url": "https://openrouter.ai/playground?model=sao10k/l3.3-euryale-70b",
+    "api_pricing": {
+      "input_price_per_1m": 0.65,
+      "output_price_per_1m": 0.75
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-o1",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: o1",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 200000,
+    "max_output_tokens": 100000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "The latest and strongest model family from OpenAI, o1 is designed to spend more time thinking before responding. The o1 model series is trained with large-scale reinforcement learning to reason...",
+    "official_url": "https://openrouter.ai/models/openai/o1",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/o1",
+    "api_pricing": {
+      "input_price_per_1m": 15.0,
+      "output_price_per_1m": 60.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-o1:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: o1 (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 200000,
+    "max_output_tokens": 100000,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "The latest and strongest model family from OpenAI, o1 is designed to spend more time thinking before responding. The o1 model series is trained with large-scale reinforcement learning to reason...",
+    "official_url": "https://openrouter.ai/models/openai/o1:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/o1:batch",
+    "api_pricing": {
+      "input_price_per_1m": 7.5,
+      "output_price_per_1m": 30.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "cohere-command-r7b-12-2024",
+    "provider_id": "cohere",
+    "provider_name": "Cohere",
+    "name": "Cohere: Command R7B (12-2024)",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 4000,
+    "modality": [
+      "text"
+    ],
+    "description": "Command R7B (12-2024) is a small, fast update of the Command R+ model, delivered in December 2024. It excels at RAG, tool use, agents, and similar tasks requiring complex reasoning...",
+    "official_url": "https://openrouter.ai/models/cohere/command-r7b-12-2024",
+    "source_docs_url": "https://openrouter.ai/playground?model=cohere/command-r7b-12-2024",
+    "api_pricing": {
+      "input_price_per_1m": 0.037,
+      "output_price_per_1m": 0.15
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "meta-llama-llama-3.3-70b-instruct",
+    "provider_id": "meta-llama",
+    "provider_name": "Meta-llama",
+    "name": "Meta: Llama 3.3 70B Instruct",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "The Meta Llama 3.3 multilingual large language model (LLM) is a pretrained and instruction tuned generative model in 70B (text in/text out). The Llama 3.3 instruction tuned text only model...",
+    "official_url": "https://openrouter.ai/models/meta-llama/llama-3.3-70b-instruct",
+    "source_docs_url": "https://openrouter.ai/playground?model=meta-llama/llama-3.3-70b-instruct",
+    "api_pricing": {
+      "input_price_per_1m": 0.1,
+      "output_price_per_1m": 0.32
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "amazon-nova-lite-v1",
+    "provider_id": "amazon",
+    "provider_name": "Amazon",
+    "name": "Amazon: Nova Lite 1.0",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 300000,
+    "max_output_tokens": 5120,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Amazon Nova Lite 1.0 is a very low-cost multimodal model from Amazon that focused on fast processing of image, video, and text inputs to generate text output. Amazon Nova Lite...",
+    "official_url": "https://openrouter.ai/models/amazon/nova-lite-v1",
+    "source_docs_url": "https://openrouter.ai/playground?model=amazon/nova-lite-v1",
+    "api_pricing": {
+      "input_price_per_1m": 0.06,
+      "output_price_per_1m": 0.24
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "amazon-nova-micro-v1",
+    "provider_id": "amazon",
+    "provider_name": "Amazon",
+    "name": "Amazon: Nova Micro 1.0",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 5120,
+    "modality": [
+      "text"
+    ],
+    "description": "Amazon Nova Micro 1.0 is a text-only model that delivers the lowest latency responses in the Amazon Nova family of models at a very low cost. With a context length...",
+    "official_url": "https://openrouter.ai/models/amazon/nova-micro-v1",
+    "source_docs_url": "https://openrouter.ai/playground?model=amazon/nova-micro-v1",
+    "api_pricing": {
+      "input_price_per_1m": 0.035,
+      "output_price_per_1m": 0.14
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "amazon-nova-pro-v1",
+    "provider_id": "amazon",
+    "provider_name": "Amazon",
+    "name": "Amazon: Nova Pro 1.0",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 300000,
+    "max_output_tokens": 5120,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Amazon Nova Pro 1.0 is a capable multimodal model from Amazon focused on providing a combination of accuracy, speed, and cost for a wide range of tasks. As of December...",
+    "official_url": "https://openrouter.ai/models/amazon/nova-pro-v1",
+    "source_docs_url": "https://openrouter.ai/playground?model=amazon/nova-pro-v1",
+    "api_pricing": {
+      "input_price_per_1m": 0.8,
+      "output_price_per_1m": 3.2
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-4o-2024-11-20",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-4o (2024-11-20)",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "The 2024-11-20 version of GPT-4o offers a leveled-up creative writing ability with more natural, engaging, and tailored writing to improve relevance & readability. It’s also better at working with uploaded...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-4o-2024-11-20",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-4o-2024-11-20",
+    "api_pricing": {
+      "input_price_per_1m": 2.5,
+      "output_price_per_1m": 10.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "mistralai-mistral-large-2407",
+    "provider_id": "mistralai",
+    "provider_name": "Mistralai",
+    "name": "Mistral Large 2407",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "This is Mistral AI's flagship model, Mistral Large 2 (version mistral-large-2407). It's a proprietary weights-available model and excels at reasoning, code, JSON, chat, and more. Read the launch announcement [here](https://mistral.ai/news/mistral-large-2407/)....",
+    "official_url": "https://openrouter.ai/models/mistralai/mistral-large-2407",
+    "source_docs_url": "https://openrouter.ai/playground?model=mistralai/mistral-large-2407",
+    "api_pricing": {
+      "input_price_per_1m": 2.0,
+      "output_price_per_1m": 6.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen-2.5-coder-32b-instruct",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen2.5 Coder 32B Instruct",
+    "tier": "Small",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 32768,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen2.5-Coder is the latest series of Code-Specific Qwen large language models (formerly known as CodeQwen). Qwen2.5-Coder brings the following improvements upon CodeQwen1.5: - Significantly improvements in **code generation**, **code reasoning**...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen-2.5-coder-32b-instruct",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen-2.5-coder-32b-instruct",
+    "api_pricing": {
+      "input_price_per_1m": 0.66,
+      "output_price_per_1m": 1.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "thedrummer-unslopnemo-12b",
+    "provider_id": "thedrummer",
+    "provider_name": "Thedrummer",
+    "name": "TheDrummer: UnslopNemo 12B",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 1024000,
+    "max_output_tokens": 1024000,
+    "modality": [
+      "text"
+    ],
+    "description": "UnslopNemo v4.1 is the latest addition from the creator of Rocinante, designed for adventure writing and role-play scenarios.",
+    "official_url": "https://openrouter.ai/models/thedrummer/unslopnemo-12b",
+    "source_docs_url": "https://openrouter.ai/playground?model=thedrummer/unslopnemo-12b",
+    "api_pricing": {
+      "input_price_per_1m": 0.4,
+      "output_price_per_1m": 0.4
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthracite-org-magnum-v4-72b",
+    "provider_id": "anthracite-org",
+    "provider_name": "Anthracite-org",
+    "name": "Magnum v4 72B",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 16384,
+    "max_output_tokens": 2048,
+    "modality": [
+      "text"
+    ],
+    "description": "This is a series of models designed to replicate the prose quality of the Claude 3 models, specifically Sonnet(https://openrouter.ai/anthropic/claude-3.5-sonnet) and Opus(https://openrouter.ai/anthropic/claude-3-opus).\n\nThe model is fine-tuned on top of [Qwen2.5 72B](https://openrouter.ai/qwen/qwen-2.5-72b-instruct).",
+    "official_url": "https://openrouter.ai/models/anthracite-org/magnum-v4-72b",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthracite-org/magnum-v4-72b",
+    "api_pricing": {
+      "input_price_per_1m": 3.0,
+      "output_price_per_1m": 5.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen-2.5-7b-instruct",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen: Qwen2.5 7B Instruct",
+    "tier": "Small",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 32768,
+    "max_output_tokens": 32768,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen2.5 7B is the latest series of Qwen large language models. Qwen2.5 brings the following improvements upon Qwen2: - Significantly more knowledge and has greatly improved capabilities in coding and...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen-2.5-7b-instruct",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen-2.5-7b-instruct",
+    "api_pricing": {
+      "input_price_per_1m": 0.1,
+      "output_price_per_1m": 0.2
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "thedrummer-rocinante-12b",
+    "provider_id": "thedrummer",
+    "provider_name": "Thedrummer",
+    "name": "TheDrummer: Rocinante 12B",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 65536,
+    "max_output_tokens": 65536,
+    "modality": [
+      "text"
+    ],
+    "description": "Rocinante 12B is designed for engaging storytelling and rich prose. Early testers have reported: - Expanded vocabulary with unique and expressive word choices - Enhanced creativity for vivid narratives -...",
+    "official_url": "https://openrouter.ai/models/thedrummer/rocinante-12b",
+    "source_docs_url": "https://openrouter.ai/playground?model=thedrummer/rocinante-12b",
+    "api_pricing": {
+      "input_price_per_1m": 0.25,
+      "output_price_per_1m": 0.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "meta-llama-llama-3.2-1b-instruct",
+    "provider_id": "meta-llama",
+    "provider_name": "Meta-llama",
+    "name": "Meta: Llama 3.2 1B Instruct",
+    "tier": "Small",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 60000,
+    "max_output_tokens": 60000,
+    "modality": [
+      "text"
+    ],
+    "description": "Llama 3.2 1B is a 1-billion-parameter language model focused on efficiently performing natural language tasks, such as summarization, dialogue, and multilingual text analysis. Its smaller size allows it to operate...",
+    "official_url": "https://openrouter.ai/models/meta-llama/llama-3.2-1b-instruct",
+    "source_docs_url": "https://openrouter.ai/playground?model=meta-llama/llama-3.2-1b-instruct",
+    "api_pricing": {
+      "input_price_per_1m": 0.027,
+      "output_price_per_1m": 0.201
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "meta-llama-llama-3.2-3b-instruct",
+    "provider_id": "meta-llama",
+    "provider_name": "Meta-llama",
+    "name": "Meta: Llama 3.2 3B Instruct",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 131072,
+    "modality": [
+      "text"
+    ],
+    "description": "Llama 3.2 3B is a 3-billion-parameter multilingual large language model, optimized for advanced natural language processing tasks like dialogue generation, reasoning, and summarization. Designed with the latest transformer architecture, it...",
+    "official_url": "https://openrouter.ai/models/meta-llama/llama-3.2-3b-instruct",
+    "source_docs_url": "https://openrouter.ai/playground?model=meta-llama/llama-3.2-3b-instruct",
+    "api_pricing": {
+      "input_price_per_1m": 0.05,
+      "output_price_per_1m": 0.33
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "qwen-qwen-2.5-72b-instruct",
+    "provider_id": "qwen",
+    "provider_name": "Qwen",
+    "name": "Qwen2.5 72B Instruct",
+    "tier": "Small",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 32768,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "Qwen2.5 72B is the latest series of Qwen large language models. Qwen2.5 brings the following improvements upon Qwen2: - Significantly more knowledge and has greatly improved capabilities in coding and...",
+    "official_url": "https://openrouter.ai/models/qwen/qwen-2.5-72b-instruct",
+    "source_docs_url": "https://openrouter.ai/playground?model=qwen/qwen-2.5-72b-instruct",
+    "api_pricing": {
+      "input_price_per_1m": 0.36,
+      "output_price_per_1m": 0.4
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "cohere-command-r-08-2024",
+    "provider_id": "cohere",
+    "provider_name": "Cohere",
+    "name": "Cohere: Command R (08-2024)",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 4000,
+    "modality": [
+      "text"
+    ],
+    "description": "command-r-08-2024 is an update of the [Command R](/models/cohere/command-r) with improved performance for multilingual retrieval-augmented generation (RAG) and tool use. More broadly, it is better at math, code and reasoning and...",
+    "official_url": "https://openrouter.ai/models/cohere/command-r-08-2024",
+    "source_docs_url": "https://openrouter.ai/playground?model=cohere/command-r-08-2024",
+    "api_pricing": {
+      "input_price_per_1m": 0.15,
+      "output_price_per_1m": 0.6
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "cohere-command-r-plus-08-2024",
+    "provider_id": "cohere",
+    "provider_name": "Cohere",
+    "name": "Cohere: Command R+ (08-2024)",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 4000,
+    "modality": [
+      "text"
+    ],
+    "description": "command-r-plus-08-2024 is an update of the [Command R+](/models/cohere/command-r-plus) with roughly 50% higher throughput and 25% lower latencies as compared to the previous Command R+ version, while keeping the hardware footprint...",
+    "official_url": "https://openrouter.ai/models/cohere/command-r-plus-08-2024",
+    "source_docs_url": "https://openrouter.ai/playground?model=cohere/command-r-plus-08-2024",
+    "api_pricing": {
+      "input_price_per_1m": 2.5,
+      "output_price_per_1m": 10.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "sao10k-l3.1-euryale-70b",
+    "provider_id": "sao10k",
+    "provider_name": "Sao10k",
+    "name": "Sao10K: Llama 3.1 Euryale 70B v2.2",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "Euryale L3.1 70B v2.2 is a model focused on creative roleplay from [Sao10k](https://ko-fi.com/sao10k). It is the successor of [Euryale L3 70B v2.1](/models/sao10k/l3-euryale-70b).",
+    "official_url": "https://openrouter.ai/models/sao10k/l3.1-euryale-70b",
+    "source_docs_url": "https://openrouter.ai/playground?model=sao10k/l3.1-euryale-70b",
+    "api_pricing": {
+      "input_price_per_1m": 0.85,
+      "output_price_per_1m": 0.85
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "nousresearch-hermes-3-llama-3.1-70b",
+    "provider_id": "nousresearch",
+    "provider_name": "Nousresearch",
+    "name": "Nous: Hermes 3 70B Instruct",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "Hermes 3 is a generalist language model with many improvements over [Hermes 2](/models/nousresearch/nous-hermes-2-mistral-7b-dpo), including advanced agentic capabilities, much better roleplaying, reasoning, multi-turn conversation, long context coherence, and improvements across the...",
+    "official_url": "https://openrouter.ai/models/nousresearch/hermes-3-llama-3.1-70b",
+    "source_docs_url": "https://openrouter.ai/playground?model=nousresearch/hermes-3-llama-3.1-70b",
+    "api_pricing": {
+      "input_price_per_1m": 0.7,
+      "output_price_per_1m": 0.7
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "nousresearch-hermes-3-llama-3.1-405b",
+    "provider_id": "nousresearch",
+    "provider_name": "Nousresearch",
+    "name": "Nous: Hermes 3 405B Instruct",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "Hermes 3 is a generalist language model with many improvements over Hermes 2, including advanced agentic capabilities, much better roleplaying, reasoning, multi-turn conversation, long context coherence, and improvements across the...",
+    "official_url": "https://openrouter.ai/models/nousresearch/hermes-3-llama-3.1-405b",
+    "source_docs_url": "https://openrouter.ai/playground?model=nousresearch/hermes-3-llama-3.1-405b",
+    "api_pricing": {
+      "input_price_per_1m": 1.0,
+      "output_price_per_1m": 1.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "sao10k-l3-lunaris-8b",
+    "provider_id": "sao10k",
+    "provider_name": "Sao10k",
+    "name": "Sao10K: Llama 3 8B Lunaris",
+    "tier": "Micro",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 8192,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "Lunaris 8B is a versatile generalist and roleplaying model based on Llama 3. It's a strategic merge of multiple models, designed to balance creativity with improved logic and general knowledge....",
+    "official_url": "https://openrouter.ai/models/sao10k/l3-lunaris-8b",
+    "source_docs_url": "https://openrouter.ai/playground?model=sao10k/l3-lunaris-8b",
+    "api_pricing": {
+      "input_price_per_1m": 0.04,
+      "output_price_per_1m": 0.05
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-4o-2024-08-06",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-4o (2024-08-06)",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "The 2024-08-06 version of GPT-4o offers improved performance in structured outputs, with the ability to supply a JSON schema in the respone_format. Read more [here](https://openai.com/index/introducing-structured-outputs-in-the-api/). GPT-4o (\"o\" for \"omni\") is...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-4o-2024-08-06",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-4o-2024-08-06",
+    "api_pricing": {
+      "input_price_per_1m": 2.5,
+      "output_price_per_1m": 10.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "meta-llama-llama-3.1-70b-instruct",
+    "provider_id": "meta-llama",
+    "provider_name": "Meta-llama",
+    "name": "Meta: Llama 3.1 70B Instruct",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "Meta's latest class of model (Llama 3.1) launched with a variety of sizes & flavors. This 70B instruct-tuned version is optimized for high quality dialogue usecases. It has demonstrated strong...",
+    "official_url": "https://openrouter.ai/models/meta-llama/llama-3.1-70b-instruct",
+    "source_docs_url": "https://openrouter.ai/playground?model=meta-llama/llama-3.1-70b-instruct",
+    "api_pricing": {
+      "input_price_per_1m": 0.4,
+      "output_price_per_1m": 0.4
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "meta-llama-llama-3.1-8b-instruct",
+    "provider_id": "meta-llama",
+    "provider_name": "Meta-llama",
+    "name": "Meta: Llama 3.1 8B Instruct",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 131072,
+    "modality": [
+      "text"
+    ],
+    "description": "Meta's latest class of model (Llama 3.1) launched with a variety of sizes & flavors. This 8B instruct-tuned version is fast and efficient. It has demonstrated strong performance compared to...",
+    "official_url": "https://openrouter.ai/models/meta-llama/llama-3.1-8b-instruct",
+    "source_docs_url": "https://openrouter.ai/playground?model=meta-llama/llama-3.1-8b-instruct",
+    "api_pricing": {
+      "input_price_per_1m": 0.05,
+      "output_price_per_1m": 0.08
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "mistralai-mistral-nemo",
+    "provider_id": "mistralai",
+    "provider_name": "Mistralai",
+    "name": "Mistral: Mistral Nemo",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 131072,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "A 12B parameter model with a 128k token context length built by Mistral in collaboration with NVIDIA. The model is multilingual, supporting English, French, German, Spanish, Italian, Portuguese, Chinese, Japanese,...",
+    "official_url": "https://openrouter.ai/models/mistralai/mistral-nemo",
+    "source_docs_url": "https://openrouter.ai/playground?model=mistralai/mistral-nemo",
+    "api_pricing": {
+      "input_price_per_1m": 0.019,
+      "output_price_per_1m": 0.03
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-4o-mini",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-4o-mini",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-4o mini is OpenAI's newest model after [GPT-4 Omni](/models/openai/gpt-4o), supporting both text and image inputs with text outputs. As their most advanced small model, it is many multiples more affordable...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-4o-mini",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-4o-mini",
+    "api_pricing": {
+      "input_price_per_1m": 0.15,
+      "output_price_per_1m": 0.6
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-4o-mini-2024-07-18",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-4o-mini (2024-07-18)",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-4o mini is OpenAI's newest model after [GPT-4 Omni](/models/openai/gpt-4o), supporting both text and image inputs with text outputs. As their most advanced small model, it is many multiples more affordable...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-4o-mini-2024-07-18",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-4o-mini-2024-07-18",
+    "api_pricing": {
+      "input_price_per_1m": 0.15,
+      "output_price_per_1m": 0.6
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-4o-mini:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-4o-mini (batch)",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-4o mini is OpenAI's newest model after [GPT-4 Omni](/models/openai/gpt-4o), supporting both text and image inputs with text outputs. As their most advanced small model, it is many multiples more affordable...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-4o-mini:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-4o-mini:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.075,
+      "output_price_per_1m": 0.3
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "google-gemma-2-27b-it",
+    "provider_id": "google",
+    "provider_name": "Google",
+    "name": "Google: Gemma 2 27B",
+    "tier": "Small",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 8192,
+    "max_output_tokens": 2048,
+    "modality": [
+      "text"
+    ],
+    "description": "Gemma 2 27B by Google is an open model built from the same research and technology used to create the [Gemini models](/models?q=gemini). Gemma models are well-suited for a variety of...",
+    "official_url": "https://openrouter.ai/models/google/gemma-2-27b-it",
+    "source_docs_url": "https://openrouter.ai/playground?model=google/gemma-2-27b-it",
+    "api_pricing": {
+      "input_price_per_1m": 0.65,
+      "output_price_per_1m": 0.65
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-4o",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-4o",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-4o (\"o\" for \"omni\") is OpenAI's latest AI model, supporting both text and image inputs with text outputs. It maintains the intelligence level of [GPT-4 Turbo](/models/openai/gpt-4-turbo) while being twice as...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-4o",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-4o",
+    "api_pricing": {
+      "input_price_per_1m": 2.5,
+      "output_price_per_1m": 10.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-4o-2024-05-13",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-4o (2024-05-13)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 4096,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-4o (\"o\" for \"omni\") is OpenAI's latest AI model, supporting both text and image inputs with text outputs. It maintains the intelligence level of [GPT-4 Turbo](/models/openai/gpt-4-turbo) while being twice as...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-4o-2024-05-13",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-4o-2024-05-13",
+    "api_pricing": {
+      "input_price_per_1m": 5.0,
+      "output_price_per_1m": 15.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-4o:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-4o (batch)",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "GPT-4o (\"o\" for \"omni\") is OpenAI's latest AI model, supporting both text and image inputs with text outputs. It maintains the intelligence level of [GPT-4 Turbo](/models/openai/gpt-4-turbo) while being twice as...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-4o:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-4o:batch",
+    "api_pricing": {
+      "input_price_per_1m": 1.25,
+      "output_price_per_1m": 5.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "mistralai-mixtral-8x22b-instruct",
+    "provider_id": "mistralai",
+    "provider_name": "Mistralai",
+    "name": "Mistral: Mixtral 8x22B Instruct",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 65536,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "Mistral's official instruct fine-tuned version of [Mixtral 8x22B](/models/mistralai/mixtral-8x22b). It uses 39B active parameters out of 141B, offering unparalleled cost efficiency for its size. Its strengths include: - strong math, coding,...",
+    "official_url": "https://openrouter.ai/models/mistralai/mixtral-8x22b-instruct",
+    "source_docs_url": "https://openrouter.ai/playground?model=mistralai/mixtral-8x22b-instruct",
+    "api_pricing": {
+      "input_price_per_1m": 2.0,
+      "output_price_per_1m": 6.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "microsoft-wizardlm-2-8x22b",
+    "provider_id": "microsoft",
+    "provider_name": "Microsoft",
+    "name": "WizardLM-2 8x22B",
+    "tier": "Mid",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 65535,
+    "max_output_tokens": 8000,
+    "modality": [
+      "text"
+    ],
+    "description": "WizardLM-2 8x22B is Microsoft AI's most advanced Wizard model. It demonstrates highly competitive performance compared to leading proprietary models, and it consistently outperforms all existing state-of-the-art opensource models. It is...",
+    "official_url": "https://openrouter.ai/models/microsoft/wizardlm-2-8x22b",
+    "source_docs_url": "https://openrouter.ai/playground?model=microsoft/wizardlm-2-8x22b",
+    "api_pricing": {
+      "input_price_per_1m": 0.62,
+      "output_price_per_1m": 0.62
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-4-turbo",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-4 Turbo",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 4096,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "The latest GPT-4 Turbo model with vision capabilities. Vision requests can now use JSON mode and function calling.\n\nTraining data: up to December 2023.",
+    "official_url": "https://openrouter.ai/models/openai/gpt-4-turbo",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-4-turbo",
+    "api_pricing": {
+      "input_price_per_1m": 10.0,
+      "output_price_per_1m": 30.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-4-turbo:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-4 Turbo (batch)",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 4096,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "The latest GPT-4 Turbo model with vision capabilities. Vision requests can now use JSON mode and function calling.\n\nTraining data: up to December 2023.",
+    "official_url": "https://openrouter.ai/models/openai/gpt-4-turbo:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-4-turbo:batch",
+    "api_pricing": {
+      "input_price_per_1m": 5.0,
+      "output_price_per_1m": 15.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "anthropic-claude-3-haiku",
+    "provider_id": "anthropic",
+    "provider_name": "Anthropic",
+    "name": "Anthropic: Claude 3 Haiku",
+    "tier": "Frontier",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 200000,
+    "max_output_tokens": 4096,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Claude 3 Haiku is Anthropic's fastest and most compact model for\nnear-instant responsiveness. Quick and accurate targeted performance.\n\nSee the launch announcement and benchmark results [here](https://www.anthropic.com/news/claude-3-haiku)\n\n#multimodal",
+    "official_url": "https://openrouter.ai/models/anthropic/claude-3-haiku",
+    "source_docs_url": "https://openrouter.ai/playground?model=anthropic/claude-3-haiku",
+    "api_pricing": {
+      "input_price_per_1m": 0.25,
+      "output_price_per_1m": 1.25
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "mistralai-mistral-large",
+    "provider_id": "mistralai",
+    "provider_name": "Mistralai",
+    "name": "Mistral Large",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text"
+    ],
+    "description": "This is Mistral AI's flagship model, Mistral Large 2 (version `mistral-large-2407`). It's a proprietary weights-available model and excels at reasoning, code, JSON, chat, and more. Read the launch announcement [here](https://mistral.ai/news/mistral-large-2407/)....",
+    "official_url": "https://openrouter.ai/models/mistralai/mistral-large",
+    "source_docs_url": "https://openrouter.ai/playground?model=mistralai/mistral-large",
+    "api_pricing": {
+      "input_price_per_1m": 2.0,
+      "output_price_per_1m": 6.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-3.5-turbo-0613",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-3.5 Turbo (older v0613)",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 4095,
+    "max_output_tokens": 4096,
+    "modality": [
+      "text"
+    ],
+    "description": "GPT-3.5 Turbo is OpenAI's fastest model. It can understand and generate natural language or code, and is optimized for chat and traditional completion tasks.\n\nTraining data up to Sep 2021.",
+    "official_url": "https://openrouter.ai/models/openai/gpt-3.5-turbo-0613",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-3.5-turbo-0613",
+    "api_pricing": {
+      "input_price_per_1m": 1.0,
+      "output_price_per_1m": 2.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-4-turbo-preview",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-4 Turbo Preview",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 128000,
+    "max_output_tokens": 4096,
+    "modality": [
+      "text"
+    ],
+    "description": "The preview GPT-4 model with improved instruction following, JSON mode, reproducible outputs, parallel function calling, and more. Training data: up to Dec 2023. **Note:** heavily rate limited by OpenAI while...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-4-turbo-preview",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-4-turbo-preview",
+    "api_pricing": {
+      "input_price_per_1m": 10.0,
+      "output_price_per_1m": 30.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openrouter-auto",
+    "provider_id": "openrouter",
+    "provider_name": "Openrouter",
+    "name": "Auto Router",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 2000000,
+    "max_output_tokens": 16384,
+    "modality": [
+      "text",
+      "vision"
+    ],
+    "description": "Your prompt will be processed by a meta-model and routed to one of dozens of models (see below), optimizing for the best possible output. To see which model was used,...",
+    "official_url": "https://openrouter.ai/models/openrouter/auto",
+    "source_docs_url": "https://openrouter.ai/playground?model=openrouter/auto",
+    "api_pricing": {
+      "input_price_per_1m": -1000000.0,
+      "output_price_per_1m": -1000000.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-3.5-turbo-instruct",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-3.5 Turbo Instruct",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 4095,
+    "max_output_tokens": 4096,
+    "modality": [
+      "text"
+    ],
+    "description": "This model is a variant of GPT-3.5 Turbo tuned for instructional prompts and omitting chat-related optimizations. Training data: up to Sep 2021.",
+    "official_url": "https://openrouter.ai/models/openai/gpt-3.5-turbo-instruct",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-3.5-turbo-instruct",
+    "api_pricing": {
+      "input_price_per_1m": 1.5,
+      "output_price_per_1m": 2.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-3.5-turbo-16k",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-3.5 Turbo 16k",
+    "tier": "Mid",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 16385,
+    "max_output_tokens": 4096,
+    "modality": [
+      "text"
+    ],
+    "description": "This model offers four times the context length of gpt-3.5-turbo, allowing it to support approximately 20 pages of text in a single request at a higher cost. Training data: up...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-3.5-turbo-16k",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-3.5-turbo-16k",
+    "api_pricing": {
+      "input_price_per_1m": 3.0,
+      "output_price_per_1m": 4.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "mancer-weaver",
+    "provider_id": "mancer",
+    "provider_name": "Mancer",
+    "name": "Mancer: Weaver (alpha)",
+    "tier": "Small",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 8000,
+    "max_output_tokens": 6000,
+    "modality": [
+      "text"
+    ],
+    "description": "An attempt to recreate Claude-style verbosity, but don't expect the same level of coherence or memory. Meant for use in roleplay/narrative situations.",
+    "official_url": "https://openrouter.ai/models/mancer/weaver",
+    "source_docs_url": "https://openrouter.ai/playground?model=mancer/weaver",
+    "api_pricing": {
+      "input_price_per_1m": 0.5,
+      "output_price_per_1m": 0.75
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "undi95-remm-slerp-l2-13b",
+    "provider_id": "undi95",
+    "provider_name": "Undi95",
+    "name": "ReMM SLERP 13B",
+    "tier": "Small",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 6144,
+    "max_output_tokens": 6144,
+    "modality": [
+      "text"
+    ],
+    "description": "A recreation trial of the original MythoMax-L2-B13 but with updated models. #merge",
+    "official_url": "https://openrouter.ai/models/undi95/remm-slerp-l2-13b",
+    "source_docs_url": "https://openrouter.ai/playground?model=undi95/remm-slerp-l2-13b",
+    "api_pricing": {
+      "input_price_per_1m": 0.45,
+      "output_price_per_1m": 0.65
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "gryphe-mythomax-l2-13b",
+    "provider_id": "gryphe",
+    "provider_name": "Gryphe",
+    "name": "MythoMax 13B",
+    "tier": "Micro",
+    "is_open_weight": false,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 8192,
+    "max_output_tokens": 4096,
+    "modality": [
+      "text"
+    ],
+    "description": "One of the highest performing and most popular fine-tunes of Llama 2 13B, with rich descriptions and roleplay. #merge",
+    "official_url": "https://openrouter.ai/models/gryphe/mythomax-l2-13b",
+    "source_docs_url": "https://openrouter.ai/playground?model=gryphe/mythomax-l2-13b",
+    "api_pricing": {
+      "input_price_per_1m": 0.06,
+      "output_price_per_1m": 0.06
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-3.5-turbo",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-3.5 Turbo",
+    "tier": "Small",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 16385,
+    "max_output_tokens": 4096,
+    "modality": [
+      "text"
+    ],
+    "description": "GPT-3.5 Turbo is OpenAI's fastest model. It can understand and generate natural language or code, and is optimized for chat and traditional completion tasks.\n\nTraining data up to Sep 2021.",
+    "official_url": "https://openrouter.ai/models/openai/gpt-3.5-turbo",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-3.5-turbo",
+    "api_pricing": {
+      "input_price_per_1m": 0.5,
+      "output_price_per_1m": 1.5
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-3.5-turbo:batch",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-3.5 Turbo (batch)",
+    "tier": "Small",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 16385,
+    "max_output_tokens": 4096,
+    "modality": [
+      "text"
+    ],
+    "description": "GPT-3.5 Turbo is OpenAI's fastest model. It can understand and generate natural language or code, and is optimized for chat and traditional completion tasks.\n\nTraining data up to Sep 2021.",
+    "official_url": "https://openrouter.ai/models/openai/gpt-3.5-turbo:batch",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-3.5-turbo:batch",
+    "api_pricing": {
+      "input_price_per_1m": 0.25,
+      "output_price_per_1m": 0.75
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
+  },
+  {
+    "id": "openai-gpt-4",
+    "provider_id": "openai",
+    "provider_name": "Openai",
+    "name": "OpenAI: GPT-4",
+    "tier": "Frontier",
+    "is_open_weight": true,
+    "license_type": "Proprietary",
+    "architecture": "Dense/MoE",
+    "context_window": 8191,
+    "max_output_tokens": 4096,
+    "modality": [
+      "text"
+    ],
+    "description": "OpenAI's flagship model, GPT-4 is a large-scale multimodal language model capable of solving difficult problems with greater accuracy than previous models due to its broader general knowledge and advanced reasoning...",
+    "official_url": "https://openrouter.ai/models/openai/gpt-4",
+    "source_docs_url": "https://openrouter.ai/playground?model=openai/gpt-4",
+    "api_pricing": {
+      "input_price_per_1m": 30.0,
+      "output_price_per_1m": 60.0
+    },
+    "benchmarks": {},
+    "hardware_requirements": [],
+    "is_verified": true,
+    "supports_reasoning": false,
+    "supports_web_search": false,
+    "is_deprecated": false,
+    "is_new": false
   }
 ];

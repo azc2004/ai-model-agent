@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import type { RecommendationRequest, ArchitectureRecommendationResult, TrendingTemplate } from '../types';
 import { API_BASE_URL } from '../api';
+import { useLanguage } from '../context/LanguageContext';
 
 const INITIAL_SAMPLE_RESULT: ArchitectureRecommendationResult = {
   service_name: "자율 코딩 에이전트 서비스 (미리 준비된 샘플)",
@@ -112,17 +113,120 @@ const INITIAL_SAMPLE_RESULT: ArchitectureRecommendationResult = {
 };
 
 export const ArchitectureAdvisor: React.FC = () => {
-  const t = {
-    title: "맞춤형 AI 서비스 모델 조합 & 호스팅 시뮬레이터",
-    subtitle: "구현하려는 서비스의 트래픽과 요구사항을 입력하세요. 최고 성능, 스마트 최적 라우팅, 극가성비 3가지 조합과 개발명세서 Markdown(.md)을 생성해 드립니다.",
-    researchProgress: {
-      step1: "1. 유저 요구사항 자연어 의도 파악 및 도메인 분석",
-      step2: "2. 전세계 LLM Leaderboard (Elo/MMLU) 상위 100개 모델 지표 검증",
-      step3: "3. 트래픽 토큰량 기반 OpEx 비용 및 GPU 인프라 가성비 산출",
-      step4: "4. 3-Tier Multi-Model 라우팅 조합 및 호스팅 옵션 매핑",
-      step5: "5. 실리콘밸리 표준 BigTech 5대 Markdown 설계 아티팩트 명세서 작성 중..."
+  const { language } = useLanguage();
+
+  const I18N_ADVISOR: Record<string, any> = {
+    ko: {
+      title: "맞춤형 AI 서비스 모델 조합 & 호스팅 시뮬레이터",
+      subtitle: "구현하려는 서비스의 트래픽과 요구사항을 입력하세요. 최고 성능, 스마트 최적 라우팅, 극가성비 3가지 조합과 개발명세서 Markdown(.md)을 생성해 드립니다.",
+      topRankingTitle: "요즘 가장 많이 구현하는 AI 서비스 TOP 5 (인기 랭킹)",
+      rankingInfoBtn: "랭킹 근거 & 갱신 주기",
+      instantResultNotice: "⚡ 미리 준비된 정밀 결과 즉시 노출",
+      customInputHeading: "💡 내 서비스 요구사항 맞춤형 아키텍처 생성하기",
+      calcBtn: "⚡ 5대 개발명세서 아티팩트 자동 생성",
+      resultHeading: "🎯 추천 아키텍처 모델 조합 & 호스팅 산출 결과",
+      artifactBtn: "📦 5대 명세서 아티팩트 보기",
+      researchProgress: {
+        step1: "1. 유저 요구사항 자연어 의도 파악 및 도메인 분석",
+        step2: "2. 전세계 LLM Leaderboard (Elo/MMLU) 상위 100개 모델 지표 검증",
+        step3: "3. 트래픽 토큰량 기반 OpEx 비용 및 GPU 인프라 가성비 산출",
+        step4: "4. 3-Tier Multi-Model 라우팅 조합 및 호스팅 옵션 매핑",
+        step5: "5. 실리콘밸리 표준 BigTech 5대 Markdown 설계 아티팩트 명세서 작성 중..."
+      }
+    },
+    en: {
+      title: "Custom AI Architecture & Hosting Simulator",
+      subtitle: "Input your service traffic and requirements. Generates Top Performance, Smart Router, and Ultra-Budget combos along with 5 Markdown (.md) Architecture Specs.",
+      topRankingTitle: "TOP 5 Most Popular AI Architectures Implemented Today",
+      rankingInfoBtn: "Ranking Criteria & Update Schedule",
+      instantResultNotice: "⚡ Pre-calculated Precision Recommendations Ready",
+      customInputHeading: "💡 Custom Architecture Generator for Your Requirements",
+      calcBtn: "⚡ Generate 5 Architecture Spec Artifacts",
+      resultHeading: "🎯 Recommended Architecture Combinations & Cost Results",
+      artifactBtn: "📦 View 5 Spec Artifacts",
+      researchProgress: {
+        step1: "1. Analyzing user requirements & domain intent",
+        step2: "2. Verifying top 100 LLM leaderboard (Elo/MMLU) metrics",
+        step3: "3. Calculating OpEx costs & GPU cost-efficiency based on traffic tokens",
+        step4: "4. Mapping 3-Tier Multi-Model routing combos & hosting options",
+        step5: "5. Generating Silicon Valley standard BigTech 5 Markdown design artifacts..."
+      }
+    },
+    ja: {
+      title: "カスタム AI アーキテクチャ & ホスティング シミュレーター",
+      subtitle: "トラフィックと要件を入力してください。最高性能、スマート最適ルーティング、超コスパの3つの構成と5つのマークダウン設計書を自動生成します。",
+      topRankingTitle: "最近よく実装されている AI サービス TOP 5",
+      rankingInfoBtn: "ランキング根拠と更新周期",
+      instantResultNotice: "⚡ 事前計算された精密結果を即時表示",
+      customInputHeading: "💡 要件に合わせたカスタムアーキテクチャ生成",
+      calcBtn: "⚡ 5大設計仕様書アーティファクトを自動生成",
+      resultHeading: "🎯 推奨アーキテクチャモデル構成 & ホスティング試算結果",
+      artifactBtn: "📦 5大仕様書アーティファクトを見る",
+      researchProgress: {
+        step1: "1. ユーザー要件の分析",
+        step2: "2. Top 100 LLM リーダーボード指標の検証",
+        step3: "3. OpEx コストおよび GPU コスパの算出",
+        step4: "4. 3-Tier マルチモデルルーティング構成のマッピング",
+        step5: "5. BigTech 標準 5大設計ドキュメントの生成中..."
+      }
+    },
+    zh: {
+      title: "定制 AI 架构组合与托管模拟器",
+      subtitle: "输入您的服务流量和需求。自动生成最高性能、智能路由器和极性价比 3 种组合以及 5 份 Markdown 设计文档。",
+      topRankingTitle: "近期最常实现的 AI 服务 TOP 5 热门排名",
+      rankingInfoBtn: "排名依据与更新周期",
+      instantResultNotice: "⚡ 即时展示预先准备的精确定制结果",
+      customInputHeading: "💡 根据您的需求定制 AI 架构生成",
+      calcBtn: "⚡ 自动生成 5 大架构设计规范产物",
+      resultHeading: "🎯 推荐架构模型组合与托管演算结果",
+      artifactBtn: "📦 查看 5 大规范产物",
+      researchProgress: {
+        step1: "1. 分析用户需求与意图",
+        step2: "2. 验证前 100 大 LLM 排行榜指标",
+        step3: "3. 计算 OpEx 成本与 GPU 性价比",
+        step4: "4. 映射 3-Tier 多模型路由组合",
+        step5: "5. 正在生成 5 大架构规范文档..."
+      }
+    },
+    es: {
+      title: "Simulador de Arquitectura e Hospedaje de IA Personalizado",
+      subtitle: "Ingrese el tráfico y requisitos de su servicio. Genera combinaciones de Alto Rendimiento, Enrutador Inteligente y Ultra-Económico junto con 5 especificaciones Markdown.",
+      topRankingTitle: "TOP 5 Arquitecturas de IA Más Implementadas",
+      rankingInfoBtn: "Criterios de Clasificación",
+      instantResultNotice: "⚡ Resultados De Alta Precisión Disponibles Al Instante",
+      customInputHeading: "💡 Generador de Arquitectura Personalizado",
+      calcBtn: "⚡ Generar 5 Artefactos de Especificación",
+      resultHeading: "🎯 Combinaciones de Modelos Recomendadas",
+      artifactBtn: "📦 Ver 5 Artefactos de Especificación",
+      researchProgress: {
+        step1: "1. Analizando requisitos del usuario",
+        step2: "2. Verificando métricas de clasificación de LLM",
+        step3: "3. Calculando costos de OpEx y rentabilidad de GPU",
+        step4: "4. Mapeando combinaciones de enrutamiento",
+        step5: "5. Generando 5 especificaciones de arquitectura..."
+      }
+    },
+    de: {
+      title: "Individueller KI-Architektur & Hosting Simulator",
+      subtitle: "Geben Sie Daten zu Ihrem Dienst ein. Generiert Top-Leistung, Smart-Router und Budget-Kombinationen sowie 5 Markdown-Architektur-Spezifikationen.",
+      topRankingTitle: "TOP 5 am häufigsten implementierte KI-Architekturen",
+      rankingInfoBtn: "Kriterien & Aktualisierungsintervall",
+      instantResultNotice: "⚡ Präzise Empfehlungen sofort verfügbar",
+      customInputHeading: "💡 Individueller Architektur-Generator",
+      calcBtn: "⚡ 5 Architektur-Spezifikationen generieren",
+      resultHeading: "🎯 Empfohlene Modellkombinationen & Ergebnisse",
+      artifactBtn: "📦 5 Spezifikations-Artefakte anzeigen",
+      researchProgress: {
+        step1: "1. Analyse der Benutzeranforderungen",
+        step2: "2. Überprüfung der Top-100-LLM-Metriken",
+        step3: "3. Berechnung von OpEx-Kosten und GPU-Effizienz",
+        step4: "4. Zuordnung von Multi-Modell-Routing",
+        step5: "5. Erstellung von 5 Architektur-Dokumenten..."
+      }
     }
   };
+
+  const t = I18N_ADVISOR[language as keyof typeof I18N_ADVISOR] || I18N_ADVISOR.en;
 
   const [customPrompt, setCustomPrompt] = useState<string>('');
   const [serviceType, setServiceType] = useState<string>('code_agent');
@@ -317,17 +421,17 @@ export const ArchitectureAdvisor: React.FC = () => {
           <div className="flex items-center gap-3">
             <h2 className="text-xl font-black text-slate-900 dark:text-white flex items-center gap-2 tracking-tight">
               <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-500 text-sm font-black">🏆</span>
-              요즘 가장 많이 구현하는 AI 서비스 TOP 5 (인기 랭킹)
+              {t.topRankingTitle}
             </h2>
             <button
               onClick={() => setShowRankingInfoModal(true)}
               className="text-xs px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-extrabold flex items-center gap-1 transition-all shadow-sm"
-              title="랭킹 근거 및 갱신 주기 확인"
+              title="Information"
             >
-              <span>ℹ️</span> 랭킹 근거 & 갱신 주기
+              <span>ℹ️</span> {t.rankingInfoBtn}
             </button>
           </div>
-          <span className="text-xs text-slate-500 dark:text-slate-400 font-extrabold">⚡ 미리 준비된 정밀 결과 즉시 노출</span>
+          <span className="text-xs text-slate-500 dark:text-slate-400 font-extrabold">{t.instantResultNotice}</span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">

@@ -3,10 +3,101 @@ import {
   Copy, Check, Sparkles, Layers, Zap, ShieldCheck, Puzzle, Terminal, 
   Cpu, Users, GitBranch, AlertTriangle, HelpCircle, Server
 } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export const TutorialView: React.FC = () => {
+  const { language } = useLanguage();
   const [activeCategory, setActiveCategory] = useState<'claude_team' | 'antigravity' | 'cursor' | 'frameworks' | 'comparison' | 'troubleshoot'>('claude_team');
   const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const I18N_TUTORIAL: Record<string, any> = {
+    ko: {
+      badge: "2026 AI AGENTIC ARCHITECTURE MASTER GUIDE",
+      titleMain: "AI 에이전트팀 & 서브에이전트",
+      titleSub: "실전 튜토리얼 & 도구별 종합 비교 가이드",
+      description: "API 문서를 읽다가 탭 6개를 열어놓고 AI 창에 복사/붙여넣기 하던 탭 전환의 낭비를 끝내세요. Claude Code(에이전트팀·서브에이전트·스킬·MCP)부터 Google Antigravity, Cursor, AutoGen, CrewAI까지 최신 AI 개발 생태계를 한눈에 따라 실습할 수 있는 실무 튜토리얼입니다.",
+      tabs: [
+        { id: 'claude_team', title: '🤖 튜토리얼 1: Claude 에이전트팀 & 서브에이전트', desc: 'Agent Teams, Sub-agents, Skills, MCP' },
+        { id: 'antigravity', title: '🌌 튜토리얼 2: Google Antigravity & Directives', desc: 'DeepMind Agentic Skills & directives.yaml' },
+        { id: 'cursor', title: '💻 튜토리얼 3: Cursor & Cascade Rules', desc: '.cursorrules & Extension Plugins' },
+        { id: 'frameworks', title: '⚙️ 튜토리얼 4: AutoGen 0.4 & CrewAI', desc: 'Python 기반 멀티 에이전트 코드' },
+        { id: 'comparison', title: '📊 종합 비교: Top 5 AI 에이전트 도구', desc: '기능, 스킬 지원, 요금제, 보안 가드레일' },
+        { id: 'troubleshoot', title: '🛡️ 보안 & 트러블슈팅 가이드', desc: 'Prompt Injection 방어, OOM, Retry' }
+      ]
+    },
+    en: {
+      badge: "2026 AI AGENTIC ARCHITECTURE MASTER GUIDE",
+      titleMain: "AI Agent Teams & Sub-agents",
+      titleSub: "Hands-on Tutorial & Tool Comparison Guide",
+      description: "Stop wasting time switching tabs and copying/pasting between AI windows. Hands-on practical guide for Claude Code (Agent Teams, Sub-agents, Skills, MCP), Google Antigravity, Cursor, AutoGen 0.4, and CrewAI.",
+      tabs: [
+        { id: 'claude_team', title: '🤖 Tutorial 1: Claude Agent Teams & Sub-agents', desc: 'Agent Teams, Sub-agents, Skills, MCP' },
+        { id: 'antigravity', title: '🌌 Tutorial 2: Google Antigravity & Directives', desc: 'DeepMind Agentic Skills & directives.yaml' },
+        { id: 'cursor', title: '💻 Tutorial 3: Cursor & Cascade Rules', desc: '.cursorrules & Extension Plugins' },
+        { id: 'frameworks', title: '⚙️ Tutorial 4: AutoGen 0.4 & CrewAI', desc: 'Python Multi-Agent Code' },
+        { id: 'comparison', title: '📊 Top 5 AI Agent Tools Comparison', desc: 'Features, Skills, Pricing, Guardrails' },
+        { id: 'troubleshoot', title: '🛡️ Security & Troubleshooting Guide', desc: 'Prompt Injection, OOM, Retry' }
+      ]
+    },
+    ja: {
+      badge: "2026 AI AGENTIC ARCHITECTURE MASTER GUIDE",
+      titleMain: "AI エージェントチーム & サブエージェント",
+      titleSub: "実践チュートリアル & ツール別比較ガイド",
+      description: "タブ切り替えの無駄を排除し、Claude Code、Google Antigravity、Cursor、AutoGen、CrewAI などの最新 AI エージェント開発環境をスムーズに習得できる実践チュートリアルです。",
+      tabs: [
+        { id: 'claude_team', title: '🤖 チュートリアル 1: Claude エージェントチーム', desc: 'Agent Teams, Sub-agents, Skills, MCP' },
+        { id: 'antigravity', title: '🌌 チュートリアル 2: Google Antigravity', desc: 'DeepMind Agentic Skills & directives.yaml' },
+        { id: 'cursor', title: '💻 チュートリアル 3: Cursor & Cascade Rules', desc: '.cursorrules & Extension Plugins' },
+        { id: 'frameworks', title: '⚙️ チュートリアル 4: AutoGen 0.4 & CrewAI', desc: 'Python マルチエージェントコード' },
+        { id: 'comparison', title: '📊 Top 5 AI エージェントツール総合比較', desc: '機能、スキル、料金、セキュリティ' },
+        { id: 'troubleshoot', title: '🛡️ セキュリティ & トラブルシューティング', desc: 'Prompt Injection 防御、OOM、Retry' }
+      ]
+    },
+    zh: {
+      badge: "2026 AI AGENTIC ARCHITECTURE MASTER GUIDE",
+      titleMain: "AI 智能体团队与子智能体",
+      titleSub: "实操教程与工具综合对比指南",
+      description: "告别在 6 个标签页和 AI 窗口之间频繁复制粘贴的低效模式。涵盖 Claude Code、Google Antigravity、Cursor、AutoGen 0.4 和 CrewAI 的全方位实操指南。",
+      tabs: [
+        { id: 'claude_team', title: '🤖 教程 1: Claude 智能体团队与子智能体', desc: 'Agent Teams, Sub-agents, Skills, MCP' },
+        { id: 'antigravity', title: '🌌 教程 2: Google Antigravity & Directives', desc: 'DeepMind Agentic Skills & directives.yaml' },
+        { id: 'cursor', title: '💻 教程 3: Cursor & Cascade Rules', desc: '.cursorrules & Extension Plugins' },
+        { id: 'frameworks', title: '⚙️ 教程 4: AutoGen 0.4 & CrewAI', desc: 'Python 多智能体代码' },
+        { id: 'comparison', title: '📊 Top 5 AI 智能体工具综合对比', desc: '功能、技能支持、资费、安全护栏' },
+        { id: 'troubleshoot', title: '🛡️ 安全与排错指南', desc: 'Prompt Injection 防御、OOM、重试' }
+      ]
+    },
+    es: {
+      badge: "2026 AI AGENTIC ARCHITECTURE MASTER GUIDE",
+      titleMain: "Equipos de Agentes de IA y Subagentes",
+      titleSub: "Tutorial Práctico y Guía Comparativa",
+      description: "Elimine la pérdida de tiempo al alternar entre pestañas. Guía práctica para Claude Code, Google Antigravity, Cursor, AutoGen 0.4 y CrewAI.",
+      tabs: [
+        { id: 'claude_team', title: '🤖 Tutorial 1: Equipos de Agentes Claude', desc: 'Agent Teams, Sub-agents, Skills, MCP' },
+        { id: 'antigravity', title: '🌌 Tutorial 2: Google Antigravity', desc: 'DeepMind Agentic Skills & directives.yaml' },
+        { id: 'cursor', title: '💻 Tutorial 3: Cursor & Cascade Rules', desc: '.cursorrules & Extension Plugins' },
+        { id: 'frameworks', title: '⚙️ Tutorial 4: AutoGen 0.4 & CrewAI', desc: 'Código Multi-Agente en Python' },
+        { id: 'comparison', title: '📊 Comparación de 5 Herramientas Principales', desc: 'Funciones, Habilidades, Precios' },
+        { id: 'troubleshoot', title: '🛡️ Seguridad y Solución de Problemas', desc: 'Prompt Injection, OOM, Reintentos' }
+      ]
+    },
+    de: {
+      badge: "2026 AI AGENTIC ARCHITECTURE MASTER GUIDE",
+      titleMain: "KI-Agenten-Teams & Sub-Agenten",
+      titleSub: "Praxis-Tutorial & Werkzeug-Vergleich",
+      description: "Schluss mit dem Kopieren und Einfügen zwischen Registerkarten. Praktisches Tutorial für Claude Code, Google Antigravity, Cursor, AutoGen 0.4 und CrewAI.",
+      tabs: [
+        { id: 'claude_team', title: '🤖 Tutorial 1: Claude Agenten-Teams', desc: 'Agent Teams, Sub-agents, Skills, MCP' },
+        { id: 'antigravity', title: '🌌 Tutorial 2: Google Antigravity', desc: 'DeepMind Agentic Skills & directives.yaml' },
+        { id: 'cursor', title: '💻 Tutorial 3: Cursor & Cascade Rules', desc: '.cursorrules & Extension Plugins' },
+        { id: 'frameworks', title: '⚙️ Tutorial 4: AutoGen 0.4 & CrewAI', desc: 'Python Multi-Agenten-Code' },
+        { id: 'comparison', title: '📊 Vergleich der Top 5 KI-Agenten-Tools', desc: 'Funktionen, Skills, Preise, Schutz' },
+        { id: 'troubleshoot', title: '🛡️ Sicherheit & Fehlerbehebung', desc: 'Prompt Injection, OOM, Retry' }
+      ]
+    }
+  };
+
+  const t = I18N_TUTORIAL[language as keyof typeof I18N_TUTORIAL] || I18N_TUTORIAL.en;
 
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -21,31 +112,23 @@ export const TutorialView: React.FC = () => {
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div className="relative z-10 max-w-4xl space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/20 border border-indigo-400/30 text-indigo-300 text-xs font-bold uppercase tracking-wider">
-            <Sparkles className="w-4 h-4 text-amber-400 animate-pulse" /> 2026 AI Agentic Architecture Master Guide
+            <Sparkles className="w-4 h-4 text-amber-400 animate-pulse" /> {t.badge}
           </div>
           <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
-            AI 에이전트팀 & 서브에이전트 <br />
+            {t.titleMain} <br />
             <span className="bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent">
-              실전 튜토리얼 & 도구별 종합 비교 가이드
+              {t.titleSub}
             </span>
           </h1>
           <p className="text-slate-300 text-sm sm:text-base leading-relaxed font-medium max-w-3xl">
-            API 문서를 읽다가 탭 6개를 열어놓고 AI 창에 복사/붙여넣기 하던 탭 전환의 낭비를 끝내세요.
-            <strong className="text-white"> Claude Code(에이전트팀·서브에이전트·스킬·MCP)</strong>부터 <strong className="text-indigo-300">Google Antigravity, Cursor, AutoGen, CrewAI</strong>까지 최신 AI 개발 생태계를 한눈에 따라 실습할 수 있는 실무 튜토리얼입니다.
+            {t.description}
           </p>
         </div>
       </div>
 
       {/* Main Category Tabs */}
       <div className="flex bg-slate-100 dark:bg-slate-900/90 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-x-auto scrollbar-none gap-1.5">
-        {[
-          { id: 'claude_team', title: '🤖 튜토리얼 1: Claude 에이전트팀 & 서브에이전트', desc: 'Agent Teams, Sub-agents, Skills, MCP' },
-          { id: 'antigravity', title: '🌌 튜토리얼 2: Google Antigravity & Directives', desc: 'DeepMind Agentic Skills & directives.yaml' },
-          { id: 'cursor', title: '💻 튜토리얼 3: Cursor & Cascade Rules', desc: '.cursorrules & Extension Plugins' },
-          { id: 'frameworks', title: '⚙️ 튜토리얼 4: AutoGen 0.4 & CrewAI', desc: 'Python 기반 멀티 에이전트 코드' },
-          { id: 'comparison', title: '📊 종합 비교: Top 5 AI 에이전트 도구', desc: '기능, 스킬 지원, 요금제, 보안 가드레일' },
-          { id: 'troubleshoot', title: '🛡️ 보안 & 트러블슈팅 가이드', desc: 'Prompt Injection 방어, OOM, Retry' }
-        ].map((tab) => {
+        {t.tabs.map((tab: any) => {
           const isActive = activeCategory === tab.id;
           return (
             <button
