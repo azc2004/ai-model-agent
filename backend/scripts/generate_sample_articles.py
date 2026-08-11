@@ -1,7 +1,6 @@
 import sys
 import os
 from datetime import datetime, timezone
-import uuid
 
 # PYTHONPATH 설정
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -9,57 +8,98 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from app.database import SessionLocal
 from app.db_models import NewsArticleDB
 
-SAMPLE_1_BLOG = """# 📌 [Super Hybrid Report] Anthropic 자율 멀티에이전트 Computer Use 및 Agentic Tooling 2.0 파이프라인
+SAMPLE_1_BLOG = """# 📊 [심층 기술 분석 & 아키텍처 재구성] Anthropic Computer Use 2.0: GUI 자율 제어 및 Agentic 오케스트레이션 분석
 
-> **주요 출처**: Anthropic AI Engineering | **카테고리**: 빅테크 공식 | **검증**: ✅ Multi-Source Cross-Validated | **특집**: 🎨 시각화 + 💻 코드 + 💼 Executive + 🔬 Deep-Dive
-
----
-
-### 1. ⚡ 60초 Executive Summary & Why This Matters (The Pragmatic Engineer & The Batch 스타일)
-Anthropic이 차세대 AI 자율 에이전트 구축을 위한 **Computer Use 및 Agentic Tooling 2.0 파이프라인**을 공식 발표했습니다. 기존 텍스트/코드 생성 수준을 넘어 에이전트가 직접 브라우저 GUI, 마우스 클릭, 키보드 타이핑, API 오케스트레이션을 스스로 판단하여 수행하는 **엔드투엔드 업무 자동화 아키텍처**입니다.
-
-> 💡 **Why This Matters (산업 파급력)**: 반복적인 수동 데이터 수집, QA 테스팅, 서류 조회 및 ERP 입력 작업을 자율 에이전트에 위임함으로써 기업 인적 자원 소비를 **최대 75% 절감**하고 업무 처리 속도를 4배 이상 가속화할 수 있습니다.
+> **분석 대상**: Anthropic AI Engineering 공식 발표 | **분석 유형**: 심층 분석 및 아키텍처 재구성 리포트 | **검증**: ✅ Multi-Source Cross-Validated
 
 ---
 
-### 2. 🎨 단계별 시스템 아키텍처 & Evolving Data Flow (ByteByteGo & Jay Alammar 스타일)
+### 1. 🔍 배경 분석: 왜 단순 API 연동에서 GUI 자율 제어(Computer Use)로 패러다임이 전환되는가?
+
+전통적인 기업 업무 자동화(RPA 및 API Integration)는 시스템이 개편되거나 API 명세가 변경될 때마다 엔지니어가 코드를 수동 수정해야 하는 **'강한 결합(Tight Coupling)과 높은 유지보수 비용'** 한계에 직면해 있었습니다.
+
+Anthropic의 **Computer Use 2.0**은 기존 방식의 한계를 깨고, 인간처럼 웹/데스크톱 화면(GUI)의 픽셀(Pixel)을 시각적으로 인식하여 **마우스 이동, 클릭, 타이핑, API 호출 판단을 스스로 수행하는 자율 오케스트레이션**으로 기술 패러다임을 근본적으로 재구성합니다.
+
+```
+[기존 방식: API 연동]      수동 API 개발 (2~4주) ──> 백엔드 강결합 ──> API 변경 시 파손 (Broken)
+                                                                 ▼
+[개선 방식: Computer Use]   비전 recognition ──> 자율 GUI 판단 ──> UI 변경 시 스스로 추론 교정 (Robust)
+```
+
+---
+
+### 2. 🏗️ 재구성된 엔드투엔드 시스템 아키텍처 & 자율 루프 (Reconstructed System Architecture)
+
+장황한 원문 텍스트를 한눈에 파악할 수 있는 **5단계 자율 제어 파이프라인**으로 재구성한 아키텍처입니다:
 
 ```mermaid
 flowchart TD
-    A[👤 사용자 업무 요청\nUser Goal / Prompt] --> B[🧠 Planner Agent\nTask Breakdown & Reasoning]
-    B --> C{🛡️ 보안 검증 가드레일\nHuman-in-the-loop Guardrail}
-    C -- ❌ 미승인 / 고위험 --> D[🛑 인간 승인 요청\nUser Approval Gate]
-    D -- 승인 완료 --> E[🤖 GUI Worker Agent\nComputer Use & Tool Execution]
-    C -- ✅ 자동 승인 --> E
-    E --> F[💻 브라우저 / Desktop GUI\nMouse Click & Type Execution]
-    F --> G[👁️ Vision Evaluator\nScreen Capture & State Feedback]
-    G -- 과업 미완수 --> B
-    G -- ✅ 성공 완수 --> H[🎉 최종 업무 완료 리포트 리턴]
+    subgraph Step1 ["1단계: 목표 수립 & 분해"]
+        A[👤 사용자 업무 요청\nUser Goal / Natural Language] --> B[🧠 Planner Agent\nTask Decomposition & Reasoning]
+    end
+
+    subgraph Step2 ["2단계: 실시간 보안 검증"]
+        B --> C{🛡️ 보안 검증 가드레일\nHuman-in-the-loop Gate}
+        C -- ❌ 민감 데이터/결제 --> D[🛑 사용자 모달 승인 요청\nApproval Gate]
+        D -- 승인 완료 --> E[🤖 GUI Worker Agent]
+        C -- ✅ 일반 통과 --> E
+    end
+
+    subgraph Step3 ["3단계: VLA 조작 실행"]
+        E --> F[💻 OS / Browser GUI Execution\nMouse Click, Type, Scroll]
+    end
+
+    subgraph Step4 ["4단계: 비전 캡처 평가 & 피드백"]
+        F --> G[👁️ Vision Evaluator\nScreen Capture & State Feedback]
+        G -- 과업 미완수 / 오차 발생 --> B
+        G -- ✅ 최종 과업 달성 --> H[🎉 완료 리포트 및 결과 제출]
+    end
+
+    style C fill:#1e293b,stroke:#f59e0b,stroke-width:2px,color:#fff
+    style G fill:#1e293b,stroke:#3b82f6,stroke-width:2px,color:#fff
 ```
-
-#### 🔍 기술 방식별 Trade-offs 비교표 (Pros vs Cons vs Best For)
-
-| 구현 방식 | 주요 장점 (Pros) | 한계점 (Cons) | 최적 적용 대상 (Best For) |
-| :--- | :--- | :--- | :--- |
-| **기존 수동 조작 (Manual)** | 사람의 직관적 판단, 예외 처리 뛰어남 | 인건비 높음, 24시간 연속 가동 불가 | 단발성 예외 업무 |
-| **전통적 API 연동** | 처리 속도 빠름, 시스템 안정적 | API 개편 시 코드 파손, 연동 개발 기간 4주 | 고정된 백엔드 연동 |
-| **Computer Use 2.0 (본 기술)** | **GUI 변경 시 자율 적응, 1일 내 즉시 도입** | 비전 캡처 토큰 소비 발생 | **종합 ERP / 웹 업무 자동화** |
-
-#### 📊 OSWorld 벤치마크 성과 비교
-[CHART:bar|OSWorld Task Completion Rate (%)|Legacy Agent:18%|Claude 3.5 Sonnet:38%|Claude 3.7 Sonnet (Thinking):64%|Human Baseline:72%]
 
 ---
 
-### 3. 💻 원클릭 SDK 연동 코드 & 프로덕션 서빙 가이던스 (HuggingFace & Chip Huyen 스타일)
+### 3. ⚡ 3대 핵심 메커니즘 심층 분석 (Critical Technical Deep-Dive)
 
-아래 Python SDK 코드 스니펫을 사내 에이전트 백엔드 시스템에 이식하면 즉시 자율 GUI 브라우저 조작 파이프라인을 가동할 수 있습니다.
+#### 메커니즘 A. 1000x1000 정규화 그리드 좌표 인식 (Vision-Language-Action Grounding)
+- **분석**: 화면 해상도가 달라져도 클릭 정확도를 보장하기 위해, 입력 캡처 이미지를 1000x1000 정규화 그리드로 변환한 후 클릭/드래그 대상을 시각적 좌표로 계산합니다.
+- **효과**: 마우스 클릭 좌표 오차를 ±2px 이내로 제어하여 웹 상의 미세한 버튼도 정확하게 조작합니다.
+
+#### 메커니즘 B. Self-Correction 오토메이션 피드백 루프
+- **분석**: 마우스 클릭 후 팝업 모달이나 로딩 지연이 발생할 경우, 비전 평가기(Vision Evaluator)가 이전 화면과의 델타(Delta)를 비교하여 팝업 닫기나 Scroll Down을 자율 판단합니다.
+
+#### 메커니즘 C. 델타 프레임(Delta Frame) 캡처 기반 토큰 절감
+- **분석**: 매 초 전체 고화질 스크린샷을 전송할 때 발생하는 막대한 비전 토큰 비용을 방지하기 위해, 변경된 영역만 크롭(Crop)하여 전송하는 델타 캡처 기술을 채택했습니다.
+
+---
+
+### 4. ⚖️ 기술 방식별 구조적 Trade-off & 실무 비교 분석 Matrix
+
+원문의 텍스트 내용을 토대로 기술 구현 방식별 장단점을 재정리한 분석 표입니다:
+
+| 비교 파라미터 | 전통적 RPA (UiPath 등) | 백엔드 REST API 연동 | Anthropic Computer Use 2.0 (본 기술) |
+| :--- | :--- | :--- | :--- |
+| **구축 방식** | 수동 클릭 좌표/DOM 엘리먼트 지정 | API 엔드포인트 파싱 & 연동 코드 작성 | **자연어 목표 입력 후 에이전트 자율 시각 조작** |
+| **UI 변경 대응력** | DOM 구조 변경 시 100% 오류 발생 | API 스펙 변경 시 연동 장애 발생 | **화면 레이아웃 변경 시에도 시각적 추론으로 자율 적응** |
+| **도입 소요 기간** | 2~3주 (스크립트 작성) | 3~4주 (백엔드 개발) | **1일 이내 (SDK 이식 및 가드레일 설정)** |
+| **비용 구조** | 솔루션 라이선스 비용 | 백엔드 유지보수 공수 | **비전 캡처 토큰 소비 (델타 캡처 시 60% 절감)** |
+
+---
+
+### 5. 💻 실무 이식 코드 레시피 (Implementation Recipe)
+
+개발자가 사내 시스템에 자율 브라우저 조작 파이프라인을 이식할 수 있도록 재구성한 코드 레시피입니다.
 
 ```python
 import anthropic
 from anthropic import Anthropic
 
+# 1. Anthropic 클라이언트 초기화
 client = Anthropic(api_key="YOUR_ANTHROPIC_API_KEY")
 
+# 2. Computer Use 2.0 도구 정의 및 자율 파이프라인 실행
 response = client.beta.messages.create(
     model="claude-3-7-sonnet-20250219",
     max_tokens=4096,
@@ -72,194 +112,220 @@ response = client.beta.messages.create(
     }],
     messages=[{
         "role": "user",
-        "content": "사내 ERP에 접속하여 지난달 미결제 매출 명세서를 조회하고 PDF로 다운로드하세요."
+        "content": "사내 ERP 웹사이트에 접속하여 지난달 미결제 매출 명세서를 조회하고 PDF로 다운로드하세요."
     }],
     betas=["computer-use-2024-10-22"]
 )
 
-print("Agent Action Plan:", response.content)
+print("📌 Agent Action Plan Execution:", response.content)
 ```
 
-> 🛡️ **Production Guardrail Warning (실무 주의사항)**:
-> 1. **Human-in-the-loop 승인 게이트**: 금융 결제, 회원 데이터 삭제 등 파괴적 동작 시 실시간 사용자 모달 승인을 거치도록 IAM 권한을 격리하세요.
-> 2. **비전 캡처 토큰 절감**: 매 프레임마다 전체 화면을 전송하지 말고 델타(Delta) 캡처를 적용하여 토큰 비용을 60% 절감하세요.
+> 🛡️ **Production Guardrail & Security Warning (실무 경고)**:
+> - **Human-in-the-loop 승인**: 금융 결제, 회원 개인정보 삭제 등 파괴적 행동 시 반드시 사용자 승인을 거치도록 IAM 권한을 분리하세요.
 
 ---
 
-### 4. 🔬 심층 알고리즘 및 작동 원리 분석 (Lilian Weng / Lil'Log 스타일)
-Computer Use 2.0의 핵심은 **Vision-Language-Action (VLA)** 멀티모달 그라운딩 알고리즘입니다. 
-1. **Screen Co-ordinate Mapping**: 1920x1080 화면을 1000x1000 정규화 그리드 좌표계로 변환하여 클릭 오차를 ±2px 이내로 제어합니다.
-2. **Self-Correction Feedback Loop**: 마우스 클릭 후 화면 변화가 없을 경우, 에이전트가 오버레이 팝업이나 로딩 상태를 인식하고 차순위 조작(Press Tab, Scroll Down)을 시도합니다.
+### 6. 🎯 4개 직무 관점별 실전 대응 전략 (Strategic Action Plan)
 
----
-
-### 5. 🎯 실무 적용 핵심 체크리스트 (Actionable Checklist)
-
-#### 🚀 컴퓨터 조작 에이전트 이식 및 보안 통제
-* **Computer Use SDK 도입**: Anthropic 공식 SDK를 백엔드 워크플로우에 이식하여 GUI 조작 자동화 구축.
-* **Human-in-the-loop 승인 가드레일**: 금융 결제, 민감 데이터 변경 시 사용자 모달 승인 가드레일 필수 적용.
-* **비전 캡처 토큰 최적화**: 화면 캡처 토큰 소비 절감을 위해 델타 프레임(Delta Frame) 변경 감지 적용.
-* **IAM 세션 격리**: 에이전트 전용 격리 브라우저 인스턴스를 부여하여 사내 보안 유출 차단.
+* **👩‍💻 엔지니어/개발자**: Anthropic Computer Use SDK를 도입하여 기존 수동 API 연동 대신 비전 자율 조작 파이프라인으로 전환하세요.
+* **💡 기획자/PM**: 사용자가 일일이 입력하지 않고 목표만 던져도 결과가 완수되는 Goal-driven 자율 UX를 서비스 로드맵에 우선 편성하세요.
+* **💼 비즈니스 리더**: 반복적인 서류 데이터 수집 및 외주 단순 입력 작업을 자율 에이전트에 위임하여 운영 비용을 75% 절감하세요.
+* **🔬 연구자/학계**: Vision-Language-Action(VLA) 모델의 픽셀 그라운딩 정확도 향상 및 델타 프레임 최적화 알고리즘 연구를 벤치마킹하세요.
 """
 
-SAMPLE_2_BLOG = """# 📌 [Super Hybrid Report] DeepSeek R1 / V3: 671B MoE 자율 강화학습(RL) 아키텍처 및 벤치마크 리포트
+SAMPLE_2_BLOG = """# 📊 [심층 기술 분석 & 아키텍처 재구성] DeepSeek R1 / V3: 671B MoE 자율 강화학습(RL) 아키텍처 분석
 
-> **주요 출처**: DeepSeek AI Lab | **카테고리**: 최신 논문 & 학계 | **검증**: ✅ Multi-Source Cross-Validated | **특집**: 🎨 시각화 + 💻 코드 + 💼 Executive + 🔬 Deep-Dive
-
----
-
-### 1. ⚡ 60초 Executive Summary & Why This Matters (The Pragmatic Engineer & The Batch 스타일)
-DeepSeek 팀이 오픈소스로 공개한 **DeepSeek R1 및 V3** 모델은 총 671B 파라미터 중 파스당 37B만 활성화하는 **DeepSeekMoE 아키텍처**와 감독 학습(SFT) 없이 오직 자율 강화학습(RL)만으로 복잡 추론 능력을 극대화한 혁신적 추론 엔진입니다.
-
-> 💡 **Why This Matters (산업 파급력)**: OpenAI o1 급 최고 성능의 추론 능력을 **1/27 가격 (OpenAI o1 대비 96% 비용 절감)**으로 이용할 수 있어 사내 인프라 TCO를 획기적으로 절감할 수 있습니다.
+> **분석 대상**: DeepSeek AI Lab 공식 논문 & 기술 발표 | **분석 유형**: 심층 분석 및 아키텍처 재구성 리포트 | **검증**: ✅ Multi-Source Cross-Validated
 
 ---
 
-### 2. 🎨 단계별 시스템 아키텍처 & Evolving Data Flow (ByteByteGo & Jay Alammar 스타일)
+### 1. 🔍 배경 분석: 왜 감독 학습(SFT) 중심에서 자율 강화학습(RL)으로 패러다임이 전환되는가?
+
+기존 대형 언어 모델(LLM) 학습은 사람이 직접 작성한 고비용 정답 데이터(Supervised Fine-Tuning)에 종속되어 있어, **'사람의 능력을 넘어서는 초지능 추론'**을 학습시키는 데 한계가 있었습니다.
+
+**DeepSeek R1**은 감독 학습(SFT) 단계를 대폭 건너뛰고, 오직 **자율 강화학습(RL)**만으로 모델이스로 오류를 수정하고 반성(Self-Correction & Reflection)하는 **Chain-of-Thought 자율 진화 아키텍처**를 완성했습니다.
+
+```
+[기존 방식: SFT 데이터 학습]    사람이 정답 작성 ──> 데이터 한계에 부딪힘 ──> 고비용 & 확장성 제한
+                                                                 ▼
+[개선 방식: R1 RL 자율 진화]   수학/코드 보상 부여 ──> 모델 스스로 반성(CoT) ──> SOTA 추론 성능 스스로 달성
+```
+
+---
+
+### 2. 🏗️ 재구성된 DeepSeekMoE & RL 추론 파이프라인 (Reconstructed Pipeline)
+
+장황한 논문 텍스트를 한눈에 파악할 수 있도록 **3단계 모듈별 데이터 처리 흐름**으로 재구성했습니다:
 
 ```mermaid
 flowchart LR
-    subgraph Input_Stage ["1. 입력 처리 단계"]
-        Prompt[입력 프롬프트] --> MLA[Multi-Head Latent Attention\n(압축 토큰 메모리 보존)]
+    subgraph Step1 ["1단계: 압축 토큰 보존"]
+        Prompt[입력 프롬프트] --> MLA[Multi-Head Latent Attention\n(KV 캐시 메모리 93% 절감)]
     end
 
-    subgraph MoE_Routing ["2. DeepSeekMoE 라우팅"]
+    subgraph Step2 ["2단계: DeepSeekMoE 라우팅"]
         MLA --> Router{Dynamic Router\n(Top-8 Expert Selector)}
         Router --> E1[Shared Expert 1]
         Router --> E2[Routed Expert 12]
         Router --> E3[Routed Expert 48]
     end
 
-    subgraph RL_Reasoning ["3. Chain-of-Thought RL 추론"]
-        E1 & E2 & E3 --> CoT[Self-Correction & Reflection\n(아하 순간 CoT 생성)]
-        CoT --> Rewards{GRPO Reward Engine\n(수학/코드 정확도 검증)}
+    subgraph Step3 ["3단계: GRPO 보상 기반 추론"]
+        E1 & E2 & E3 --> CoT[Self-Correction & Reflection\n(아하 순간 CoT 자율 생성)]
+        CoT --> Rewards{GRPO Reward Engine\n(Critic 모델 없이 상대 보상 측정)}
     end
 
-    Rewards --> Output[최종 정밀 추론 답변]
+    Rewards --> Output[최종 정밀 추론 답변 리턴]
+
+    style MLA fill:#1e293b,stroke:#3b82f6,stroke-width:2px,color:#fff
+    style Rewards fill:#1e293b,stroke:#10b981,stroke-width:2px,color:#fff
 ```
-
-#### 🔍 추론 프론티어 모델 비교표 (Pros vs Cons vs Best For)
-
-| 모델명 | 주요 장점 (Pros) | 한계점 (Cons) | 1M 토큰당 가격 (Input/Output) |
-| :--- | :--- | :--- | :--- |
-| **DeepSeek R1 (671B MoE)** | **SOTA 성능, 96% 비용 절감, 온프레미스 지원** | 8x H800 GPU 노드 최소 필요 | **$0.55 / $2.19** |
-| **OpenAI o1** | 고난도 논리 추론 최고 수준 | 비용 최고가, 클라우드 전용 | $15.00 / $60.00 |
-| **Claude 3.7 Sonnet** | 실무 코딩 SWE-Bench 70.3% 1위 | Thinking 사용 시 토큰 소비 증가 | $3.00 / $15.00 |
-
-#### 📊 1M 토큰 당 API 비용 비교
-[CHART:bar|API Input Price per 1M Tokens ($)|DeepSeek R1:0.55|Claude 3.7 Sonnet:3.00|OpenAI o1:15.00|GPT-4o:2.50]
 
 ---
 
-### 3. 💻 원클릭 SDK 연동 코드 & 프로덕션 서빙 가이던스 (HuggingFace & Chip Huyen 스타일)
+### 3. ⚡ 3대 핵심 메커니즘 심층 분석 (Critical Technical Deep-Dive)
 
-사내 서버에서 OpenAI 호환 API로 DeepSeek R1 고속 추론 서빙을 호출하는 cURL 및 Python 코드입니다.
+#### 메커니즘 A. 파스당 37B만 활성화하는 671B DeepSeekMoE 구조
+- **분석**: 전체 671B 파라미터 중 요청 1건당 딱 37B 전문가(Expert) 파라미터만 동적으로 선택 활성화합니다.
+- **효과**: Dense 모델 대비 서빙 연산량을 1/18로 감축하여 추론 가격을 OpenAI o1 대비 **96% 절감**했습니다.
 
-```bash
-# OpenAI API 호환 cURL 파이프라인 호출
-curl https://api.deepseek.com/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_DEEPSEEK_API_KEY" \
-  -d '{
-    "model": "deepseek-reasoner",
-    "messages": [
-      {"role": "system", "content": "너는 사내 시스템 아키텍트이다."},
-      {"role": "user", "content": "PostgreSQL 1M TPS 조회를 위한 파티셔닝 전략을 수립해라."}
-    ],
-    "thinking_budget": 2048
-  }'
-```
+#### 메커니즘 B. Multi-Head Latent Attention (MLA) 메모리 혁신
+- **분석**: KV 캐시 메모리 사용량을 획기적으로 줄이기 위해 Key-Value 벡터를 저차원 잠재 공간(Latent Space)으로 압축 저장합니다.
+- **효과**: 동일 GPU 노드에서 동시 처리 가능한 유저 쿼리 수(Throughput)를 4배 이상 확대했습니다.
+
+#### 메커니즘 C. Critic 모델을 제거한 GRPO (Group Relative Policy Optimization)
+- **분석**: 기존 PPO 학습 시 필요했던 대형 Critic(가치 평가) 모델을 제거하고, 그룹 내 $Q$개 답변의 상대적 평균/표준편차 보상으로 학습을 진행합니다.
+- **효과**: RL 학습 과정에서의 메모리 전력 소비를 절반으로 낮추고 학습 안정성을 극대화했습니다.
+
+---
+
+### 4. ⚖️ 주요 프론티어 추론 모델 성능 및 TCO 비교 분석 Matrix
+
+| 평가 파라미터 | DeepSeek R1 (671B MoE) | OpenAI o1 (Latest) | Claude 3.7 Sonnet (Thinking) |
+| :--- | :--- | :--- | :--- |
+| **핵심 추론 아키텍처** | DeepSeekMoE + GRPO RL | Closed Frontier MoE | Hybrid Thinking Engine |
+| **AIME 2024 (수학 올림피아드)** | **79.8%** | 79.2% | 78.5% |
+| **SWE-Bench Verified (코딩)** | 49.2% | 48.9% | **70.3%** |
+| **1M 토큰 당 API 비용 (Input/Output)**| **$0.55 / $2.19 (96% 절감)** | $15.00 / $60.00 | $3.00 / $15.00 |
+| **온프레미스 사내망 서빙** | **가능 (8x H800 노드)** | 불가능 (클라우드 전용) | 불가능 (클라우드 전용) |
+
+---
+
+### 5. 💻 실무 이식 코드 레시피 (Implementation Recipe)
+
+DeepSeek R1의 Reasoning 사고 과정(Thinking)과 최종 답변을 분리 파싱하는 Python 서빙 파이프라인 코드입니다.
 
 ```python
 from openai import OpenAI
 
-client = OpenAI(api_key="YOUR_DEEPSEEK_API_KEY", base_url="https://api.deepseek.com/v1")
-
-response = client.chat.completions.create(
-    model="deepseek-reasoner",
-    messages=[{"role": "user", "content": "복잡한 알고리즘 문제 해결 전략"}]
+# 1. DeepSeek OpenAI 호환 API 엔드포인트 세팅
+client = OpenAI(
+    api_key="YOUR_DEEPSEEK_API_KEY",
+    base_url="https://api.deepseek.com/v1"
 )
 
-# R1의 사고 과정(Thinking process)과 최종 답변 분리 출력
-print("=== Thinking Process ===")
+# 2. R1 추론 요청 파이프라인 수행
+response = client.chat.completions.create(
+    model="deepseek-reasoner",
+    messages=[{"role": "user", "content": "PostgreSQL 1M TPS 처리를 위한 파티셔닝 전략 수립"}]
+)
+
+# 3. 사고 과정(Reasoning)과 최종 결론 분리 출력
+print("🧠 === Agent Self-Correction Thinking Process ===")
 print(response.choices[0].message.reasoning_content)
-print("\n=== Final Answer ===")
+
+print("\n🎯 === Final Reconstructed Architecture Answer ===")
 print(response.choices[0].message.content)
 ```
 
-> 🛡️ **Production Guardrail Warning (실무 주의사항)**:
-> 1. **vLLM FP8 Quantization**: 8x H800 GPU 노드 배치 시 Tensor Parallelism(TP=8)과 Expert Parallelism(EP) 커널을 함께 설정하세요.
-> 2. **Reasoning Content 파싱**: 유저 UI 노출 시 사고 과정(`reasoning_content`)은 접기/펼치기 Accordion UI로 배치하여 읽기 불편함을 예방하세요.
+> 🛡️ **Production Guardrail & Security Warning (실무 경고)**:
+> - **UI 펼치기/접기 디자인**: 유저 화면 렌더링 시 장황한 `reasoning_content`는 기본적으로 접힘(Collapsed) 상태로 제공하여 읽기 피로도를 방지하세요.
 
 ---
 
-### 4. 🔬 심층 알고리즘 및 GRPO 보상 원리 분석 (Lilian Weng / Lil'Log 스타일)
-DeepSeek R1 학습의 핵심 혁신은 기존 PPO(Proximal Policy Optimization) 학습에서 필요했던 **Critic(가치 평가) 모델을 제거하고 Group Relative Policy Optimization (GRPO)**를 적용한 것입니다.
-* **수학적 보상 식**: 그룹 내 $Q$개 샘플 답변의 평균 보상 $\bar{R}$과 표준편차 $\sigma_R$을 기준으로 상대적 이점(Advantage) $A_i = \frac{R_i - \bar{R}}{\sigma_R}$을 직접 구하여 학습 가중치를 업데이트합니다.
+### 6. 🎯 4개 직무 관점별 실전 대응 전략 (Strategic Action Plan)
 
----
-
-### 5. 🎯 실무 적용 핵심 체크리스트 (Actionable Checklist)
-
-#### 🚀 추론 엔진 서빙 및 TCO 최적화
-* **vLLM / SGLang FP8 파이프라인**: DeepSeekMoE 전용 텐서 병렬화(TP=8) 및 EP(Expert Parallelism) 커널 적용.
-* **Thinking Budget 인터페이스**: 응답 속도와 추론 깊이 사이의 밸런스를 조절하는 유저 선택 UI 구성.
-* **GRPO 보상 모델 커스텀**: 사내 코딩 및 보안 지침 준수 여부를 평가하는 자체 보상 엔진 설계.
-* **온프레미스 사내망 이식**: 고비용 상용 API 대신 망분리 환경 내 671B MoE 서빙으로 월 TCO 80% 절감.
+* **👩‍💻 엔지니어/개발자**: vLLM 및 SGLang FP8 양자화 서빙 커널을 적용하여 8x H800 노드에서 671B MoE 모델을 고속 서빙하세요.
+* **💡 기획자/PM**: 추론 시간과 정확도 밸런스를 유저가 직접 조절하는 Thinking Budget 선택 인터페이스를 제공하세요.
+* **💼 비즈니스 리더**: 고비용 상용 추론 API를 DeepSeek R1 기반 사내망 오픈 모델 서빙으로 대체하여 월 TCO를 80% 이상 절감하세요.
+* **🔬 연구자/학계**: Critic 모델 없이 그룹 상대 보상으로 유전자 알고리즘 학습을 수행하는 GRPO 수학적 원리를 분석하세요.
 """
 
-SAMPLE_3_BLOG = """# 📌 [Super Hybrid Report] Cool URIs don't change: W3C 영구 웹 아키텍처 및 시스템 지속성 리포트
+SAMPLE_3_BLOG = """# 📊 [심층 기술 분석 & 아키텍처 재구성] Cool URIs don't change: W3C 영구 웹 아키텍처 및 시스템 지속성 분석
 
-> **주요 출처**: W3C Web Architecture | **카테고리**: IT 매체 | **검증**: ✅ Multi-Source Cross-Validated | **특집**: 🎨 시각화 + 💻 코드 + 💼 Executive + 🔬 Deep-Dive
-
----
-
-### 1. ⚡ 60초 Executive Summary & Why This Matters (The Pragmatic Engineer & The Batch 스타일)
-월드와이드웹(W3C) 창시자 팀 버너스 리(Tim Berners-Lee)의 명작 기술 가이드라인 **"Cool URIs don't change(좋은 URI는 변경되지 않는다)"**를 최신 웹 아키텍처 관점에서 심층 분석했습니다. 10년, 20년이 지나도 깨지지 않는(Dangling Link 없는) **영구적 웹 URI 설계 원칙과 디커플링 아키텍처**를 제시합니다.
-
-> 💡 **Why This Matters (산업 파급력)**: 무분별한 URL 변경으로 인한 **SEO 검색엔진 순위 하락 및 68%의 링크 파손율(Link Rot)**을 예방하고 사내 디지털 웹 자산 가치를 영구적으로 보존할 수 있습니다.
+> **분석 대상**: W3C Web Architecture (Tim Berners-Lee) | **분석 유형**: 심층 분석 및 아키텍처 재구성 리포트 | **검증**: ✅ Multi-Source Cross-Validated
 
 ---
 
-### 2. 🎨 단계별 시스템 아키텍처 & Evolving Data Flow (ByteByteGo & Jay Alammar 스타일)
+### 1. 🔍 배경 분석: 왜 개발 프레임워크 변경 시 URL 파손(Link Rot) 문제가 발생하는가?
+
+많은 기업들이 웹 서비스나 백엔드 시스템을 리팩토링(PHP ➔ Node.js ➔ Python/Go)할 때 `/page.php` 또는 `/servlet/item?id=99`와 같은 파일 확장자나 DB PK를 URL 주소에 직접 노출하는 **'강결합 주소 설계'** 오류를 범하고 있습니다.
+
+이로 인해 시스템 개편 시마다 기존 북마크나 검색엔진 인덱스 링크가 깨져 **5년 경과 시 68%의 링크 파손율(Link Rot)**이 발생하고 기업의 디지털 웹 자산 가치가 상실되는 심각한 문제가 일어납니다.
+
+```
+[기존 방식: 기술스택 노출 URI]   /page.php ──> Node.js 변환 시 /page.js ──> 주소 파손 (Link Rot 68%)
+                                                                ▼
+[개선 방식: W3C 영구 Cool URI]  /docs/guidelines ──> 프록시 추상화 ──> 백엔드 변경돼도 주소 유지 (Link Rot 3%)
+```
+
+---
+
+### 2. 🏗️ 재구성된 W3C 영구 디커플링 아키텍처 (Reconstructed Architecture)
+
+장황한 W3C 문서의 핵심 원칙을 **3계층 디커플링 라우팅 파이프라인**으로 시각적 재구성했습니다:
 
 ```mermaid
 flowchart TD
-    subgraph Client_Layer ["1. 클라이언트 요청 레이어"]
-        User[웹 브라우저 / API Client] -->|영구 식별자 요청| CoolURI["https://example.com/docs/api-guidelines"]
+    subgraph Client_Layer ["1계층: 클라이언트 외부 영구 주소"]
+        User[웹 브라우저 / 외부 API Client] -->|영구 식별자 요청| CoolURI["https://example.com/docs/api-guidelines"]
     end
 
-    subgraph Abstraction_Layer ["2. 추상화 & 리디렉션 레이어"]
+    subgraph Abstraction_Layer ["2계층: 추상화 & 프록시 레이어"]
         CoolURI --> ReverseProxy[Nginx / Cloudflare Edge Proxy]
-        ReverseProxy -->|내부 맵핑 분리| Router{Internal Router}
+        ReverseProxy -->|내부 주소 맵핑 분리| Router{Internal Router}
     end
 
-    subgraph Storage_Layer ["3. 백엔드 & 저장소 레이어 (자유롭게 변경 가능)"]
+    subgraph Storage_Layer ["3계층: 백엔드 & 저장소 (자유롭게 개편 가능)"]
         Router -->|2020년| Server1[PHP / Apache Server]
         Router -->|2024년| Server2[Node.js / Express Server]
         Router -->|2026년| Server3[FastAPI / Python Microservice]
     end
 
     style CoolURI fill:#1e293b,stroke:#3b82f6,stroke-width:2px,color:#fff
+    style ReverseProxy fill:#1e293b,stroke:#10b981,stroke-width:2px,color:#fff
 ```
-
-#### 🔍 안 좋은 URI 패턴 vs 영구적 Cool URI 설계 패턴 비교
-
-| 구분 | 나쁜 URI 패턴 (Bad Practice) | 영구적 Cool URI 패턴 (Best Practice) | 이유 및 개선 효과 |
-| :--- | :--- | :--- | :--- |
-| **기술 스택 노출** | `/page.php`, `/index.asp`, `/cgi-bin/` | `/docs/guidelines`, `/articles/123` | 백엔드 언어 변경 시 주소가 파손되지 않음 |
-| **날짜/버전 과도 포함**| `/2026/08/10/article.html` | `/articles/cool-uris-architecture` | 콘텐츠 카테고리 재편 시 지속성 유지 |
-| **DB PK 및 내부 경로**| `/servlet/db/item_v2_final.jsp?id=99` | `/products/wireless-keyboard` | DB 스키마 리팩토링 시 외부에 영향을 주지 않음 |
-| **조직/부서명 포함**| `/marketing/reports/2026` | `/reports/2026` | 회사 조직 개편이나 부서 통합 시 링크 유지 |
-
-#### 📊 5년 경과 후 깨진 링크 비율(Link Rot) 비교
-[CHART:bar|Link Rot Rate over 5 Years (%)|Unstructured Legacy URIs:68%|Restructured V2 URIs:42%|W3C Permanent Cool URIs:3%]
 
 ---
 
-### 3. 💻 원클릭 Nginx & Cloudflare 리버스 프록시 연동 코드 (HuggingFace & Chip Huyen 스타일)
+### 3. ⚡ 3대 핵심 메커니즘 심층 분석 (Critical Technical Deep-Dive)
 
-백엔드 기술 스택 변경 시에도 외부 URI 주소를 원형 그대로 유지해 주는 Nginx 리버스 프록시 설정 스니펫입니다.
+#### 메커니즘 A. 기술 스택 및 파일 확장자의 완전한 격리
+- **분석**: URI 경로에 `.php`, `.asp`, `cgi-bin` 등 백엔드 구현 기술을 완전히 삭제하고, 식별 대상 자원(Resource)의 명사형 이름만 남깁니다.
+- **효과**: 백엔드 프레임워크를 전면 재작성하더라도 외부 클라이언트 주소는 단 1px도 변경되지 않습니다.
+
+#### 메커니즘 B. 리버스 프록시(Reverse Proxy) 기반 URL 맵핑 추상화
+- **분석**: Edge 리버스 프록시(Nginx / Cloudflare Worker)가 외부 요청 URI를 내부 마이크로서비스 라우트로 실시간 맵핑 릴레이합니다.
+
+#### 메커니즘 C. 301 Permanent Redirect 통한 영구 자산 승계
+- **분석**: 불가피한 주소 변경 시 임시 302가 아닌 301 Permanent Redirect 헤더를 응답하여 검색엔진 백링크 점수를 100% 보존합니다.
+
+---
+
+### 4. ⚖️ 나쁜 URI 패턴 vs W3C 영구 Cool URI 패턴 비교 분석 Matrix
+
+| 비교 구분 | 나쁜 URI 패턴 (Bad Practice) | 영구적 Cool URI 패턴 (Best Practice) | 구조적 개선 효과 |
+| :--- | :--- | :--- | :--- |
+| **기술 스택 노출** | `/page.php`, `/index.asp` | `/docs/guidelines`, `/articles/123` | **백엔드 언어 변경 시 주소가 파손되지 않음** |
+| **날짜/버전 과도 포함**| `/2026/08/10/article.html` | `/articles/cool-uris-architecture` | **콘텐츠 카테고리 재편 시 영구 지속성 유지** |
+| **DB PK 및 내부 경로**| `/servlet/db/item_v2.jsp?id=99` | `/products/wireless-keyboard` | **DB 스키마 리팩토링 시 외부에 영향을 주지 않음** |
+| **조직/부서명 포함**| `/marketing/reports/2026` | `/reports/2026` | **회사 조직 개편이나 부서 통합 시 링크 유지** |
+
+---
+
+### 5. 💻 실무 이식 Nginx 영구 프록시 연동 코드 레시피 (Implementation Recipe)
+
+W3C 영구 URI 원칙을 실제 인프라 레벨에서 구현하는 Nginx 프록시 연동 코드입니다.
 
 ```nginx
 # W3C Permanent URI Decoupling Proxy Configuration
@@ -267,40 +333,33 @@ server {
     listen 80;
     server_name example.com;
 
-    # 외부 노출 영구 URI 라우트
+    # 외부 노출 영구 URI 라우트 (W3C Best Practice)
     location /docs/api-guidelines {
-        # 백엔드 기술 스택이 PHP -> Node.js -> Python으로 변경되어도 
+        # 백엔드 기술 스택이 PHP -> Node.js -> Python으로 개편되어도
         # 외부 클라이언트는 오직 /docs/api-guidelines 주소만 바라봅니다.
         proxy_pass http://internal-microservice-cluster:8000/v3/guidelines;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
     }
 
-    # 레거시 URL 301 영구 리디렉션
+    # 레거시 URL 301 영구 리디렉션 (SEO 점수 승계)
     location ~ ^/page\.php$ {
         return 301 https://$host/docs/api-guidelines;
     }
 }
 ```
 
-> 🛡️ **Production Guardrail Warning (실무 주의사항)**:
-> 1. **301 vs 302 Redirection**: 주소 변경 시 반드시 SEO 백링크 자산 점수를 100% 승계받도록 302(임시)가 아닌 `301 Permanent Redirect` 헤더를 응답하세요.
-> 2. **Canonical Tag 명시**: 동일 콘텐츠가 여러 주소로 조회될 수 있는 경우 HTML `<link rel="canonical" href="...">` 태그를 필수 선언하세요.
+> 🛡️ **Production Guardrail Warning (실무 경고)**:
+> - **Canonical Tag 선언**: 동일 콘텐츠가 복수 주소로 노출될 가능성을 방지하기 위해 HTML `<link rel="canonical" href="...">` 태그를 반드시 선언하세요.
 
 ---
 
-### 4. 🔬 심층 웹 아키텍처 디커플링 원리 분석 (Lilian Weng / Lil'Log 스타일)
-W3C 영구 URI 원칙의 핵심 수학적 개념은 **URI의 지속성(Persistence)은 웹 기술이 아니라 인간 조직과 시스템의 디커플링 관리 설계**에 종속된다는 점입니다.
-* **Resource vs Representation**: URI는 물리적 파일이 아닌 '추상적 자원(Resource)'을 지목해야 하며, 내부 구현체(HTML, JSON, PDF)는 HTTP Accept Content Negotiation 헤더로 분리하여 다뤄야 합니다.
+### 6. 🎯 4개 직무 관점별 실전 대응 전략 (Strategic Action Plan)
 
----
-
-### 5. 🎯 실무 적용 핵심 체크리스트 (Actionable Checklist)
-
-#### 🚀 영구적 URI 설계 및 트래픽 보존
-* **URL 라우팅 추상화 레이어 적용**: Nginx, Cloudflare Edge Worker 등 리버스 프록시를 배치하여 주소와 내부 파일 확장자 분리.
-* **301 Permanent Redirect 엔진**: 구주소 파손 방지 및 SEO 백링크 자산 유지를 위한 레거시 URL 변환 맵핑 수립.
-* **시맨틱 Slug URL 적용**: 사용자 가독성과 검색엔진 SEO에 최적화된 직관적 식별자 구조 설계.
+* **👩‍💻 엔지니어/개발자**: Nginx/Cloudflare Edge Worker를 적용하여 외부 영구 URI 주소와 내부 백엔드 파일/기술 스택을 완전히 디커플링하세요.
+* **💡 기획자/PM**: 콘텐츠 URL 설계 시 날짜나 부서명 대신 영구 식별자 Slug 방식을 서비스 라우팅 표준으로 채택하세요.
+* **💼 비즈니스 리더**: SEO 검색엔진 순위 유지 및 68%의 깨진 링크 발생 방지를 통해 브랜드 디지털 웹 자산 가치를 유지하세요.
+* **🔬 연구자/학계**: HTTP Content Negotiation 메커니즘을 적용하여 자원의 식별자와 표상(Representation)을 분리하는 웹 아키텍처 원리를 연구하세요.
 """
 
 def create_sample_articles():
@@ -309,7 +368,7 @@ def create_sample_articles():
         samples = [
             {
                 "id": "sample-agentic-computer-use",
-                "title": "[Super Hybrid Report] Anthropic, 자율 멀티에이전트 Computer Use 및 Agentic Tooling 2.0 파이프라인 발표",
+                "title": "[심층 기술 분석] Anthropic Computer Use 2.0: GUI 자율 제어 및 Agentic 오케스트레이션 분석",
                 "source_name": "Anthropic AI Engineering",
                 "source_url": "https://www.anthropic.com/news/agentic-tooling-2.0",
                 "published_at": datetime.now(timezone.utc).isoformat(),
@@ -334,7 +393,7 @@ def create_sample_articles():
             },
             {
                 "id": "sample-deepseek-r1-moe",
-                "title": "[Super Hybrid Report] DeepSeek R1 / V3: 671B MoE 자율 강화학습(RL) 아키텍처 및 벤치마크 분석",
+                "title": "[심층 기술 분석] DeepSeek R1 / V3: 671B MoE 자율 강화학습(RL) 아키텍처 분석",
                 "source_name": "DeepSeek AI Lab",
                 "source_url": "https://github.com/deepseek-ai/DeepSeek-R1",
                 "published_at": datetime.now(timezone.utc).isoformat(),
@@ -359,7 +418,7 @@ def create_sample_articles():
             },
             {
                 "id": "sample-w3c-cool-uris",
-                "title": "[Super Hybrid Report] Cool URIs don't change: W3C 영구 웹 아키텍처 및 시스템 지속성 리포트",
+                "title": "[심층 기술 분석] Cool URIs don't change: W3C 영구 웹 아키텍처 및 시스템 지속성 분석",
                 "source_name": "W3C Web Architecture",
                 "source_url": "https://www.w3.org/Provider/Style/URI",
                 "published_at": datetime.now(timezone.utc).isoformat(),
@@ -372,10 +431,10 @@ def create_sample_articles():
                 ],
                 "blog_summary": SAMPLE_3_BLOG,
                 "actionable_insight": {
-                    "developer": "Nginx/Cloudflare Edge Worker를 적용하여 외부 영구 URI 주소와 내부 백엔드 파일/기술 스택을 분리하세요.",
-                    "pm": "콘텐츠 URL 설계 시 날짜나 부서명 대신 영구 식별자 Slug 방식을 서비스 표준으로 채택하세요.",
-                    "business": "SEO 검색엔진 순위 유지 및 68%의 깨진 링크 발생 방지를 통해 브랜드 웹 자산 가치를 유지하세요.",
-                    "researcher": "HTTP Content Negotiation 메커니즘을 적용하여 자원의 식별자와 표상(Representation)을 분리하는 원리를 연구하세요."
+                    "developer": "Nginx/Cloudflare Edge Worker를 적용하여 외부 영구 URI 주소와 내부 백엔드 파일/기술 스택을 완전히 디커플링하세요.",
+                    "pm": "콘텐츠 URL 설계 시 날짜나 부서명 대신 영구 식별자 Slug 방식을 서비스 라우팅 표준으로 채택하세요.",
+                    "business": "SEO 검색엔진 순위 유지 및 68%의 깨진 링크 발생 방지를 통해 브랜드 디지털 웹 자산 가치를 유지하세요.",
+                    "researcher": "HTTP Content Negotiation 메커니즘을 적용하여 자원의 식별자와 표상(Representation)을 분리하는 웹 아키텍처 원리를 연구하세요."
                 },
                 "impact_score": 92,
                 "tags": ["#W3C", "#WebArchitecture", "#URI", "#Infrastructure"],
@@ -403,7 +462,7 @@ def create_sample_articles():
             else:
                 db.add(NewsArticleDB(**s))
         db.commit()
-        print("✅ Super Hybrid 4-in-1 sample articles populated successfully!")
+        print("✅ Reconstructed Analytical Report sample articles populated successfully!")
     except Exception as e:
         print(f"❌ Error creating sample articles: {e}")
         db.rollback()
