@@ -1,9 +1,5 @@
-name = "llm-compass-frontend"
+name = "ai-model-agent"
 compatibility_date = "2025-01-01"
-pages_build_output_dir = "frontend/dist"
 
-[env.production]
-name = "llm-compass-frontend"
-
-[env.preview]
-name = "llm-compass-frontend-preview"
+[assets]
+directory = "frontend/dist"
