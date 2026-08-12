@@ -127,7 +127,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     },
     dashboard: {
       title: "글로벌 LLM 모델 카탈로그",
-      subtitle: "OpenAI, Anthropic, Google, AWS Bedrock, DeepSeek, Meta 등 142+ AI 전체 모델 공식 출처(Official Docs) 기반 스펙, 비용, 할당량 및 벤치마크 비교",
+      subtitle: "OpenAI, Anthropic, Google, AWS Bedrock, DeepSeek, Meta 등 580+ AI 전체 모델 공식 출처(Official Docs) 기반 스펙, 비용, 할당량 및 벤치마크 비교",
       searchPlaceholder: "모델명, 프로바이더, 라이선스 검색...",
       allProviders: "모든 프로바이더",
       allTiers: "모든 티어",
@@ -217,7 +217,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     },
     dashboard: {
       title: "Global LLM Model Catalog",
-      subtitle: "Compare official specs, pricing, rate limits, and benchmarks for 142+ LLMs with verified official documentation source links",
+      subtitle: "Compare official specs, pricing, rate limits, and benchmarks for 580+ LLMs with verified official documentation source links",
       searchPlaceholder: "Search model name, provider, license...",
       allProviders: "All Providers",
       allTiers: "All Tiers",
