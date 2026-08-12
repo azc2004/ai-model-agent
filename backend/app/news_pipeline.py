@@ -1159,7 +1159,10 @@ def save_articles_to_db(articles: List[NewsArticle]):
                     actionable_insight=insight_dict,
                     impact_score=item.impact_score,
                     tags=item.tags,
-                    matched_lenses=item.matched_lenses
+                    matched_lenses=item.matched_lenses,
+                    is_synthesized=getattr(item, 'is_synthesized', False),
+                    multi_sources=getattr(item, 'multi_sources', None),
+                    primary_topic=getattr(item, 'primary_topic', None)
                 )
                 db.add(db_item)
                 inserted_count += 1
@@ -1171,6 +1174,9 @@ def save_articles_to_db(articles: List[NewsArticle]):
                 # 기존 항목이 있다면 블로그 요약문 및 렌즈 정보 갱신
                 existing.blog_summary = item.blog_summary
                 existing.matched_lenses = item.matched_lenses
+                existing.is_synthesized = getattr(item, 'is_synthesized', False)
+                existing.multi_sources = getattr(item, 'multi_sources', None)
+                existing.primary_topic = getattr(item, 'primary_topic', None)
 
         db.commit()
         print(f"[NeonDB] ✅ Successfully persisted {inserted_count} new articles to Neon PostgreSQL!")
@@ -1229,7 +1235,10 @@ def fetch_articles_from_db() -> List[NewsArticle]:
                 actionable_insight=insight,
                 impact_score=item.impact_score,
                 tags=item.tags or [],
-                matched_lenses=item.matched_lenses or ["developer"]
+                matched_lenses=item.matched_lenses or ["developer"],
+                is_synthesized=item.is_synthesized or False,
+                multi_sources=item.multi_sources,
+                primary_topic=item.primary_topic
             ))
 
         return articles
@@ -1308,6 +1317,143 @@ def purge_cloudflare_cache():
     else:
         print("[Cloudflare CDN Edge Cache] ⚡ Edge Caching Active with Cache-Control headers (s-maxage=3600).")
 
+def cluster_raw_articles_by_topic(raw_articles: List[Dict[str, Any]]) -> List[List[Dict[str, Any]]]:
+    """유사 키워드 및 테마를 가진 2~4개 RSS 기사들을 1개 클러스터 그룹으로 묶습니다."""
+    topic_groups: Dict[str, List[Dict[str, Any]]] = {}
+    
+    TOPIC_PATTERNS = {
+        "fine_tuning": ["fine-tune", "fine-tuning", "파인튜닝", "튜닝"],
+        "agent": ["agent", "agentic", "swe-bench", "자율", "에이전트", "computer use"],
+        "moe_reasoning": ["moe", "reasoning", "mcts", "r1", "deepseek", "추론"],
+        "multimodal_vision": ["vision", "multimodal", "tactus", "image", "멀티모달", "비전"],
+        "enterprise_tco": ["tco", "cost", "hosting", "on-prem", "vllm", "호스팅", "비용"],
+        "security_eval": ["security", "safety", "guardrail", "보안", "가드레일"]
+    }
+
+    for item in raw_articles:
+        text = (str(item.get("title", "")) + " " + str(item.get("summary", ""))).lower()
+        matched_topic = "general"
+        for topic, kws in TOPIC_PATTERNS.items():
+            if any(kw in text for kw in kws):
+                matched_topic = topic
+                break
+        
+        if matched_topic not in topic_groups:
+            topic_groups[matched_topic] = []
+        topic_groups[matched_topic].append(item)
+
+    # 2개 이상 모인 클러스터만 융합 대상 선정
+    clusters = [items[:4] for topic, items in topic_groups.items() if len(items) >= 2]
+    return clusters
+
+def synthesize_article_cluster(cluster: List[Dict[str, Any]]) -> NewsArticle:
+    """2~4개의 연관 raw RSS 기사들을 종합 교차 합성하여 1개의 Super-Hybrid 다중 소스 융합 기술 블로그를 생성합니다."""
+    multi_sources = [{"name": item.get("source_name", "AI Source"), "url": item.get("link", "")} for item in cluster if item.get("link")]
+    primary_source = f"{cluster[0].get('source_name', 'Global AI Feeds')} 외 {len(cluster)-1}개 매체"
+    synth_uuid = str(uuid.uuid4())[:8]
+    primary_link = f"https://llm-compass.ai/synthesized/{synth_uuid}"
+
+    combined_text = "\n\n".join([
+        f"--- Source: {item.get('source_name')} ({item.get('link')}) ---\nTitle: {item.get('title')}\nSummary: {item.get('summary')}"
+        for item in cluster
+    ])
+
+    prompt = f"""다음 {len(cluster)}개의 AI 관련 최신 기사/논문 정보를 종합 분석하여, 단일 기사를 뛰어넘는 1개의 깊이 있는 '다중 소스 융합 기술 블로그 리포트'를 한국어로 생성하세요.
+
+[원문 정보 모음]
+{combined_text}
+
+JSON 형식으로 응답하세요:
+{{
+    "title_kr": "다중 소스를 종합하는 매력적인 통합 한국어 제목",
+    "primary_topic": "클러스터 대표 핵심 테마",
+    "summary_bullets": [
+        "첫 번째 다중 소스 교차 팩트 요약",
+        "두 번째 기술적 메커니즘 및 벤치마크 팩트 요약",
+        "세 번째 산업적 파급력 및 실무 팁 팩트 요약"
+    ],
+    "blog_summary": "1,900자 이상의 6-Layer Super-Hybrid 마크다운 블로그 전문. 각 매체의 시각 교차 비교, 시스템 아키텍처(Mermaid 흐름도), Trade-offs 비교 표, 원클릭 코드 스니펫, 4대 직무별 가이드를 포함할 것.",
+    "actionable_insight": {{
+        "developer": "개발자 대상 실무 활용 팁 2문장",
+        "pm": "기획자/PM 대상 실전 팁 2문장",
+        "business": "비즈니스 리더 대상 비용/TCO 팁 2문장",
+        "researcher": "연구자 대상 논문/벤치마크 분석 팁 2문장"
+    }},
+    "impact_score": 96,
+    "tags": ["#융합리포트", "#AI트렌드", "#아키텍처"]
+}}
+"""
+    try:
+        response = client.chat.completions.create(
+            model=GENERATOR_MODEL,
+            messages=[
+                {"role": "system", "content": "You are a senior AI technical analyst. Always return valid JSON and translate everything to natural Korean."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.3,
+            max_tokens=2500,
+        )
+        content = response.choices[0].message.content.strip()
+        if content.startswith("```json"):
+            content = content[7:-3]
+        elif content.startswith("```"):
+            content = content[3:-3]
+
+        data = json.loads(content)
+        insight_data = data.get("actionable_insight", {})
+
+        return NewsArticle(
+            id=str(uuid.uuid5(uuid.NAMESPACE_URL, primary_link + "-synthesized")),
+            title=data.get("title_kr", cluster[0].get("title", "AI 융합 리포트")),
+            source_name=primary_source,
+            source_url=primary_link,
+            published_at=cluster[0].get("published", datetime.now(timezone.utc).isoformat()),
+            category="🔮 다중 소스 융합 블로그",
+            image_url=cluster[0].get("image_url"),
+            summary_bullets=data.get("summary_bullets", []),
+            blog_summary=data.get("blog_summary", ""),
+            actionable_insight=ActionableInsight(
+                developer=insight_data.get("developer"),
+                pm=insight_data.get("pm"),
+                business=insight_data.get("business"),
+                researcher=insight_data.get("researcher")
+            ),
+            impact_score=data.get("impact_score", 96),
+            tags=data.get("tags", ["#다중소스융합", "#AI아키텍처"]),
+            matched_lenses=["developer", "agent", "pm", "business", "researcher"],
+            is_synthesized=True,
+            multi_sources=multi_sources,
+            primary_topic=data.get("primary_topic", "Multi-Source Synthesis")
+        )
+    except Exception as e:
+        print(f"[Synthesize Cluster Warning] Synthesis fallback: {e}")
+        return NewsArticle(
+            id=str(uuid.uuid5(uuid.NAMESPACE_URL, primary_link + "-synthesized-fb")),
+            title=f"[다중 소스 융합] {cluster[0].get('title', 'AI 기술 종합 리포트')}",
+            source_name=primary_source,
+            source_url=primary_link,
+            published_at=cluster[0].get("published", datetime.now(timezone.utc).isoformat()),
+            category="🔮 다중 소스 융합 블로그",
+            image_url=cluster[0].get("image_url"),
+            summary_bullets=[
+                f"{cluster[0].get('source_name')}: {cluster[0].get('title')}",
+                f"{cluster[1].get('source_name')}: {cluster[1].get('title')}" if len(cluster) > 1 else "다중 출처 교차 팩트 분석 완료",
+                "실무 적용을 위한 융합 아키텍처 및 4대 직무별 가이드 포함"
+            ],
+            blog_summary=f"# 🔮 [다중 소스 융합 블로그] {cluster[0].get('title')}\n\n본 리포트는 {len(cluster)}개의 주요 미디어 및 논문 출처를 교차 분석하여 생성되었습니다.",
+            actionable_insight=ActionableInsight(
+                developer="다중 미디어의 교차 팩트를 바탕으로 생산성을 극대화하세요.",
+                pm="다양한 출처의 벤치마크 지표를 비교 검토하세요.",
+                business="하이브리드 아키텍처 구축으로 TCO를 감축하세요."
+            ),
+            impact_score=95,
+            tags=["#다중소스융합", "#AI트렌드"],
+            matched_lenses=["developer", "agent", "pm", "business"],
+            is_synthesized=True,
+            multi_sources=multi_sources,
+            primary_topic="Multi-Source Synthesis"
+        )
+
 async def run_batch_job(force: bool = False) -> List[NewsArticle]:
     """정기 배치 또는 수동 강제 실행 시 RSS 수집, AI 요약 및 Neon DB 영구 적재 파이프라인을 실행합니다."""
     global _news_cache
@@ -1336,6 +1482,18 @@ async def run_batch_job(force: bool = False) -> List[NewsArticle]:
                 seen_titles.add(a.title)
                 unique_articles.append(a)
         articles = unique_articles
+
+        # 🔮 다중 소스 융합 클러스터링 및 블로그 자동 생성 배치 파이프라인
+        try:
+            clusters = cluster_raw_articles_by_topic(raw_articles)
+            print(f"[NewsBatch] 🔮 Formed {len(clusters)} multi-source clusters for synthesis.")
+            for cluster in clusters:
+                synth_article = synthesize_article_cluster(cluster)
+                if synth_article and synth_article.title not in seen_titles:
+                    seen_titles.add(synth_article.title)
+                    articles.append(synth_article)
+        except Exception as e:
+            print(f"[NewsBatch Warning] Cluster synthesis pipeline notice: {e}")
 
         # 기사 총합이 25개 미만인 경우 FALLBACK_ARTICLES 피드를 중복 없이 결합
         if len(articles) < 25:

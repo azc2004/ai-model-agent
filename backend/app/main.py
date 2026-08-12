@@ -55,6 +55,7 @@ def health_check():
         "total_providers": len(PROVIDERS)
     }
 
+from sqlalchemy import text
 from app.database import SessionLocal, engine, Base
 from app.db_models import LLMModelDB, ProviderDB, NewsArticleDB
 
@@ -65,6 +66,12 @@ def init_neon_db_catalog():
     """
     try:
         Base.metadata.create_all(bind=engine)
+        # 테이블 컬럼 동적 마이그레이션 (is_synthesized, multi_sources, primary_topic)
+        with engine.connect() as conn:
+            conn.execute(text('ALTER TABLE news_articles ADD COLUMN IF NOT EXISTS is_synthesized BOOLEAN DEFAULT FALSE;'))
+            conn.execute(text('ALTER TABLE news_articles ADD COLUMN IF NOT EXISTS multi_sources JSON;'))
+            conn.execute(text('ALTER TABLE news_articles ADD COLUMN IF NOT EXISTS primary_topic VARCHAR(200);'))
+            conn.commit()
         db = SessionLocal()
         count = db.query(LLMModelDB).count()
         if count < len(MODELS):
