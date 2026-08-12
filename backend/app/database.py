@@ -20,6 +20,8 @@ if DATABASE_URL.startswith("postgres://"):
 # SQLAlchemy 엔진 생성
 engine = create_engine(
     DATABASE_URL,
+    pool_size=20,            # 동시 연결 커넥션 풀 크기 20으로 확장
+    max_overflow=30,         # 피크 트래픽 대비 오버플로우 30 허용 (QueuePool 타임아웃 100% 방지)
     pool_pre_ping=True,      # 커넥션 유효성 자동 핑 검사 (Neon 수면 해제 지원)
     pool_recycle=300,        # 5분 단위 커넥션 재사용
     connect_args={"sslmode": "require"} if "postgresql" in DATABASE_URL else {}
