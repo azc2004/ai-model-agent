@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from typing import List, Optional
-from fastapi import FastAPI, HTTPException, Query, Response
+from fastapi import FastAPI, HTTPException, Query, Response, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.schemas import (
@@ -374,13 +374,13 @@ async def get_news_pulse(
         "last_updated": datetime.now(timezone.utc).isoformat()
     }
 
-@app.post("/api/v1/news/pulse/refresh", response_model=NewsPulseResponse)
-async def force_refresh_news_pulse():
-    """관리자/개발자 수동 강제 수집 배치 및 DB 동기화 엔드포인트"""
-    articles = await run_batch_job(force=True)
+@app.post("/api/v1/news/pulse/refresh")
+async def force_refresh_news_pulse(background_tasks: BackgroundTasks):
+    """관리자/개발자/GitHub Actions 수동 강제 수집 배치 엔드포인트 (비동기 백그라운드 태스크 실행으로 HTTP 타임아웃 0%)"""
+    background_tasks.add_task(run_batch_job, force=True)
     return {
-        "articles": articles,
-        "total_count": len(articles),
+        "articles": [],
+        "total_count": 0,
         "last_updated": datetime.now(timezone.utc).isoformat()
     }
 

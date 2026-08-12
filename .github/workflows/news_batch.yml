@@ -19,14 +19,14 @@ jobs:
 
       - name: 🚀 2. Execute AI News Refresh Batch Job with Retries
         run: |
-          echo "Starting GitHub Actions AI News Pulse Batch..."
+          echo "Starting GitHub Actions AI News Pulse Batch Trigger..."
           
-          # 타임아웃 180초, 3회 재시도 (재시도 간격 10초) 적용
+          # 백엔드 BackgroundTasks 비동기 기동으로 0.1초 내 HTTP 200 OK 응답 수령
           curl -v -X POST "https://llm-compass-backend.onrender.com/api/v1/news/pulse/refresh" \
                -H "Content-Type: application/json" \
-               --max-time 180 \
+               --connect-timeout 30 \
+               --max-time 60 \
                --retry 3 \
-               --retry-delay 10 \
-               --retry-max-time 300
+               --retry-delay 5
 
-          echo "✅ Successfully triggered news batch pipeline on Render backend!"
+          echo "✅ Successfully triggered news batch pipeline in background on Render backend!"
