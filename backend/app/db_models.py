@@ -19,6 +19,9 @@ class NewsArticleDB(Base):
     impact_score = Column(Integer, default=85, index=True)
     tags = Column(JSON, nullable=True)                  # 태그 리스트 (JSON)
     matched_lenses = Column(JSON, nullable=True)        # 매칭 직무 렌즈 (JSON)
+    is_synthesized = Column(Boolean, default=False)     # 2~5개 다중 소스 융합 블로그 여부
+    multi_sources = Column(JSON, nullable=True)         # 참조된 다중 소스 정보 ([{"name": "...", "url": "..."}])
+    primary_topic = Column(String(200), nullable=True)  # 클러스터 대표 테마
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 class LLMModelDB(Base):

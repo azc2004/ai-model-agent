@@ -218,6 +218,9 @@ class NewsArticle(BaseModel):
     tags: List[str] = Field(default_factory=list, description="핵심 트렌딩 키워드 태그")
     matched_lenses: List[str] = Field(default_factory=list, description="연관된 직무 렌즈 ['developer', 'pm', 'business', 'researcher']")
     is_new: bool = Field(False, description="신규 수집 기사 여부 (48시간 이내)")
+    is_synthesized: bool = Field(False, description="2~5개 다중 소스 융합 블로그 여부")
+    multi_sources: Optional[List[Dict[str, str]]] = Field(None, description="참조된 다중 소스 정보 ([{'name': '...', 'url': '...'}])")
+    primary_topic: Optional[str] = Field(None, description="클러스터 대표 테마")
 
 class NewsPulseResponse(BaseModel):
     articles: List[NewsArticle]

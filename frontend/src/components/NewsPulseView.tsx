@@ -26,6 +26,9 @@ interface NewsArticle {
   tags: string[];
   matched_lenses: string[];
   is_new?: boolean;
+  is_synthesized?: boolean;
+  multi_sources?: Array<{ name: string; url: string }>;
+  primary_topic?: string;
 }
 
 import type { Language } from '../i18n/translations';
@@ -270,7 +273,8 @@ const I18N_TEXTS = {
 };
 
 const LENSES = [
-  { id: 'all', label: '🔥 전체', icon: Activity, desc: '주요 AI 트렌드 종합' },
+  { id: 'all', label: '🔥 전체 피드', icon: Activity, desc: '주요 AI 트렌드 종합' },
+  { id: 'synthesized', label: '🔮 다중 소스 융합 블로그', icon: Sparkles, desc: '2~5개 관련 기사를 교차 분석하여 통합 탄생시킨 차세대 기술 블로그' },
   { id: 'new', label: '✨ 최신 속보 (NEW)', icon: Sparkles, desc: '최근 72시간 이내 수집된 신규 기술 리포트만 조망' },
   { id: 'developer', label: '👩‍💻 코딩 & 프레임워크', icon: Users, desc: 'API, 파인튜닝, Coding Agent, SDK' },
   { id: 'agent', label: '🤖 Agent & 오토메이션', icon: Activity, desc: 'Agentic AI, 자율 에이전트, RAG, 멀티에이전트' },
@@ -422,14 +426,21 @@ const CLIENT_FALLBACK_NEWS: NewsResponse = {
     // 👩‍💻 개발자/엔지니어 특화 (Developer Lens)
     {
       id: "fb-dev-1",
-      title: "OpenAI, 저비용 고효율 모델 Fine-Tuning API 및 추론 지연시간 35% 단축 기술 정식 출시",
+      title: "OpenAI & Microsoft, 저비용 고효율 모델 Fine-Tuning API 및 추론 지연시간 35% 단축 기술 정식 출시",
       source_name: "OpenAI Blog",
       source_url: "https://openai.com/news/",
       published_at: new Date().toISOString(),
       category: "빅테크 공식",
       image_url: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+      is_synthesized: true,
+      multi_sources: [
+        { name: "OpenAI Official", url: "https://openai.com/news/" },
+        { name: "Microsoft Research", url: "https://www.microsoft.com/en-us/research/" },
+        { name: "VentureBeat AI", url: "https://venturebeat.com/category/ai/" }
+      ],
+      primary_topic: "Fine-Tuning API & Latency Optimization",
       summary_bullets: [
-        "OpenAI가 저비용 고효율 파인튜닝과 추론 성능을 극대화한 신규 엔드포인트를 공식 개방함.",
+        "OpenAI 및 Microsoft Research가 저비용 고효율 파인튜닝과 추론 성능을 극대화한 신규 엔드포인트를 공식 개방함.",
         "기업 도메인에 특화된 사용자 맞춤형 커스텀 모델 생성을 60% 이상 저렴한 비용으로 제공.",
         "개발자 콘솔을 통한 추론 지연 시간(Latency) 35% 단축 및 9월 말까지 파인튜닝 토큰 혜택 부여."
       ],
@@ -444,14 +455,20 @@ const CLIENT_FALLBACK_NEWS: NewsResponse = {
     },
     {
       id: "fb-dev-2",
-      title: "Google DeepMind, SWE-bench 42% 상회하는 코드 리팩토링 및 런타임 버그 수술용 자율 코딩 에이전트 공개",
+      title: "Google DeepMind & ArXiv, SWE-bench 42% 상회하는 코드 리팩토링 및 런타임 버그 수술용 자율 코딩 에이전트 공개",
       source_name: "Google DeepMind",
       source_url: "https://deepmind.google/blog/",
       published_at: new Date().toISOString(),
       category: "빅테크 공식",
       image_url: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80",
+      is_synthesized: true,
+      multi_sources: [
+        { name: "Google DeepMind", url: "https://deepmind.google/blog/" },
+        { name: "ArXiv AI Papers", url: "https://arxiv.org/abs/2608.001" }
+      ],
+      primary_topic: "Autonomous Coding Agent & SWE-Bench",
       summary_bullets: [
-        "구글 딥마인드가 멀티모달 화면 뷰어와 지식 그래프를 연동한 자율 개발 에이전트 엔진을 공개함.",
+        "구글 딥마인드와 ArXiv 커뮤니티가 멀티모달 화면 뷰어와 지식 그래프를 연동한 자율 개발 에이전트 엔진을 공개함.",
         "SWE-bench 파이프라인 벤치마크에서 기존 LLM 대비 코드 수정 및 자동 테스트 성공률 42% 상회.",
         "개발자가 작성한 요구사항 명세서만으로 전체 프론트엔드/백엔드 모듈 빌드 자동 완성."
       ],
@@ -940,7 +957,9 @@ export default function NewsPulseView() {
     if (!newsData?.articles) return [];
     let list = newsData.articles;
 
-    if (activeLens === 'new') {
+    if (activeLens === 'synthesized') {
+      list = list.filter(a => a.is_synthesized);
+    } else if (activeLens === 'new') {
       list = list.filter(a => isRecentArticle(a.published_at, a.is_new));
     }
 
@@ -1150,6 +1169,11 @@ export default function NewsPulseView() {
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2.5 mb-2.5 flex-wrap">
+                      {article.is_synthesized && (
+                        <span className="px-2.5 py-1 text-xs font-black rounded-lg bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 text-white shadow-md flex items-center gap-1">
+                          🔮 {article.multi_sources ? `${article.multi_sources.length}개 출처 융합` : '다중 소스 융합'}
+                        </span>
+                      )}
                       {isRecentArticle(article.published_at, article.is_new) && (
                         <span className="px-2.5 py-1 text-xs font-black rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md animate-pulse flex items-center gap-1">
                           ⚡ NEW
@@ -1158,6 +1182,18 @@ export default function NewsPulseView() {
                       <span className="px-2.5 py-1 text-xs font-bold rounded-lg bg-slate-100 text-slate-800 dark:bg-slate-700/80 dark:text-slate-200">
                         🏢 {article.source_name}
                       </span>
+                      {article.multi_sources && article.multi_sources.map((src, idx) => (
+                        <a 
+                          key={idx} 
+                          href={src.url} 
+                          target="_blank" 
+                          rel="noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="px-2 py-0.5 text-[11px] font-bold rounded-md bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 hover:underline flex items-center gap-1 border border-purple-200 dark:border-purple-800"
+                        >
+                          🔗 {src.name}
+                        </a>
+                      ))}
                       <span className={`px-2.5 py-1 text-xs font-bold rounded-lg ${getImpactColor(article.impact_score)}`}>
                         🔥 Impact: {article.impact_score}
                       </span>

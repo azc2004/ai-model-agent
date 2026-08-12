@@ -25,6 +25,9 @@ export interface NewsArticle {
   impact_score: number;
   tags: string[];
   matched_lenses: string[];
+  is_synthesized?: boolean;
+  multi_sources?: Array<{ name: string; url: string }>;
+  primary_topic?: string;
 }
 
 interface NewsDetailViewProps {
@@ -762,6 +765,33 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
                 </span>
               ))}
             </div>
+
+            {/* 🔮 Multi-Source Synthesis Reference Box */}
+            {article.multi_sources && article.multi_sources.length > 0 && (
+              <div className="mt-4 p-4 rounded-2xl bg-purple-50/80 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800/60 shadow-sm space-y-2">
+                <div className="flex items-center gap-2 text-xs font-black text-purple-900 dark:text-purple-300">
+                  <Sparkles className="w-4 h-4 text-purple-600 dark:text-purple-400 animate-pulse" />
+                  <span>🔮 다중 소스 교차 합성 리포트 (Multi-Source Synthesis Report)</span>
+                </div>
+                <p className="text-xs text-purple-800 dark:text-purple-300 font-medium">
+                  본 리포트는 아래 {article.multi_sources.length}개의 주요 공식 파트너 매체 및 학술 논문의 시각과 데이터를 교차 분석하여 단일 통합 기술 블로그로 재탄생되었습니다:
+                </p>
+                <div className="flex flex-wrap gap-2 pt-1">
+                  {article.multi_sources.map((src, idx) => (
+                    <a
+                      key={idx}
+                      href={src.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-purple-200 dark:border-purple-800 text-xs font-bold text-purple-700 dark:text-purple-300 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1.5 shadow-sm transition-all"
+                    >
+                      <span>🔗 {src.name}</span>
+                      <ExternalLink className="w-3 h-3 opacity-60" />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Rich Parsed Body */}
