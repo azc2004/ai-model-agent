@@ -935,7 +935,7 @@ export default function NewsPulseView() {
     fetchNews(activeLens);
   }, [activeLens]);
 
-  // 키워드 및 렌즈 실시간 필터링
+  // 키워드 및 렌즈 실시간 필터링 (3중 정밀 데두플리케이션 적용)
   const filteredArticles = useMemo(() => {
     if (!newsData?.articles) return [];
     let list = newsData.articles;
@@ -944,20 +944,43 @@ export default function NewsPulseView() {
       list = list.filter(a => isRecentArticle(a.published_at, a.is_new));
     }
 
-    if (!searchQuery.trim()) return list;
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      list = list.filter(article => {
+        const titleMatch = article.title.toLowerCase().includes(q);
+        const sourceMatch = article.source_name.toLowerCase().includes(q);
+        const tagMatch = article.tags?.some(tag => tag.toLowerCase().includes(q));
+        const summaryMatch = article.summary_bullets?.some(b => b.toLowerCase().includes(q));
+        const blogMatch = article.blog_summary?.toLowerCase().includes(q);
+        const insightMatch = article.actionable_insight 
+          ? Object.values(article.actionable_insight).some(v => v && v.toLowerCase().includes(q))
+          : false;
+        return titleMatch || sourceMatch || tagMatch || summaryMatch || blogMatch || insightMatch;
+      });
+    }
 
-    const q = searchQuery.toLowerCase().trim();
-    return list.filter(article => {
-      const titleMatch = article.title.toLowerCase().includes(q);
-      const sourceMatch = article.source_name.toLowerCase().includes(q);
-      const tagMatch = article.tags?.some(tag => tag.toLowerCase().includes(q));
-      const summaryMatch = article.summary_bullets?.some(b => b.toLowerCase().includes(q));
-      const blogMatch = article.blog_summary?.toLowerCase().includes(q);
-      const insightMatch = article.actionable_insight 
-        ? Object.values(article.actionable_insight).some(v => v && v.toLowerCase().includes(q))
-        : false;
-      return titleMatch || sourceMatch || tagMatch || summaryMatch || blogMatch || insightMatch;
-    });
+    // 💡 3중 정밀 데두플리케이션: 동일/유사 제목 및 ID/URL 기준 중복 카드 렌더링 100% 원천 차단
+    const seenTitles = new Set<string>();
+    const seenIds = new Set<string>();
+    const uniqueList: NewsArticle[] = [];
+
+    for (const a of list) {
+      const normTitle = a.title
+        .replace(/\s*소식\s*및\s*기술\s*리포트\s*/g, '')
+        .replace(/[\s\W_]+/g, '')
+        .toLowerCase();
+
+      const cleanUrl = (a.source_url || '').split('?')[0].replace(/\/$/, '');
+
+      if (!seenTitles.has(normTitle) && !seenIds.has(a.id) && (!cleanUrl || !seenIds.has(cleanUrl))) {
+        seenTitles.add(normTitle);
+        seenIds.add(a.id);
+        if (cleanUrl) seenIds.add(cleanUrl);
+        uniqueList.push(a);
+      }
+    }
+
+    return uniqueList;
   }, [newsData, searchQuery, activeLens]);
 
   // 날짜 포맷팅 함수

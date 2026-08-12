@@ -1114,16 +1114,34 @@ Content: {raw['summary']}
             matched_lenses=lenses
         )
 
+def normalize_news_title(title: str) -> str:
+    """기사 제목 정규화: 특수문자, 공백 및 접미어(' 소식 및 기술 리포트')를 제거하여 동일 기사 판별"""
+    if not title:
+        return ""
+    t = re.sub(r'\s*소식\s*및\s*기술\s*리포트\s*', '', title)
+    return re.sub(r'[\s\W_]+', '', t).lower()
+
+def clean_news_url(url: str) -> str:
+    """URL 정규화: 파라미터 및 트레일링 슬래시 제거"""
+    if not url:
+        return ""
+    return url.split('?')[0].rstrip('/')
+
 def save_articles_to_db(articles: List[NewsArticle]):
-    """수집된 최신 기사를 Neon PostgreSQL DB에 중복 없이 영구 적재(UPSERT/INSERT)합니다."""
+    """수집된 최신 기사를 Neon PostgreSQL DB에 정규화 제목 및 URL 기준 100% 중복 없이 영구 적재(UPSERT/INSERT)합니다."""
     db = SessionLocal()
     try:
         inserted_count = 0
+        existing_items = db.query(NewsArticleDB).all()
+        existing_titles = {normalize_news_title(e.title): e for e in existing_items if e.title}
+        existing_urls = {clean_news_url(e.source_url): e for e in existing_items if e.source_url}
+        existing_ids = {e.id: e for e in existing_items if e.id}
+
         for item in articles:
-            # source_url 또는 id 기준 중복 여부 확인
-            existing = db.query(NewsArticleDB).filter(
-                (NewsArticleDB.source_url == item.source_url) | (NewsArticleDB.id == item.id)
-            ).first()
+            norm_title = normalize_news_title(item.title)
+            c_url = clean_news_url(item.source_url)
+
+            existing = existing_ids.get(item.id) or existing_titles.get(norm_title) or (existing_urls.get(c_url) if c_url else None)
 
             insight_dict = item.actionable_insight.dict() if item.actionable_insight else None
 
@@ -1145,6 +1163,10 @@ def save_articles_to_db(articles: List[NewsArticle]):
                 )
                 db.add(db_item)
                 inserted_count += 1
+                if norm_title:
+                    existing_titles[norm_title] = db_item
+                if c_url:
+                    existing_urls[c_url] = db_item
             else:
                 # 기존 항목이 있다면 블로그 요약문 및 렌즈 정보 갱신
                 existing.blog_summary = item.blog_summary
@@ -1159,7 +1181,7 @@ def save_articles_to_db(articles: List[NewsArticle]):
         db.close()
 
 def fetch_articles_from_db() -> List[NewsArticle]:
-    """Neon PostgreSQL DB에서 영구 보관 중인 최신 기사들을 0.001초 만에 순수 SELECT하여 반환합니다."""
+    """Neon PostgreSQL DB에서 영구 보관 중인 최신 기사들을 0.001초 만에 순수 SELECT하여 중복 0%로 반환합니다."""
     db = SessionLocal()
     try:
         db_items = db.query(NewsArticleDB).order_by(
@@ -1167,8 +1189,24 @@ def fetch_articles_from_db() -> List[NewsArticle]:
             NewsArticleDB.created_at.desc()
         ).all()
 
+        seen_titles = set()
+        seen_urls = set()
+        seen_ids = set()
+
         articles = []
         for item in db_items:
+            norm_title = normalize_news_title(item.title)
+            c_url = clean_news_url(item.source_url)
+
+            if item.id in seen_ids or (norm_title and norm_title in seen_titles) or (c_url and c_url in seen_urls):
+                continue
+
+            seen_ids.add(item.id)
+            if norm_title:
+                seen_titles.add(norm_title)
+            if c_url:
+                seen_urls.add(c_url)
+
             insight = None
             if item.actionable_insight and isinstance(item.actionable_insight, dict):
                 insight = ActionableInsight(
