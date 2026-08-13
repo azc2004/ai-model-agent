@@ -29,6 +29,7 @@ import subprocess
 import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import List, Dict, Any, Optional
 
@@ -57,37 +58,148 @@ load_dotenv(os.path.join(REPO_ROOT, "backend", ".env"))
 # ─────────────────────────────────────────────────────────
 
 D1_DB_NAME = "llm-compass-db"
+# ─────────────────────────────────────────────────────────
+# 1. 설정값 및 멀티 프로바이더 LLM 라우터
+# ─────────────────────────────────────────────────────────
+
 SQL_OUTPUT_PATH = os.path.join(REPO_ROOT, "seed_news_batch.sql")
 MAX_ARTICLES_PER_FEED = 10
 SUMMARY_MIN_LEN = 300       # 이하면 원문 웹 스크래핑 시도
 MAX_TOTAL = 300
 
-# Gemini API 클라이언트
-_gemini_key = os.getenv("GEMINI_API_KEY", "")
-_openai_key = os.getenv("OPENAI_API_KEY", "")
-_litellm_url = os.getenv("LITELLM_URL", os.getenv("OPENAI_BASE_URL", ""))
 
-if _litellm_url:
-    llm_client = OpenAI(
-        base_url=_litellm_url,
-        api_key=os.getenv("LITELLM_API_KEY", _openai_key or "sk-litellm-master-key")
-    )
-    LLM_MODEL = os.getenv("GENERATOR_MODEL", "gemini-3.6-flash")
-elif _gemini_key and _gemini_key not in ("front", "", "your-key-here"):
-    llm_client = OpenAI(
-        base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
-        api_key=_gemini_key
-    )
-    LLM_MODEL = os.getenv("GENERATOR_MODEL", "gemini-3.6-flash")
-elif _openai_key:
-    llm_client = OpenAI(api_key=_openai_key)
-    LLM_MODEL = os.getenv("GENERATOR_MODEL", "gpt-4o-mini")
+@dataclass
+class LLMProvider:
+    """LLM 공급자 설정 및 클라이언트 정보."""
+    name: str
+    client: OpenAI
+    models: List[str]
+    timeout: float = 30.0
+
+
+def initialize_llm_providers() -> List[LLMProvider]:
+    """
+    사용 가능한 무료 및 상용 LLM 공급자를 우선순위대로 초기화합니다.
+    1순위: Google AI Studio (Gemini 2.0 Flash / 1.5 Flash / 3.6 Flash)
+    2순위: Groq Cloud (Llama 3.3 70B / DeepSeek R1 Distill) - 초고속 LPU
+    3순위: GitHub Models (GPT-4o-mini / Llama 3.3)
+    4순위: OpenRouter Free Models
+    5순위: LiteLLM Proxy / OpenAI Direct
+    """
+    providers: List[LLMProvider] = []
+
+    gemini_key = os.getenv("GEMINI_API_KEY", "").strip()
+    groq_key = os.getenv("GROQ_API_KEY", "").strip()
+    github_token = (os.getenv("GITHUB_TOKEN") or os.getenv("GITHUB_MODELS_TOKEN", "")).strip()
+    openrouter_key = os.getenv("OPENROUTER_API_KEY", "").strip()
+    openai_key = os.getenv("OPENAI_API_KEY", "").strip()
+    litellm_url = os.getenv("LITELLM_URL", os.getenv("OPENAI_BASE_URL", "")).strip()
+
+    # 1. LiteLLM Proxy (로컬 또는 프록시 환경 우선)
+    if litellm_url:
+        try:
+            client = OpenAI(
+                base_url=litellm_url,
+                api_key=os.getenv("LITELLM_API_KEY", openai_key or "sk-litellm-master-key"),
+                timeout=30.0
+            )
+            model_name = os.getenv("GENERATOR_MODEL", "gemini-3.6-flash")
+            providers.append(LLMProvider(name="LiteLLM Proxy", client=client, models=[model_name]))
+        except Exception as e:
+            print(f"⚠️ LiteLLM 초기화 실패: {e}")
+
+    # 2. Google AI Studio (무료 1,500 RPD, 1M 컨텍스트, 최고 한국어 품질)
+    if gemini_key and gemini_key not in ("front", "your-key-here"):
+        try:
+            client = OpenAI(
+                base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+                api_key=gemini_key,
+                timeout=35.0
+            )
+            # 사용 가능한 Gemini 모델 후보군 (fallback 대비)
+            gemini_models = [
+                os.getenv("GENERATOR_MODEL", "gemini-3.6-flash"),
+                "gemini-2.0-flash",
+                "gemini-1.5-flash"
+            ]
+            # 중복 제거
+            seen = set()
+            unique_models = [m for m in gemini_models if m and not (m in seen or seen.add(m))]
+            providers.append(LLMProvider(name="Google AI Studio", client=client, models=unique_models))
+        except Exception as e:
+            print(f"⚠️ Google AI Studio 초기화 실패: {e}")
+
+    # 3. Groq Cloud (초고속 LPU, 무료 14,400 RPD)
+    if groq_key:
+        try:
+            client = OpenAI(
+                base_url="https://api.groq.com/openai/v1",
+                api_key=groq_key,
+                timeout=25.0
+            )
+            providers.append(LLMProvider(
+                name="Groq Cloud",
+                client=client,
+                models=["llama-3.3-70b-versatile", "deepseek-r1-distill-llama-70b", "llama-3.1-8b-instant"]
+            ))
+        except Exception as e:
+            print(f"⚠️ Groq Cloud 초기화 실패: {e}")
+
+    # 4. GitHub Models (GPT-4o-mini 무료 티어)
+    if github_token:
+        try:
+            client = OpenAI(
+                base_url="https://models.inference.ai.azure.com",
+                api_key=github_token,
+                timeout=30.0
+            )
+            providers.append(LLMProvider(
+                name="GitHub Models",
+                client=client,
+                models=["gpt-4o-mini", "meta-llama-3.3-70b-instruct"]
+            ))
+        except Exception as e:
+            print(f"⚠️ GitHub Models 초기화 실패: {e}")
+
+    # 5. OpenRouter (무료 오픈 모델)
+    if openrouter_key:
+        try:
+            client = OpenAI(
+                base_url="https://openrouter.ai/api/v1",
+                api_key=openrouter_key,
+                timeout=30.0
+            )
+            providers.append(LLMProvider(
+                name="OpenRouter",
+                client=client,
+                models=["meta-llama/llama-3.3-70b-instruct:free", "google/gemini-2.0-flash-exp:free"]
+            ))
+        except Exception as e:
+            print(f"⚠️ OpenRouter 초기화 실패: {e}")
+
+    # 6. OpenAI Direct
+    if openai_key and not litellm_url:
+        try:
+            client = OpenAI(api_key=openai_key, timeout=30.0)
+            providers.append(LLMProvider(
+                name="OpenAI Direct",
+                client=client,
+                models=["gpt-4o-mini"]
+            ))
+        except Exception as e:
+            print(f"⚠️ OpenAI 초기화 실패: {e}")
+
+    return providers
+
+
+LLM_PROVIDERS = initialize_llm_providers()
+LLM_AVAILABLE = len(LLM_PROVIDERS) > 0
+
+if LLM_AVAILABLE:
+    provider_names = ", ".join([f"{p.name}({p.models[0]})" for p in LLM_PROVIDERS])
+    print(f"🤖 멀티 LLM 라우터 활성화: [{provider_names}]")
 else:
-    llm_client = None
-    LLM_MODEL = None
-
-LLM_AVAILABLE = (llm_client is not None and LLM_MODEL is not None)
-print(f"🤖 LLM 분석: {'활성화 (' + LLM_MODEL + ')' if LLM_AVAILABLE else '❌ 비활성화 (API 키 없음)'}")
+    print("❌ 비활성화: 사용 가능한 LLM API 키가 없습니다 (규칙 기반 폴백 모드로 실행)")
 
 RSS_FEEDS = [
     # 🏢 빅테크 공식 블로그 (9개)
@@ -359,9 +471,12 @@ def extract_json_from_text(raw_text: str) -> Dict:
 
 def analyze_article_with_llm(title: str, content: str, source_name: str, category: str) -> Dict:
     """
-    Gemini/OpenAI를 사용해 원문을 Senior AI Solution Architect 스타일
-    심층 분석 리포트(1,800자+)로 재구성합니다.
+    다양한 무료/상용 LLM 공급자(Google AI Studio, Groq, GitHub Models 등)를 순차 시도하여
+    원문을 Senior AI Solution Architect 스타일 심층 분석 리포트(1,800자+)로 재구성합니다.
     """
+    if not LLM_PROVIDERS:
+        return {}
+
     prompt = f"""다음은 최근 AI 관련 기사/논문의 원문 정보입니다.
 
 Title: {title}
@@ -395,20 +510,29 @@ Content: {content[:4000]}
     "matched_lenses": ["developer", "agent"]
 }}"""
 
-    try:
-        resp = llm_client.chat.completions.create(
-            model=LLM_MODEL,
-            messages=[{"role": "user", "content": prompt}],
-            response_format={"type": "json_object"},
-            max_tokens=3500,
-            temperature=0.3,
-        )
-        raw_text = resp.choices[0].message.content.strip()
-        result = extract_json_from_text(raw_text)
-        if result and result.get("analytical_deep_dive"):
-            return result
-    except Exception as e:
-        print(f"    [LLM API 오류] {e}")
+    for provider in LLM_PROVIDERS:
+        for model in provider.models:
+            try:
+                kwargs: Dict[str, Any] = {
+                    "model": model,
+                    "messages": [{"role": "user", "content": prompt}],
+                    "max_tokens": 3500,
+                    "temperature": 0.3,
+                    "timeout": provider.timeout
+                }
+                # JSON 포맷 강제
+                if any(x in model.lower() for x in ["gemini", "gpt", "llama", "deepseek"]):
+                    kwargs["response_format"] = {"type": "json_object"}
+
+                resp = provider.client.chat.completions.create(**kwargs)
+                raw_text = resp.choices[0].message.content.strip()
+                result = extract_json_from_text(raw_text)
+                if result and result.get("analytical_deep_dive"):
+                    return result
+            except Exception as e:
+                # ponytail: 특정 공급자 Rate Limit 또는 네트워크 타임아웃 시 다음 공급자로 즉시 페일오버
+                print(f"    ⚠️ [{provider.name}/{model}] 일시적 오류: {e} -> 차순위 모델/공급자로 폴백")
+                continue
 
     return {}
 
