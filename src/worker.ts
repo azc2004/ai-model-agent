@@ -87,13 +87,19 @@ export default {
     // D1 Edge API Routes - Trend News Pulse & Articles
     if (url.pathname === '/api/v1/news/pulse' || url.pathname.startsWith('/api/v1/news/pulse')) {
       try {
+        const targetLens = url.searchParams.get('lens');
         const { results } = await env.DB.prepare('SELECT * FROM trend_news ORDER BY created_at DESC').all();
 
-        const articles = results.map((n: any) => {
+        let articles = results.map((n: any) => {
           let takeaways = [];
           let sources = [];
+          let tags = ["#AITrend", "#DeepSeek", "#Anthropic", "#SOTA"];
+          let matched_lenses = ["developer", "agent", "pm", "business", "researcher"];
+
           try { takeaways = JSON.parse(n.key_takeaways || '[]'); } catch {}
           try { sources = JSON.parse(n.original_sources || '[]'); } catch {}
+          if (n.tags) { try { tags = JSON.parse(n.tags); } catch {} }
+          if (n.matched_lenses) { try { matched_lenses = JSON.parse(n.matched_lenses); } catch {} }
 
           return {
             id: n.id,
@@ -112,10 +118,14 @@ export default {
               researcher: "멀티 슈타인 강화학습 및 차세대 MoE 라우팅 논문을 분석하세요."
             },
             impact_score: 98,
-            tags: ["#AITrend", "#DeepSeek", "#Anthropic", "#SOTA"],
-            matched_lenses: ["developer", "agent", "pm", "business", "researcher"]
+            tags,
+            matched_lenses
           };
         });
+
+        if (targetLens && targetLens !== 'all' && targetLens !== 'new') {
+          articles = articles.filter(a => a.matched_lenses.includes(targetLens));
+        }
 
         return new Response(JSON.stringify({
           articles,
@@ -149,8 +159,13 @@ export default {
 
         let takeaways = [];
         let sources = [];
+        let tags = ["#AITrend", "#DeepSeek", "#Anthropic", "#SOTA"];
+        let matched_lenses = ["developer", "agent", "pm", "business", "researcher"];
+
         try { takeaways = JSON.parse(n.key_takeaways || '[]'); } catch {}
         try { sources = JSON.parse(n.original_sources || '[]'); } catch {}
+        if (n.tags) { try { tags = JSON.parse(n.tags); } catch {} }
+        if (n.matched_lenses) { try { matched_lenses = JSON.parse(n.matched_lenses); } catch {} }
 
         const article = {
           id: n.id,
@@ -169,8 +184,8 @@ export default {
             researcher: "멀티 슈타인 강화학습 및 차세대 MoE 라우팅 논문을 분석하세요."
           },
           impact_score: 98,
-          tags: ["#AITrend", "#DeepSeek", "#Anthropic", "#SOTA"],
-          matched_lenses: ["developer", "agent", "pm", "business", "researcher"]
+          tags,
+          matched_lenses
         };
 
         return new Response(JSON.stringify(article), {
