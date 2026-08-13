@@ -232,18 +232,62 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
   return (
     <div className="space-y-8 pb-16">
-      {/* Title Header */}
-      <div className="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-md backdrop-blur-md">
-        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">
-          {t.dashboard.title}
-        </h1>
-        <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base max-w-3xl leading-relaxed font-semibold">
-          {t.dashboard.subtitle}
-        </p>
+      {/* 2026 Bento Grid Spotlight Hero */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Bento 1: Top Elo Leader */}
+        <div className="bento-card-2026 p-6 relative overflow-hidden group border border-purple-500/30 bg-gradient-to-br from-purple-950/40 via-slate-900/60 to-slate-950/80">
+          <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl group-hover:bg-purple-500/20 transition-all pointer-events-none" />
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-[10px] font-black tracking-widest uppercase text-purple-400 bg-purple-500/20 border border-purple-500/30 px-2.5 py-1 rounded-full flex items-center gap-1.5">
+              <span>👑 TOP ELO LEADER</span>
+            </span>
+            <span className="text-xs font-mono font-bold text-amber-400">1360 Elo</span>
+          </div>
+          <h3 className="text-lg font-black metallic-text mb-1 group-hover:text-cyan-300 transition-colors">
+            DeepSeek R1 / GPT-4o
+          </h3>
+          <p className="text-xs text-slate-400 leading-relaxed font-semibold">
+            글로벌 LMSYS Chatbot Arena 복합 추론 & 지식 평가 1위 프론티어 모델
+          </p>
+        </div>
+
+        {/* Bento 2: Speed Champion */}
+        <div className="bento-card-2026 p-6 relative overflow-hidden group border border-cyan-500/30 bg-gradient-to-br from-cyan-950/40 via-slate-900/60 to-slate-950/80">
+          <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl group-hover:bg-cyan-500/20 transition-all pointer-events-none" />
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-[10px] font-black tracking-widest uppercase text-cyan-400 bg-cyan-500/20 border border-cyan-500/30 px-2.5 py-1 rounded-full flex items-center gap-1.5">
+              <span>⚡ SPEED CHAMPION</span>
+            </span>
+            <span className="text-xs font-mono font-bold text-cyan-300">2,100 TPS</span>
+          </div>
+          <h3 className="text-lg font-black metallic-cyan mb-1">
+            Cerebras Llama 3.3 70B
+          </h3>
+          <p className="text-xs text-slate-400 leading-relaxed font-semibold">
+            초당 2,100 토큰 초고속 서빙 및 TTFT 180ms 최저 지연시간 기록
+          </p>
+        </div>
+
+        {/* Bento 3: Best Value Champion */}
+        <div className="bento-card-2026 p-6 relative overflow-hidden group border border-emerald-500/30 bg-gradient-to-br from-emerald-950/40 via-slate-900/60 to-slate-950/80">
+          <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all pointer-events-none" />
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-[10px] font-black tracking-widest uppercase text-emerald-400 bg-emerald-500/20 border border-emerald-500/30 px-2.5 py-1 rounded-full flex items-center gap-1.5">
+              <span>💎 BEST EFFICIENCY</span>
+            </span>
+            <span className="text-xs font-mono font-bold text-emerald-300">$0.50 / 1M</span>
+          </div>
+          <h3 className="text-lg font-black text-emerald-200 mb-1">
+            ByteDance Seed / Qwen 2.5
+          </h3>
+          <p className="text-xs text-slate-400 leading-relaxed font-semibold">
+            1M 토큰당 $0.50 최저비용으로 프론티어급 코드 & 추론 성능 제공
+          </p>
+        </div>
       </div>
 
       {/* Filter and Search Bar Header */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm space-y-4">
+      <div className="glass-card p-4 sm:p-5 space-y-4">
         {/* Row 1: Search Input & Primary Dropdowns */}
         <div className="flex flex-col lg:flex-row items-center gap-3">
           {/* Search Box */}
@@ -463,12 +507,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
             return (
               <div
                 key={model.id}
-                className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-cyan-500 rounded-2xl p-5 flex flex-col justify-between transition-all duration-200 shadow-md hover:shadow-xl group"
+                className="bento-card-2026 p-5 flex flex-col justify-between group relative overflow-hidden"
               >
                 <div>
                   {/* Top Bar: Provider & Badges */}
                   <div className="flex items-center justify-between gap-2 mb-3">
-                    <span className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                    <span className="text-xs font-black text-slate-400 uppercase tracking-wider font-mono">
                       {model.provider_name}
                     </span>
                     <div className="flex items-center gap-1.5 flex-wrap justify-end">
@@ -507,7 +551,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   </div>
 
                   {/* Model Title */}
-                  <h3 className="text-xl font-black text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors mb-2 tracking-tight">
+                  <h3 className="text-xl font-black metallic-text group-hover:text-cyan-300 transition-colors mb-2 tracking-tight">
                     {model.name}
                   </h3>
 
