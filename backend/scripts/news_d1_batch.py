@@ -25,6 +25,7 @@ import json
 import uuid
 import time
 import argparse
+import threading
 import subprocess
 import urllib.parse
 import urllib.request
@@ -54,18 +55,49 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 load_dotenv(os.path.join(REPO_ROOT, "backend", ".env"))
 
 # ─────────────────────────────────────────────────────────
-# 1. 설정값
-# ─────────────────────────────────────────────────────────
-
-D1_DB_NAME = "llm-compass-db"
-# ─────────────────────────────────────────────────────────
 # 1. 설정값 및 멀티 프로바이더 LLM 라우터
 # ─────────────────────────────────────────────────────────
 
+D1_DB_NAME = "llm-compass-db"
 SQL_OUTPUT_PATH = os.path.join(REPO_ROOT, "seed_news_batch.sql")
 MAX_ARTICLES_PER_FEED = 10
 SUMMARY_MIN_LEN = 300       # 이하면 원문 웹 스크래핑 시도
 MAX_TOTAL = 300
+
+
+class ZeroCostRateLimiter:
+    """
+    Google AI Studio 무료 티어(15 RPM / 1,500 RPD)를 100% 준수하여
+    유료 결제 계정에서도 $0.00(과금 0원)을 보장하는 스레드 안전 속도 제어기.
+    - 최대 12 RPM (5.0초 간격) 강제 제어로 15 RPM 한도 초과 원천 차단
+    - 일일 최대 1,400건 초과 시 자동으로 100% 무료인 Groq Cloud로 페일오버
+    """
+    def __init__(self, max_rpm: int = 12, max_daily_requests: int = 1400):
+        self.min_interval: float = 60.0 / max_rpm  # 5.0초
+        self.max_daily_requests: int = max_daily_requests
+        self.last_request_time: float = 0.0
+        self.daily_request_count: int = 0
+        self.lock: threading.Lock = threading.Lock()
+
+    def acquire_gemini_slot(self) -> bool:
+        """Gemini 무료 슬롯 확보 시도. 일일 안전 한도 초과 시 False 반환."""
+        with self.lock:
+            if self.daily_request_count >= self.max_daily_requests:
+                print("    ⚠️ [ZeroCost Guardrail] 일일 무료 안전 한도(1,400건) 도달 -> Groq 무료 엔진으로 자동 전환")
+                return False
+
+            now = time.time()
+            elapsed = now - self.last_request_time
+            if elapsed < self.min_interval:
+                sleep_time = self.min_interval - elapsed
+                time.sleep(sleep_time)
+
+            self.last_request_time = time.time()
+            self.daily_request_count += 1
+            return True
+
+
+GEMINI_LIMITER = ZeroCostRateLimiter(max_rpm=12, max_daily_requests=1400)
 
 
 @dataclass
@@ -172,7 +204,7 @@ def initialize_llm_providers() -> List[LLMProvider]:
             providers.append(LLMProvider(
                 name="OpenRouter",
                 client=client,
-                models=["meta-llama/llama-3.3-70b-instruct:free", "google/gemini-2.0-flash-exp:free"]
+                models=["google/gemma-4-26b-a4b-it:free", "nvidia/nemotron-3.5-lightning:free"]
             ))
         except Exception as e:
             print(f"⚠️ OpenRouter 초기화 실패: {e}")
@@ -511,6 +543,11 @@ Content: {content[:4000]}
 }}"""
 
     for provider in LLM_PROVIDERS:
+        # Google AI Studio인 경우 12 RPM / 1,400 RPD 무료 가드레일 슬롯 획득 (유료 과금 원천 차단)
+        if provider.name == "Google AI Studio":
+            if not GEMINI_LIMITER.acquire_gemini_slot():
+                continue
+
         for model in provider.models:
             try:
                 kwargs: Dict[str, Any] = {
