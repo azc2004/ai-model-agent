@@ -117,7 +117,7 @@ export const AppContent: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex bg-slate-950 text-slate-100 font-sans transition-colors">
+    <div className="min-h-screen flex bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors">
       {/* 1. Left Sidebar Navigation */}
       <SidebarNav
         activeTab={activeTab}
@@ -188,7 +188,7 @@ export const AppContent: React.FC = () => {
           {activeTab === 'speed' && <SpeedMonitorView />}
         </main>
 
-        <footer className="border-t border-slate-800/80 bg-slate-950/60 py-6 text-center text-xs text-slate-500">
+        <footer className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/60 py-6 text-center text-xs text-slate-500">
           <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
             <p>© 2026 LLM COMPASS - Global AI Model Spec & TCO Analytics Platform</p>
             <p className="text-slate-600">Supported Languages: 🇰🇷 한국어 | 🇺🇸 English | 🇯🇵 日本語 | 🇨🇳 中文</p>
