@@ -557,7 +557,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   </p>
 
                   {/* Quota Information Box */}
-                  {model.quota && (
+                  {model.quota && (model.quota.rpm !== undefined || model.quota.tpm !== undefined) && (
                     <div className="bg-cyan-50 dark:bg-cyan-950/80 border border-cyan-200 dark:border-cyan-500/40 rounded-xl p-3 mb-4 text-xs shadow-inner">
                       <div className="text-[11px] font-black text-cyan-800 dark:text-cyan-300 mb-1 flex items-center gap-1">
                         <svg className="w-3.5 h-3.5 text-cyan-500 dark:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -567,10 +567,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
                       </div>
                       <div className="grid grid-cols-2 gap-1 text-[11px] text-slate-900 dark:text-slate-100 font-extrabold">
                         <div>
-                          <span className="text-slate-600 dark:text-slate-400 font-bold">RPM:</span> <span className="text-slate-900 dark:text-white font-black">{model.quota.rpm.toLocaleString()}</span>
+                          <span className="text-slate-600 dark:text-slate-400 font-bold">RPM:</span> <span className="text-slate-900 dark:text-white font-black">{model.quota.rpm ? model.quota.rpm.toLocaleString() : '-'}</span>
                         </div>
                         <div>
-                          <span className="text-slate-600 dark:text-slate-400 font-bold">TPM:</span> <span className="text-slate-900 dark:text-white font-black">{(model.quota.tpm / 1000).toLocaleString()}k</span>
+                          <span className="text-slate-600 dark:text-slate-400 font-bold">TPM:</span> <span className="text-slate-900 dark:text-white font-black">{model.quota.tpm ? `${(model.quota.tpm / 1000).toLocaleString()}k` : '-'}</span>
                         </div>
                       </div>
                     </div>
@@ -713,7 +713,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                         ${model.api_pricing.output_price_per_1m.toFixed(3)}
                       </td>
                       <td className="py-3 px-4 font-mono font-bold text-blue-600 dark:text-cyan-300 text-xs">
-                        {model.quota ? `${model.quota.rpm.toLocaleString()}` : '-'}
+                        {model.quota?.rpm ? `${model.quota.rpm.toLocaleString()}` : '-'}
                       </td>
                       <td className="py-3 px-4 font-mono font-extrabold text-amber-600 dark:text-amber-400 text-xs">
                         {model.benchmarks.arena_elo ?? '-'}

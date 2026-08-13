@@ -114,10 +114,10 @@ export const CompareView: React.FC<CompareViewProps> = ({
               </td>
               {comparedModels.map((m) => (
                 <td key={m.id} className="p-4 text-center font-mono text-xs border-l border-slate-200 dark:border-slate-800">
-                  {m.quota ? (
+                  {m.quota && (m.quota.rpm !== undefined || m.quota.tpm !== undefined) ? (
                     <div className="space-y-1">
-                      <div className="text-slate-900 dark:text-cyan-300 font-black">{m.quota.rpm.toLocaleString()} RPM</div>
-                      <div className="text-slate-600 dark:text-slate-400 font-bold">{(m.quota.tpm / 1000).toFixed(0)}k TPM</div>
+                      <div className="text-slate-900 dark:text-cyan-300 font-black">{m.quota.rpm ? `${m.quota.rpm.toLocaleString()} RPM` : '-'}</div>
+                      <div className="text-slate-600 dark:text-slate-400 font-bold">{m.quota.tpm ? `${(m.quota.tpm / 1000).toFixed(0)}k TPM` : '-'}</div>
                     </div>
                   ) : (
                     '-'
