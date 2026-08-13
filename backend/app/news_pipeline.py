@@ -442,30 +442,36 @@ def auto_translate_and_format(title: str, summary_text: str, source_name: str = 
         b1 = bullets[1] if len(bullets) > 1 else "주요 기능 릴리스 소식을 서비스 기능 개발 로드맵에 반영하세요."
         b2 = bullets[2] if len(bullets) > 2 else "사내 시스템 이식 시 보안 컴플라이언스 및 인프라 TCO 영향도를 점검하세요."
 
-        blog_summary = f"""# 📌 [Detailed Report] {title_kr}
+        blog_summary = f"""# 📌 [Analytical Technical Report] {title_kr}
 
-> **주요 출처**: {all_sources} | **카테고리**: {category} | **검증**: ✅ Multi-Source Cross-Validated
-
----
-
-### 1. 💡 핵심 요약 및 개요 (Executive Summary)
-본 리포트는 **{source_name}**에서 발췌된 **'{title_kr}'** 소식을 바탕으로 작성되었습니다. 동종 분야 소식 및 커뮤니티 데이터와의 교차 검증을 통해 핵심 포인트를 전달합니다.
+> **주요 출처**: {all_sources} | **카테고리**: {category} | **검증 분석**: ✅ Restructured & Cross-Validated
 
 ---
 
-### 2. 🔍 상세 내용 및 기사 본문 (Detailed Content)
+### 1. 📌 개발 배경 및 해결 과제 (Background & Problem)
+본 기술 리포트는 **{source_name}**에서 발표된 **'{title_kr}'**의 핵심 원문 내용과 스펙 데이터를 기반으로 재구성되었습니다.
+{b0}
+
+---
+
+### 2. ⚙️ 핵심 기술 아키텍처 및 원문 팩트 분석 (Core Architecture & Raw Facts)
 {body_text}
 
 ---
 
-### 3. 🎯 핵심 시사점 및 실무 가이드라인 (Actionable Insights)
-* **👩‍💻 개발자/엔지니어**: {b0}
-* **💡 기획자/PM**: {b1}
-* **💼 비즈니스 리더**: {b2}
+### 3. 📊 성능 지표 및 산업적 파급력 (Metrics & Impact)
+* **수치/지표 요약**: {b1}
+* **시스템 영향도**: 레거시 시스템 호환성 유지 및 처리 지연 시간(Latency) 최적화에 직관적으로 기여합니다.
 
 ---
 
-### 4. 🌐 다중 소스 크로스 검증 (Cross-Validation)
+### 4. 💡 실무 시스템 이식 가이드 (Implementation Checklist)
+* **API/SDK 연동**: 기존 파이프라인 전처리 단계에 모듈식으로 결합하여 예외 처리 메커니즘을 내장하세요.
+* **보안 & TCO**: {b2}
+
+---
+
+### 5. 🌐 다중 소스 크로스 검증 (Cross-Validation Context)
 {cross_context}
 """
 
@@ -981,32 +987,36 @@ async def fetch_rss_feeds() -> List[Dict[str, Any]]:
     return raw_articles
 
 def analyze_article_with_llm(raw: Dict[str, Any]) -> NewsArticle:
-    """원문을 LLM에 넘겨 3줄 요약, 실무 팁, 태그, 렌즈를 추출합니다."""
+    """원문을 단순 요약이 아닌 원문의 세부 팩트를 100% 보존하면서 심층 분석적으로 재구성(Analytical Restructuring)합니다."""
     prompt = f"""
-다음은 최근 AI 관련 기사의 원문(또는 일부)입니다.
+다음은 최근 AI 관련 기사/논문의 원문 정보입니다.
 Title: {raw['title']}
 Source: {raw['source_name']}
 Content: {raw['summary']}
 
-이 기사의 표면적인 요약을 넘어서, 독자가 원문 기사를 전혀 읽지 않고도 모든 세부 내용(핵심 수치, 작동 원리, 기술적 특징, 한계점 등)을 완벽히 파악할 수 있도록 매우 상세하고 깊이 있는 분석을 수행하세요.
-다음 JSON 스키마에 정확히 맞게 분석 결과를 한국어로 응답하세요. (마크다운 ```json 등은 제외하고 순수 JSON 문자열만 반환할 것)
+[원문 분석 및 재구성(Restructuring) 가이드라인]
+단순히 몇 문장으로 축약하는 겉핥기 요약을 절대 하지 마세요! 
+독자가 원문을 찾아 읽을 필요가 전혀 없도록 원문의 세부 수치, 기술 명칭, 벤치마크 데이터, 배경 맥락을 100% 보존하여
+'Senior AI Solution Architect의 체계적 기술 분석 리포트(Analytical Restructuring Report)' 스타일로 깊이 있게 재구성하세요.
+
+다음 JSON 스키마에 맞춰 자연스러운 한국어로 응답하세요 (마크다운 ```json 표기 제외하고 순수 JSON만 반환):
 {{
-    "title_kr": "기사 제목의 자연스러운 한국어 번역",
+    "title_kr": "원문의 핵심 기술 가치와 수치가 돋보이는 자연스러운 한국어 제목",
     "summary_bullets": [
-        "핵심 내용 및 배경에 대한 상세 요약 (2~3문장 분량)",
-        "주요 기술적 성과, 수치, 아키텍처 등 구체적 디테일 (2~3문장 분량)",
-        "산업적 파급력 및 향후 전망에 대한 심층 요약 (2~3문장 분량)"
+        "📌 [개발 배경 & 과제] 원문의 개발 배경, 해결하고자 하는 핵심 과제 및 수치적 목표 (2~3문장)",
+        "⚙️ [핵심 아키텍처 & 메커니즘] 원문 기사의 핵심 기술 작동 원리, 데이터 팩트, 알고리즘 및 성능 (2~3문장)",
+        "💡 [실무 적용 & 파급력] 현업 엔지니어 및 기업 환경에서의 실무 이식 가치, TCO 영향 및 향후 전망 (2~3문장)"
     ],
-    "blog_summary": "마크다운 포맷으로 작성된 심층 분석 리포트 전문. 원문의 세부 내용, 데이터, 파급력 등을 소제목(###)과 글머리 기호 등을 활용하여 1500자 이상으로 매우 구체적이고 체계적으로 작성할 것. 가상의 데이터를 절대 쓰지 말고 오직 기사 원문의 팩트에 기반할 것.",
+    "blog_summary": "1,800자 이상의 프리미엄 심층 기술 분석 마크다운 전문. 원문 기사의 모든 세부 수치와 팩트를 100% 보존하여 아래 5대 섹션을 완벽히 포함할 것:\n\n### 1. 📌 개발 배경 및 해결 과제 (Background & Problem)\n### 2. ⚙️ 핵심 기술 아키텍처 및 작동 원리 (Architecture & Core Mechanism)\n### 3. 📊 성능 지표, 벤치마크 및 데이터 분석 (Metrics & Benchmarks)\n### 4. 💡 실무 시스템 이식 가이드 & 원클릭 코드 레시피 (Implementation & Code)\n### 5. 🎯 직무별 맞춤 액션 플랜 (Role Action Checklist)",
     "actionable_insight": {{
-        "developer": "개발자/엔지니어 입장에서의 실무 적용 팁 2~3문장 (관련없으면 null)",
-        "pm": "서비스 기획자/PM 입장에서의 팁 2~3문장 (관련없으면 null)",
-        "business": "비즈니스 리더/임원 입장에서의 팁 2~3문장 (관련없으면 null)",
-        "researcher": "연구자/학계 입장에서의 팁 2~3문장 (관련없으면 null)"
+        "developer": "개발자/엔지니어 입장에서의 구체적 코드/API 실무 이식 팁 (2~3문장)",
+        "pm": "서비스 기획자/PM 입장에서의 프로덕트 UX 및 기능 기획 팁 (2~3문장)",
+        "business": "비즈니스 리더/임원 입장에서의 TCO 절감 및 인프라 전략 팁 (2~3문장)",
+        "researcher": "연구자/학계 입장에서의 SOTA 벤치마크 및 논문 분석 팁 (2~3문장)"
     }},
-    "impact_score": 85,
-    "tags": ["#태그1", "#태그2"],
-    "matched_lenses": ["developer"]
+    "impact_score": 92,
+    "tags": ["#태그1", "#태그2", "#태그3"],
+    "matched_lenses": ["developer", "agent"]
 }}
 """
     
