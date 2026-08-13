@@ -193,6 +193,34 @@ export const TCOSimulatorView: React.FC<TCOSimulatorViewProps> = ({ models }) =>
               ))}
             </div>
           </div>
+
+          {/* VRAM Footprint & Hardware Calculator Card */}
+          <div className="bg-slate-900/90 p-5 rounded-2xl border border-slate-800 space-y-3 text-xs">
+            <h4 className="font-bold text-slate-200 flex items-center justify-between">
+              <span>💾 VRAM Footprint & Hardware Estimator</span>
+              <span className="text-[10px] text-cyan-400 bg-cyan-950/50 px-2 py-0.5 rounded border border-cyan-800">vLLM / Ollama</span>
+            </h4>
+            <div className="space-y-2 text-slate-300">
+              <div className="flex justify-between">
+                <span>필요 VRAM 용량:</span>
+                <span className="font-bold text-cyan-400">
+                  {((result?.self_hosted.total_vram_gb ?? 32)).toFixed(1)} GB
+                </span>
+              </div>
+              <div className="flex justify-between text-slate-400 text-[11px]">
+                <span>- 모델 가중치 (Weights):</span>
+                <span>{(((result?.self_hosted.total_vram_gb ?? 32) * 0.75)).toFixed(1)} GB</span>
+              </div>
+              <div className="flex justify-between text-slate-400 text-[11px]">
+                <span>- KV Cache & Context:</span>
+                <span>{(((result?.self_hosted.total_vram_gb ?? 32) * 0.25)).toFixed(1)} GB</span>
+              </div>
+              <div className="pt-2 border-t border-slate-800 flex justify-between font-bold text-emerald-400">
+                <span>추천 GPU 구성:</span>
+                <span>{result?.self_hosted.recommended_gpu ?? 'NVIDIA H100 80GB'} x {result?.self_hosted.gpu_count ?? 1}</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Results Analytics & Bar Chart */}

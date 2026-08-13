@@ -825,6 +825,37 @@ const SpecBundleModal: React.FC<{
 
   const activeData = getActiveContent();
 
+  const handleShareLink = () => {
+    const url = new URL(window.location.href);
+    url.searchParams.set('tab', 'advisor');
+    navigator.clipboard.writeText(url.toString());
+    alert('🔗 AI 아키텍처 명세서 공유 링크가 클립보드에 복사되었습니다!');
+  };
+
+  const handlePrintPdf = () => {
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>${activeData.filename} - LLM COMPASS Architecture Spec</title>
+          <style>
+            body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 30px; color: #1e293b; line-height: 1.6; }
+            h1, h2, h3 { color: #0f172a; }
+            pre { background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; white-space: pre-wrap; font-family: monospace; }
+          </style>
+        </head>
+        <body>
+          <h1>📌 LLM COMPASS AI Architecture Specification</h1>
+          <h2>${result.service_name}</h2>
+          <pre>${activeData.content}</pre>
+          <script>window.print();</script>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+  };
+
   const handleCopy = () => {
     navigator.clipboard.writeText(activeData.content);
     setCopied(true);
@@ -931,10 +962,24 @@ const SpecBundleModal: React.FC<{
             💡 <strong className="text-slate-900 dark:text-white">Cursor / Claude Code 활용법</strong>: <span>`AGENTS.md`와 `TASKS.md`를 프로젝트 루트에 복사하면 AI가 자동 개발합니다.</span>
           </div>
 
-          <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-end">
+            <button
+              onClick={handleShareLink}
+              className="px-3 py-2.5 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition-all flex items-center gap-1"
+            >
+              🔗 공유 링크 복사
+            </button>
+
+            <button
+              onClick={handlePrintPdf}
+              className="px-3 py-2.5 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition-all flex items-center gap-1"
+            >
+              📄 PDF/프린트
+            </button>
+
             <button
               onClick={handleCopy}
-              className="px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition-all flex items-center gap-1.5"
+              className="px-3.5 py-2.5 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition-all flex items-center gap-1.5"
             >
               {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4 text-slate-300" />}
               {copied ? '복사 완료!' : `${activeData.filename} 복사`}
@@ -942,7 +987,7 @@ const SpecBundleModal: React.FC<{
 
             <button
               onClick={handleDownloadSingle}
-              className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 shadow-md transition-all flex items-center gap-1.5"
+              className="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 shadow-md transition-all flex items-center gap-1.5"
             >
               <Download className="w-4 h-4 text-indigo-400" />
               {activeData.filename} 저장

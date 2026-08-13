@@ -13,6 +13,8 @@ import { GPUListView } from './components/GPUListView';
 import { ArchitectureAdvisor } from './components/ArchitectureAdvisor';
 import { TutorialView } from './components/TutorialView';
 import NewsPulseView from './components/NewsPulseView';
+import { TokenizerSandboxView } from './components/TokenizerSandboxView';
+import { SpeedMonitorView } from './components/SpeedMonitorView';
 
 export const AppContent: React.FC = () => {
   // URL query parameter ?tab= 및 ?article= 파싱으로 북마크/즐겨찾기 라우팅 초기화
@@ -21,7 +23,7 @@ export const AppContent: React.FC = () => {
     const tabParam = params.get('tab');
     const articleParam = params.get('article');
     if (articleParam) return 'news';
-    if (tabParam && ['dashboard', 'compare', 'tco', 'advisor', 'tutorial', 'leaderboard', 'gpus', 'news'].includes(tabParam)) {
+    if (tabParam && ['dashboard', 'compare', 'tco', 'advisor', 'tutorial', 'leaderboard', 'gpus', 'news', 'sandbox', 'speed'].includes(tabParam)) {
       return tabParam;
     }
     return 'dashboard';
@@ -151,6 +153,16 @@ export const AppContent: React.FC = () => {
         )}
         
         {activeTab === 'news' && <NewsPulseView />}
+
+        {activeTab === 'sandbox' && (
+          <TokenizerSandboxView
+            models={models}
+            onToggleCompare={handleToggleCompare}
+            selectedModelIds={selectedModelIds}
+          />
+        )}
+
+        {activeTab === 'speed' && <SpeedMonitorView />}
       </main>
 
       <footer className="border-t border-slate-800/80 bg-slate-950/60 py-6 text-center text-xs text-slate-500">

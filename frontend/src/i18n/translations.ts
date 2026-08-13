@@ -11,6 +11,8 @@ export interface TranslationDictionary {
     news: string;
     leaderboard: string;
     gpus: string;
+    sandbox: string;
+    speed: string;
   };
   viewMode: {
     grid: string;
@@ -102,7 +104,9 @@ export const translations: Record<Language, TranslationDictionary> = {
       tutorial: "🎓 튜토리얼",
       news: "📰 AI 트렌드 뉴스",
       leaderboard: "리더보드",
-      gpus: "GPU 스펙 & 비용"
+      gpus: "GPU 스펙 & 비용",
+      sandbox: "🧮 토크나이저 샌드박스",
+      speed: "⚡ 실시간 추론 속도"
     },
     viewMode: {
       grid: "카드 뷰",
@@ -192,7 +196,9 @@ export const translations: Record<Language, TranslationDictionary> = {
       tutorial: "🎓 Tutorial",
       news: "📰 AI Trends News",
       leaderboard: "Leaderboard",
-      gpus: "GPU Specs & Costs"
+      gpus: "GPU Specs & Costs",
+      sandbox: "🧮 Tokenizer Sandbox",
+      speed: "⚡ Live Inference Speed"
     },
     viewMode: {
       grid: "Card View",
@@ -282,7 +288,9 @@ export const translations: Record<Language, TranslationDictionary> = {
       tutorial: "🎓 チュートリアル",
       news: "📰 AI トレンドニュース",
       leaderboard: "リーダーボード",
-      gpus: "GPUスペック・コスト"
+      gpus: "GPUスペック・コスト",
+      sandbox: "🧮 トークナイザーサンドボックス",
+      speed: "⚡ リアルタイム推論速度"
     },
     viewMode: {
       grid: "カード表示",
@@ -372,7 +380,9 @@ export const translations: Record<Language, TranslationDictionary> = {
       tutorial: "🎓 教程",
       news: "📰 AI 趋势新闻",
       leaderboard: "排行榜",
-      gpus: "GPU 规格与成本"
+      gpus: "GPU 规格与成本",
+      sandbox: "🧮 Token 计算沙盒",
+      speed: "⚡ 实时推理速度"
     },
     viewMode: {
       grid: "卡片视图",
@@ -462,7 +472,9 @@ export const translations: Record<Language, TranslationDictionary> = {
       tutorial: "🎓 Tutorial",
       news: "📰 Noticias de Tendencias IA",
       leaderboard: "Tabla de Clasificación",
-      gpus: "Precios y Especificaciones GPU"
+      gpus: "Precios y Especificaciones GPU",
+      sandbox: "🧮 Tokenizer Sandbox",
+      speed: "⚡ Velocidad de Inferencia"
     },
     viewMode: { grid: "Cuadrícula", table: "Tabla", compact: "Compacto" },
     quota: { title: "Límites de Tarifa", rpm: "RPM", tpm: "TPM", rpd: "RPD", concurrency: "Concurrencia" },
@@ -542,7 +554,9 @@ export const translations: Record<Language, TranslationDictionary> = {
       tutorial: "🎓 Tutorial",
       news: "📰 KI Trend-News",
       leaderboard: "Bestenliste",
-      gpus: "GPU Preise & Specs"
+      gpus: "GPU Preise & Specs",
+      sandbox: "🧮 Tokenizer Sandbox",
+      speed: "⚡ Live-Inferenzgeschwindigkeit"
     },
     viewMode: { grid: "Raster", table: "Tabelle", compact: "Kompakt" },
     quota: { title: "Ratenlimits", rpm: "RPM", tpm: "TPM", rpd: "RPD", concurrency: "Nebenläufigkeit" },
@@ -622,7 +636,9 @@ export const translations: Record<Language, TranslationDictionary> = {
       tutorial: "🎓 Tutoriel",
       news: "📰 Actualités des Tendances IA",
       leaderboard: "Classement Général",
-      gpus: "Spécifications & Prix GPU"
+      gpus: "Spécifications & Prix GPU",
+      sandbox: "🧮 Bac à sable Tokenizer",
+      speed: "⚡ Vitesse d'inférence en direct"
     },
     viewMode: { grid: "Grille", table: "Tableau", compact: "Compact" },
     quota: { title: "Limites de Débit", rpm: "RPM", tpm: "TPM", rpd: "RPD", concurrency: "Concurrence" },

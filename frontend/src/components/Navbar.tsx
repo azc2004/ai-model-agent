@@ -146,6 +146,30 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, compare
               <Cpu className="w-4 h-4 shrink-0 text-purple-600 dark:text-purple-400" />
               <span className="whitespace-nowrap">{t.nav.gpus}</span>
             </button>
+
+            <button
+              onClick={() => setActiveTab('sandbox')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all whitespace-nowrap shrink-0 ${
+                activeTab === 'sandbox'
+                  ? 'bg-cyan-500 text-slate-950 font-black shadow-md shadow-cyan-500/20'
+                  : 'text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900/60'
+              }`}
+            >
+              <span className="text-sm shrink-0">🧮</span>
+              <span className="whitespace-nowrap">{t.nav.sandbox}</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('speed')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all whitespace-nowrap shrink-0 ${
+                activeTab === 'speed'
+                  ? 'bg-emerald-500 text-slate-950 font-black shadow-md shadow-emerald-500/20'
+                  : 'text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900/60'
+              }`}
+            >
+              <span className="text-sm shrink-0">⚡</span>
+              <span className="whitespace-nowrap">{t.nav.speed}</span>
+            </button>
           </nav>
 
           {/* Language Selector Dropdown & Theme Toggle */}
