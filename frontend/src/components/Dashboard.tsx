@@ -232,55 +232,52 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
   return (
     <div className="space-y-8 pb-16">
-      {/* 2026 Bento Grid Spotlight Hero */}
+      {/* 2026 Bento Grid Spotlight Hero (Bright & Modern) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Bento 1: Top Elo Leader */}
-        <div className="bento-card-2026 p-6 relative overflow-hidden group border border-purple-500/30 bg-gradient-to-br from-purple-950/40 via-slate-900/60 to-slate-950/80">
-          <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl group-hover:bg-purple-500/20 transition-all pointer-events-none" />
+        <div className="bento-card-2026 p-6 relative overflow-hidden group border border-purple-200 dark:border-purple-500/30 bg-gradient-to-br from-indigo-50/90 via-purple-50/50 to-white dark:from-purple-950/40 dark:to-slate-950/80 shadow-sm">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-[10px] font-black tracking-widest uppercase text-purple-400 bg-purple-500/20 border border-purple-500/30 px-2.5 py-1 rounded-full flex items-center gap-1.5">
+            <span className="text-[10px] font-black tracking-widest uppercase text-purple-700 dark:text-purple-300 bg-purple-100 dark:bg-purple-500/20 border border-purple-200 dark:border-purple-500/30 px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
               <span>👑 TOP ELO LEADER</span>
             </span>
-            <span className="text-xs font-mono font-bold text-amber-400">1360 Elo</span>
+            <span className="text-xs font-mono font-black text-purple-700 dark:text-amber-400">1360 Elo</span>
           </div>
-          <h3 className="text-lg font-black metallic-text mb-1 group-hover:text-cyan-300 transition-colors">
+          <h3 className="text-lg font-black text-slate-900 dark:text-white mb-1 group-hover:text-indigo-600 dark:group-hover:text-cyan-300 transition-colors">
             DeepSeek R1 / GPT-4o
           </h3>
-          <p className="text-xs text-slate-400 leading-relaxed font-semibold">
+          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-semibold">
             글로벌 LMSYS Chatbot Arena 복합 추론 & 지식 평가 1위 프론티어 모델
           </p>
         </div>
 
         {/* Bento 2: Speed Champion */}
-        <div className="bento-card-2026 p-6 relative overflow-hidden group border border-cyan-500/30 bg-gradient-to-br from-cyan-950/40 via-slate-900/60 to-slate-950/80">
-          <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl group-hover:bg-cyan-500/20 transition-all pointer-events-none" />
+        <div className="bento-card-2026 p-6 relative overflow-hidden group border border-cyan-200 dark:border-cyan-500/30 bg-gradient-to-br from-sky-50/90 via-cyan-50/50 to-white dark:from-cyan-950/40 dark:to-slate-950/80 shadow-sm">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-[10px] font-black tracking-widest uppercase text-cyan-400 bg-cyan-500/20 border border-cyan-500/30 px-2.5 py-1 rounded-full flex items-center gap-1.5">
+            <span className="text-[10px] font-black tracking-widest uppercase text-cyan-800 dark:text-cyan-300 bg-cyan-100 dark:bg-cyan-500/20 border border-cyan-200 dark:border-cyan-500/30 px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
               <span>⚡ SPEED CHAMPION</span>
             </span>
-            <span className="text-xs font-mono font-bold text-cyan-300">2,100 TPS</span>
+            <span className="text-xs font-mono font-black text-cyan-700 dark:text-cyan-300">2,100 TPS</span>
           </div>
-          <h3 className="text-lg font-black metallic-cyan mb-1">
+          <h3 className="text-lg font-black text-slate-900 dark:text-white mb-1 group-hover:text-cyan-600 transition-colors">
             Cerebras Llama 3.3 70B
           </h3>
-          <p className="text-xs text-slate-400 leading-relaxed font-semibold">
+          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-semibold">
             초당 2,100 토큰 초고속 서빙 및 TTFT 180ms 최저 지연시간 기록
           </p>
         </div>
 
         {/* Bento 3: Best Value Champion */}
-        <div className="bento-card-2026 p-6 relative overflow-hidden group border border-emerald-500/30 bg-gradient-to-br from-emerald-950/40 via-slate-900/60 to-slate-950/80">
-          <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all pointer-events-none" />
+        <div className="bento-card-2026 p-6 relative overflow-hidden group border border-emerald-200 dark:border-emerald-500/30 bg-gradient-to-br from-emerald-50/90 via-teal-50/50 to-white dark:from-emerald-950/40 dark:to-slate-950/80 shadow-sm">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-[10px] font-black tracking-widest uppercase text-emerald-400 bg-emerald-500/20 border border-emerald-500/30 px-2.5 py-1 rounded-full flex items-center gap-1.5">
+            <span className="text-[10px] font-black tracking-widest uppercase text-emerald-800 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/30 px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
               <span>💎 BEST EFFICIENCY</span>
             </span>
-            <span className="text-xs font-mono font-bold text-emerald-300">$0.50 / 1M</span>
+            <span className="text-xs font-mono font-black text-emerald-700 dark:text-emerald-300">$0.50 / 1M</span>
           </div>
-          <h3 className="text-lg font-black text-emerald-200 mb-1">
+          <h3 className="text-lg font-black text-slate-900 dark:text-white mb-1 group-hover:text-emerald-600 transition-colors">
             ByteDance Seed / Qwen 2.5
           </h3>
-          <p className="text-xs text-slate-400 leading-relaxed font-semibold">
+          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-semibold">
             1M 토큰당 $0.50 최저비용으로 프론티어급 코드 & 추론 성능 제공
           </p>
         </div>
