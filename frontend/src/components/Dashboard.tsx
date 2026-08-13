@@ -14,6 +14,7 @@ interface DashboardProps {
   onToggleCompare?: (modelId: string) => void;
   onClearCompare?: () => void;
   onGoToCompare?: () => void;
+  globalSearchQuery?: string;
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({
@@ -22,7 +23,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
   selectedModelIds = [],
   onToggleCompare,
   models: propModels = [],
-  providers: propProviders = []
+  providers: propProviders = [],
+  globalSearchQuery = ''
 }) => {
   const { t } = useLanguage();
   const [models, setModels] = useState<ModelSpec[]>(propModels);
@@ -31,7 +33,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
   // Filter states
   const [codeModalModel, setCodeModalModel] = useState<ModelSpec | null>(null);
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>(globalSearchQuery);
+
+  useEffect(() => {
+    setSearchTerm(globalSearchQuery);
+  }, [globalSearchQuery]);
   const [selectedProvider, setSelectedProvider] = useState<string>('all');
   const [selectedTier, setSelectedTier] = useState<string>('all');
   const [selectedLicense, setSelectedLicense] = useState<string>('all');

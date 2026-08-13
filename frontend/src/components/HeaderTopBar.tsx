@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Compass,
   Search,
@@ -7,6 +7,7 @@ import {
   Sun,
   Moon,
   Menu,
+  X,
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
@@ -17,6 +18,7 @@ interface HeaderTopBarProps {
   setActiveTab: (tab: string) => void;
   compareCount: number;
   onOpenMobileMenu: () => void;
+  globalSearchQuery?: string;
   onGlobalSearch?: (query: string) => void;
 }
 
@@ -25,14 +27,31 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({
   setActiveTab,
   compareCount,
   onOpenMobileMenu,
+  globalSearchQuery = '',
   onGlobalSearch,
 }) => {
   const { language, setLanguage } = useLanguage();
   const { theme, toggleTheme } = useTheme();
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>(globalSearchQuery);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
+  useEffect(() => {
+    setSearchQuery(globalSearchQuery);
+  }, [globalSearchQuery]);
+
+  // Global Keyboard Shortcut (⌘K / Ctrl+K) Listener
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const handleSearchChange = (val: string) => {
     setSearchQuery(val);
     if (onGlobalSearch) {
       onGlobalSearch(val);
@@ -79,18 +98,33 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({
 
         {/* Center: Global Fast Search Input with Shortcut Hint */}
         <div className="flex-1 max-w-md mx-2">
-          <div className="relative">
+          <div className="relative flex items-center">
             <Search className="w-4 h-4 text-slate-400 dark:text-cyan-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
+              ref={inputRef}
               type="text"
               value={searchQuery}
-              onChange={handleSearchChange}
-              placeholder="🔍 580+ 모델, 프로바이더, 뉴스 검색..."
-              className="w-full bg-slate-100/90 dark:bg-slate-900/80 border border-slate-200 dark:border-white/10 rounded-xl pl-9 pr-14 py-1.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-indigo-500 dark:focus:border-cyan-500/60 focus:ring-1 focus:ring-indigo-500/30 transition shadow-inner font-semibold"
+              onChange={(e) => handleSearchChange(e.target.value)}
+              placeholder="580+ 모델, 프로바이더, 라이선스 검색..."
+              className="w-full bg-slate-100/90 dark:bg-slate-900/80 border border-slate-200 dark:border-white/10 rounded-xl pl-9 pr-16 py-1.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-indigo-500 dark:focus:border-cyan-500/60 focus:ring-2 focus:ring-indigo-500/20 transition shadow-inner font-bold"
             />
-            <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none hidden sm:flex items-center gap-1 bg-slate-200/80 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 rounded px-1.5 py-0.5 text-[9px] font-mono text-slate-600 dark:text-slate-400 font-bold">
-              <span>⌘</span>
-              <span>K</span>
+
+            {/* Clear Button or Cmd+K Badge */}
+            <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
+              {searchQuery ? (
+                <button
+                  onClick={() => handleSearchChange('')}
+                  className="p-1 rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition"
+                  title="검색어 지우기"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              ) : (
+                <div className="hidden sm:flex items-center gap-0.5 bg-slate-200/80 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 rounded px-1.5 py-0.5 text-[9px] font-mono text-slate-600 dark:text-slate-400 font-bold pointer-events-none">
+                  <span>⌘</span>
+                  <span>K</span>
+                </div>
+              )}
             </div>
           </div>
         </div>

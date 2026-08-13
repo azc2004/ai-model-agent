@@ -37,9 +37,18 @@ export const AppContent: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Sidebar Layout States
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+
+  // Global Search State
+  const [globalSearchQuery, setGlobalSearchQuery] = useState<string>('');
+
+  const handleGlobalSearch = (query: string) => {
+    setGlobalSearchQuery(query);
+    if (activeTab !== 'dashboard') {
+      setActiveTab('dashboard');
+    }
+  };
 
   // 탭 변경 시 URL 파라미터 주소창 자동 동기화 (즐겨찾기/링크 공유 가능)
   const setActiveTab = (tab: string) => {
@@ -141,6 +150,8 @@ export const AppContent: React.FC = () => {
           setActiveTab={setActiveTab}
           compareCount={selectedModelIds.length}
           onOpenMobileMenu={() => setMobileMenuOpen(true)}
+          globalSearchQuery={globalSearchQuery}
+          onGlobalSearch={handleGlobalSearch}
         />
 
         {/* Viewport View Component */}
@@ -153,6 +164,7 @@ export const AppContent: React.FC = () => {
               onToggleCompare={handleToggleCompare}
               onClearCompare={handleClearCompare}
               onGoToCompare={() => setActiveTab('compare')}
+              globalSearchQuery={globalSearchQuery}
             />
           )}
 
