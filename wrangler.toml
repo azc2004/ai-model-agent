@@ -1,5 +1,11 @@
 name = "ai-model-agent"
+main = "src/worker.ts"
 compatibility_date = "2025-01-01"
 
 [assets]
 directory = "frontend/dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "llm-compass-db"
+database_id = "5b9b2878-ecb8-4201-9688-198b37811c66"
