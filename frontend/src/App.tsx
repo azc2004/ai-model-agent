@@ -4,7 +4,8 @@ import type { ModelSpec, Provider } from './types';
 import { fetchModels, fetchProviders } from './api';
 import { LanguageProvider } from './context/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
-import { Navbar } from './components/Navbar';
+import { SidebarNav } from './components/SidebarNav';
+import { HeaderTopBar } from './components/HeaderTopBar';
 import { Dashboard } from './components/Dashboard';
 import { TCOSimulatorView } from './components/TCOSimulatorView';
 import { CompareView } from './components/CompareView';
@@ -35,6 +36,10 @@ export const AppContent: React.FC = () => {
   const [selectedModelIds, setSelectedModelIds] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Sidebar Layout States
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
   // 탭 변경 시 URL 파라미터 주소창 자동 동기화 (즐겨찾기/링크 공유 가능)
   const setActiveTab = (tab: string) => {
@@ -112,65 +117,84 @@ export const AppContent: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col font-sans transition-colors">
-      <Navbar
+    <div className="min-h-screen flex bg-slate-950 text-slate-100 font-sans transition-colors">
+      {/* 1. Left Sidebar Navigation */}
+      <SidebarNav
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         compareCount={selectedModelIds.length}
+        isCollapsed={isSidebarCollapsed}
+        setIsCollapsed={setIsSidebarCollapsed}
+        mobileOpen={mobileMenuOpen}
+        setMobileOpen={setMobileMenuOpen}
       />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-2.5 sm:px-6 py-4 sm:py-8">
-        {activeTab === 'dashboard' && (
-          <Dashboard
-            models={models}
-            providers={providers}
-            selectedModelIds={selectedModelIds}
-            onToggleCompare={handleToggleCompare}
-            onClearCompare={handleClearCompare}
-            onGoToCompare={() => setActiveTab('compare')}
-          />
-        )}
+      {/* 2. Main Content Area (Offset by Left Sidebar width on desktop) */}
+      <div
+        className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${
+          isSidebarCollapsed ? 'md:ml-16' : 'md:ml-60'
+        }`}
+      >
+        {/* Top Header Bar */}
+        <HeaderTopBar
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          compareCount={selectedModelIds.length}
+          onOpenMobileMenu={() => setMobileMenuOpen(true)}
+        />
 
-        {activeTab === 'compare' && (
-          <CompareView
-            models={models}
-            selectedModelIds={selectedModelIds}
-            onToggleCompare={handleToggleCompare}
-            onGoToDashboard={() => setActiveTab('dashboard')}
-          />
-        )}
+        {/* Viewport View Component */}
+        <main className="flex-1 max-w-7xl w-full mx-auto px-2.5 sm:px-6 py-4 sm:py-8">
+          {activeTab === 'dashboard' && (
+            <Dashboard
+              models={models}
+              providers={providers}
+              selectedModelIds={selectedModelIds}
+              onToggleCompare={handleToggleCompare}
+              onClearCompare={handleClearCompare}
+              onGoToCompare={() => setActiveTab('compare')}
+            />
+          )}
 
-        {activeTab === 'tco' && <TCOSimulatorView models={models} />}
+          {activeTab === 'compare' && (
+            <CompareView
+              models={models}
+              selectedModelIds={selectedModelIds}
+              onToggleCompare={handleToggleCompare}
+              onGoToDashboard={() => setActiveTab('dashboard')}
+            />
+          )}
 
-        {activeTab === 'advisor' && <ArchitectureAdvisor />}
+          {activeTab === 'tco' && <TCOSimulatorView models={models} />}
 
-        {activeTab === 'tutorial' && <TutorialView />}
+          {activeTab === 'advisor' && <ArchitectureAdvisor />}
 
-        {activeTab === 'leaderboard' && <LeaderboardView models={models} />}
+          {activeTab === 'tutorial' && <TutorialView />}
 
-        {activeTab === 'gpus' && (
-          <GPUListView />
-        )}
-        
-        {activeTab === 'news' && <NewsPulseView />}
+          {activeTab === 'leaderboard' && <LeaderboardView models={models} />}
 
-        {activeTab === 'sandbox' && (
-          <TokenizerSandboxView
-            models={models}
-            onToggleCompare={handleToggleCompare}
-            selectedModelIds={selectedModelIds}
-          />
-        )}
+          {activeTab === 'gpus' && <GPUListView />}
+          
+          {activeTab === 'news' && <NewsPulseView />}
 
-        {activeTab === 'speed' && <SpeedMonitorView />}
-      </main>
+          {activeTab === 'sandbox' && (
+            <TokenizerSandboxView
+              models={models}
+              onToggleCompare={handleToggleCompare}
+              selectedModelIds={selectedModelIds}
+            />
+          )}
 
-      <footer className="border-t border-slate-800/80 bg-slate-950/60 py-6 text-center text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p>© 2026 LLM COMPASS - Global AI Model Spec & TCO Analytics Platform</p>
-          <p className="text-slate-600">Supported Languages: 🇰🇷 한국어 | 🇺🇸 English | 🇯🇵 日本語 | 🇨🇳 中文</p>
-        </div>
-      </footer>
+          {activeTab === 'speed' && <SpeedMonitorView />}
+        </main>
+
+        <footer className="border-t border-slate-800/80 bg-slate-950/60 py-6 text-center text-xs text-slate-500">
+          <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p>© 2026 LLM COMPASS - Global AI Model Spec & TCO Analytics Platform</p>
+            <p className="text-slate-600">Supported Languages: 🇰🇷 한국어 | 🇺🇸 English | 🇯🇵 日本語 | 🇨🇳 中文</p>
+          </div>
+        </footer>
+      </div>
     </div>
   );
 };
