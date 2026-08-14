@@ -16,29 +16,148 @@ from app.schemas import (
 from app.seed_data import MODELS
 from app.guardrails import validate_and_sanitize_prompt, build_security_blocked_spec
 
+import time
+import threading
+import logging
+from openai import OpenAI, RateLimitError, APIStatusError
+
 logger = logging.getLogger(__name__)
 
-# Gemini API 초기화 (GEMINI_API_KEY 환경변수 필요)
-_gemini_model = None
-try:
-    import google.generativeai as genai
-    _api_key = os.getenv("GEMINI_API_KEY", "")
-    if _api_key:
-        genai.configure(api_key=_api_key)
-        # 공식 구글 Gemini API 표준 모델: gemini-2.0-flash (404 예외 방지)
-        _gemini_model = genai.GenerativeModel(
-            model_name="gemini-2.0-flash",
-            generation_config={
-                "temperature": 0.4,
-                "top_p": 0.95,
-                "max_output_tokens": 8192,
-            }
-        )
-        logger.info("✅ Gemini 2.0 Flash 마크다운 생성 모드 활성화")
-    else:
-        logger.warning("⚠️  GEMINI_API_KEY 미설정 → 정적 템플릿 폴백 모드")
-except ImportError:
-    logger.warning("⚠️  google-generativeai 미설치 → pip install google-generativeai")
+# ---------------------------------------------------------------------------
+# ZeroCostLimiter — 무료 한도 내 선제적 차단
+# ---------------------------------------------------------------------------
+
+class _ZeroCostLimiter:
+    """RPM·RPD 기준 선제 차단. 한도 90% 도달 시 다음 프로바이더로 자동 전환."""
+    def __init__(self, name: str, max_rpm: int, max_rpd: int):
+        self.name, self.max_rpm, self.max_rpd = name, max_rpm, max_rpd
+        self._lock = threading.Lock()
+        self._minute_count = self._daily_count = 0
+        self._last_minute = int(time.time() // 60)
+        self._last_day = int(time.time() // 86400)
+
+    def acquire(self) -> bool:
+        with self._lock:
+            now = time.time()
+            cur_min, cur_day = int(now // 60), int(now // 86400)
+            if cur_min != self._last_minute:
+                self._minute_count = 0; self._last_minute = cur_min
+            if cur_day != self._last_day:
+                self._daily_count = 0; self._last_day = cur_day
+                logger.info(f"[ZeroCost] {self.name} 일별 카운터 리셋")
+            if self._minute_count >= self.max_rpm:
+                logger.info(f"[ZeroCost] {self.name} RPM 상한({self.max_rpm}) 도달 → 다음 프로바이더")
+                return False
+            if self._daily_count >= self.max_rpd:
+                logger.warning(f"[ZeroCost] {self.name} 일일 상한({self.max_rpd}) 도달 → 다음 프로바이더")
+                return False
+            self._minute_count += 1; self._daily_count += 1
+            return True
+
+    @property
+    def status(self) -> str:
+        return f"{self.name}: {self._daily_count}/{self.max_rpd} RPD"
+
+
+# ---------------------------------------------------------------------------
+# [무료 전용] 멀티-프로바이더 폴백 체인
+# 우선순위: Groq → NVIDIA NIM → Cerebras → OpenRouter(:free)
+# ⚠️  Gemini(유료 billing)·Mistral(pay-per-token) 제외 — 과금 방지
+# ---------------------------------------------------------------------------
+
+_REC_PROVIDER_CHAIN: list[dict] = []
+_rec_active_idx: int = 0
+_FALLBACK_STATUS_CODES = {429, 500, 502, 503, 504}
+
+# 1순위: Groq — 영구 무료, 14,400 RPD
+_groq_key = os.getenv("GROQ_API_KEY", "")
+if _groq_key:
+    _REC_PROVIDER_CHAIN.append({
+        "name": "Groq",
+        "client": OpenAI(base_url="https://api.groq.com/openai/v1", api_key=_groq_key),
+        "model": os.getenv("GROQ_GENERATOR_MODEL", "llama-3.3-70b-versatile"),
+        "limiter": _ZeroCostLimiter("Groq", max_rpm=27, max_rpd=12_960),
+    })
+
+# 2순위: NVIDIA NIM — 무료 개발 티어
+_nvidia_key = os.getenv("NVIDIA_API_KEY", "")
+if _nvidia_key:
+    _REC_PROVIDER_CHAIN.append({
+        "name": "NVIDIA NIM",
+        "client": OpenAI(base_url="https://integrate.api.nvidia.com/v1", api_key=_nvidia_key),
+        "model": os.getenv("NVIDIA_GENERATOR_MODEL", "meta/llama-3.3-70b-instruct"),
+        "limiter": _ZeroCostLimiter("NVIDIA NIM", max_rpm=36, max_rpd=180),
+    })
+
+# 3순위: Cerebras — 무료 티어
+_cerebras_key = os.getenv("CEREBRAS_API_KEY", "")
+if _cerebras_key:
+    _REC_PROVIDER_CHAIN.append({
+        "name": "Cerebras",
+        "client": OpenAI(base_url="https://api.cerebras.ai/v1", api_key=_cerebras_key),
+        "model": os.getenv("CEREBRAS_GENERATOR_MODEL", "llama-3.3-70b"),
+        "limiter": _ZeroCostLimiter("Cerebras", max_rpm=27, max_rpd=12_960),
+    })
+
+# 4순위: OpenRouter — :free 모델만 사용 (과금 없음 보장)
+_openrouter_key = os.getenv("OPENROUTER_API_KEY", "")
+if _openrouter_key:
+    _REC_PROVIDER_CHAIN.append({
+        "name": "OpenRouter",
+        "client": OpenAI(base_url="https://openrouter.ai/api/v1", api_key=_openrouter_key),
+        "model": os.getenv("OPENROUTER_GENERATOR_MODEL", "meta-llama/llama-3.3-70b-instruct:free"),
+        "limiter": _ZeroCostLimiter("OpenRouter", max_rpm=18, max_rpd=180),
+    })
+
+# ponytail: Gemini·Mistral은 billing 계정·pay-per-token 이슈로 의도적으로 제외
+
+if _REC_PROVIDER_CHAIN:
+    _names = ", ".join(p["name"] for p in _REC_PROVIDER_CHAIN)
+    logger.info(f"✅ Recommender 멀티 LLM 폴백 체인 활성화: [{_names}]")
+else:
+    logger.warning("⚠️ 설정된 LLM API 키 없음 → 정적 템플릿 폴백 모드")
+
+
+def _llm_chat_with_fallback(system: str, user: str, timeout: float = 90.0) -> str | None:
+    """멀티-프로바이더 폴백 체인으로 LLM 호출. 모든 프로바이더 실패 시 None 반환."""
+    global _rec_active_idx
+    if not _REC_PROVIDER_CHAIN:
+        return None
+    start_idx = _rec_active_idx
+    for offset in range(len(_REC_PROVIDER_CHAIN)):
+        idx = (start_idx + offset) % len(_REC_PROVIDER_CHAIN)
+        p = _REC_PROVIDER_CHAIN[idx]
+        # ZeroCostLimiter: 무료 한도 도달 전 선제 차단
+        limiter = p.get("limiter")
+        if limiter is not None and not limiter.acquire():
+            continue
+        try:
+            resp = p["client"].chat.completions.create(
+                model=p["model"],
+                messages=[
+                    {"role": "system", "content": system},
+                    {"role": "user", "content": user},
+                ],
+                timeout=timeout,
+            )
+            if idx != _rec_active_idx:
+                prev_name = _REC_PROVIDER_CHAIN[_rec_active_idx]["name"]
+                logger.info(f"[Recommender Fallback] '{p['name']}'으로 전환 성공 (이전: '{prev_name}')")
+                _rec_active_idx = idx
+            return resp.choices[0].message.content or ""
+        except RateLimitError as e:
+            logger.warning(f"[Recommender Fallback] '{p['name']}' 429 한도 초과 → 다음 시도: {e}")
+            continue
+        except APIStatusError as e:
+            if e.status_code in _FALLBACK_STATUS_CODES:
+                logger.warning(f"[Recommender Fallback] '{p['name']}' {e.status_code} 에러 → 다음 시도: {e}")
+                continue
+            raise
+        except Exception as e:
+            logger.warning(f"[Recommender Fallback] '{p['name']}' 에러 → 다음 시도: {e}")
+            continue
+    logger.error(f"[Recommender Fallback] 모든 프로바이더 실패 ({[p['name'] for p in _REC_PROVIDER_CHAIN]})")
+    return None
 
 # Helper to find model by id or fallback
 def get_model(model_id: str):
@@ -335,8 +454,8 @@ def generate_markdown_spec(
                 reason=error_reason or "안전 정책에 위배된 입력"
             )
 
-    # Gemini API 사용 가능 시 동적 생성 (Primary: gemini-2.0-flash -> Fallback: gemini-1.5-flash)
-    if _gemini_model is not None:
+    # LLM 동적 생성 시도 (멀티-프로바이더 폴백 체인)
+    if _REC_PROVIDER_CHAIN:
         user_prompt = _build_gemini_user_prompt(
             service_name=service_name,
             req=req,
@@ -346,35 +465,17 @@ def generate_markdown_spec(
             best_combo=best_combo,
             hosting=hosting,
         )
-        full_content = [{"role": "user", "parts": [SYSTEM_PROMPT + "\n\n---\n\n" + user_prompt]}]
-
-        # 1차 시도: gemini-2.0-flash
-        try:
-            response = _gemini_model.generate_content(
-                contents=full_content,
-                request_options={"timeout": 60}
-            )
-            generated_text = response.text.strip()
-            if generated_text and len(generated_text) > 500:
-                logger.info(f"✅ Gemini 2.0 Flash 마크다운 생성 완료 ({len(generated_text)} chars)")
-                return generated_text
-        except Exception as e:
-            logger.warning(f"⚠️ Primary gemini-2.0-flash 실패: {e} → 2차 gemini-1.5-flash 폴백 시도")
-
-        # 2차 시도: gemini-1.5-flash 폴백 라우팅
-        try:
-            import google.generativeai as genai
-            fallback_model = genai.GenerativeModel("gemini-1.5-flash")
-            response = fallback_model.generate_content(
-                contents=full_content,
-                request_options={"timeout": 60}
-            )
-            generated_text = response.text.strip()
-            if generated_text and len(generated_text) > 500:
-                logger.info(f"✅ Gemini 1.5 Flash 차순위 폴백 생성 완료 ({len(generated_text)} chars)")
-                return generated_text
-        except Exception as fallback_err:
-            logger.error(f"❌ Gemini 차순위 모델도 실패: {fallback_err} → 정적 템플릿으로 전환")
+        generated_text = _llm_chat_with_fallback(
+            system=SYSTEM_PROMPT,
+            user=user_prompt,
+            timeout=90.0,
+        )
+        if generated_text and len(generated_text) > 500:
+            active = _REC_PROVIDER_CHAIN[_rec_active_idx]
+            logger.info(f"✅ {active['name']} ({active['model']}) 마크다운 생성 완료 ({len(generated_text)} chars)")
+            return generated_text
+        else:
+            logger.warning("⚠️ LLM 폴백 체인 전체 실패 또는 응답 불충분 → 정적 템플릿으로 전환")
 
     # 폴백: 정적 f-string 템플릿
     return _fallback_markdown_spec(

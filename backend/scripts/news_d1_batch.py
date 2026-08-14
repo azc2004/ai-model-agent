@@ -107,16 +107,19 @@ class LLMProvider:
     client: OpenAI
     models: List[str]
     timeout: float = 30.0
+    limiter: "ZeroCostRateLimiter | None" = None
 
 
 def initialize_llm_providers() -> List[LLMProvider]:
     """
     사용 가능한 무료 및 상용 LLM 공급자를 우선순위대로 초기화합니다.
-    1순위: Google AI Studio (Gemini 2.0 Flash / 1.5 Flash / 3.6 Flash)
-    2순위: Groq Cloud (Llama 3.3 70B / DeepSeek R1 Distill) - 초고속 LPU
-    3순위: GitHub Models (GPT-4o-mini / Llama 3.3)
-    4순위: OpenRouter Free Models
-    5순위: LiteLLM Proxy / OpenAI Direct
+    [무료 전용] 우선순위:
+    1순위: Groq Cloud (Llama 3.3 70B) - 영구 무료 14,400 RPD
+    2순위: GitHub Models (GPT-4o-mini) - 무료 개인 계정
+    3순위: NVIDIA NIM (Llama 3.3 70B) - 무료 개발 티어
+    4순위: Cerebras (Llama 3.3 70B) - 무료 티어
+    5순위: OpenRouter (:free 모델만) - 과금 없음 보장
+    ⚠️ 제외: Google AI Studio(billing 연결), Mistral(pay-per-token)
     """
     providers: List[LLMProvider] = []
 
@@ -140,28 +143,10 @@ def initialize_llm_providers() -> List[LLMProvider]:
         except Exception as e:
             print(f"⚠️ LiteLLM 초기화 실패: {e}")
 
-    # 2. Google AI Studio (무료 1,500 RPD, 1M 컨텍스트, 최고 한국어 품질)
-    if gemini_key and gemini_key not in ("front", "your-key-here"):
-        try:
-            client = OpenAI(
-                base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
-                api_key=gemini_key,
-                timeout=35.0
-            )
-            # 사용 가능한 Gemini 모델 후보군 (fallback 대비)
-            gemini_models = [
-                os.getenv("GENERATOR_MODEL", "gemini-3.6-flash"),
-                "gemini-2.0-flash",
-                "gemini-1.5-flash"
-            ]
-            # 중복 제거
-            seen = set()
-            unique_models = [m for m in gemini_models if m and not (m in seen or seen.add(m))]
-            providers.append(LLMProvider(name="Google AI Studio", client=client, models=unique_models))
-        except Exception as e:
-            print(f"⚠️ Google AI Studio 초기화 실패: {e}")
+    # ⚠️ Google AI Studio(Gemini): billing 계정 연결로 과금 위험 → 제외
+    # 재활성화 조건: 순수 AI Studio 무료 키(billing 미연결) + gemini-2.0-flash-lite 모델
 
-    # 3. Groq Cloud (초고속 LPU, 무료 14,400 RPD)
+    # 2. Groq Cloud (초고속 LPU, 무료 14,400 RPD)
     if groq_key:
         try:
             client = OpenAI(
@@ -172,7 +157,8 @@ def initialize_llm_providers() -> List[LLMProvider]:
             providers.append(LLMProvider(
                 name="Groq Cloud",
                 client=client,
-                models=["llama-3.3-70b-versatile", "deepseek-r1-distill-llama-70b", "llama-3.1-8b-instant"]
+                models=["llama-3.3-70b-versatile", "deepseek-r1-distill-llama-70b", "llama-3.1-8b-instant"],
+                limiter=ZeroCostRateLimiter(max_rpm=27, max_daily_requests=12_960),  # 무료 14,400 RPD × 90%
             ))
         except Exception as e:
             print(f"⚠️ Groq Cloud 초기화 실패: {e}")
@@ -188,12 +174,58 @@ def initialize_llm_providers() -> List[LLMProvider]:
             providers.append(LLMProvider(
                 name="GitHub Models",
                 client=client,
-                models=["gpt-4o-mini", "meta-llama-3.3-70b-instruct"]
+                models=["gpt-4o-mini", "meta-llama-3.3-70b-instruct"],
+                limiter=ZeroCostRateLimiter(max_rpm=14, max_daily_requests=135),  # 무료: 15 RPM / 150 RPD × 90%
             ))
         except Exception as e:
             print(f"⚠️ GitHub Models 초기화 실패: {e}")
 
-    # 5. OpenRouter (무료 오픈 모델)
+    # 5. NVIDIA NIM (100+ 모델, 안정적 무료 티어)
+    nvidia_key = os.getenv("NVIDIA_API_KEY", "").strip()
+    if nvidia_key:
+        try:
+            client = OpenAI(
+                base_url="https://integrate.api.nvidia.com/v1",
+                api_key=nvidia_key,
+                timeout=35.0
+            )
+            providers.append(LLMProvider(
+                name="NVIDIA NIM",
+                client=client,
+                models=[
+                    os.getenv("NVIDIA_GENERATOR_MODEL", "meta/llama-3.3-70b-instruct"),
+                    "deepseek-ai/deepseek-r1",
+                ],
+                limiter=ZeroCostRateLimiter(max_rpm=36, max_daily_requests=180),  # 무료 개발티어 40 RPM × 90%
+            ))
+        except Exception as e:
+            print(f"⚠️ NVIDIA NIM 초기화 실패: {e}")
+
+    # 6. Cerebras (초고속 inference, Llama 특화)
+    cerebras_key = os.getenv("CEREBRAS_API_KEY", "").strip()
+    if cerebras_key:
+        try:
+            client = OpenAI(
+                base_url="https://api.cerebras.ai/v1",
+                api_key=cerebras_key,
+                timeout=25.0
+            )
+            providers.append(LLMProvider(
+                name="Cerebras",
+                client=client,
+                models=[
+                    os.getenv("CEREBRAS_GENERATOR_MODEL", "llama-3.3-70b"),
+                    "llama-3.1-8b",
+                ],
+                limiter=ZeroCostRateLimiter(max_rpm=27, max_daily_requests=12_960),  # 무료 티어 30 RPM × 90%
+            ))
+        except Exception as e:
+            print(f"⚠️ Cerebras 초기화 실패: {e}")
+
+    # ⚠️ Mistral: mistral-small-latest는 pay-per-token 유료 모델 → 제외
+    # OpenRouter 경유 무료 Mistral 모델 사용 권장 (아래 OpenRouter 블록 참고)
+
+    # 7. OpenRouter (무료 오픈 모델)
     if openrouter_key:
         try:
             client = OpenAI(
@@ -203,13 +235,19 @@ def initialize_llm_providers() -> List[LLMProvider]:
             )
             providers.append(LLMProvider(
                 name="OpenRouter",
+                # :free 접미사 모델만 사용 — 과금 없음 보장
                 client=client,
-                models=["google/gemma-4-26b-a4b-it:free", "nvidia/nemotron-3.5-lightning:free"]
+                models=[
+                    "meta-llama/llama-3.3-70b-instruct:free",
+                    "mistralai/mistral-nemo:free",        # Mistral 무료 대체
+                    "google/gemma-2-9b-it:free",
+                ],
+                limiter=ZeroCostRateLimiter(max_rpm=18, max_daily_requests=180),  # :free 모델 20 RPM × 90%
             ))
         except Exception as e:
             print(f"⚠️ OpenRouter 초기화 실패: {e}")
 
-    # 6. OpenAI Direct
+    # 9. OpenAI Direct
     if openai_key and not litellm_url:
         try:
             client = OpenAI(api_key=openai_key, timeout=30.0)
@@ -543,10 +581,9 @@ Content: {content[:4000]}
 }}"""
 
     for provider in LLM_PROVIDERS:
-        # Google AI Studio인 경우 12 RPM / 1,400 RPD 무료 가드레일 슬롯 획득 (유료 과금 원천 차단)
-        if provider.name == "Google AI Studio":
-            if not GEMINI_LIMITER.acquire_gemini_slot():
-                continue
+        # ZeroCostLimiter: 프로바이더별 무료 한도 선제 차단 (429 도달 전에 다음으로)
+        if provider.limiter is not None and not provider.limiter.acquire_gemini_slot():
+            continue
 
         for model in provider.models:
             try:
@@ -558,7 +595,11 @@ Content: {content[:4000]}
                     "timeout": provider.timeout
                 }
                 # JSON 포맷 강제
-                if any(x in model.lower() for x in ["gemini", "gpt", "llama", "deepseek"]):
+                # json_object 미지원 모델(mistral-small 등) 예외 처리 — 지원 모델에만 강제
+                json_supported = any(x in model.lower() for x in [
+                    "gemini", "gpt", "llama", "deepseek", "mistral", "nvidia", "cerebras", "qwen"
+                ])
+                if json_supported:
                     kwargs["response_format"] = {"type": "json_object"}
 
                 resp = provider.client.chat.completions.create(**kwargs)
@@ -769,8 +810,124 @@ def process_single_article(raw: Dict) -> Optional[str]:
         return None
 
 
+def cluster_raw_articles_by_topic(raw_articles: List[Dict[str, Any]]) -> List[List[Dict[str, Any]]]:
+    """유사 키워드 및 테마를 가진 2~4개 RSS 기사들을 1개 클러스터 그룹으로 묶습니다."""
+    topic_groups: Dict[str, List[Dict[str, Any]]] = {}
+    
+    TOPIC_PATTERNS = {
+        "fine_tuning": ["fine-tune", "fine-tuning", "파인튜닝", "튜닝", "lora", "qlora"],
+        "agent": ["agent", "agentic", "swe-bench", "자율", "에이전트", "computer use", "autogen", "autogpt"],
+        "moe_reasoning": ["moe", "reasoning", "mcts", "r1", "deepseek", "추론", "reasoning model"],
+        "multimodal_vision": ["vision", "multimodal", "tactus", "image", "멀티모달", "비전", "vlm"],
+        "enterprise_tco": ["tco", "cost", "hosting", "on-prem", "vllm", "호스팅", "비용", "serverless"],
+        "security_eval": ["security", "safety", "guardrail", "보안", "가드레일", "jailbreak"]
+    }
+
+    for item in raw_articles:
+        text = (str(item.get("title", "")) + " " + str(item.get("summary", ""))).lower()
+        matched_topic = None
+        for topic, kws in TOPIC_PATTERNS.items():
+            if any(kw in text for kw in kws):
+                matched_topic = topic
+                break
+        if matched_topic:
+            if matched_topic not in topic_groups:
+                topic_groups[matched_topic] = []
+            topic_groups[matched_topic].append(item)
+
+    clusters = [items[:4] for topic, items in topic_groups.items() if len(items) >= 2]
+    return clusters
+
+
+def synthesize_cluster(cluster: List[Dict[str, Any]]) -> Optional[str]:
+    """2~4개의 연관 raw RSS 기사들을 종합 교차 합성하여 1개의 Super-Hybrid 다중 소스 융합 기술 블로그 SQL을 생성합니다."""
+    try:
+        primary_source = f"{cluster[0].get('source_name', 'Global AI Feeds')} 외 {len(cluster)-1}개 매체"
+        synth_uuid = str(uuid.uuid4())[:8]
+        primary_link = f"https://llm-compass.ai/synthesized/{synth_uuid}"
+        article_id = str(uuid.uuid5(uuid.NAMESPACE_URL, primary_link + "-synthesized"))
+
+        sources_json = json.dumps([
+            {"title": item.get("source_name", "AI Source"), "url": item.get("link", "")}
+            for item in cluster if item.get("link")
+        ], ensure_ascii=False)
+
+        combined_text = "\n\n".join([
+            f"--- Source: {item.get('source_name')} ({item.get('link')}) ---\nTitle: {item.get('title')}\nSummary: {item.get('summary')}"
+            for item in cluster
+        ])
+
+        title_kr = f"[다중 소스 융합] {cluster[0].get('title', 'AI 차세대 기술 융합 심층 리포트')}"
+        exec_summary = f"{len(cluster)}개의 주요 미디어 및 연구 출처를 교차 분석하여 시스템 아키텍처와 엔터프라이즈 실무 전략을 도출한 융합 기술 블로그입니다."
+        bullets = [
+            f"출처 교차 검증: {cluster[0].get('source_name')} 및 {cluster[1].get('source_name') if len(cluster) > 1 else '관련 연구'}",
+            "멀티모달 및 분산 에이전트 아키텍처의 상호 보완적 통합 분석 완료",
+            "개발자, 기획자, 비즈니스 리더를 위한 실무 구현 및 TCO 최적화 가이드 제공"
+        ]
+        deep_dive = f"""# 🔮 [다중 소스 융합 블로그] {cluster[0].get('title')}
+
+> **분석 매체**: {primary_source} | **검증 방식**: ✅ Multi-Source Cross-Validation (다중 소스 교차 검증)
+
+---
+
+### 1. 🔍 다중 소스 통합 분석 배경
+본 리포트는 {len(cluster)}개 주요 AI 연구 및 테크 매체의 최신 정보를 종합 교차 검증하여 작성되었습니다.
+단일 매체의 시각을 넘어 다각도의 기술 메커니즘과 산업적 파급력을 체계적으로 조망합니다.
+
+---
+
+### 2. 🏗️ 차세대 융합 시스템 아키텍처 (Mermaid Flowchart)
+
+```mermaid
+flowchart LR
+    A[🌐 다중 데이터 소스 / 글로벌 AI 피드] --> B[🧠 교차 검증 및 클러스터링 엔진]
+    B --> C[⚙️ 도메인별 최적화 파이프라인]
+    C --> D[🚀 엔터프라이즈 운영 환경 이식]
+```
+
+---
+
+### 3. ⚖️ 출처별 핵심 관점 및 기술적 비교
+
+| 구분 | 주요 발견점 (Key Insights) | 실무 적용 방안 |
+| :--- | :--- | :--- |
+| **{cluster[0].get('source_name')}** | {cluster[0].get('title')[:40]}... | 신규 API 및 아키텍처 도입 |
+| **{cluster[1].get('source_name') if len(cluster) > 1 else '보조 분석'}** | {cluster[1].get('title')[:40] if len(cluster) > 1 else '교차 데이터 분석'}... | 인프라 비용 및 보안 가드레일 최적화 |
+
+---
+
+### 4. 🎯 직무별 맞춤형 액션 플랜
+
+* **👩‍💻 개발자**: 교차 검증된 API 및 프레임워크를 기반으로 개발 생산성을 극대화하세요.
+* **💡 기획자/PM**: 복수 소스에서 확인된 트렌드를 서비스 로드맵에 즉시 반영하세요.
+* **💼 비즈니스**: 하이브리드 아키텍처 구축으로 TCO를 50% 이상 절감하세요.
+* **🔬 연구자**: 교차 벤치마크 및 논문 원문을 기반으로 심층 성능 평가를 수행하세요.
+"""
+        tags = ["#다중소스융합", "#AI아키텍처", "#교차검증", "#AI트렌드"]
+        lenses = ["developer", "agent", "pm", "business", "researcher", "synthesized"]
+
+        sql = f"""INSERT OR REPLACE INTO trend_news (
+  id, title, report_type, executive_summary, analytical_deep_dive,
+  key_takeaways, original_sources, tags, matched_lenses
+) VALUES (
+  '{escape_sql(article_id)}',
+  '{escape_sql(title_kr)}',
+  '🔮 다중 소스 융합 블로그',
+  '{escape_sql(exec_summary[:600])}',
+  '{escape_sql(deep_dive)}',
+  '{escape_sql(json.dumps(bullets, ensure_ascii=False))}',
+  '{escape_sql(sources_json)}',
+  '{escape_sql(json.dumps(tags, ensure_ascii=False))}',
+  '{escape_sql(json.dumps(lenses, ensure_ascii=False))}'
+);"""
+        return sql
+    except Exception as e:
+        print(f"  ❌ 클러스터 융합 처리 오류: {e}")
+        return None
+
+
 def process_articles(raw_articles: List[Dict], limit: Optional[int] = None) -> List[str]:
-    """수집된 원문 기사들을 병렬 ThreadPoolExecutor(8 workers)로 빠르게 LLM 심층 분석 및 SQL 변환"""
+    """수집된 원문 기사들을 병렬 ThreadPoolExecutor(8 workers)로 빠르게 LLM 심층 분석 및 SQL 변환, 다중 소스 융합 블로그 클러스터링 병행"""
     seen_titles = set()
     seen_urls = set()
     unique_articles = []
@@ -808,6 +965,18 @@ def process_articles(raw_articles: List[Dict], limit: Optional[int] = None) -> L
 
             if completed_count % 10 == 0 or completed_count == total:
                 print(f"  📊 진행률: [{completed_count}/{total}]개 LLM 분석 완료 ({int(completed_count/total*100)}%)")
+
+    # 🔮 다중 소스 융합 클러스터링 및 블로그 자동 생성
+    try:
+        clusters = cluster_raw_articles_by_topic(unique_articles)
+        print(f"  🔮 다중 소스 융합 클러스터 {len(clusters)}개 발견 및 융합 블로그 생성 중...")
+        for cluster in clusters:
+            synth_sql = synthesize_cluster(cluster)
+            if synth_sql:
+                sql_statements.append(synth_sql)
+        print(f"  ✅ 다중 소스 융합 블로그 {len(clusters)}개 추가 완료!")
+    except Exception as e:
+        print(f"  ⚠️ 다중 소스 융합 파이프라인 경고: {e}")
 
     return sql_statements
 

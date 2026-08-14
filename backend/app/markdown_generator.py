@@ -11,10 +11,13 @@ from __future__ import annotations
 
 import json
 import re
+import time
+import threading
+import logging
 from enum import Enum
 from typing import Any
 
-from openai import OpenAI
+from openai import OpenAI, RateLimitError, APIStatusError
 from pydantic import BaseModel, Field
 
 import os
@@ -22,47 +25,167 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+logger = logging.getLogger(__name__)
+
 # ---------------------------------------------------------------------------
-# 설정 (환경변수 자동 감지)
+# ZeroCostLimiter — 무료 한도 내 선제적 차단 (429 도달 전에 폴백)
+# 각 프로바이더의 무료 티어 공식 한도의 90%를 안전 상한으로 설정
+# ---------------------------------------------------------------------------
+
+class _ZeroCostLimiter:
+    """스레드 안전 무료 한도 제어기.
+    RPM(분당 요청) / RPD(일일 요청) 기준으로 선제 차단 → 429 도달 전에 다음 프로바이더로.
+    자정에 일별 카운터 자동 리셋.
+    """
+    def __init__(self, name: str, max_rpm: int, max_rpd: int):
+        self.name = name
+        self.max_rpm = max_rpm
+        self.max_rpd = max_rpd
+        self._lock = threading.Lock()
+        self._minute_count = 0
+        self._daily_count = 0
+        self._last_minute = int(time.time() // 60)
+        self._last_day = int(time.time() // 86400)
+
+    def acquire(self) -> bool:
+        """슬롯 획득 시도. 한도 초과 시 False 반환 (호출 측에서 다음 프로바이더로 전환)."""
+        with self._lock:
+            now = time.time()
+            cur_min = int(now // 60)
+            cur_day = int(now // 86400)
+            if cur_min != self._last_minute:
+                self._minute_count = 0
+                self._last_minute = cur_min
+            if cur_day != self._last_day:
+                self._daily_count = 0
+                self._last_day = cur_day
+                logger.info(f"[ZeroCost] {self.name} 일별 카운터 리셋")
+            if self._minute_count >= self.max_rpm:
+                logger.info(f"[ZeroCost] {self.name} RPM 상한({self.max_rpm}) 도달 → 다음 프로바이더")
+                return False
+            if self._daily_count >= self.max_rpd:
+                logger.warning(f"[ZeroCost] {self.name} 일일 상한({self.max_rpd}) 도달 → 다음 프로바이더")
+                return False
+            self._minute_count += 1
+            self._daily_count += 1
+            return True
+
+    @property
+    def status(self) -> str:
+        return f"{self.name}: {self._daily_count}/{self.max_rpd} RPD, {self._minute_count}/{self.max_rpm} RPM"
+
+
+# ---------------------------------------------------------------------------
+# [무료 전용] 멀티-프로바이더 폴백 체인
+# 우선순위: Groq → NVIDIA NIM → Cerebras → OpenRouter(:free) → LiteLLM
+# ⚠️  Gemini(유료 billing 계정)·Mistral(pay-per-token) 제외 — 과금 방지
+# ZeroCostLimiter가 한도 90% 도달 시 429 전에 선제 차단
+# ---------------------------------------------------------------------------
+#
+# 무료 한도 (공식 발표 기준 → 안전 상한 90% 적용):
+#   Groq llama-3.3-70b-versatile : RPM 30 → 27,  RPD 14,400 → 12,960
+#   NVIDIA NIM (개발 티어)        : RPM 40 → 36,  RPD 크레딧 기반 → 보수적 180
+#   Cerebras (무료 티어)          : RPM 30 → 27,  RPD 14,400 → 12,960
+#   OpenRouter :free 모델         : RPM 20 → 18,  RPD 200 → 180
 # ---------------------------------------------------------------------------
 
 _litellm_url = os.getenv("LITELLM_URL", os.getenv("OPENAI_BASE_URL", ""))
-_openai_api_key = os.getenv("OPENAI_API_KEY", "")
-_gemini_api_key = os.getenv("GEMINI_API_KEY", "")
 
+_PROVIDER_CHAIN: list[dict] = []
+
+# 1순위: Groq — 영구 무료, 14,400 RPD, 초고속 LPU inference
+_groq_key = os.getenv("GROQ_API_KEY", "")
+if _groq_key:
+    _PROVIDER_CHAIN.append({
+        "name": "Groq",
+        "base_url": "https://api.groq.com/openai/v1",
+        "api_key": _groq_key,
+        "generator_model": os.getenv("GROQ_GENERATOR_MODEL", "llama-3.3-70b-versatile"),
+        "router_model": os.getenv("GROQ_ROUTER_MODEL", "llama-3.3-70b-versatile"),
+        "limiter": _ZeroCostLimiter("Groq", max_rpm=27, max_rpd=12_960),
+    })
+
+# 2순위: NVIDIA NIM — 무료 개발 티어, 40 RPM, 크레딧 기반
+_nvidia_key = os.getenv("NVIDIA_API_KEY", "")
+if _nvidia_key:
+    _PROVIDER_CHAIN.append({
+        "name": "NVIDIA NIM",
+        "base_url": "https://integrate.api.nvidia.com/v1",
+        "api_key": _nvidia_key,
+        "generator_model": os.getenv("NVIDIA_GENERATOR_MODEL", "meta/llama-3.3-70b-instruct"),
+        "router_model": os.getenv("NVIDIA_ROUTER_MODEL", "meta/llama-3.3-70b-instruct"),
+        "limiter": _ZeroCostLimiter("NVIDIA NIM", max_rpm=36, max_rpd=180),
+    })
+
+# 3순위: Cerebras — 무료 티어, Llama 특화 초고속
+_cerebras_key = os.getenv("CEREBRAS_API_KEY", "")
+if _cerebras_key:
+    _PROVIDER_CHAIN.append({
+        "name": "Cerebras",
+        "base_url": "https://api.cerebras.ai/v1",
+        "api_key": _cerebras_key,
+        "generator_model": os.getenv("CEREBRAS_GENERATOR_MODEL", "llama-3.3-70b"),
+        "router_model": os.getenv("CEREBRAS_ROUTER_MODEL", "llama-3.3-70b"),
+        "limiter": _ZeroCostLimiter("Cerebras", max_rpm=27, max_rpd=12_960),
+    })
+
+# 4순위: OpenRouter — :free 모델만 사용 (과금 없음 보장)
+_openrouter_key = os.getenv("OPENROUTER_API_KEY", "")
+if _openrouter_key:
+    _PROVIDER_CHAIN.append({
+        "name": "OpenRouter",
+        "base_url": "https://openrouter.ai/api/v1",
+        "api_key": _openrouter_key,
+        "generator_model": os.getenv("OPENROUTER_GENERATOR_MODEL", "meta-llama/llama-3.3-70b-instruct:free"),
+        "router_model": os.getenv("OPENROUTER_ROUTER_MODEL", "meta-llama/llama-3.3-70b-instruct:free"),
+        "limiter": _ZeroCostLimiter("OpenRouter", max_rpm=18, max_rpd=180),
+    })
+
+# 5순위: LiteLLM 프록시 (자체 호스팅 환경 전용 — 한도 없음)
 if _litellm_url:
-    client = OpenAI(
-        base_url=_litellm_url,
-        api_key=os.getenv("LITELLM_API_KEY", _openai_api_key or "sk-litellm-master-key"),
-    )
-    GENERATOR_MODEL = os.getenv("GENERATOR_MODEL", "glm-5.1")
-    CRITIQUE_MODEL = os.getenv("CRITIQUE_MODEL", "glm-5.1")
-    ROUTER_MODEL = os.getenv("ROUTER_MODEL", "glm-5.1")
-elif _gemini_api_key:
-    # Google Gemini OpenAI 호환 엔드포인트 v1beta
-    client = OpenAI(
-        base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
-        api_key=_gemini_api_key,
-    )
-    GENERATOR_MODEL = os.getenv("GENERATOR_MODEL", "gemini-2.0-flash")
-    CRITIQUE_MODEL = os.getenv("CRITIQUE_MODEL", "gemini-2.0-flash")
-    ROUTER_MODEL = os.getenv("ROUTER_MODEL", "gemini-2.0-flash")
-elif _openai_api_key:
-    client = OpenAI(api_key=_openai_api_key)
-    GENERATOR_MODEL = os.getenv("GENERATOR_MODEL", "gpt-4o-mini")
-    CRITIQUE_MODEL = os.getenv("CRITIQUE_MODEL", "gpt-4o-mini")
-    ROUTER_MODEL = os.getenv("ROUTER_MODEL", "gpt-4o-mini")
-else:
-    # Fallback default LiteLLM
-    client = OpenAI(
-        base_url="http://localhost:4000",
-        api_key="sk-litellm-master-key",
-    )
-    GENERATOR_MODEL = "glm-5.1"
-    CRITIQUE_MODEL = "glm-5.1"
-    ROUTER_MODEL = "glm-5.1"
+    _PROVIDER_CHAIN.append({
+        "name": "LiteLLM",
+        "base_url": _litellm_url,
+        "api_key": os.getenv("LITELLM_API_KEY", os.getenv("OPENAI_API_KEY", "sk-litellm-master-key")),
+        "generator_model": os.getenv("GENERATOR_MODEL", "glm-5.1"),
+        "router_model": os.getenv("ROUTER_MODEL", "glm-5.1"),
+        "limiter": None,  # 자체 호스팅 — 한도 제한 없음
+    })
+
+# ponytail: Gemini·Mistral은 billing 계정·pay-per-token 이슈로 의도적으로 제외
+
+if not _PROVIDER_CHAIN:
+    # ponytail: 모든 API 키 미설정 시 로컬 LiteLLM 최후 폴백
+    logger.warning("[LLM] 설정된 API 키가 없습니다. 로컬 LiteLLM(localhost:4000)으로 폴백합니다.")
+    _PROVIDER_CHAIN.append({
+        "name": "LiteLLM-local",
+        "base_url": "http://localhost:4000",
+        "api_key": "sk-litellm-master-key",
+        "generator_model": "glm-5.1",
+        "router_model": "glm-5.1",
+    })
+
+# 현재 활성 프로바이더 인덱스 (런타임 상태)
+_active_provider_idx: int = 0
+
+# 편의 변수: 초기 프로바이더 기준 모델명 노출 (하위 호환)
+_primary = _PROVIDER_CHAIN[0]
+client = OpenAI(base_url=_primary["base_url"], api_key=_primary["api_key"])
+GENERATOR_MODEL = _primary["generator_model"]
+CRITIQUE_MODEL = _primary["generator_model"]
+ROUTER_MODEL = _primary["router_model"]
+
+# 폴백 트리거 HTTP 상태 코드
+_FALLBACK_STATUS_CODES = {429, 500, 502, 503, 504}
 
 MAX_RETRIES = 2
+
+
+def _get_provider_client(idx: int) -> tuple[OpenAI, str, str]:
+    """인덱스에 해당하는 (OpenAI client, generator_model, router_model) 반환."""
+    p = _PROVIDER_CHAIN[idx]
+    c = OpenAI(base_url=p["base_url"], api_key=p["api_key"])
+    return c, p["generator_model"], p["router_model"]
 
 
 # ---------------------------------------------------------------------------
@@ -204,20 +327,64 @@ CRITIQUE_SYSTEM_PROMPT = """당신은 에이전트 코딩용 마크다운 품질
 
 def _chat(model: str, system: str, user: str, *, json_mode: bool = False,
           metadata: dict[str, Any] | None = None) -> str:
-    """LiteLLM 프록시 경유 단일 호출. metadata는 Langfuse 트레이스 태깅용."""
-    kwargs: dict[str, Any] = {}
-    if json_mode:
-        kwargs["response_format"] = {"type": "json_object"}
-    resp = client.chat.completions.create(
-        model=model,
-        messages=[
-            {"role": "system", "content": system},
-            {"role": "user", "content": user},
-        ],
-        extra_body={"metadata": metadata or {}},
-        **kwargs,
+    """멀티-프로바이더 폴백 체인 경유 단일 호출.
+
+    429(한도 초과) / 5xx(서버 에러) 발생 시 체인의 다음 프로바이더로 자동 전환.
+    metadata는 Langfuse 트레이스 태깅용 (LiteLLM 프록시 사용 시에만 유효).
+    """
+    global _active_provider_idx
+
+    # 현재 활성 프로바이더부터 순서대로 시도
+    start_idx = _active_provider_idx
+    for offset in range(len(_PROVIDER_CHAIN)):
+        idx = (start_idx + offset) % len(_PROVIDER_CHAIN)
+        p = _PROVIDER_CHAIN[idx]
+        # ZeroCostLimiter: 무료 한도 도달 전 선제 차단
+        limiter = p.get("limiter")
+        if limiter is not None and not limiter.acquire():
+            continue  # 이 프로바이더 한도 도달 → 다음으로
+        try:
+            c, gen_model, rtr_model = _get_provider_client(idx)
+            # model 인자가 현재 체인의 기본 모델과 같으면 해당 프로바이더 모델로 교체
+            effective_model = p["generator_model"] if model == GENERATOR_MODEL else (
+                p["router_model"] if model == ROUTER_MODEL else model
+            )
+            kwargs: dict[str, Any] = {}
+            if json_mode:
+                kwargs["response_format"] = {"type": "json_object"}
+            # extra_body(metadata)는 LiteLLM 프록시 전용 — 타사 프로바이더에는 전송 금지
+            if p["name"].startswith("LiteLLM") and metadata:
+                kwargs["extra_body"] = {"metadata": metadata}
+            resp = c.chat.completions.create(
+                model=effective_model,
+                messages=[
+                    {"role": "system", "content": system},
+                    {"role": "user", "content": user},
+                ],
+                **kwargs,
+            )
+            # 성공 시 활성 프로바이더 업데이트
+            if idx != _active_provider_idx:
+                logger.info(f"[LLM Fallback] '{p['name']}'으로 전환 성공 (이전: '{_PROVIDER_CHAIN[_active_provider_idx]['name']}')")
+                _active_provider_idx = idx
+            return resp.choices[0].message.content or ""
+
+        except RateLimitError as e:
+            logger.warning(f"[LLM Fallback] '{p['name']}' 429 한도 초과 → 다음 프로바이더 시도: {e}")
+            continue
+        except APIStatusError as e:
+            if e.status_code in _FALLBACK_STATUS_CODES:
+                logger.warning(f"[LLM Fallback] '{p['name']}' {e.status_code} 에러 → 다음 프로바이더 시도: {e}")
+                continue
+            raise  # 4xx 클라이언트 에러는 재시도 불필요
+        except Exception as e:
+            logger.warning(f"[LLM Fallback] '{p['name']}' 알 수 없는 에러 → 다음 프로바이더 시도: {e}")
+            continue
+
+    raise RuntimeError(
+        f"[LLM] 모든 프로바이더 실패 ({[p['name'] for p in _PROVIDER_CHAIN]}). "
+        "API 키 및 네트워크 상태를 확인하세요."
     )
-    return resp.choices[0].message.content or ""
 
 
 def _strip_code_fence(text: str) -> str:
