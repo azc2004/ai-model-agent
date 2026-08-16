@@ -257,54 +257,71 @@ def classify_article_lenses(title: str, text: str, source_name: str, category: s
         "researcher": 0
     }
 
-    # 1. 코딩 & 프레임워크 (developer)
-    dev_kws = ["code", "coding", "developer", "fine-tuning", "vllm", "api", "sdk", "python", "cuda", "open-weights", "repo", "git", "refactoring", "swe-bench", "파인튜닝", "개발자", "코드"]
+    # 1. 코딩 & 프레임워크 (developer) - 구체적 개발 키워드만
+    dev_kws = ["code", "coding", "developer", "fine-tuning", "vllm", "sdk", "python", "cuda", "open-weights", "github", "refactoring", "swe-bench", "파인튜닝", "개발자", "코드", "llama.cpp", "huggingface", "inference", "deployment", "docker", "api endpoint", "openai api", "claude api"]
     for kw in dev_kws:
         if kw in combined:
             scores["developer"] += 2
 
-    # 2. Agent & 오토메이션 (agent)
-    agent_kws = ["agent", "agentic", "autonomous", "workflow", "rag", "multi-agent", "langchain", "llamaindex", "automation", "task", "에이전트", "자율", "자동화"]
+    # 2. Agent & 오토메이션 (agent) - 자율 실행/멀티 에이전트 키워드
+    agent_kws = ["agentic", "autonomous", "multi-agent", "langchain", "llamaindex", "automation pipeline", "에이전트", "자율", "자동화 워크플로", "tool call", "function call", "computer use", "autogen", "crew ai", "swarm", "agent framework"]
     for kw in agent_kws:
         if kw in combined:
             scores["agent"] += 3
+    # agent 단독 키워드는 낮은 점수만
+    if "agent" in combined:
+        scores["agent"] += 1
+    if "workflow" in combined:
+        scores["agent"] += 1
 
-    # 3. 기획 & UX (pm)
-    pm_kws = ["ux", "ui", "product", "pm", "design", "onboarding", "interface", "app", "experience", "dialog", "prompt", "기획", "디자인", "사용자", "인터페이스"]
+    # 3. 기획 & UX (pm) - PM/UX 전문 키워드만 (app, product 제거)
+    pm_kws = ["ux design", "user experience", "product manager", "product roadmap", "onboarding flow", "ui/ux", "human-computer", "interaction design", "prototype", "기획자", "서비스 기획", "사용자 경험", "인터페이스 디자인", "프로토타입"]
     for kw in pm_kws:
         if kw in combined:
             scores["pm"] += 3
+    # pm 관련 일반 단어는 소폭 추가
+    if "ui" in combined and len([w for w in ["ux", "interface", "design", "user"] if w in combined]) >= 2:
+        scores["pm"] += 2
 
-    # 4. 비즈니스 & TCO (business)
-    biz_kws = ["tco", "cost", "enterprise", "business", "security", "iam", "roi", "price", "market", "f1", "aws", "nvidia", "cloud", "telco", "비용", "비즈니스", "보안", "기업"]
+    # 4. 비즈니스 & TCO (business) - 비용/기업/보안 관련 구체적 키워드
+    biz_kws = ["tco", "enterprise cost", "business roi", "security breach", "iam policy", "market share", "f1 score", "aws bedrock", "on-premise", "cloud cost", "telco", "비용 절감", "엔터프라이즈", "보안 사고", "기업 도입", "연간 계약"]
     for kw in biz_kws:
         if kw in combined:
             scores["business"] += 2
+    # 일반적인 비즈니스 단어는 소폭 추가
+    if "enterprise" in combined:
+        scores["business"] += 1
+    if "cost" in combined and any(kw in combined for kw in ["cloud", "gpu", "api", "model", "tco"]):
+        scores["business"] += 1
 
-    # 5. 최신 논문 & 학계 (researcher)
-    res_kws = ["paper", "arxiv", "sota", "benchmark", "mcts", "math", "dataset", "research", "slm", "evaluations", "eval", "논문", "연구", "학계", "벤치마크"]
+    # 5. 최신 논문 & 학계 (researcher) - ArXiv/논문 키워드
+    res_kws = ["paper", "arxiv", "sota", "benchmark", "mcts", "dataset", "evaluation", "논문", "연구", "학계", "벤치마크", "ablation", "mmlu", "gpqa", "swe-bench"]
     for kw in res_kws:
         if kw in combined:
             scores["researcher"] += 3
 
     # 출처별 가중치 부여
-    if "arxiv" in combined or "hugging face" in combined or "paper" in combined:
+    if "arxiv" in combined or "hugging face" in combined:
         scores["researcher"] += 5
-    if "openai" in combined or "anthropic" in combined or "nvidia" in combined or "deepmind" in combined:
+    if "openai" in combined or "anthropic" in combined or "deepmind" in combined:
         scores["developer"] += 2
-        scores["agent"] += 2
-    if "techcrunch" in combined or "venturebeat" in combined or "wired" in combined:
-        scores["business"] += 3
+    if "nvidia" in combined and any(kw in combined for kw in ["gpu", "cuda", "training", "inference"]):
+        scores["developer"] += 2
+    if "techcrunch" in combined or "venturebeat" in combined:
+        scores["business"] += 2
+    if "wired" in combined or "mit" in combined:
+        scores["researcher"] += 2
 
     # 점수 기준 정렬
     sorted_lenses = sorted(scores.items(), key=lambda item: item[1], reverse=True)
     
-    # 최고 점수가 0점보다 높은 렌즈들 추출 (최대 2개로 제한하여 중복 방지)
-    selected = [lens for lens, score in sorted_lenses if score >= 2][:2]
+    # ✅ 임계값 강화: 3점 이상 + 최대 2개로 제한 (중복 방지)
+    selected = [lens for lens, score in sorted_lenses if score >= 3][:2]
     
     if not selected:
-        # 기본 폴백 렌즈 지정
-        selected = [sorted_lenses[0][0]] if sorted_lenses[0][1] > 0 else ["developer"]
+        # 기본 폴백 렌즈 지정 (최소 1점이라도 있는 최고 점수 렌즈)
+        top = sorted_lenses[0]
+        selected = [top[0]] if top[1] > 0 else ["developer"]
         
     return selected
 
@@ -868,10 +885,10 @@ FALLBACK_ARTICLES = [
 for _article in FALLBACK_ARTICLES:
     _, _, _article.blog_summary = auto_translate_and_format(_article.title, " ".join(_article.summary_bullets), _article.source_name)
 
-# In-memory 캐시 (서버 구동 시 최신 동기 수집을 위해 last_updated를 0으로 설정)
+# In-memory 캐시 (서버 구동 시 DB 최신 기사를 즉시 웜업하도록 빈 리스트로 초기화)
 _news_cache: Dict[str, Any] = {
     "last_updated": 0,
-    "articles": FALLBACK_ARTICLES
+    "articles": []
 }
 
 CACHE_TTL = 3600 * 24  # 하루에 1번 수집/갱신 (24시간)
@@ -1232,21 +1249,34 @@ def fetch_articles_from_db() -> List[NewsArticle]:
                     researcher=item.actionable_insight.get("researcher")
                 )
 
+            is_synth = bool(item.is_synthesized or (item.category and '융합' in item.category) or (item.title and ('다중 소스 융합' in item.title or '다중소스' in item.title)))
+
+            # ✅ DB에 저장된 구버전 렌즈를 무시하고 새 정밀 분류기로 실시간 재분류
+            summary_text = " ".join(item.summary_bullets or [])
+            lenses = classify_article_lenses(
+                item.title or "",
+                summary_text,
+                item.source_name or "",
+                item.category or ""
+            )
+            if is_synth and "synthesized" not in lenses:
+                lenses.append("synthesized")
+
             articles.append(NewsArticle(
                 id=item.id,
                 title=item.title,
                 source_name=item.source_name,
                 source_url=item.source_url,
                 published_at=item.published_at,
-                category=item.category,
+                category=item.category or ("🔮 다중 소스 융합 블로그" if is_synth else "심층 리포트"),
                 image_url=item.image_url,
                 summary_bullets=item.summary_bullets or [],
                 blog_summary=item.blog_summary,
                 actionable_insight=insight,
                 impact_score=item.impact_score,
                 tags=item.tags or [],
-                matched_lenses=item.matched_lenses or ["developer"],
-                is_synthesized=item.is_synthesized or False,
+                matched_lenses=lenses,
+                is_synthesized=is_synth,
                 multi_sources=item.multi_sources,
                 primary_topic=item.primary_topic
             ))
@@ -1430,7 +1460,7 @@ JSON 형식으로 응답하세요:
             ),
             impact_score=data.get("impact_score", 96),
             tags=data.get("tags", ["#다중소스융합", "#AI아키텍처"]),
-            matched_lenses=["developer", "agent", "pm", "business", "researcher"],
+            matched_lenses=["developer", "agent", "pm", "business", "researcher", "synthesized"],
             is_synthesized=True,
             multi_sources=multi_sources,
             primary_topic=data.get("primary_topic", "Multi-Source Synthesis")
@@ -1458,7 +1488,7 @@ JSON 형식으로 응답하세요:
             ),
             impact_score=95,
             tags=["#다중소스융합", "#AI트렌드"],
-            matched_lenses=["developer", "agent", "pm", "business"],
+            matched_lenses=["developer", "agent", "pm", "business", "synthesized"],
             is_synthesized=True,
             multi_sources=multi_sources,
             primary_topic="Multi-Source Synthesis"

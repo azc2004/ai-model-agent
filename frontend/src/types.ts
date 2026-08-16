@@ -59,15 +59,25 @@ export interface ModelSpec {
   hardware_requirements?: any;
 }
 
+export type GPUTier = 'enterprise' | 'prosumer' | 'consumer';
+
 export interface GPUSpec {
   id: string;
   name: string;
+  tier: GPUTier;
   vram_gb: number;
   memory_bandwidth_gbps: number;
   purchase_price_usd: number;
-  cloud_hourly_on_demand: number;
-  cloud_hourly_spot: number;
+  cloud_hourly_on_demand: number | null;
+  cloud_hourly_spot: number | null;
   power_watts: number;
+  fp16_tflops: number;       // FP16 연산 성능 (TFLOPS)
+  int8_tops: number;         // INT8 추론 성능 (TOPS)
+  cuda_cores: number;
+  tensor_cores: number;
+  form_factor: string;       // 'SXM5' | 'PCIe' | 'Desktop' 등
+  nvlink: boolean;           // NVLink 지원 여부
+  recommended_use: string;   // 한국어 추천 용도 요약
 }
 
 export interface TCOInput {

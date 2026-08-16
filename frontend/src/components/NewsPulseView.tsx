@@ -430,7 +430,7 @@ const CLIENT_FALLBACK_NEWS: NewsResponse = {
       source_name: "OpenAI Blog",
       source_url: "https://openai.com/news/",
       published_at: new Date().toISOString(),
-      category: "빅테크 공식",
+      category: "🔮 다중 소스 융합 블로그",
       image_url: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
       is_synthesized: true,
       multi_sources: [
@@ -451,7 +451,7 @@ const CLIENT_FALLBACK_NEWS: NewsResponse = {
       },
       impact_score: 98,
       tags: ["#OpenAI", "#FineTuning", "#GPT4o", "#개발자API"],
-      matched_lenses: ["developer"]
+      matched_lenses: ["developer", "synthesized"]
     },
     {
       id: "fb-dev-2",
@@ -459,7 +459,7 @@ const CLIENT_FALLBACK_NEWS: NewsResponse = {
       source_name: "Google DeepMind",
       source_url: "https://deepmind.google/blog/",
       published_at: new Date().toISOString(),
-      category: "빅테크 공식",
+      category: "🔮 다중 소스 융합 블로그",
       image_url: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80",
       is_synthesized: true,
       multi_sources: [
@@ -478,7 +478,7 @@ const CLIENT_FALLBACK_NEWS: NewsResponse = {
       },
       impact_score: 95,
       tags: ["#GoogleDeepMind", "#AgenticAI", "#SWEbench", "#자율코딩"],
-      matched_lenses: ["developer", "agent"]
+      matched_lenses: ["developer", "agent", "synthesized"]
     },
     {
       id: "fb-dev-3",
@@ -936,7 +936,9 @@ export default function NewsPulseView() {
         }
         const filteredFallback = (lens === 'all' || lens === 'new')
           ? CLIENT_FALLBACK_NEWS.articles 
-          : CLIENT_FALLBACK_NEWS.articles.filter(a => a.matched_lenses.includes(lens));
+          : (lens === 'synthesized')
+            ? CLIENT_FALLBACK_NEWS.articles.filter(a => a.is_synthesized || a.category?.includes('융합') || a.matched_lenses?.includes('synthesized'))
+            : CLIENT_FALLBACK_NEWS.articles.filter(a => a.matched_lenses.includes(lens));
         return {
           articles: filteredFallback,
           total_count: filteredFallback.length,
@@ -958,9 +960,12 @@ export default function NewsPulseView() {
     let list = newsData.articles;
 
     if (activeLens === 'synthesized') {
-      list = list.filter(a => a.is_synthesized);
+      list = list.filter(a => a.is_synthesized || a.category?.includes('융합') || a.title?.includes('다중 소스 융합') || a.title?.includes('다중소스') || a.matched_lenses?.includes('synthesized'));
     } else if (activeLens === 'new') {
       list = list.filter(a => isRecentArticle(a.published_at, a.is_new));
+    } else if (activeLens !== 'all') {
+      // ✅ 렌즈 탭 필터링: 해당 렌즈가 matched_lenses에 포함된 기사만 표시
+      list = list.filter(a => a.matched_lenses?.includes(activeLens));
     }
 
     if (searchQuery.trim()) {

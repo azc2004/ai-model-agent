@@ -365,7 +365,10 @@ export const ArchitectureAdvisor: React.FC = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     })
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('API Error');
+        return res.json();
+      })
       .then((data: ArchitectureRecommendationResult) => {
         clearTimeout(timer1);
         clearTimeout(timer2);

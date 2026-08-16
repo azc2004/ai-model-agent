@@ -357,7 +357,10 @@ async def get_news_pulse(
     
     articles = all_articles
     if lens and lens != 'all' and lens != 'new':
-        articles = [a for a in articles if lens in a.matched_lenses]
+        if lens == 'synthesized':
+            articles = [a for a in articles if getattr(a, 'is_synthesized', False) or (a.category and '융합' in a.category) or 'synthesized' in (a.matched_lenses or [])]
+        else:
+            articles = [a for a in articles if lens in a.matched_lenses]
         
     if search:
         s = search.lower()
