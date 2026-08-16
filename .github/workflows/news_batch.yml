@@ -25,6 +25,12 @@ jobs:
         run: pip install feedparser beautifulsoup4
 
       - name: 🗞️ 4. RSS 뉴스 수집 및 D1 SQL 생성
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY }}
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "📡 26개 RSS 소스에서 AI 뉴스 수집 시작..."
           python3 backend/scripts/news_d1_batch.py --dry-run

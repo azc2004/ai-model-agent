@@ -624,19 +624,23 @@ def make_fallback_report(title_kr: str, summary_text: str, source_name: str, cat
     sentences = [s.strip() for s in re.split(r'(?<=[.!?])\s+', clean) if len(s.strip()) > 20]
 
     if len(sentences) >= 3:
+        s0 = free_translate(sentences[0])
+        s1 = free_translate(sentences[1])
+        s2 = free_translate(sentences[2])
         bullets = [
-            f"📌 {sentences[0]}",
-            f"⚙️ {sentences[1]}",
-            f"💡 {sentences[2]}"
+            f"📌 {s0}",
+            f"⚙️ {s1}",
+            f"💡 {s2}"
         ]
-        exec_summary = sentences[0]
+        exec_summary = s0
     elif sentences:
+        s0 = free_translate(sentences[0])
         bullets = [
-            f"📌 {sentences[0]}",
+            f"📌 {s0}",
             f"⚙️ {source_name}을(를) 통해 발표된 최신 AI 기술 동향입니다.",
             "💡 해당 직무별 실전 활용 팁을 현업 시스템에 적용해 보세요."
         ]
-        exec_summary = sentences[0]
+        exec_summary = s0
     else:
         bullets = [
             f"📌 '{title_kr}' 주제에 관한 {source_name} 발표 기술 리포트입니다.",
