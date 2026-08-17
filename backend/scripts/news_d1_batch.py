@@ -930,15 +930,43 @@ flowchart LR
         return None
 
 
+
+def get_already_translated_ids() -> set:
+    """API를 통해 기 번역 완료된(한국어 포함) 기사 ID 목록 조회"""
+    translated_ids = set()
+    try:
+        import urllib.request
+        req = urllib.request.Request("https://ai-model-agent.ai-azc2004.workers.dev/api/v1/news/pulse", headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=10) as response:
+            data = json.loads(response.read().decode('utf-8'))
+            articles = data.get("articles", [])
+            for a in articles:
+                text = str(a.get("summary_bullets", "")) + str(a.get("blog_summary", ""))
+                ko_chars = re.findall(r"[\u3131-\uD79D]", text)
+                if len(ko_chars) >= 10:
+                    translated_ids.add(a.get("id"))
+    except Exception as e:
+        print(f"⚠️ 기 번역 기사 목록 조회 실패 (건너뛰기 비활성화): {e}")
+    return translated_ids
+
 def process_articles(raw_articles: List[Dict], limit: Optional[int] = None) -> List[str]:
     """수집된 원문 기사들을 병렬 ThreadPoolExecutor(8 workers)로 빠르게 LLM 심층 분석 및 SQL 변환, 다중 소스 융합 블로그 클러스터링 병행"""
     seen_titles = set()
     seen_urls = set()
     unique_articles = []
 
+    already_translated_ids = get_already_translated_ids()
+    skipped_count = 0
+
     for raw in raw_articles:
         if limit and len(unique_articles) >= limit:
             break
+            
+        article_id = str(uuid.uuid5(uuid.NAMESPACE_URL, raw["link"]))
+        if article_id in already_translated_ids:
+            skipped_count += 1
+            continue
+            
         norm_t = normalize_title(raw.get("title", ""))
         clean_url = raw.get("link", "").split("?")[0].rstrip("/")
         if norm_t in seen_titles or (clean_url and clean_url in seen_urls):
@@ -950,7 +978,7 @@ def process_articles(raw_articles: List[Dict], limit: Optional[int] = None) -> L
         unique_articles.append(raw)
 
     total = len(unique_articles)
-    print(f"  ⚡ {total}개 원문 기사를 8개 병렬 스레드로 Gemini LLM 심층 분석 중...")
+    print(f"  ⚡ {total}개 신규 원문 기사를 (기 번역 {skipped_count}개 제외) 8개 병렬 스레드로 LLM 심층 분석 중...")
 
     sql_statements = []
     completed_count = 0
