@@ -2,6 +2,10 @@ name = "ai-model-agent"
 main = "src/worker.ts"
 compatibility_date = "2025-01-01"
 
+routes = [
+  { pattern = "llmcompass.azclab.com", custom_domain = true }
+]
+
 [assets]
 directory = "frontend/dist"
 
