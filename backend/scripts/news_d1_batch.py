@@ -157,7 +157,7 @@ def initialize_llm_providers() -> List[LLMProvider]:
             providers.append(LLMProvider(
                 name="Groq Cloud",
                 client=client,
-                models=["llama-3.3-70b-versatile", "deepseek-r1-distill-llama-70b", "llama-3.1-8b-instant"],
+                models=["llama-3.3-70b-versatile", "llama-3.1-8b-instant", "gemma2-9b-it"],
                 limiter=ZeroCostRateLimiter(max_rpm=27, max_daily_requests=12_960),  # 무료 14,400 RPD × 90%
             ))
         except Exception as e:
@@ -406,19 +406,40 @@ def is_mostly_korean(text: str) -> bool:
 
 
 def free_translate(text: str) -> str:
-    """Google 무료 번역 폴백"""
-    if not text or len(text) < 5:
+    """무료 번역 엔진 (Google GTX -> MyMemory 다중 폴백)"""
+    if not text or len(text) < 3:
         return text
+    clean_text = text.strip()
+    
+    # 1. Google Translate GTX
     try:
-        encoded = urllib.parse.quote(str(text)[:800])
+        encoded = urllib.parse.quote(str(clean_text)[:800])
         url = f"https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=ko&dt=t&q={encoded}"
-        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(req, timeout=6) as resp:
+        req = urllib.request.Request(url, headers={
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        })
+        with urllib.request.urlopen(req, timeout=5) as resp:
             data = json.loads(resp.read().decode("utf-8"))
             translated = "".join([item[0] for item in data[0] if item and item[0]])
-            return translated.strip() if translated else text
+            if translated and len(translated.strip()) > 0:
+                return translated.strip()
     except Exception:
-        return text
+        pass
+
+    # 2. MyMemory Translation Fallback
+    try:
+        encoded = urllib.parse.quote(str(clean_text)[:500])
+        url = f"https://api.mymemory.translated.net/get?q={encoded}&langpair=en|ko"
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            match = data.get("responseData", {}).get("translatedText", "")
+            if match and not match.startswith("MYMEMORY WARNING"):
+                return match.strip()
+    except Exception:
+        pass
+
+    return clean_text
 
 
 def translate_title(title: str) -> str:

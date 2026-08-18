@@ -2,6 +2,8 @@ name = "ai-model-agent"
 main = "src/worker.ts"
 compatibility_date = "2025-01-01"
 
+workers_dev = true
+
 routes = [
   { pattern = "llmcompass.azclab.com", custom_domain = true }
 ]
