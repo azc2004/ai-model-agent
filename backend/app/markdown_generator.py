@@ -77,9 +77,15 @@ class _ZeroCostLimiter:
 
 # ---------------------------------------------------------------------------
 # [무료 전용] 멀티-프로바이더 폴백 체인
-# 우선순위: Groq → NVIDIA NIM → Cerebras → OpenRouter(:free) → LiteLLM
+# 우선순위: AI Gateway(personal-main) → Groq → NVIDIA NIM → Cerebras → OpenRouter(:free)
 # ⚠️  Gemini(유료 billing 계정)·Mistral(pay-per-token) 제외 — 과금 방지
 # ZeroCostLimiter가 한도 90% 도달 시 429 전에 선제 차단
+#
+# 2026-08-19: AI Gateway(ai-gateway.azclab.com)를 1순위로 승격.
+# personal-main은 게이트웨이 내부에서 무료 풀 7배포(OR/CF/Groq/Gemini/NIM)를
+# 로드밸런싱하고 유료 저가순 폴백까지 처리하므로, 이 프로젝트의 직접 체인은
+# 게이트웨이 전체 장애 시의 생존 폴백으로만 사용된다.
+# LITELLM_API_KEY 미설정 시 게이트웨이 항목은 건너뛴다(기존 직접 체인 동작 유지).
 # ---------------------------------------------------------------------------
 #
 # 무료 한도 (공식 발표 기준 → 안전 상한 90% 적용):
@@ -90,10 +96,22 @@ class _ZeroCostLimiter:
 # ---------------------------------------------------------------------------
 
 _litellm_url = os.getenv("LITELLM_URL", os.getenv("OPENAI_BASE_URL", ""))
+_litellm_key = os.getenv("LITELLM_API_KEY", "")
 
 _PROVIDER_CHAIN: list[dict] = []
 
-# 1순위: Groq — 영구 무료, 14,400 RPD, 초고속 LPU inference
+# 1순위: AI Gateway — personal-main 무료 풀 로드밸런싱 + 유료 폴백 (게이트웨이 내부 처리)
+if _litellm_url and _litellm_key:
+    _PROVIDER_CHAIN.append({
+        "name": "LiteLLM-Gateway",
+        "base_url": _litellm_url,
+        "api_key": _litellm_key,
+        "generator_model": os.getenv("GENERATOR_MODEL", "personal-main"),
+        "router_model": os.getenv("ROUTER_MODEL", "personal-main"),
+        "limiter": None,  # 한도는 게이트웨이 키 예산($20/30d)에서 관리
+    })
+
+# 2순위(생존 폴백): Groq — 영구 무료, 14,400 RPD, 초고속 LPU inference
 _groq_key = os.getenv("GROQ_API_KEY", "")
 if _groq_key:
     _PROVIDER_CHAIN.append({
@@ -105,7 +123,7 @@ if _groq_key:
         "limiter": _ZeroCostLimiter("Groq", max_rpm=27, max_rpd=12_960),
     })
 
-# 2순위: NVIDIA NIM — 무료 개발 티어, 40 RPM, 크레딧 기반
+# 3순위(생존 폴백): NVIDIA NIM — 무료 개발 티어, 40 RPM, 크레딧 기반
 _nvidia_key = os.getenv("NVIDIA_API_KEY", "")
 if _nvidia_key:
     _PROVIDER_CHAIN.append({
@@ -117,7 +135,7 @@ if _nvidia_key:
         "limiter": _ZeroCostLimiter("NVIDIA NIM", max_rpm=36, max_rpd=180),
     })
 
-# 3순위: Cerebras — 무료 티어, Llama 특화 초고속
+# 4순위(생존 폴백): Cerebras — 무료 티어, Llama 특화 초고속
 _cerebras_key = os.getenv("CEREBRAS_API_KEY", "")
 if _cerebras_key:
     _PROVIDER_CHAIN.append({
@@ -129,7 +147,7 @@ if _cerebras_key:
         "limiter": _ZeroCostLimiter("Cerebras", max_rpm=27, max_rpd=12_960),
     })
 
-# 4순위: OpenRouter — :free 모델만 사용 (과금 없음 보장)
+# 5순위(생존 폴백): OpenRouter — :free 모델만 사용 (과금 없음 보장)
 _openrouter_key = os.getenv("OPENROUTER_API_KEY", "")
 if _openrouter_key:
     _PROVIDER_CHAIN.append({
@@ -139,17 +157,6 @@ if _openrouter_key:
         "generator_model": os.getenv("OPENROUTER_GENERATOR_MODEL", "meta-llama/llama-3.3-70b-instruct:free"),
         "router_model": os.getenv("OPENROUTER_ROUTER_MODEL", "meta-llama/llama-3.3-70b-instruct:free"),
         "limiter": _ZeroCostLimiter("OpenRouter", max_rpm=18, max_rpd=180),
-    })
-
-# 5순위: LiteLLM 프록시 (자체 호스팅 환경 전용 — 한도 없음)
-if _litellm_url:
-    _PROVIDER_CHAIN.append({
-        "name": "LiteLLM",
-        "base_url": _litellm_url,
-        "api_key": os.getenv("LITELLM_API_KEY", os.getenv("OPENAI_API_KEY", "sk-litellm-master-key")),
-        "generator_model": os.getenv("GENERATOR_MODEL", "glm-5.1"),
-        "router_model": os.getenv("ROUTER_MODEL", "glm-5.1"),
-        "limiter": None,  # 자체 호스팅 — 한도 제한 없음
     })
 
 # ponytail: Gemini·Mistral은 billing 계정·pay-per-token 이슈로 의도적으로 제외
