@@ -812,6 +812,7 @@ export default function NewsPulseView() {
   };
 
   const [activeLens, setActiveLensState] = useState(getInitialLens);
+  const [masterTab, setMasterTab] = useState<'trend' | 'single'>('trend');
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [newsData, setNewsData] = useState<NewsResponse | null>(null);
@@ -958,6 +959,13 @@ export default function NewsPulseView() {
   const filteredArticles = useMemo(() => {
     if (!newsData?.articles) return [];
     let list = newsData.articles;
+
+    // 💡 마스터 탭(Master Tab) 필터링 (트렌드 리포트 vs 단독 기사)
+    if (masterTab === 'trend') {
+      list = list.filter(a => a.is_synthesized);
+    } else {
+      list = list.filter(a => !a.is_synthesized);
+    }
 
     if (activeLens === 'synthesized') {
       list = list.filter(a => a.is_synthesized || a.category?.includes('융합') || a.title?.includes('다중 소스 융합') || a.title?.includes('다중소스') || a.matched_lenses?.includes('synthesized'));
@@ -1108,9 +1116,35 @@ export default function NewsPulseView() {
           )}
         </div>
 
+        {/* 🔮 Master Tabs (B안 적용: 종합 트렌드 리포트 vs 단독 기사 분리) */}
+        <div className="flex border-b border-gray-200 dark:border-gray-700/50 mb-6">
+          <button 
+            onClick={() => { setMasterTab('trend'); setActiveLens('all'); }}
+            className={`px-6 py-3 font-semibold transition-colors border-b-2 flex items-center gap-2
+              ${masterTab === 'trend' 
+                ? 'text-blue-600 border-blue-600 dark:text-blue-400 dark:border-blue-500' 
+                : 'text-gray-500 border-transparent hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'}`}
+          >
+            🔮 종합 트렌드 리포트
+          </button>
+          <button 
+            onClick={() => { setMasterTab('single'); setActiveLens('all'); }}
+            className={`px-6 py-3 font-semibold transition-colors border-b-2 flex items-center gap-2
+              ${masterTab === 'single' 
+                ? 'text-blue-600 border-blue-600 dark:text-blue-400 dark:border-blue-500' 
+                : 'text-gray-500 border-transparent hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'}`}
+          >
+            📰 단독 기사 모아보기
+          </button>
+        </div>
+
         {/* Lens Tabs (Horizontal scroll on mobile) */}
         <div className="flex items-center gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-          {LENSES.map(lens => {
+          {LENSES.filter(lens => {
+            // 트렌드 리포트 탭에서는 'synthesized' 렌즈 숨김 (이미 필터링되므로)
+            if (masterTab === 'trend' && lens.id === 'synthesized') return false;
+            return true;
+          }).map(lens => {
             const Icon = lens.icon;
             const isActive = activeLens === lens.id;
             const labelText = t.lenses[lens.id as keyof typeof t.lenses] || lens.label;

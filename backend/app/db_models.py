@@ -22,6 +22,9 @@ class NewsArticleDB(Base):
     is_synthesized = Column(Boolean, default=False)     # 2~5개 다중 소스 융합 블로그 여부
     multi_sources = Column(JSON, nullable=True)         # 참조된 다중 소스 정보 ([{"name": "...", "url": "..."}])
     primary_topic = Column(String(200), nullable=True)  # 클러스터 대표 테마
+    cluster_id = Column(String(100), nullable=True, index=True)
+    cluster_size = Column(Integer, default=1)
+    source_articles = Column(JSON, nullable=True)       # 클러스터 원본 기사 목록 (JSON)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 class LLMModelDB(Base):

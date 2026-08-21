@@ -221,6 +221,9 @@ class NewsArticle(BaseModel):
     is_synthesized: bool = Field(False, description="2~5개 다중 소스 융합 블로그 여부")
     multi_sources: Optional[List[Dict[str, str]]] = Field(None, description="참조된 다중 소스 정보 ([{'name': '...', 'url': '...'}])")
     primary_topic: Optional[str] = Field(None, description="클러스터 대표 테마")
+    cluster_id: Optional[str] = Field(None, description="클러스터 고유 ID")
+    cluster_size: int = Field(1, description="클러스터에 포함된 기사 수")
+    source_articles: Optional[List[Dict[str, Any]]] = Field(default_factory=list, description="클러스터에 속한 원본 기사 데이터 목록")
 
 class NewsPulseResponse(BaseModel):
     articles: List[NewsArticle]
