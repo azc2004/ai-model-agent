@@ -1391,14 +1391,19 @@ def cluster_raw_articles_by_topic(raw_articles: List[Dict[str, Any]]) -> List[Li
             topic_groups[matched_topic] = []
         topic_groups[matched_topic].append(item)
 
-    # 2개 이상 모인 클러스터만 융합 대상 선정
-    clusters = [items[:4] for topic, items in topic_groups.items() if len(items) >= 2]
+    # 1개 이상 모인 클러스터 모두 융합(또는 심층 분석) 대상 선정
+    clusters = [items[:4] for topic, items in topic_groups.items() if len(items) >= 1]
     return clusters
 
 def synthesize_article_cluster(cluster: List[Dict[str, Any]]) -> NewsArticle:
     """2~4개의 연관 raw RSS 기사들을 종합 교차 합성하여 1개의 Super-Hybrid 다중 소스 융합 기술 블로그를 생성합니다."""
     multi_sources = [{"name": item.get("source_name", "AI Source"), "url": item.get("link", "")} for item in cluster if item.get("link")]
-    primary_source = f"{cluster[0].get('source_name', 'Global AI Feeds')} 외 {len(cluster)-1}개 매체"
+    
+    if len(cluster) == 1:
+        primary_source = cluster[0].get('source_name', 'Global AI Feeds')
+    else:
+        primary_source = f"{cluster[0].get('source_name', 'Global AI Feeds')} 외 {len(cluster)-1}개 매체"
+
     synth_uuid = str(uuid.uuid4())[:8]
     primary_link = f"https://llm-compass.ai/synthesized/{synth_uuid}"
     cluster_id = f"cluster-{synth_uuid}"
@@ -1527,21 +1532,10 @@ async def run_batch_job(force: bool = False) -> List[NewsArticle]:
         print(f"[NewsBatch] Fetched {len(raw_articles)} raw entries from RSS feeds.")
         
         articles = []
-        for raw in raw_articles:
-            article = analyze_article_with_llm(raw)
-            if article.impact_score > 0:
-                articles.append(article)
-        
-        # 중복 제목 및 링크 데두플리케이션(Deduplication)
         seen_titles = set()
-        unique_articles = []
-        for a in articles:
-            if a.title not in seen_titles:
-                seen_titles.add(a.title)
-                unique_articles.append(a)
-        articles = unique_articles
 
         # 🔮 다중 소스 융합 클러스터링 및 블로그 자동 생성 배치 파이프라인
+        # 단독 기사(분석 엉망) 항목을 제거하고 오직 '종합 트렌드 리포트'만 생성하도록 로직 일원화
         try:
             clusters = cluster_raw_articles_by_topic(raw_articles)
             print(f"[NewsBatch] 🔮 Formed {len(clusters)} multi-source clusters for synthesis.")
