@@ -3,11 +3,10 @@
 종합 트렌드 리포트 생성 스크립트
 RSS 수집 → 클러스터링 → LiteLLM(gpt-4o-mini) → Cloudflare D1 저장
 """
-import json, re, uuid, subprocess, urllib.request, urllib.parse
+import json, os, re, uuid, subprocess, urllib.request, urllib.parse
+from dataclasses import dataclass
+from typing import Mapping
 
-LITELLM_URL = "https://ai-gateway.azclab.com/v1"
-LITELLM_KEY = "sk-KHka5Ru5gRYFDEwvvZsWUg"
-MODEL = "personal-main"
 RSS_FEEDS = [
     "https://feeds.feedburner.com/venturebeat/SZYF",
     "https://techcrunch.com/feed/",
@@ -28,6 +27,25 @@ TOPIC_PATTERNS = {
     "finetuning": ["fine-tuning","finetune","lora","rlhf","instruction tuning","training"],
     "research": ["arxiv","paper","benchmark","sota","evaluation","dataset","model release"],
 }
+
+
+@dataclass(frozen=True)
+class BatchConfig:
+    litellm_url: str
+    litellm_key: str
+    model: str
+
+
+def load_config(environ: Mapping[str, str] | None = None) -> BatchConfig:
+    source = os.environ if environ is None else environ
+    key = source.get("LITELLM_API_KEY", "").strip()
+    if not key:
+        raise RuntimeError("LITELLM_API_KEY is required")
+    return BatchConfig(
+        litellm_url=source.get("LITELLM_URL", "https://ai-gateway.azclab.com/v1").rstrip("/"),
+        litellm_key=key,
+        model=source.get("LITELLM_MODEL", "personal-main"),
+    )
 
 def fetch_rss(feed_url):
     try:
@@ -59,17 +77,17 @@ def cluster_articles(raw):
         groups.setdefault(topic, []).append(art)
     return [arts[:5] for arts in groups.values() if len(arts) >= 1][:8]
 
-def call_llm(prompt):
+def call_llm(prompt, config):
     payload = json.dumps({
-        "model": MODEL,
+        "model": config.model,
         "messages": [
             {"role": "system", "content": "You are a senior AI tech journalist. Return ONLY valid JSON. Use formal Korean (합쇼체)."},
             {"role": "user", "content": prompt}
         ],
         "temperature": 0.3, "max_tokens": 8000,
     }).encode()
-    req = urllib.request.Request(f"{LITELLM_URL}/chat/completions", data=payload,
-        headers={"Authorization": f"Bearer {LITELLM_KEY}", "Content-Type": "application/json", "User-Agent": "curl/8.7.1"}, method="POST")
+    req = urllib.request.Request(f"{config.litellm_url}/chat/completions", data=payload,
+        headers={"Authorization": f"Bearer {config.litellm_key}", "Content-Type": "application/json", "User-Agent": "curl/8.7.1"}, method="POST")
     with urllib.request.urlopen(req, timeout=60) as resp:
         data = json.loads(resp.read())
         raw = data["choices"][0]["message"]["content"]
@@ -129,6 +147,7 @@ def save_to_d1(report, cluster):
     return True
 
 def main():
+    config = load_config()
     print("=" * 60)
     print("🚀 종합 트렌드 리포트 생성 파이프라인")
     print("=" * 60)
@@ -152,7 +171,7 @@ def main():
         for a in cluster:
             print(f"    - {a['title'][:60]}")
         try:
-            report = call_llm(build_prompt(cluster))
+            report = call_llm(build_prompt(cluster), config)
             print(f"    📝 제목: {report.get('title','N/A')}")
             if save_to_d1(report, cluster):
                 saved += 1
