@@ -122,8 +122,7 @@ JSON으로만 응답하세요:
   "impact_score": 92
 }}"""
 
-def save_to_d1(report, cluster):
-    rid = f"synth-{uuid.uuid4().hex[:12]}"
+def build_insert_sql(report, cluster, report_id):
     sources = json.dumps([{"title": a["source"], "url": a["link"]} for a in cluster])
     tags = json.dumps(report.get("tags", ["#AI트렌드", "#종합리포트"]))
     tldr = report.get("tldr", "")
@@ -133,18 +132,25 @@ def save_to_d1(report, cluster):
     def esc(s):
         return (s or "").replace("'", "''")
 
-    sql = (f"INSERT OR REPLACE INTO trend_news "
+    return (f"INSERT OR REPLACE INTO trend_news "
            f"(id, title, report_type, executive_summary, analytical_deep_dive, key_takeaways, original_sources, tags, matched_lenses) VALUES ("
-           f"'{esc(rid)}', '{esc(report.get('title','종합 AI 트렌드 리포트'))}', "
+           f"'{esc(report_id)}', '{esc(report.get('title','종합 AI 트렌드 리포트'))}', "
            f"'🔮 종합 트렌드 리포트', '{esc(tldr)}', '{esc(report.get('blog_body',''))}', "
            f"'{esc(key_takeaways)}', '{esc(sources)}', '{esc(tags)}', '{esc(matched_lenses)}')")
 
-    r = subprocess.run(["npx","wrangler","d1","execute","llm-compass-db","--remote","--command", sql],
+
+def write_report(sql, runner=subprocess.run):
+    result = runner(["npx","wrangler","d1","execute","llm-compass-db","--remote","--command", sql],
         capture_output=True, text=True)
-    if r.returncode != 0:
-        print(f"    [D1 Error] {r.stderr[:300]}")
+    if result.returncode != 0:
+        print("    [D1 Error] report write failed")
         return False
     return True
+
+
+def save_to_d1(report, cluster):
+    report_id = f"synth-{uuid.uuid4().hex[:12]}"
+    return write_report(build_insert_sql(report, cluster, report_id))
 
 def main():
     config = load_config()
