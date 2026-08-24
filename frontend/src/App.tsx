@@ -101,9 +101,19 @@ export const AppContent: React.FC = () => {
   // non-blocking non-freeze 렌더링: loading 상태여도 메인 UI 화면을 0초만에 노출
   if (loading && models.length === 0) {
     return (
-      <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center flex-col gap-4">
-        <div className="w-12 h-12 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
-        <p className="text-slate-400 font-medium animate-pulse">LLM COMPASS Loading...</p>
+      <div className="min-h-screen bg-slate-950 text-white">
+        <header className="h-16 border-b border-white/10 flex items-center px-4 sm:px-6">
+          <span className="font-black tracking-wide">LLM COMPASS</span>
+        </header>
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8" aria-busy="true">
+          <div className="h-8 w-64 rounded-lg bg-slate-800 animate-pulse" />
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+            {[0, 1, 2].map((item) => (
+              <div key={item} className="h-48 rounded-2xl bg-slate-900 border border-white/10 animate-pulse" />
+            ))}
+          </div>
+          <p className="sr-only">LLM COMPASS Loading...</p>
+        </main>
       </div>
     );
   }
