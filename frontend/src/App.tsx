@@ -4,8 +4,6 @@ import type { ModelSpec, Provider } from './types';
 import { fetchModels, fetchProviders } from './api';
 import { LanguageProvider } from './context/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
-import { SidebarNav } from './components/SidebarNav';
-import { HeaderTopBar } from './components/HeaderTopBar';
 import { Dashboard } from './components/Dashboard';
 import { TCOSimulatorView } from './components/TCOSimulatorView';
 import { CompareView } from './components/CompareView';
@@ -16,29 +14,28 @@ import { TutorialView } from './components/TutorialView';
 import NewsPulseView from './components/NewsPulseView';
 import { TokenizerSandboxView } from './components/TokenizerSandboxView';
 import { SpeedMonitorView } from './components/SpeedMonitorView';
+import { AppShell } from './components/AppShell';
+import { isAppTab, type AppTab } from './navigation/navigationConfig';
 
 export const AppContent: React.FC = () => {
   // URL query parameter ?tab= 및 ?article= 파싱으로 북마크/즐겨찾기 라우팅 초기화
-  const getInitialTab = () => {
+  const getInitialTab = (): AppTab => {
     const params = new URLSearchParams(window.location.search);
     const tabParam = params.get('tab');
     const articleParam = params.get('article');
     if (articleParam) return 'news';
-    if (tabParam && ['dashboard', 'compare', 'tco', 'advisor', 'tutorial', 'leaderboard', 'gpus', 'news', 'sandbox', 'speed'].includes(tabParam)) {
+    if (isAppTab(tabParam)) {
       return tabParam;
     }
     return 'dashboard';
   };
 
-  const [activeTab, setActiveTabState] = useState<string>(getInitialTab);
+  const [activeTab, setActiveTabState] = useState<AppTab>(getInitialTab);
   const [models, setModels] = useState<ModelSpec[]>([]);
   const [providers, setProviders] = useState<Provider[]>([]);
   const [selectedModelIds, setSelectedModelIds] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
   // Global Search State
   const [globalSearchQuery, setGlobalSearchQuery] = useState<string>('');
@@ -51,7 +48,7 @@ export const AppContent: React.FC = () => {
   };
 
   // 탭 변경 시 URL 파라미터 주소창 자동 동기화 (즐겨찾기/링크 공유 가능)
-  const setActiveTab = (tab: string) => {
+  const setActiveTab = (tab: AppTab) => {
     setActiveTabState(tab);
     const url = new URL(window.location.href);
     url.searchParams.set('tab', tab);
@@ -62,8 +59,8 @@ export const AppContent: React.FC = () => {
   useEffect(() => {
     const handlePopState = () => {
       const params = new URLSearchParams(window.location.search);
-      const tabParam = params.get('tab') || 'dashboard';
-      setActiveTabState(tabParam);
+      const tabParam = params.get('tab');
+      setActiveTabState(isAppTab(tabParam) ? tabParam : 'dashboard');
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
@@ -98,74 +95,24 @@ export const AppContent: React.FC = () => {
     setSelectedModelIds([]);
   };
 
-  // non-blocking non-freeze 렌더링: loading 상태여도 메인 UI 화면을 0초만에 노출
-  if (loading && models.length === 0) {
-    return (
-      <div className="min-h-screen bg-slate-950 text-white">
-        <header className="h-16 border-b border-white/10 flex items-center px-4 sm:px-6">
-          <span className="font-black tracking-wide">LLM COMPASS</span>
-        </header>
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8" aria-busy="true">
-          <div className="h-8 w-64 rounded-lg bg-slate-800 animate-pulse" />
-          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-            {[0, 1, 2].map((item) => (
-              <div key={item} className="h-48 rounded-2xl bg-slate-900 border border-white/10 animate-pulse" />
-            ))}
-          </div>
-          <p className="sr-only">LLM COMPASS Loading...</p>
-        </main>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center p-6">
-        <div className="glass-card max-w-md p-8 text-center rounded-2xl border border-red-500/30">
-          <h2 className="text-xl font-bold text-red-400 mb-2">Error Occurred</h2>
-          <p className="text-slate-300 text-sm mb-4">{error}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 rounded-lg text-sm font-semibold transition-colors"
-          >
-            Retry
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen flex bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors">
-      {/* 1. Left Sidebar Navigation */}
-      <SidebarNav
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        compareCount={selectedModelIds.length}
-        isCollapsed={isSidebarCollapsed}
-        setIsCollapsed={setIsSidebarCollapsed}
-        mobileOpen={mobileMenuOpen}
-        setMobileOpen={setMobileMenuOpen}
-      />
-
-      {/* 2. Main Content Area (Offset by Left Sidebar width on desktop) */}
-      <div
-        className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${
-          isSidebarCollapsed ? 'md:ml-16' : 'md:ml-60'
-        }`}
-      >
-        {/* Top Header Bar */}
-        <HeaderTopBar
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          compareCount={selectedModelIds.length}
-          onOpenMobileMenu={() => setMobileMenuOpen(true)}
-          globalSearchQuery={globalSearchQuery}
-          onGlobalSearch={handleGlobalSearch}
-        />
-
-        {/* Viewport View Component */}
-        <main className="flex-1 max-w-7xl w-full mx-auto px-2.5 sm:px-6 py-4 sm:py-8">
+    <AppShell activeTab={activeTab} onNavigate={setActiveTab} compareCount={selectedModelIds.length} globalSearchQuery={globalSearchQuery} onGlobalSearch={handleGlobalSearch}>
+        <main className="flex-1 max-w-[var(--content-max)] w-full mx-auto px-2.5 sm:px-6 py-4 sm:py-8 mobile-safe-bottom" aria-busy={loading || undefined}>
+          {loading && models.length === 0 ? (
+            <div>
+              <div className="h-8 w-64 rounded-lg bg-slate-200 dark:bg-slate-800 animate-pulse" />
+              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                {[0, 1, 2].map((item) => <div key={item} className="h-48 rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/10 animate-pulse" />)}
+              </div>
+              <p className="sr-only">LLM COMPASS Loading...</p>
+            </div>
+          ) : error ? (
+            <div className="glass-card max-w-md mx-auto p-8 text-center rounded-2xl border border-red-500/30">
+              <h2 className="text-xl font-bold text-red-500 mb-2">Error Occurred</h2>
+              <p className="text-slate-600 dark:text-slate-300 text-sm mb-4">{error}</p>
+              <button onClick={() => window.location.reload()} className="touch-target focus-ring px-4 py-2 bg-cyan-600 hover:bg-cyan-500 rounded-lg text-sm font-semibold text-white">Retry</button>
+            </div>
+          ) : <>
           {activeTab === 'dashboard' && (
             <Dashboard
               models={models}
@@ -208,6 +155,7 @@ export const AppContent: React.FC = () => {
           )}
 
           {activeTab === 'speed' && <SpeedMonitorView />}
+          </>}
         </main>
 
         <footer className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/60 py-6 text-center text-xs text-slate-500">
@@ -216,8 +164,7 @@ export const AppContent: React.FC = () => {
             <p className="text-slate-600">Supported Languages: 🇰🇷 한국어 | 🇺🇸 English | 🇯🇵 日本語 | 🇨🇳 中文</p>
           </div>
         </footer>
-      </div>
-    </div>
+    </AppShell>
   );
 };
 

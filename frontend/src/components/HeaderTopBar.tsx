@@ -12,10 +12,11 @@ import {
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import type { Language } from '../i18n/translations';
+import type { AppTab } from '../navigation/navigationConfig';
 
 interface HeaderTopBarProps {
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
+  activeTab: AppTab;
+  setActiveTab: (tab: AppTab) => void;
   compareCount: number;
   onOpenMobileMenu: () => void;
   globalSearchQuery?: string;
@@ -65,6 +66,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({
         <div className="flex items-center gap-3 shrink-0">
           <button
             onClick={onOpenMobileMenu}
+            aria-label="메뉴 열기"
             className="md:hidden p-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
             title="메뉴 열기"
           >

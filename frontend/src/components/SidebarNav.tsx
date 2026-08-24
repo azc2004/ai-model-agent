@@ -1,39 +1,16 @@
 import React from 'react';
-import {
-  LayoutGrid,
-  ArrowLeftRight,
-  Calculator,
-  Trophy,
-  Cpu,
-  Sparkles,
-  BookOpen,
-  ChevronLeft,
-  ChevronRight,
-  X
-} from 'lucide-react';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { NAV_GROUPS, type AppTab } from '../navigation/navigationConfig';
 
 interface SidebarNavProps {
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
+  activeTab: AppTab;
+  setActiveTab: (tab: AppTab) => void;
   compareCount: number;
   isCollapsed: boolean;
   setIsCollapsed: (collapsed: boolean) => void;
   mobileOpen: boolean;
   setMobileOpen: (open: boolean) => void;
-}
-
-interface NavItem {
-  id: string;
-  label: string;
-  icon: React.ReactNode;
-  badge?: number | null;
-  badgeText?: string;
-}
-
-interface NavCategory {
-  title: string;
-  items: NavItem[];
 }
 
 export const SidebarNav: React.FC<SidebarNavProps> = ({
@@ -47,38 +24,10 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
 }) => {
   const { t } = useLanguage();
 
-  const handleTabClick = (tab: string) => {
+  const handleTabClick = (tab: AppTab) => {
     setActiveTab(tab);
     setMobileOpen(false);
   };
-
-  const navCategories: NavCategory[] = [
-    {
-      title: "📌 메인 카탈로그",
-      items: [
-        { id: "dashboard", label: t.nav.catalog, icon: <LayoutGrid className="w-4 h-4" /> },
-        { id: "compare", label: t.nav.compare, icon: <ArrowLeftRight className="w-4 h-4" />, badge: compareCount > 0 ? compareCount : null },
-        { id: "leaderboard", label: t.nav.leaderboard, icon: <Trophy className="w-4 h-4 text-amber-500" /> },
-      ]
-    },
-    {
-      title: "🧮 샌드박스 & 시뮬레이터",
-      items: [
-        { id: "sandbox", label: t.nav.sandbox, icon: <span className="text-sm">🧮</span> },
-        { id: "tco", label: t.nav.tco, icon: <Calculator className="w-4 h-4" /> },
-        { id: "speed", label: t.nav.speed, icon: <span className="text-sm">⚡</span> },
-        { id: "gpus", label: t.nav.gpus, icon: <Cpu className="w-4 h-4 text-purple-600 dark:text-purple-400" /> },
-      ]
-    },
-    {
-      title: "🔮 AI 솔루션 & 리포트",
-      items: [
-        { id: "advisor", label: t.nav.advisor, icon: <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400" /> },
-        { id: "news", label: t.nav.news, icon: <span className="text-sm">📰</span>, badgeText: "NEW" },
-        { id: "tutorial", label: t.nav.tutorial, icon: <BookOpen className="w-4 h-4 text-purple-600 dark:text-purple-400" /> },
-      ]
-    }
-  ];
 
   const sidebarContent = (
     <div className="h-full flex flex-col justify-between bg-white/90 dark:bg-slate-950/90 backdrop-blur-2xl border-r border-slate-200/90 dark:border-white/10 text-slate-800 dark:text-slate-200 shadow-lg">
@@ -114,22 +63,25 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
       </div>
 
       {/* Nav List */}
-      <div className="flex-1 overflow-y-auto py-4 px-3 space-y-6 scrollbar-none">
-        {navCategories.map((cat, catIdx) => (
-          <div key={catIdx} className="space-y-1">
+      <nav aria-label="주요 메뉴" className="flex-1 overflow-y-auto py-4 px-3 space-y-6 scrollbar-none">
+        {NAV_GROUPS.map((group) => (
+          <div key={group.id} className="space-y-1">
             {!isCollapsed && (
               <h3 className="px-3 text-[10px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                <span>{cat.title}</span>
+                <span>{group.label}</span>
               </h3>
             )}
             <div className="space-y-1">
-              {cat.items.map((item) => {
+              {group.items.map((item) => {
                 const isActive = activeTab === item.id;
+                const label = t.nav[item.labelKey];
+                const Icon = item.icon;
                 return (
                   <button
                     key={item.id}
                     onClick={() => handleTabClick(item.id)}
-                    title={isCollapsed ? item.label : undefined}
+                    title={isCollapsed ? label : undefined}
+                    aria-current={isActive ? 'page' : undefined}
                     className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 relative group ${
                       isActive
                         ? 'bg-indigo-50 dark:bg-cyan-500/20 text-indigo-600 dark:text-cyan-300 border border-indigo-200 dark:border-cyan-500/40 shadow-sm font-black'
@@ -142,23 +94,23 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
                     )}
 
                     <span className={`shrink-0 transition-transform group-hover:scale-110 ${isActive ? 'text-indigo-600 dark:text-cyan-400' : 'text-slate-500 dark:text-slate-400'}`}>
-                      {item.icon}
+                      <Icon className="w-4 h-4" />
                     </span>
                     {!isCollapsed && (
-                      <span className="truncate flex-1 text-left tracking-tight font-extrabold">{item.label}</span>
+                      <span className="truncate flex-1 text-left tracking-tight font-extrabold">{label}</span>
                     )}
 
                     {/* Badges */}
-                    {!isCollapsed && item.badge !== undefined && item.badge !== null && (
+                    {!isCollapsed && item.badge === 'compare' && compareCount > 0 && (
                       <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
                         isActive ? 'bg-indigo-600 text-white shadow-sm' : 'bg-indigo-100 text-indigo-700 dark:bg-cyan-500/20 dark:text-cyan-400 border border-indigo-200 dark:border-cyan-500/30'
                       }`}>
-                        {item.badge}
+                        {compareCount}
                       </span>
                     )}
-                    {!isCollapsed && item.badgeText && (
+                    {!isCollapsed && item.badge === 'new' && (
                       <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white shadow-sm">
-                        {item.badgeText}
+                        NEW
                       </span>
                     )}
                   </button>
@@ -167,7 +119,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
             </div>
           </div>
         ))}
-      </div>
+      </nav>
 
       {/* Bottom Collapse Toggle (Desktop only) */}
       <div className="hidden md:block p-3 border-t border-slate-200/80 dark:border-white/10">
