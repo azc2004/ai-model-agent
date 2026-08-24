@@ -44,20 +44,27 @@
 
 ---
 
-## 🏗️ 시스템 아키텍처 (System Architecture)
+## 🏗️ 운영 시스템 아키텍처 (System Architecture)
 
 ```
-[ Frontend: React 18 + TypeScript + Vite + TailwindCSS ]
+[ Frontend: React 19 + TypeScript + Vite + TailwindCSS ]
       │
-      │ REST API (JSON)
+      │ Same-origin REST API
       ▼
-[ Backend: FastAPI (Python 3.11+) ]
-  ├── 1. `app/main.py`: 엔드포인트 라우팅 & CORS & Background Scheduler Startup
-  ├── 2. `app/news_pipeline.py`: 11채널 RSS 수집 + 24시간 백그라운드 배치 + LLM 인사이트 추출
-  ├── 3. `app/markdown_generator.py`: 5단계 환각 방지 명세서 마크다운 생성 파이프라인
-  ├── 4. `app/tco_calculator.py`: API vs GPU TCO 시뮬레이션 계산 엔진
-  └── 5. `app/recommender.py`: 아키텍처 추천 및 템플릿 처리기
+[ Cloudflare Worker: `src/worker.ts` ]
+  ├── D1 모델·뉴스 조회 API
+  ├── TCO 계산 및 아키텍처 추천 API
+  └── `frontend/dist` 정적 자산 제공
+      │
+      ▼
+[ Cloudflare D1: `llm-compass-db` ]
+
+[ GitHub Actions Python Batch ]
+  └── `backend/scripts/generate_trend_reports.py`
+      RSS 수집 → 기사 검증 → 클러스터링 → LLM 생성 → 품질 검증 → D1 저장
 ```
+
+`backend/app`의 FastAPI 구현은 로컬·레거시 호환 용도로 남아 있으며, 현재 운영 트래픽의 기본 진입점은 Cloudflare Worker입니다. 뉴스 생성은 공개 Worker API가 아니라 GitHub Actions Python 배치에서만 수행합니다.
 
 ---
 
@@ -68,11 +75,11 @@
 - **Styling**: TailwindCSS, Glassmorphism UI, Lucide Icons
 - **i18n**: 한국어, English, 日本語, 中文 4개국어 멀티 랭귀지 지원
 
-### Backend
-- **Framework**: FastAPI, Uvicorn
-- **AI/LLM**: LiteLLM, Google Gemini 2.5 Flash (v1beta), OpenAI API
-- **Data Parsing & Batch**: feedparser, BeautifulSoup4, asyncio background scheduler
-- **Validation**: Pydantic v2
+### Backend / Edge
+- **Runtime**: Cloudflare Workers, D1, Wrangler
+- **Legacy/Local API**: FastAPI, Uvicorn, Pydantic v2
+- **AI/LLM**: LiteLLM Gateway
+- **News Batch**: Python 3.11, GitHub Actions, deterministic quality validation
 
 ---
 
@@ -84,26 +91,25 @@ git clone https://github.com/azc2004/ai-model-agent.git
 cd ai-model-agent
 ```
 
-### 2. 백엔드(Backend) 실행
-```bash
-cd backend
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-
-# 환경변수 설정 (.env)
-# GEMINI_API_KEY=your_key_here 또는 OPENAI_API_KEY=your_key_here
-
-uvicorn app.main:app --reload --port 8000
-```
-
-### 3. 프론트엔드(Frontend) 실행
+### 2. 프론트엔드 실행
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-브라우저에서 `http://localhost:5173` 으로 접속합니다.
+
+브라우저에서 `http://localhost:5173`으로 접속합니다. 로컬 프론트엔드는 필요한 경우 `VITE_API_BASE_URL`로 별도 API를 지정할 수 있습니다.
+
+### 3. 뉴스 배치 테스트
+```bash
+cd backend
+python3 -m unittest \
+  tests.test_generate_trend_reports \
+  tests.test_trend_report_validation \
+  -v
+```
+
+운영 배치에는 GitHub Secret `LITELLM_API_KEY`, `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`가 필요합니다. 테스트는 외부 LLM이나 운영 D1을 호출하지 않습니다. 실제 배치 실행은 D1을 변경하므로 운영 권한이 있는 환경에서만 수행해야 합니다.
 
 ---
 
@@ -113,11 +119,12 @@ npm run dev
 | :--- | :--- | :--- |
 | `GET` | `/api/v1/providers` | LLM 프로바이더 목록 조회 |
 | `GET` | `/api/v1/models` | LLM 모델 스펙 및 요금 조회 (필터링 지원) |
-| `POST` | `/api/v1/tco/calculate` | API vs GPU 셀프호스팅 TCO 시뮬레이션 |
-| `POST` | `/api/v1/recommend` | 맞춤형 AI 아키텍처 추천 |
+| `POST` | `/api/v1/simulate/tco` | API vs GPU 셀프호스팅 TCO 시뮬레이션 |
+| `POST` | `/api/v1/recommend/architecture` | 맞춤형 AI 아키텍처 추천 |
 | `POST` | `/api/v1/generate/markdown` | 5단계 파이프라인 마크다운 생성 |
 | `GET` | `/api/v1/news/pulse` | 24시간 정기 배치 수집된 AI 뉴스 & 실전 팁 조회 (`?lens=developer`) |
-| `POST` | `/api/v1/news/pulse/refresh` | (관리자) 수동 강제 수집 배치 즉시 실행 |
+
+뉴스 생성·갱신용 공개 HTTP 엔드포인트는 제공하지 않습니다. 수동 실행은 GitHub Actions의 `news_batch.yml` workflow dispatch를 사용합니다.
 
 ---
 

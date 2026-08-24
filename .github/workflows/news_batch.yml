@@ -24,7 +24,14 @@ jobs:
       - name: 📚 3. 의존성 설치
         run: pip install feedparser beautifulsoup4
 
-      - name: 🗞️ 4. 종랍 트렌드 리포트 생성 및 D1 적재
+      - name: 🧪 4. 뉴스 파이프라인 단위 테스트
+        run: |
+          python -m unittest \
+            backend.tests.test_generate_trend_reports \
+            backend.tests.test_trend_report_validation \
+            -v
+
+      - name: 🗞️ 5. 종합 트렌드 리포트 생성 및 D1 적재
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
