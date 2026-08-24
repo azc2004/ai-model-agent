@@ -1,123 +1,123 @@
-# News Pipeline Consolidation Design
+# 뉴스 파이프라인 단일화 설계
 
-## Goal
+## 목표
 
-Make the GitHub Actions Python batch the only production path that generates and writes synthesized AI trend reports, while keeping the Cloudflare Worker read-only for news data.
+GitHub Actions에서 실행하는 Python 배치를 AI 종합 트렌드 리포트를 생성하고 저장하는 유일한 운영 경로로 지정합니다. Cloudflare Worker는 뉴스 데이터를 조회하는 역할만 담당합니다.
 
-## Scope
+## 범위
 
-This phase covers only news-generation consolidation and its minimum safety and quality controls. Worker-wide authentication, general API tests, broader CI modernization, documentation overhaul, database pagination, frontend decomposition, and bundle optimization remain later phases.
+이번 단계에서는 뉴스 생성 경로를 단일화하고, 이에 필요한 최소한의 보안 및 품질 통제를 구현합니다. Worker 전체 인증, 일반 API 테스트 확대, CI 전반 개편, 문서 전체 정비, 데이터베이스 페이지네이션, 프론트엔드 컴포넌트 분리, 번들 최적화는 이후 단계에서 진행합니다.
 
-## Architecture Decision
+## 아키텍처 결정
 
-`backend/scripts/generate_trend_reports.py` is the canonical production generator. `.github/workflows/news_batch.yml` invokes it on schedule or manually. The script collects feeds, filters and clusters articles, requests structured reports from the configured LLM gateway, validates each report, and writes only accepted reports to Cloudflare D1.
+`backend/scripts/generate_trend_reports.py`를 유일한 운영 뉴스 생성기로 사용합니다. `.github/workflows/news_batch.yml`은 정해진 일정 또는 수동 실행 요청에 따라 이 스크립트를 실행합니다. 스크립트는 RSS 피드를 수집하고, 기사를 필터링·클러스터링한 뒤, 설정된 LLM 게이트웨이에 구조화된 리포트 생성을 요청합니다. 생성 결과는 품질 검증을 통과한 경우에만 Cloudflare D1에 저장합니다.
 
-The uncommitted Worker route `POST /api/v1/news/pulse/batch` is removed. `src/worker.ts` continues to provide news list/detail reads and static asset serving, but it does not collect RSS feeds, call an LLM for news generation, or write generated news.
+현재 미커밋 상태인 Worker의 `POST /api/v1/news/pulse/batch` 경로는 제거합니다. `src/worker.ts`는 뉴스 목록·상세 조회와 정적 자산 제공을 계속 담당하지만, RSS 수집, 뉴스 생성을 위한 LLM 호출, 생성된 뉴스의 저장은 수행하지 않습니다.
 
-The untracked root copy `scripts/generate_trend_reports.py` is treated as an accidental duplicate and is not part of the production design. The tracked backend script remains canonical.
+추적되지 않은 루트 경로의 `scripts/generate_trend_reports.py`는 실수로 만들어진 중복 파일로 간주하며 운영 설계에 포함하지 않습니다. Git에서 추적 중인 백엔드 스크립트만 공식 구현으로 유지합니다.
 
-## Secret Handling
+## 비밀정보 관리
 
-No API credential may appear in source code. `backend/scripts/generate_trend_reports.py` reads `LITELLM_API_KEY` from the environment and may read `LITELLM_URL` and `LITELLM_MODEL` with non-secret defaults where appropriate. Missing required credentials cause a clear startup failure before network or database work.
+API 인증정보를 소스 코드에 포함하지 않습니다. `backend/scripts/generate_trend_reports.py`는 `LITELLM_API_KEY`를 환경변수에서 읽습니다. 비밀정보가 아닌 `LITELLM_URL`과 `LITELLM_MODEL`은 필요할 경우 안전한 기본값을 사용할 수 있습니다. 필수 인증정보가 없으면 네트워크 요청이나 데이터베이스 작업을 시작하기 전에 명확한 오류와 함께 종료합니다.
 
-The currently exposed LLM credential must be revoked and replaced outside the repository. GitHub Actions receives the replacement through `${{ secrets.LITELLM_API_KEY }}`. Repository history cleanup is a separate, explicitly authorized operation because rewriting history is destructive; rotation is mandatory regardless of history cleanup.
+현재 소스에 노출된 LLM 인증키는 폐기하고 새 키를 발급해야 합니다. GitHub Actions에는 새 키를 `${{ secrets.LITELLM_API_KEY }}`로 전달합니다. 저장소 기록을 정리하려면 파괴적인 Git 이력 재작성 작업이 필요하므로 별도 승인을 받아 진행합니다. 이력 정리 여부와 관계없이 기존 키의 폐기와 재발급은 필수입니다.
 
-## Components
+## 구성요소
 
-### Validation module
+### 검증 모듈
 
-Create `backend/scripts/trend_report_validation.py` as a dependency-free module containing deterministic validation functions and typed result data. It validates:
+외부 의존성이 없는 `backend/scripts/trend_report_validation.py`를 생성합니다. 이 모듈은 결정론적 검증 함수와 타입이 명시된 검증 결과를 제공합니다. 검증 대상은 다음과 같습니다.
 
-- required report fields: `title`, `primary_topic`, `tldr`, `blog_body`, and `tags`;
-- minimum useful Korean content and rejection of conspicuous non-Korean leakage;
-- minimum body length and non-empty actionable content;
-- tags as a non-empty string list;
-- HTTP/HTTPS source URLs with hostnames;
-- AI relevance using explicit model, agent, inference, research, GPU, cloud-AI, and provider terms;
-- duplicate source URLs inside a cluster;
-- duplicate reports within the current run using normalized titles and source URL fingerprints.
+- 필수 리포트 필드: `title`, `primary_topic`, `tldr`, `blog_body`, `tags`
+- 실질적으로 유용한 수준의 한국어 포함 여부 및 눈에 띄는 비한국어 표현 혼입
+- 본문의 최소 길이와 실제 활용 가능한 내용 포함 여부
+- 비어 있지 않은 문자열 목록 형태의 태그
+- 호스트 이름을 포함한 HTTP 또는 HTTPS 출처 URL
+- 모델, 에이전트, 추론, 연구, GPU, 클라우드 AI 및 주요 공급자 용어를 기준으로 한 AI 관련성
+- 클러스터 내부의 중복 출처 URL
+- 정규화한 제목과 출처 URL 지문을 이용한 현재 실행 내 중복 리포트
 
-Validation returns stable machine-readable reason codes so tests, logs, and future metrics use the same vocabulary.
+검증 결과는 안정적인 기계 판독용 사유 코드를 반환합니다. 테스트, 로그, 향후 운영 지표가 같은 사유 체계를 사용하도록 합니다.
 
-### Batch orchestrator
+### 배치 오케스트레이터
 
-Refactor `backend/scripts/generate_trend_reports.py` without changing its operational entry point. Network functions remain injectable or separable enough that orchestration behavior can be tested without RSS, LLM, D1, or subprocess access.
+운영 진입점은 변경하지 않고 `backend/scripts/generate_trend_reports.py`를 리팩터링합니다. RSS, LLM, D1 또는 subprocess를 실제로 호출하지 않고도 오케스트레이션 동작을 테스트할 수 있도록 네트워크 및 외부 실행 함수를 주입하거나 분리합니다.
 
-The orchestrator performs these stages:
+오케스트레이터는 다음 순서로 동작합니다.
 
-1. Validate configuration.
-2. Fetch feeds independently; one failed feed does not abort the run.
-3. Normalize and pre-filter invalid, duplicate, and irrelevant source articles.
-4. Build clusters only from accepted articles.
-5. Generate one report per cluster.
-6. Validate the LLM report together with its sources.
-7. Write accepted reports to D1.
-8. Print a summary containing collected, rejected, generated, saved, and failed counts plus rejection reason counts.
+1. 실행 설정을 검증합니다.
+2. RSS 피드를 독립적으로 수집합니다. 하나의 피드가 실패해도 전체 실행은 계속합니다.
+3. 잘못된 기사, 중복 기사, AI와 관련 없는 기사를 정규화하고 사전 제외합니다.
+4. 검증을 통과한 기사만으로 클러스터를 만듭니다.
+5. 클러스터마다 하나의 리포트를 생성합니다.
+6. LLM 생성 결과와 해당 출처를 함께 검증합니다.
+7. 검증을 통과한 리포트만 D1에 저장합니다.
+8. 수집, 제외, 생성, 저장, 실패 건수와 제외 사유별 건수를 최종 출력합니다.
 
-### D1 writer
+### D1 저장기
 
-The initial phase preserves the current Wrangler-based D1 execution to avoid introducing another deployment interface. SQL creation is isolated and tested for correct quote escaping. A D1 write failure rejects only that report and is included in the final failed count.
+이번 단계에서는 새로운 배포 인터페이스를 추가하지 않기 위해 기존 Wrangler 기반 D1 실행 방식을 유지합니다. SQL 생성은 별도 함수로 격리하고 작은따옴표 이스케이프가 정확히 처리되는지 테스트합니다. 특정 리포트의 D1 저장이 실패해도 다른 리포트 처리를 계속하며, 해당 실패를 최종 실패 건수에 포함합니다.
 
-The schema is not expanded in this phase. Values not represented by `trend_news`, such as `primary_topic` and `impact_score`, are not silently presented as persisted data.
+이번 단계에서는 데이터베이스 스키마를 확장하지 않습니다. `primary_topic`, `impact_score`처럼 `trend_news` 테이블에 없는 값은 저장된 데이터인 것처럼 표시하지 않습니다.
 
-## Data Quality Rules
+## 데이터 품질 규칙
 
-A source article is accepted only when it has a non-empty title, a valid HTTP/HTTPS URL, and positive AI relevance. Duplicate URLs are reduced to one source before clustering.
+출처 기사는 제목이 비어 있지 않고, 유효한 HTTP 또는 HTTPS URL을 가지며, AI 관련성 검증을 통과한 경우에만 사용합니다. 같은 URL의 기사는 클러스터링 전에 하나로 줄입니다.
 
-A generated report is accepted only when all required fields have correct types, the body is sufficiently substantive, Korean text is present at a useful ratio, tags are usable, and at least one validated source remains. Exact normalized title duplicates or identical source fingerprints within the same run are rejected.
+생성된 리포트는 모든 필수 필드의 타입이 올바르고, 본문이 충분한 내용을 담고 있으며, 유효한 수준의 한국어 비율을 충족하고, 사용할 수 있는 태그와 최소 한 개의 검증된 출처가 있을 때만 저장합니다. 현재 실행 중 이미 처리한 정규화 제목 또는 동일한 출처 지문을 가진 리포트는 중복으로 제외합니다.
 
-Validation is intentionally deterministic. The quality gate does not make another LLM request.
+품질 검증은 항상 같은 입력에 같은 결과를 반환하는 결정론적 방식으로 구현합니다. 품질 확인을 위해 LLM을 추가 호출하지 않습니다.
 
-## Error Handling
+## 오류 처리
 
-- Missing `LITELLM_API_KEY`: fail fast with non-zero exit status.
-- RSS timeout or malformed feed: log the feed failure and continue.
-- Empty collection or no valid clusters: terminate without D1 writes and return non-zero so scheduled runs are visibly unhealthy.
-- Invalid LLM JSON or schema: reject that cluster and continue.
-- Quality validation failure: log stable reason codes and continue.
-- D1 command failure: log a redacted diagnostic, count the write as failed, and continue.
-- Zero successfully saved reports: return non-zero after printing the complete summary.
+- `LITELLM_API_KEY` 누락: 0이 아닌 종료 코드와 함께 즉시 실패합니다.
+- RSS 시간 초과 또는 잘못된 피드: 해당 피드 실패를 기록하고 계속합니다.
+- 수집 결과가 없거나 유효한 클러스터가 없음: D1을 변경하지 않고 0이 아닌 종료 코드로 끝냅니다.
+- 잘못된 LLM JSON 또는 스키마: 해당 클러스터를 제외하고 계속합니다.
+- 품질 검증 실패: 안정적인 사유 코드를 기록하고 계속합니다.
+- D1 명령 실패: 비밀정보를 제거한 진단 내용을 기록하고 실패 건수에 포함한 뒤 계속합니다.
+- 저장에 성공한 리포트가 없음: 전체 요약을 출력한 후 0이 아닌 종료 코드로 끝냅니다.
 
-Logs must never contain authorization headers, API keys, or complete secret-bearing exception payloads.
+로그에는 인증 헤더, API 키 또는 비밀정보를 포함할 수 있는 전체 예외 내용을 기록하지 않습니다.
 
-## Testing
+## 테스트
 
-Use Python's built-in `unittest` so the tests run with the repository's declared dependencies and do not require adding pytest in this phase.
+저장소에 선언된 의존성만으로 테스트할 수 있도록 Python 기본 제공 `unittest`를 사용합니다. 이번 단계에서는 pytest 의존성을 추가하지 않습니다.
 
-Unit tests cover:
+단위 테스트 범위는 다음과 같습니다.
 
-- valid report acceptance;
-- missing and mistyped fields;
-- invalid and duplicate source URLs;
-- clearly irrelevant articles;
-- insufficient Korean or empty/short body content;
-- normalized duplicate report detection;
-- SQL quote escaping;
-- partial feed, LLM, and D1 failures;
-- missing secret fail-fast behavior;
-- final non-zero status when nothing is saved.
+- 유효한 리포트 통과
+- 필수 필드 누락 및 잘못된 타입
+- 잘못되거나 중복된 출처 URL
+- AI와 명확히 관련 없는 기사
+- 부족한 한국어 내용 또는 비어 있거나 지나치게 짧은 본문
+- 정규화 기준 중복 리포트 감지
+- SQL 작은따옴표 이스케이프
+- RSS, LLM, D1의 부분 실패
+- 비밀정보 누락 시 즉시 실패
+- 저장 결과가 없을 때 최종 실패 상태 반환
 
-The GitHub Actions workflow runs these tests before invoking the production batch. The batch itself remains manually triggerable and scheduled.
+GitHub Actions는 운영 배치를 실행하기 전에 이 테스트를 수행합니다. 배치는 기존과 같이 수동 실행과 예약 실행을 모두 지원합니다.
 
-## Migration and Rollout
+## 전환 및 배포 순서
 
-1. Revoke the exposed credential and create a new GitHub Actions secret.
-2. Add failing validation and orchestration tests.
-3. Implement the validation module and refactor the Python batch until tests pass.
-4. Update the workflow to provide the secret and run tests.
-5. Remove the uncommitted Worker batch route and duplicated secret declarations used only by that route.
-6. Remove the accidental root duplicate script after confirming it has no unique changes.
-7. Run frontend build/lint and backend tests, then perform a dry run that does not write D1.
-8. Run one explicitly authorized manual production batch and inspect its summary before relying on the schedule.
+1. 노출된 인증키를 폐기하고 새로운 GitHub Actions Secret을 생성합니다.
+2. 검증 및 오케스트레이션에 대한 실패 테스트를 먼저 추가합니다.
+3. 검증 모듈을 구현하고 Python 배치를 리팩터링하여 테스트를 통과시킵니다.
+4. Workflow가 비밀정보를 전달하고 테스트를 선행하도록 수정합니다.
+5. 미커밋 상태인 Worker 배치 경로와 해당 경로에서만 사용하는 중복 비밀정보 선언을 제거합니다.
+6. 루트의 중복 스크립트에 고유한 변경이 없음을 확인한 뒤 제거합니다.
+7. 프론트엔드 빌드·린트와 백엔드 테스트를 실행하고, D1을 변경하지 않는 드라이런을 수행합니다.
+8. 명시적인 승인을 받은 뒤 운영 배치를 한 번 수동 실행하고 결과 요약을 검토한 후 예약 실행에 맡깁니다.
 
-Production D1 writes and credential rotation occur outside local implementation verification and require the corresponding external access or user action.
+운영 D1 쓰기와 인증키 교체는 로컬 구현 검증 범위를 벗어나므로, 해당 외부 접근 권한이나 사용자 작업이 필요합니다.
 
-## Success Criteria
+## 완료 조건
 
-- There is exactly one production news-generation implementation.
-- No LLM credential exists in tracked or newly added source files.
-- The scheduled workflow supplies credentials through GitHub Secrets and gates execution on tests.
-- Invalid, irrelevant, duplicate, or malformed content cannot reach D1 through the canonical batch.
-- Individual external failures do not conceal the run outcome.
-- A run that saves no reports exits non-zero.
-- Deterministic tests cover validation and orchestration without external network or D1 access.
+- 운영 뉴스 생성 구현이 정확히 하나만 존재합니다.
+- 추적 중이거나 새로 추가한 소스 파일에 LLM 인증정보가 존재하지 않습니다.
+- 예약 Workflow가 GitHub Secrets를 통해 인증정보를 전달하고, 테스트 성공 후에만 배치를 실행합니다.
+- 잘못되거나 관련성이 없거나 중복되거나 형식이 손상된 콘텐츠가 공식 배치를 통해 D1에 저장되지 않습니다.
+- 개별 외부 서비스 실패가 전체 실행 결과를 숨기지 않습니다.
+- 저장된 리포트가 없는 실행은 0이 아닌 상태로 종료합니다.
+- 외부 네트워크나 D1 없이 검증 및 오케스트레이션을 확인하는 결정론적 테스트가 존재합니다.
