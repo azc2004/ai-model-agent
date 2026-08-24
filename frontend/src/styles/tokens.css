@@ -1,0 +1,48 @@
+:root {
+  --surface-1: #f8fafc;
+  --surface-2: #ffffff;
+  --border-default: #e2e8f0;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --accent: #4f46e5;
+  --content-max: 90rem;
+}
+
+html.dark,
+html.dark-mode {
+  --surface-1: #07090e;
+  --surface-2: #0d121e;
+  --border-default: #263041;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --accent: #818cf8;
+}
+
+.touch-target {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.numeric {
+  font-variant-numeric: tabular-nums;
+}
+
+.mobile-safe-bottom {
+  padding-bottom: calc(5rem + env(safe-area-inset-bottom));
+}
+
+.focus-ring:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
