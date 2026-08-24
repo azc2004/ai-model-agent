@@ -4,8 +4,15 @@
 RSS 수집 → 클러스터링 → LiteLLM(gpt-4o-mini) → Cloudflare D1 저장
 """
 import json, os, re, uuid, subprocess, urllib.request, urllib.parse
-from dataclasses import dataclass
+from collections import Counter
+from dataclasses import dataclass, field
 from typing import Mapping
+
+from trend_report_validation import (
+    deduplicate_sources,
+    is_duplicate_report,
+    validate_report,
+)
 
 RSS_FEEDS = [
     "https://feeds.feedburner.com/venturebeat/SZYF",
@@ -34,6 +41,18 @@ class BatchConfig:
     litellm_url: str
     litellm_key: str
     model: str
+
+
+@dataclass
+class BatchSummary:
+    collected: int = 0
+    source_rejected: int = 0
+    clusters: int = 0
+    generated: int = 0
+    report_rejected: int = 0
+    saved: int = 0
+    failed: int = 0
+    reasons: Counter[str] = field(default_factory=Counter)
 
 
 def load_config(environ: Mapping[str, str] | None = None) -> BatchConfig:
@@ -152,47 +171,94 @@ def save_to_d1(report, cluster):
     report_id = f"synth-{uuid.uuid4().hex[:12]}"
     return write_report(build_insert_sql(report, cluster, report_id))
 
+
+def run_batch(
+    config,
+    fetcher=fetch_rss,
+    generator=call_llm,
+    writer=write_report,
+    feeds=RSS_FEEDS,
+):
+    summary = BatchSummary()
+    raw_articles = []
+
+    for feed_url in feeds:
+        try:
+            articles = fetcher(feed_url)
+        except Exception:
+            summary.failed += 1
+            summary.reasons["rss_failure"] += 1
+            continue
+        raw_articles.extend(articles)
+
+    summary.collected = len(raw_articles)
+    accepted_articles, source_reasons = deduplicate_sources(raw_articles)
+    summary.reasons.update(source_reasons)
+    summary.source_rejected = sum(source_reasons.values())
+
+    clusters = cluster_articles(accepted_articles)
+    summary.clusters = len(clusters)
+    seen_titles: set[str] = set()
+    seen_sources: set[str] = set()
+
+    for cluster in clusters:
+        try:
+            report = generator(build_prompt(cluster), config)
+            summary.generated += 1
+        except Exception:
+            summary.failed += 1
+            summary.reasons["llm_failure"] += 1
+            continue
+
+        validation = validate_report(report, cluster)
+        if not validation.valid:
+            summary.report_rejected += 1
+            summary.reasons.update(validation.reasons)
+            continue
+        if is_duplicate_report(report, cluster, seen_titles, seen_sources):
+            summary.report_rejected += 1
+            summary.reasons["duplicate_report"] += 1
+            continue
+
+        report_id = f"synth-{uuid.uuid4().hex[:12]}"
+        if writer(build_insert_sql(report, cluster, report_id)):
+            summary.saved += 1
+        else:
+            summary.failed += 1
+            summary.reasons["d1_failure"] += 1
+
+    return summary
+
+
+def exit_code_for(summary):
+    return 0 if summary.saved > 0 else 1
+
+
+def _print_summary(summary):
+    print("\n" + "=" * 60)
+    print(
+        "📊 배치 요약: "
+        f"수집 {summary.collected}, 출처 제외 {summary.source_rejected}, "
+        f"클러스터 {summary.clusters}, 생성 {summary.generated}, "
+        f"리포트 제외 {summary.report_rejected}, 저장 {summary.saved}, 실패 {summary.failed}"
+    )
+    for reason, count in sorted(summary.reasons.items()):
+        print(f"  - {reason}: {count}")
+
+
 def main():
-    config = load_config()
+    try:
+        config = load_config()
+    except RuntimeError as error:
+        print(f"❌ 설정 오류: {error}")
+        return 1
+
     print("=" * 60)
     print("🚀 종합 트렌드 리포트 생성 파이프라인")
     print("=" * 60)
-
-    print("\n📡 RSS 수집 중...")
-    raw = []
-    for feed in RSS_FEEDS:
-        arts = fetch_rss(feed)
-        raw.extend(arts)
-        print(f"  ✓ {urllib.parse.urlparse(feed).hostname}: {len(arts)}건")
-    print(f"\n  총 수집: {len(raw)}건")
-
-    print("\n🧩 클러스터링...")
-    clusters = cluster_articles(raw)
-    print(f"  {len(clusters)}개 클러스터 형성")
-
-    print(f"\n🤖 LLM 종합 트렌드 리포트 생성...")
-    saved = 0
-    for i, cluster in enumerate(clusters, 1):
-        print(f"\n  [{i}/{len(clusters)}] {len(cluster)}개 기사 → 리포트 생성")
-        for a in cluster:
-            print(f"    - {a['title'][:60]}")
-        try:
-            report = call_llm(build_prompt(cluster), config)
-            print(f"    📝 제목: {report.get('title','N/A')}")
-            if save_to_d1(report, cluster):
-                saved += 1
-                print(f"    ✅ D1 저장 완료")
-        except Exception as e:
-            print(f"    ❌ 오류: {e}")
-
-    print(f"\n{'='*60}")
-    print(f"✅ 완료! {saved}개 종합 트렌드 리포트가 D1에 저장되었습니다.")
-    r = subprocess.run(["npx","wrangler","d1","execute","llm-compass-db","--remote","--command","SELECT COUNT(*) as total FROM trend_news"],
-        capture_output=True, text=True)
-    if r.returncode == 0:
-        m = re.search(r'"total":\s*(\d+)', r.stdout)
-        if m:
-            print(f"📊 D1 최종 저장: {m.group(1)}건")
+    summary = run_batch(config)
+    _print_summary(summary)
+    return exit_code_for(summary)
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
