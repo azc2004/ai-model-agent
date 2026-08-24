@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { NAV_GROUPS, type AppTab } from '../navigation/navigationConfig';
@@ -23,6 +23,36 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
   setMobileOpen,
 }) => {
   const { t } = useLanguage();
+  const drawerRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    previousFocusRef.current = document.activeElement as HTMLElement;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    drawerRef.current?.querySelector<HTMLElement>('button')?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setMobileOpen(false);
+        return;
+      }
+      if (event.key !== 'Tab') return;
+      const focusable = Array.from(drawerRef.current?.querySelectorAll<HTMLElement>('button, a, input, select, [tabindex]:not([tabindex="-1"])') ?? []);
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+      previousFocusRef.current?.focus();
+    };
+  }, [mobileOpen, setMobileOpen]);
 
   const handleTabClick = (tab: AppTab) => {
     setActiveTab(tab);
@@ -56,6 +86,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
         {/* Mobile Close Button */}
         <button
           onClick={() => setMobileOpen(false)}
+          aria-label="메뉴 닫기"
           className="md:hidden p-1.5 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
         >
           <X className="w-5 h-5" />
@@ -158,7 +189,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
             className="fixed inset-0 bg-slate-950/40 backdrop-blur-sm transition-opacity"
             onClick={() => setMobileOpen(false)}
           />
-          <div className="relative w-64 max-w-[80vw] h-full shadow-2xl z-10 animate-slideRight">
+          <div ref={drawerRef} role="dialog" aria-modal="true" aria-label="전체 메뉴" className="relative w-64 max-w-[80vw] h-full shadow-2xl z-10 animate-slideRight">
             {sidebarContent}
           </div>
         </div>

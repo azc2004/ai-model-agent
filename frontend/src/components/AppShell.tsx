@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import type { AppTab } from '../navigation/navigationConfig';
 import { HeaderTopBar } from './HeaderTopBar';
 import { SidebarNav } from './SidebarNav';
+import { MobileBottomNav } from './MobileBottomNav';
 
 interface AppShellProps {
   activeTab: AppTab;
@@ -46,6 +47,7 @@ export const AppShell: React.FC<AppShellProps> = ({
         />
         {children}
       </div>
+      <MobileBottomNav activeTab={activeTab} onNavigate={onNavigate} compareCount={compareCount} />
     </div>
   );
 };
