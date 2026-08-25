@@ -88,7 +88,7 @@ const GPUCard: React.FC<{ gpu: GPUSpec; maxBw: number; maxFp16: number; maxInt8:
   const s = TIER_STYLES[gpu.tier];
 
   return (
-    <div className={`bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col space-y-4 p-5 transition-all duration-200 shadow-sm hover:shadow-lg ${s.glow}`}>
+    <article className={`bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col space-y-4 p-4 sm:p-5 transition-all duration-200 shadow-sm hover:shadow-lg ${s.glow}`}>
       {/* 헤더 */}
       <div className="flex flex-col gap-1.5">
         <span className={`text-[10px] font-black px-2 py-0.5 rounded-full border w-fit ${s.badge}`}>
@@ -194,7 +194,7 @@ const GPUCard: React.FC<{ gpu: GPUSpec; maxBw: number; maxFp16: number; maxInt8:
       <div className="pt-2 border-t border-slate-200 dark:border-slate-800 text-[10px] text-slate-400 font-semibold text-center">
         Self-Hosting Hardware Reference Index
       </div>
-    </div>
+    </article>
   );
 };
 
@@ -307,4 +307,3 @@ export const GPUListView: React.FC = () => {
     </div>
   );
 };
-

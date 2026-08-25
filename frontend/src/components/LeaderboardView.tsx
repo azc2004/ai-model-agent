@@ -2,6 +2,9 @@ import React, { useState, useMemo } from 'react';
 import type { ModelSpec } from '../types';
 import { Trophy, Award, Code, BookOpen, BrainCircuit } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { ResponsiveDataTable, type ResponsiveColumn } from './ResponsiveDataTable';
+
+type RankedRow = { model: ModelSpec; rank: number; score: string };
 
 interface LeaderboardViewProps {
   models: ModelSpec[];
@@ -39,6 +42,18 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ models }) => {
         return scoreB - scoreA;
       });
   }, [models, activeBenchmark]);
+
+  const rankedRows: RankedRow[] = rankedModels.map((model, index) => {
+    const raw = activeBenchmark === 'arena' ? model.benchmarks.arena_elo : activeBenchmark === 'swe' ? model.benchmarks.swe_bench : activeBenchmark === 'mmlu' ? model.benchmarks.mmlu_pro : model.benchmarks.gpqa;
+    return { model, rank: index + 1, score: raw == null ? '-' : activeBenchmark === 'arena' ? String(raw) : `${raw}%` };
+  });
+  const columns: ResponsiveColumn<RankedRow>[] = [
+    { key: 'rank', header: t.leaderboard.rank, priority: 'primary', numeric: true, render: (row) => row.rank <= 3 ? ['🥇', '🥈', '🥉'][row.rank - 1] : `#${row.rank}` },
+    { key: 'model', header: t.leaderboard.model, priority: 'primary', render: (row) => <strong>{row.model.name}</strong> },
+    { key: 'provider', header: t.leaderboard.provider, priority: 'secondary', render: (row) => row.model.provider_name },
+    { key: 'tier', header: t.leaderboard.tier, priority: 'secondary', render: (row) => row.model.tier },
+    { key: 'score', header: t.leaderboard.score, priority: 'secondary', numeric: true, render: (row) => <strong className="text-cyan-600 dark:text-cyan-400">{row.score}</strong> },
+  ];
 
   return (
     <div className="space-y-6">
@@ -105,7 +120,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ models }) => {
       </div>
 
       {/* Leaderboard Table */}
-      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-md">
+      <div className="hidden">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-slate-300 dark:border-slate-800 bg-slate-200 dark:bg-slate-800/90 text-xs font-black text-slate-900 dark:text-slate-100 uppercase tracking-wider">
@@ -196,6 +211,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ models }) => {
           </tbody>
         </table>
       </div>
+      <ResponsiveDataTable rows={rankedRows} columns={columns} getRowId={(row) => row.model.id} caption={t.leaderboard.title} />
     </div>
   );
 };

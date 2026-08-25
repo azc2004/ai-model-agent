@@ -57,7 +57,7 @@ export const CompareView: React.FC<CompareViewProps> = ({
       </div>
 
       {/* Comparison Grid Table */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-x-auto shadow-md">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-x-auto shadow-md" tabIndex={0} aria-label="모델 비교표, 좌우로 스크롤 가능">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
@@ -88,7 +88,7 @@ export const CompareView: React.FC<CompareViewProps> = ({
                 {t.dashboard.inputPrice}
               </td>
               {comparedModels.map((m) => (
-                <td key={m.id} className="p-4 text-center font-mono font-black text-emerald-600 dark:text-emerald-400 border-l border-slate-200 dark:border-slate-800">
+                <td key={m.id} className="numeric p-4 text-center font-mono font-black text-emerald-600 dark:text-emerald-400 border-l border-slate-200 dark:border-slate-800">
                   {m.api_pricing ? `$${m.api_pricing.input_price_per_1m.toFixed(2)}` : '-'}
                 </td>
               ))}
