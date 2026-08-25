@@ -4,6 +4,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { fetchModels, fetchProviders } from '../api';
 import { CodeSnippetModal } from './CodeSnippetModal';
 import { Sparkles } from 'lucide-react';
+import { FilterSheet, type CatalogFilters } from './FilterSheet';
 
 interface DashboardProps {
   onCompareSelect?: (modelId: string) => void;
@@ -25,6 +26,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   models: propModels = [],
   providers: propProviders = [],
   globalSearchQuery = ''
+  , onGoToCompare
 }) => {
   const { t } = useLanguage();
   const [models, setModels] = useState<ModelSpec[]>(propModels);
@@ -45,6 +47,18 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const [webSearchOnly, setWebSearchOnly] = useState<boolean>(false);
   const [verifiedOnly, setVerifiedOnly] = useState<boolean>(false);
   const [onlyNew, setOnlyNew] = useState<boolean>(false);
+  const [filterSheetOpen, setFilterSheetOpen] = useState(false);
+  type Density = 'compact' | 'comfortable';
+  const [density, setDensity] = useState<Density>(() => localStorage.getItem('catalog-density') === 'compact' ? 'compact' : 'comfortable');
+  const changeDensity = (next: Density) => { setDensity(next); localStorage.setItem('catalog-density', next); };
+
+  const currentFilters: CatalogFilters = { provider: selectedProvider, tier: selectedTier, license: selectedLicense, reasoningOnly, webSearchOnly, verifiedOnly, onlyNew };
+  const applyFilters = (filters: CatalogFilters) => {
+    setSelectedProvider(filters.provider); setSelectedTier(filters.tier); setSelectedLicense(filters.license);
+    setReasoningOnly(filters.reasoningOnly); setWebSearchOnly(filters.webSearchOnly); setVerifiedOnly(filters.verifiedOnly); setOnlyNew(filters.onlyNew);
+    setFilterSheetOpen(false);
+  };
+  const clearFilters = () => applyFilters({ provider: 'all', tier: 'all', license: 'all', reasoningOnly: false, webSearchOnly: false, verifiedOnly: false, onlyNew: false });
 
   // View Mode: 'grid' | 'table' | 'compact'
   const [viewMode, setViewMode] = useState<'grid' | 'table' | 'compact'>('grid');
@@ -291,6 +305,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
       {/* Filter and Search Bar Header */}
       <div className="glass-card p-4 sm:p-5 space-y-4">
+        <div className="flex items-center justify-between gap-3 md:hidden">
+          <button className="touch-target focus-ring flex-1 rounded-xl border border-slate-300 dark:border-slate-700 font-black" onClick={() => setFilterSheetOpen(true)}>필터 열기</button>
+          <span className="text-xs font-bold text-slate-500">{[selectedProvider !== 'all', selectedTier !== 'all', selectedLicense !== 'all', reasoningOnly, webSearchOnly, verifiedOnly, onlyNew].filter(Boolean).length}개 적용</span>
+        </div>
         {/* Row 1: Search Input & Primary Dropdowns */}
         <div className="flex flex-col lg:flex-row items-center gap-3">
           {/* Search Box */}
@@ -318,7 +336,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           </div>
 
           {/* Primary Dropdown Filters */}
-          <div className="grid grid-cols-3 sm:flex items-center gap-2 w-full lg:w-auto shrink-0">
+          <div className="hidden md:flex items-center gap-2 w-full lg:w-auto shrink-0">
             <select
               value={selectedProvider}
               onChange={(e) => setSelectedProvider(e.target.value)}
@@ -428,6 +446,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
           {/* View Mode Switcher */}
           <div className="flex items-center bg-slate-100 dark:bg-slate-950 p-1 border border-slate-200 dark:border-slate-800 rounded-xl shrink-0 self-end sm:self-auto">
+            <button aria-label="여유로운 밀도" aria-pressed={density === 'comfortable'} onClick={() => changeDensity('comfortable')} className={`touch-target px-2 rounded-lg text-xs font-bold ${density === 'comfortable' ? 'bg-white dark:bg-slate-800' : ''}`}>여유</button>
+            <button aria-label="컴팩트 밀도" aria-pressed={density === 'compact'} onClick={() => changeDensity('compact')} className={`touch-target px-2 rounded-lg text-xs font-bold ${density === 'compact' ? 'bg-white dark:bg-slate-800' : ''}`}>컴팩트</button>
             <button
               onClick={() => setViewMode('grid')}
               className={`px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1.5 transition-all ${
@@ -504,13 +524,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
       {/* VIEW 1: Grid Mode */}
       {viewMode === 'grid' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ${density === 'compact' ? 'gap-3' : 'gap-6'}`}>
           {sortedModels.map((model) => {
             const isSelected = effectiveCompareIds.includes(model.id);
             return (
               <div
                 key={model.id}
-                className="bento-card-2026 p-5 flex flex-col justify-between group relative overflow-hidden"
+                className={`bento-card-2026 flex flex-col justify-between group relative overflow-hidden ${density === 'compact' ? 'p-3' : 'p-5'}`}
               >
                 <div>
                   {/* Top Bar: Provider & Badges */}
@@ -644,6 +664,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
           })}
         </div>
       )}
+
+      <FilterSheet open={filterSheetOpen} filters={currentFilters} providers={providers} onApply={applyFilters} onClear={clearFilters} onClose={() => setFilterSheetOpen(false)} />
+      {effectiveCompareIds.length > 0 && onGoToCompare && <button onClick={onGoToCompare} className="md:hidden fixed bottom-24 left-4 right-4 z-30 touch-target rounded-xl bg-indigo-600 text-white font-black shadow-xl">선택한 모델 {effectiveCompareIds.length}개 비교</button>}
 
       {/* VIEW 2: Table Mode */}
       {viewMode === 'table' && (
