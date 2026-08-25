@@ -315,6 +315,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           <div className="relative flex-1 w-full">
             <input
               type="text"
+              aria-label="카탈로그 검색"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="모델명, 프로바이더, 라이선스 검색..."
@@ -338,6 +339,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           {/* Primary Dropdown Filters */}
           <div className="hidden md:flex items-center gap-2 w-full lg:w-auto shrink-0">
             <select
+              aria-label="프로바이더 필터"
               value={selectedProvider}
               onChange={(e) => setSelectedProvider(e.target.value)}
               className="w-full sm:w-auto bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl px-2.5 sm:px-3 py-2.5 text-xs font-extrabold cursor-pointer shadow-sm min-h-[40px]"
@@ -351,6 +353,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </select>
 
             <select
+              aria-label="모델 등급 필터"
               value={selectedTier}
               onChange={(e) => setSelectedTier(e.target.value)}
               className="w-full sm:w-auto bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl px-2.5 sm:px-3 py-2.5 text-xs font-extrabold cursor-pointer shadow-sm min-h-[40px]"
@@ -363,6 +366,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </select>
 
             <select
+              aria-label="라이선스 필터"
               value={selectedLicense}
               onChange={(e) => setSelectedLicense(e.target.value)}
               className="w-full sm:w-auto bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl px-2.5 sm:px-3 py-2.5 text-xs font-extrabold cursor-pointer shadow-sm min-h-[40px]"
@@ -499,6 +503,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
         <div className="flex items-center gap-2">
           <span className="text-slate-600 dark:text-slate-400 text-xs font-extrabold">정렬 기준:</span>
           <select
+            aria-label="정렬 기준"
             value={sortKey}
             onChange={e => setSortKey(e.target.value as SortKey)}
             className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl px-3 py-2 text-xs font-extrabold shadow-sm cursor-pointer"

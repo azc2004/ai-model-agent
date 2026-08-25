@@ -98,7 +98,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
         {NAV_GROUPS.map((group) => (
           <div key={group.id} className="space-y-1">
             {!isCollapsed && (
-              <h3 className="px-3 text-[10px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+              <h3 className="px-3 text-[10px] font-extrabold text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
                 <span>{group.label}</span>
               </h3>
             )}

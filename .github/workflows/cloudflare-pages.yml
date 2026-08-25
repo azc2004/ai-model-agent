@@ -31,6 +31,18 @@ jobs:
           cd frontend
           npm ci
 
+      - name: 🧪 Unit and component tests
+        run: cd frontend && npm test
+
+      - name: 🔍 Lint
+        run: cd frontend && npm run lint -- --quiet
+
+      - name: 🎭 Install Playwright Chromium
+        run: cd frontend && npx playwright install --with-deps chromium
+
+      - name: 🧭 Responsive and accessibility E2E
+        run: cd frontend && npm run test:e2e
+
       - name: 🏗️ Build Frontend (Vite + TypeScript)
         run: |
           cd frontend

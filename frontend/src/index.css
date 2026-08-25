@@ -38,6 +38,12 @@ html.dark-mode body {
   background-size: 100% 100%, 100% 100%, 24px 24px;
 }
 
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 /* Glassmorphism 2.0 Cards & Bento Utilities (Light Mode First) */
 .glass-card,
 .glass-panel,

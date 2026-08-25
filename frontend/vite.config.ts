@@ -5,6 +5,7 @@ import { defineConfig } from 'vitest/config'
 // https://vite.dev/config/
 export default defineConfig({
   test: {
+    exclude: ['e2e/**', 'node_modules/**', 'dist/**'],
     environment: 'jsdom',
     environmentOptions: {
       jsdom: { url: 'http://localhost:5173/' },

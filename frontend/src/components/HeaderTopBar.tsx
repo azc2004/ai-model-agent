@@ -104,7 +104,8 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({
             <Search className="w-4 h-4 text-slate-400 dark:text-cyan-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               ref={inputRef}
-              type="text"
+              type="search"
+              aria-label="전역 모델 검색"
               value={searchQuery}
               onChange={(e) => handleSearchChange(e.target.value)}
               placeholder="580+ 모델, 프로바이더, 라이선스 검색..."
@@ -136,6 +137,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({
           {/* Compare Basket Button */}
           <button
             onClick={() => setActiveTab('compare')}
+            aria-label={`비교함${compareCount > 0 ? ` ${compareCount}개` : ''}`}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition ${
               activeTab === 'compare'
                 ? 'bg-indigo-600 dark:bg-cyan-500 text-white dark:text-slate-950 font-black shadow-md shadow-indigo-600/30'
@@ -155,6 +157,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({
           <div className="relative flex items-center">
             <Globe className="w-3.5 h-3.5 text-slate-500 dark:text-cyan-400 absolute left-2.5 pointer-events-none" />
             <select
+              aria-label="언어 선택"
               value={language}
               onChange={(e) => setLanguage(e.target.value as Language)}
               className="bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-white/10 rounded-xl pl-7 pr-3 py-1.5 text-xs font-bold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-indigo-500 cursor-pointer appearance-none shadow-sm"
