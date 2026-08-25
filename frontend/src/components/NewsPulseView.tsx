@@ -1150,14 +1150,14 @@ export default function NewsPulseView() {
           <p>No articles found for the current search/lens filter.</p>
         </div>
       ) : (
-        <div className="space-y-6">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
           {filteredArticles.map(article => (
             <div key={article.id} className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-xl transition-all duration-300 group">
-              <div className="p-6">
+              <div className="p-4 sm:p-6 h-full">
                 <div className="flex flex-col md:flex-row items-start gap-6">
                   {/* Thumbnail Image */}
                   {article.image_url && (
-                    <div className="w-full md:w-56 h-40 rounded-xl overflow-hidden shrink-0 bg-slate-900 border border-slate-200 dark:border-slate-700/80 shadow-inner relative">
+                    <div className="w-full md:w-48 h-36 sm:h-40 rounded-xl overflow-hidden shrink-0 bg-slate-900 border border-slate-200 dark:border-slate-700/80 shadow-inner relative">
                       <img
                         src={article.image_url}
                         alt={article.title}
@@ -1293,5 +1293,4 @@ export default function NewsPulseView() {
     </div>
   );
 }
-
 

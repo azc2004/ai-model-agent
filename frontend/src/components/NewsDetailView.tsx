@@ -3,6 +3,7 @@ import { ArrowLeft, ExternalLink, Share2, Sparkles, Building2, Calendar, ShieldC
 import { useLanguage } from '../context/LanguageContext';
 import type { Language } from '../i18n/translations';
 import { MermaidRenderer } from './MermaidRenderer';
+import { NewsSources } from './NewsSources';
 
 interface ActionableInsight {
   developer?: string;
@@ -650,7 +651,7 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white py-2 sm:py-6 px-1 sm:px-6 lg:px-8 animate-fade-in">
-      <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
+      <div className="max-w-[800px] mx-auto space-y-4 sm:space-y-6">
         
         {/* Navigation Header */}
         <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-slate-200 dark:border-slate-800">
@@ -852,14 +853,7 @@ ${article.summary_bullets?.join(' ') || article.title} 소식의 핵심은 기�
               <ArrowLeft className="w-4 h-4" /> 목록으로 돌아가기
             </button>
 
-            <a
-              href={article.source_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-6 py-3 text-sm font-black text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-lg transition-all flex items-center gap-2"
-            >
-              {t?.readOriginal || '원문 기사 전문 보러가기'} <ExternalLink className="w-4 h-4" />
-            </a>
+            <NewsSources sources={article.multi_sources} fallbackUrl={article.source_url} fallbackLabel={t?.readOriginal || '원문 기사 전문 보러가기'} />
           </div>
 
         </div>
