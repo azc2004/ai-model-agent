@@ -114,7 +114,7 @@ export const TokenizerSandboxView: React.FC<TokenizerSandboxViewProps> = ({
       </div>
 
       {/* Main Grid: Prompt Sandbox Left, Stats & Batch Config Right */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mobile-safe-bottom">
         {/* Left: Input Textarea */}
         <div className="lg:col-span-7 bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 space-y-4 shadow-md backdrop-blur-md">
           <div className="flex flex-wrap items-center justify-between gap-2">

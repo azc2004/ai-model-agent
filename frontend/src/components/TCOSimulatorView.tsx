@@ -77,7 +77,7 @@ export const TCOSimulatorView: React.FC<TCOSimulatorViewProps> = ({ models }) =>
     : [];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 mobile-safe-bottom">
       {/* Title */}
       <div className="bg-white dark:bg-slate-900 p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md">
         <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white mb-2 flex items-center gap-3 tracking-tight">
@@ -224,7 +224,7 @@ export const TCOSimulatorView: React.FC<TCOSimulatorViewProps> = ({ models }) =>
         </div>
 
         {/* Results Analytics & Bar Chart */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-6 lg:sticky lg:top-20 self-start">
           {result && (
             <>
               {/* Cost Summary Cards */}
