@@ -1,12 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import mermaid from 'mermaid';
-
-mermaid.initialize({
-  startOnLoad: false,
-  theme: 'dark',
-  securityLevel: 'loose',
-  fontFamily: 'Inter, system-ui, sans-serif',
-});
 
 interface MermaidRendererProps {
   chart: string;
@@ -25,6 +17,8 @@ export const MermaidRenderer: React.FC<MermaidRendererProps> = ({ chart }) => {
       if (!chart.trim()) return;
       try {
         setError(null);
+        const { default: mermaid } = await import('mermaid');
+        mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose', fontFamily: 'Inter, system-ui, sans-serif' });
         const { svg } = await mermaid.render(uniqueId, chart);
         if (isMounted) {
           setSvgContent(svg);

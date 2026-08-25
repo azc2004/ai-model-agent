@@ -1,21 +1,22 @@
 // 🚀 Cloudflare Workers CI/CD Pipeline Active
-import React, { useState, useEffect } from 'react';
+import React, { lazy, Suspense, useState, useEffect } from 'react';
 import type { ModelSpec, Provider } from './types';
 import { fetchModels, fetchProviders } from './api';
 import { LanguageProvider } from './context/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
-import { Dashboard } from './components/Dashboard';
-import { TCOSimulatorView } from './components/TCOSimulatorView';
-import { CompareView } from './components/CompareView';
-import { LeaderboardView } from './components/LeaderboardView';
-import { GPUListView } from './components/GPUListView';
-import { ArchitectureAdvisor } from './components/ArchitectureAdvisor';
-import { TutorialView } from './components/TutorialView';
-import NewsPulseView from './components/NewsPulseView';
-import { TokenizerSandboxView } from './components/TokenizerSandboxView';
-import { SpeedMonitorView } from './components/SpeedMonitorView';
 import { AppShell } from './components/AppShell';
 import { isAppTab, type AppTab } from './navigation/navigationConfig';
+
+const Dashboard = lazy(() => import('./components/Dashboard').then((module) => ({ default: module.Dashboard })));
+const CompareView = lazy(() => import('./components/CompareView').then((module) => ({ default: module.CompareView })));
+const TCOSimulatorView = lazy(() => import('./components/TCOSimulatorView').then((module) => ({ default: module.TCOSimulatorView })));
+const ArchitectureAdvisor = lazy(() => import('./components/ArchitectureAdvisor').then((module) => ({ default: module.ArchitectureAdvisor })));
+const TutorialView = lazy(() => import('./components/TutorialView').then((module) => ({ default: module.TutorialView })));
+const LeaderboardView = lazy(() => import('./components/LeaderboardView').then((module) => ({ default: module.LeaderboardView })));
+const GPUListView = lazy(() => import('./components/GPUListView').then((module) => ({ default: module.GPUListView })));
+const NewsPulseView = lazy(() => import('./components/NewsPulseView'));
+const TokenizerSandboxView = lazy(() => import('./components/TokenizerSandboxView').then((module) => ({ default: module.TokenizerSandboxView })));
+const SpeedMonitorView = lazy(() => import('./components/SpeedMonitorView').then((module) => ({ default: module.SpeedMonitorView })));
 
 export const AppContent: React.FC = () => {
   // URL query parameter ?tab= 및 ?article= 파싱으로 북마크/즐겨찾기 라우팅 초기화
@@ -112,7 +113,7 @@ export const AppContent: React.FC = () => {
               <p className="text-slate-600 dark:text-slate-300 text-sm mb-4">{error}</p>
               <button onClick={() => window.location.reload()} className="touch-target focus-ring px-4 py-2 bg-cyan-600 hover:bg-cyan-500 rounded-lg text-sm font-semibold text-white">Retry</button>
             </div>
-          ) : <>
+          ) : <Suspense fallback={<div className="grid grid-cols-1 sm:grid-cols-2 gap-4" aria-label="화면 불러오는 중"><div className="h-48 animate-pulse rounded-2xl bg-slate-200 dark:bg-slate-900" /><div className="h-48 animate-pulse rounded-2xl bg-slate-200 dark:bg-slate-900" /></div>}>
           {activeTab === 'dashboard' && (
             <Dashboard
               models={models}
@@ -155,7 +156,7 @@ export const AppContent: React.FC = () => {
           )}
 
           {activeTab === 'speed' && <SpeedMonitorView />}
-          </>}
+          </Suspense>}
         </main>
 
         <footer className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/60 py-6 text-center text-xs text-slate-500">

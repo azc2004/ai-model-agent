@@ -12,5 +12,5 @@ test('renders the application shell while data loads', () => {
   render(<App />);
 
   expect(screen.getByRole('banner')).toBeInTheDocument();
-  expect(screen.getByRole('navigation', { name: /주요 메뉴/i })).toBeInTheDocument();
+  expect(screen.getByRole('navigation', { name: /^주요 메뉴$/i })).toBeInTheDocument();
 });
