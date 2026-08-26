@@ -3,7 +3,7 @@
 종합 트렌드 리포트 생성 스크립트
 RSS 수집 → 클러스터링 → LiteLLM(gpt-4o-mini) → Cloudflare D1 저장
 """
-import json, os, re, uuid, subprocess, urllib.request, urllib.parse
+import json, os, re, uuid, subprocess, urllib.error, urllib.request, urllib.parse
 from collections import Counter
 from dataclasses import dataclass, field
 from typing import Mapping
@@ -34,6 +34,32 @@ TOPIC_PATTERNS = {
     "finetuning": ["fine-tuning","finetune","lora","rlhf","instruction tuning","training"],
     "research": ["arxiv","paper","benchmark","sota","evaluation","dataset","model release"],
 }
+TREND_REPORT_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "title": {"type": "string"},
+        "primary_topic": {"type": "string"},
+        "tldr": {"type": "string"},
+        "blog_body": {"type": "string"},
+        "developer_tip": {"type": "string"},
+        "pm_tip": {"type": "string"},
+        "business_tip": {"type": "string"},
+        "tags": {"type": "array", "items": {"type": "string"}},
+        "impact_score": {"type": "integer"},
+    },
+    "required": [
+        "title",
+        "primary_topic",
+        "tldr",
+        "blog_body",
+        "developer_tip",
+        "pm_tip",
+        "business_tip",
+        "tags",
+        "impact_score",
+    ],
+    "additionalProperties": False,
+}
 
 
 @dataclass(frozen=True)
@@ -41,6 +67,7 @@ class BatchConfig:
     litellm_url: str
     litellm_key: str
     model: str
+    fallback_model: str = ""
 
 
 @dataclass
@@ -63,7 +90,10 @@ def load_config(environ: Mapping[str, str] | None = None) -> BatchConfig:
     return BatchConfig(
         litellm_url=source.get("LITELLM_URL", "https://ai-gateway.azclab.com/v1").rstrip("/"),
         litellm_key=key,
-        model=source.get("LITELLM_MODEL", "personal-main"),
+        model=source.get("LITELLM_MODEL", "gemini/gemini-3.7-flash"),
+        fallback_model=source.get(
+            "LITELLM_FALLBACK_MODEL", "groq/qwen/qwen3.6-27b"
+        ),
     )
 
 def fetch_rss(feed_url):
@@ -96,15 +126,36 @@ def cluster_articles(raw):
         groups.setdefault(topic, []).append(art)
     return [arts[:5] for arts in groups.values() if len(arts) >= 1][:8]
 
-def call_llm(prompt, config):
-    payload = json.dumps({
-        "model": config.model,
+def _is_qwen_model(model):
+    return "qwen" in model.lower()
+
+
+def _request_llm(prompt, config, model):
+    request_body = {
+        "model": model,
         "messages": [
             {"role": "system", "content": "You are a senior AI tech journalist. Return ONLY valid JSON. Use formal Korean (합쇼체)."},
             {"role": "user", "content": prompt}
         ],
-        "temperature": 0.3, "max_tokens": 8000,
-    }).encode()
+        "temperature": 0.3,
+        "max_tokens": 3500,
+    }
+    if _is_qwen_model(model):
+        request_body.update({
+            "reasoning_effort": "none",
+            "response_format": {"type": "json_object"},
+        })
+    else:
+        request_body["response_format"] = {
+            "type": "json_schema",
+            "json_schema": {
+                "name": "trend_report",
+                "strict": True,
+                "schema": TREND_REPORT_SCHEMA,
+            },
+        }
+
+    payload = json.dumps(request_body).encode()
     req = urllib.request.Request(f"{config.litellm_url}/chat/completions", data=payload,
         headers={"Authorization": f"Bearer {config.litellm_key}", "Content-Type": "application/json", "User-Agent": "curl/8.7.1"}, method="POST")
     with urllib.request.urlopen(req, timeout=60) as resp:
@@ -112,7 +163,53 @@ def call_llm(prompt, config):
         raw = data["choices"][0]["message"]["content"]
         raw = re.sub(r"^```json\s*", "", raw).strip()
         raw = re.sub(r"```$", "", raw).strip()
-        return json.loads(raw)
+        report = json.loads(raw)
+        return _normalize_qwen_report(report) if _is_qwen_model(model) else report
+
+
+def _normalize_qwen_report(report):
+    normalized = dict(report)
+    aliases = {
+        "primary_topic": ("theme", "core_theme"),
+        "developer_tip": ("dev_tip",),
+        "business_tip": ("biz_tip",),
+        "impact_score": ("confidence", "score"),
+    }
+    for canonical, alternatives in aliases.items():
+        if normalized.get(canonical) in (None, "", []):
+            for alternative in alternatives:
+                value = normalized.get(alternative)
+                if value not in (None, "", []):
+                    normalized[canonical] = value
+                    break
+        for alternative in alternatives:
+            normalized.pop(alternative, None)
+    return normalized
+
+
+def _is_transient_llm_error(error):
+    if isinstance(error, (TimeoutError, urllib.error.URLError)):
+        return True
+    return isinstance(error, urllib.error.HTTPError) and (
+        error.code == 429 or error.code >= 500
+    )
+
+
+def _has_required_report_fields(report):
+    return all(report.get(field) not in (None, "", []) for field in TREND_REPORT_SCHEMA["required"])
+
+
+def call_llm(prompt, config):
+    try:
+        return _request_llm(prompt, config, config.model)
+    except Exception as error:
+        if not config.fallback_model or not _is_transient_llm_error(error):
+            raise
+
+    report = _request_llm(prompt, config, config.fallback_model)
+    if not _has_required_report_fields(report):
+        report = _request_llm(prompt, config, config.fallback_model)
+    return report
 
 def build_prompt(cluster):
     combined = "\n\n---\n\n".join(f"Source: {a['source']}\nTitle: {a['title']}\nSummary: {a['summary']}" for a in cluster)
