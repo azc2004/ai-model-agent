@@ -369,7 +369,9 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
           infra: ['bg-slate-600','bg-blue-700','bg-teal-600','bg-cyan-700','bg-emerald-700','bg-green-600'],
         };
         const colors = colorMap[flowType] ?? colorMap['sota'];
-        const gridCols = steps.length <= 4 ? `grid-cols-1 sm:grid-cols-${steps.length}` : 'grid-cols-2 sm:grid-cols-5';
+        // 정적 맵: 템플릿 리터럴 클래스는 Tailwind가 스캔하지 못해 생성되지 않는다
+        const gridColsMap: Record<number, string> = { 1: 'grid-cols-1', 2: 'grid-cols-1 sm:grid-cols-2', 3: 'grid-cols-1 sm:grid-cols-3', 4: 'grid-cols-2 sm:grid-cols-4' };
+        const gridCols = gridColsMap[steps.length] ?? 'grid-cols-2 sm:grid-cols-5';
         elements.push(
           <div key={nextKey()} className="my-8 p-5 sm:p-6 rounded-3xl bg-slate-950 border border-slate-800 shadow-2xl">
             <div className="flex items-center gap-2 mb-5 pb-3 border-b border-slate-800">

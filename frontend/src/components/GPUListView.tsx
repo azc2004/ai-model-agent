@@ -235,24 +235,14 @@ export const GPUListView: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* 타이틀 */}
-      <div className="bg-white dark:bg-slate-900 p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md">
-        <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white mb-2 flex items-center gap-3 tracking-tight">
+      <div className="bg-white dark:bg-slate-900 p-4 sm:p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 dark:text-white mb-2 flex items-center gap-3 tracking-tight">
           <Cpu className="w-7 h-7 text-purple-600 dark:text-purple-400" />
           {t.gpu.title}
         </h2>
         <p className="text-slate-600 dark:text-slate-300 text-sm max-w-3xl font-semibold">
           {t.gpu.subtitle}
         </p>
-        {/* 범례 */}
-        <div className="mt-4 flex flex-wrap gap-3">
-          {TIERS.slice(1).map(tier => (
-            <div key={tier.key} className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${tier.bg} ${tier.color} ${tier.border}`}>
-              {tier.icon}
-              {tier.label}
-              <span className="ml-1 font-black opacity-70">{counts[tier.key] ?? 0}종</span>
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* 탭 필터 */}
@@ -263,7 +253,7 @@ export const GPUListView: React.FC = () => {
             <button
               key={tier.key}
               onClick={() => setActiveTab(tier.key as GPUTier | 'all')}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-black border transition-all ${
+              className={`touch-target focus-ring flex items-center justify-center gap-1.5 px-4 py-2 rounded-full text-xs font-black border transition-all ${
                 isActive
                   ? `${tier.bg} ${tier.color} ${tier.border} shadow-sm`
                   : 'bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-500'
@@ -281,7 +271,7 @@ export const GPUListView: React.FC = () => {
 
       {/* 요약 통계 (탭 선택 시) */}
       {activeTab !== 'all' && filtered.length > 0 && (
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
             { icon: <HardDrive className="w-4 h-4 text-cyan-500" />, label: '최대 VRAM', value: `${Math.max(...filtered.map(g => g.vram_gb))} GB` },
             { icon: <Activity className="w-4 h-4 text-violet-500" />, label: '최고 FP16', value: `${Math.max(...filtered.map(g => g.fp16_tflops))} TF` },

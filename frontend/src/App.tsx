@@ -98,7 +98,7 @@ export const AppContent: React.FC = () => {
 
   return (
     <AppShell activeTab={activeTab} onNavigate={setActiveTab} compareCount={selectedModelIds.length} globalSearchQuery={globalSearchQuery} onGlobalSearch={handleGlobalSearch}>
-        <main className="flex-1 max-w-[var(--content-max)] w-full mx-auto px-2.5 sm:px-6 py-4 sm:py-8 mobile-safe-bottom" aria-busy={loading || undefined}>
+        <main className="flex-1 max-w-[var(--content-max)] w-full mx-auto px-2.5 sm:px-6 py-4 sm:py-8" aria-busy={loading || undefined}>
           {loading && models.length === 0 ? (
             <div>
               <div className="h-8 w-64 rounded-lg bg-slate-200 dark:bg-slate-800 animate-pulse" />
@@ -159,7 +159,7 @@ export const AppContent: React.FC = () => {
           </Suspense>}
         </main>
 
-        <footer className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/60 py-6 text-center text-xs text-slate-500">
+        <footer className="mobile-safe-bottom border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/60 py-6 text-center text-xs text-slate-500">
           <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
             <p>© 2026 LLM COMPASS - Global AI Model Spec & TCO Analytics Platform</p>
             <p className="text-slate-600">Supported Languages: 🇰🇷 한국어 | 🇺🇸 English | 🇯🇵 日本語 | 🇨🇳 中文</p>

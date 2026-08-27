@@ -45,14 +45,14 @@ export interface NavItem {
 
 export interface NavGroup {
   id: 'catalog' | 'tools' | 'insights';
-  label: string;
+  labelKey: 'groupCatalog' | 'groupTools' | 'groupInsights';
   items: NavItem[];
 }
 
 export const NAV_GROUPS: NavGroup[] = [
   {
     id: 'catalog',
-    label: '메인 카탈로그',
+    labelKey: 'groupCatalog',
     items: [
       { id: 'dashboard', labelKey: 'catalog', icon: LayoutGrid },
       { id: 'compare', labelKey: 'compare', icon: ArrowLeftRight, badge: 'compare' },
@@ -61,7 +61,7 @@ export const NAV_GROUPS: NavGroup[] = [
   },
   {
     id: 'tools',
-    label: '샌드박스 & 시뮬레이터',
+    labelKey: 'groupTools',
     items: [
       { id: 'sandbox', labelKey: 'sandbox', icon: Braces },
       { id: 'tco', labelKey: 'tco', icon: Calculator },
@@ -71,7 +71,7 @@ export const NAV_GROUPS: NavGroup[] = [
   },
   {
     id: 'insights',
-    label: 'AI 솔루션 & 리포트',
+    labelKey: 'groupInsights',
     items: [
       { id: 'advisor', labelKey: 'advisor', icon: Sparkles },
       { id: 'news', labelKey: 'news', icon: Newspaper, badge: 'new' },

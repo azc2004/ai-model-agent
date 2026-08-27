@@ -77,10 +77,10 @@ export const TCOSimulatorView: React.FC<TCOSimulatorViewProps> = ({ models }) =>
     : [];
 
   return (
-    <div className="space-y-6 mobile-safe-bottom">
+    <div className="space-y-6">
       {/* Title */}
-      <div className="bg-white dark:bg-slate-900 p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md">
-        <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white mb-2 flex items-center gap-3 tracking-tight">
+      <div className="bg-white dark:bg-slate-900 p-4 sm:p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 dark:text-white mb-2 flex items-center gap-3 tracking-tight">
           <Calculator className="w-7 h-7 text-cyan-600 dark:text-cyan-400" />
           {t.tco.title}
         </h2>
@@ -92,9 +92,6 @@ export const TCOSimulatorView: React.FC<TCOSimulatorViewProps> = ({ models }) =>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Controls Card */}
         <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-5 shadow-md">
-          <h3 className="text-lg font-black text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-3">
-            {t.tco.title}
-          </h3>
 
           {/* 1단계: 프로바이더 (공급자) 선택 */}
           <div>
@@ -177,7 +174,7 @@ export const TCOSimulatorView: React.FC<TCOSimulatorViewProps> = ({ models }) =>
             <label className="block text-xs font-black text-slate-700 dark:text-slate-300 mb-2">
               {t.tco.quantization}
             </label>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {['Q4_K_M', 'FP8', 'FP16'].map((q) => (
                 <button
                   key={q}
