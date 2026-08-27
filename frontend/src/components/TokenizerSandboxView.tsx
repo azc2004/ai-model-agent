@@ -114,7 +114,7 @@ export const TokenizerSandboxView: React.FC<TokenizerSandboxViewProps> = ({
       </div>
 
       {/* Main Grid: Prompt Sandbox Left, Stats & Batch Config Right */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mobile-safe-bottom">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left: Input Textarea */}
         <div className="lg:col-span-7 bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 space-y-4 shadow-md backdrop-blur-md">
           <div className="flex flex-wrap items-center justify-between gap-2">
@@ -185,7 +185,7 @@ export const TokenizerSandboxView: React.FC<TokenizerSandboxViewProps> = ({
             {/* Batch Call Count */}
             <div className="space-y-2">
               <span className="text-xs text-slate-700 dark:text-slate-300 font-bold">월간 총 API 호출 횟수 (Batch Requests)</span>
-              <div className="grid grid-cols-4 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {[1, 1000, 10000, 100000].map((cnt) => (
                   <button
                     key={cnt}

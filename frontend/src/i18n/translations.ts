@@ -13,6 +13,11 @@ export interface TranslationDictionary {
     gpus: string;
     sandbox: string;
     speed: string;
+    groupCatalog: string;
+    groupTools: string;
+    groupInsights: string;
+    compareBasket: string;
+    collapseMenu: string;
   };
   viewMode: {
     grid: string;
@@ -106,7 +111,12 @@ export const translations: Record<Language, TranslationDictionary> = {
       leaderboard: "리더보드",
       gpus: "GPU 스펙 & 비용",
       sandbox: "🧮 토크나이저 샌드박스",
-      speed: "⚡ 실시간 추론 속도"
+      speed: "⚡ 실시간 추론 속도",
+      groupCatalog: "메인 카탈로그",
+      groupTools: "샌드박스 & 시뮬레이터",
+      groupInsights: "AI 솔루션 & 리포트",
+      compareBasket: "비교함",
+      collapseMenu: "메뉴 접기"
     },
     viewMode: {
       grid: "카드 뷰",
@@ -198,7 +208,12 @@ export const translations: Record<Language, TranslationDictionary> = {
       leaderboard: "Leaderboard",
       gpus: "GPU Specs & Costs",
       sandbox: "🧮 Tokenizer Sandbox",
-      speed: "⚡ Live Inference Speed"
+      speed: "⚡ Live Inference Speed",
+      groupCatalog: "Main Catalog",
+      groupTools: "Sandbox & Simulators",
+      groupInsights: "AI Solutions & Reports",
+      compareBasket: "Compare",
+      collapseMenu: "Collapse menu"
     },
     viewMode: {
       grid: "Card View",
@@ -290,7 +305,12 @@ export const translations: Record<Language, TranslationDictionary> = {
       leaderboard: "リーダーボード",
       gpus: "GPUスペック・コスト",
       sandbox: "🧮 トークナイザーサンドボックス",
-      speed: "⚡ リアルタイム推論速度"
+      speed: "⚡ リアルタイム推論速度",
+      groupCatalog: "メインカタログ",
+      groupTools: "サンドボックス & シミュレーター",
+      groupInsights: "AI ソリューション & レポート",
+      compareBasket: "比較リスト",
+      collapseMenu: "メニューを折りたたむ"
     },
     viewMode: {
       grid: "カード表示",
@@ -382,7 +402,12 @@ export const translations: Record<Language, TranslationDictionary> = {
       leaderboard: "排行榜",
       gpus: "GPU 规格与成本",
       sandbox: "🧮 Token 计算沙盒",
-      speed: "⚡ 实时推理速度"
+      speed: "⚡ 实时推理速度",
+      groupCatalog: "主目录",
+      groupTools: "沙盒与模拟器",
+      groupInsights: "AI 解决方案与报告",
+      compareBasket: "对比栏",
+      collapseMenu: "收起菜单"
     },
     viewMode: {
       grid: "卡片视图",
@@ -474,7 +499,12 @@ export const translations: Record<Language, TranslationDictionary> = {
       leaderboard: "Tabla de Clasificación",
       gpus: "Precios y Especificaciones GPU",
       sandbox: "🧮 Tokenizer Sandbox",
-      speed: "⚡ Velocidad de Inferencia"
+      speed: "⚡ Velocidad de Inferencia",
+      groupCatalog: "Catálogo principal",
+      groupTools: "Sandbox y simuladores",
+      groupInsights: "Soluciones e informes IA",
+      compareBasket: "Comparador",
+      collapseMenu: "Contraer menú"
     },
     viewMode: { grid: "Cuadrícula", table: "Tabla", compact: "Compacto" },
     quota: { title: "Límites de Tarifa", rpm: "RPM", tpm: "TPM", rpd: "RPD", concurrency: "Concurrencia" },
@@ -556,7 +586,12 @@ export const translations: Record<Language, TranslationDictionary> = {
       leaderboard: "Bestenliste",
       gpus: "GPU Preise & Specs",
       sandbox: "🧮 Tokenizer Sandbox",
-      speed: "⚡ Live-Inferenzgeschwindigkeit"
+      speed: "⚡ Live-Inferenzgeschwindigkeit",
+      groupCatalog: "Hauptkatalog",
+      groupTools: "Sandbox & Simulatoren",
+      groupInsights: "KI-Lösungen & Berichte",
+      compareBasket: "Vergleich",
+      collapseMenu: "Menü einklappen"
     },
     viewMode: { grid: "Raster", table: "Tabelle", compact: "Kompakt" },
     quota: { title: "Ratenlimits", rpm: "RPM", tpm: "TPM", rpd: "RPD", concurrency: "Nebenläufigkeit" },
@@ -638,7 +673,12 @@ export const translations: Record<Language, TranslationDictionary> = {
       leaderboard: "Classement Général",
       gpus: "Spécifications & Prix GPU",
       sandbox: "🧮 Bac à sable Tokenizer",
-      speed: "⚡ Vitesse d'inférence en direct"
+      speed: "⚡ Vitesse d'inférence en direct",
+      groupCatalog: "Catalogue principal",
+      groupTools: "Bac à sable & simulateurs",
+      groupInsights: "Solutions & rapports IA",
+      compareBasket: "Comparateur",
+      collapseMenu: "Réduire le menu"
     },
     viewMode: { grid: "Grille", table: "Tableau", compact: "Compact" },
     quota: { title: "Limites de Débit", rpm: "RPM", tpm: "TPM", rpd: "RPD", concurrency: "Concurrence" },

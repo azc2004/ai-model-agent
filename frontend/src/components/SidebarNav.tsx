@@ -99,7 +99,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
           <div key={group.id} className="space-y-1">
             {!isCollapsed && (
               <h3 className="px-3 text-[10px] font-extrabold text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                <span>{group.label}</span>
+                <span>{t.nav[group.labelKey]}</span>
               </h3>
             )}
             <div className="space-y-1">
@@ -163,7 +163,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
           ) : (
             <>
               <ChevronLeft className="w-4 h-4 text-indigo-600 dark:text-cyan-400" />
-              <span>메뉴 접기</span>
+              <span>{t.nav.collapseMenu}</span>
             </>
           )}
         </button>

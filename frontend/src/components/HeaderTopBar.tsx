@@ -31,7 +31,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({
   globalSearchQuery = '',
   onGlobalSearch,
 }) => {
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   const [searchQuery, setSearchQuery] = useState<string>(globalSearchQuery);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -67,7 +67,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({
           <button
             onClick={onOpenMobileMenu}
             aria-label="메뉴 열기"
-            className="md:hidden p-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+            className="touch-target focus-ring md:hidden grid place-items-center rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
             title="메뉴 열기"
           >
             <Menu className="w-5 h-5" />
@@ -76,7 +76,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({
           {/* Logo Branding */}
           <div
             onClick={() => setActiveTab('dashboard')}
-            className="flex items-center gap-2.5 cursor-pointer group shrink-0"
+            className="md:hidden flex items-center gap-2.5 cursor-pointer group shrink-0"
           >
             <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-cyan-500 p-0.5 shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform">
               <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
@@ -99,7 +99,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({
         </div>
 
         {/* Center: Global Fast Search Input with Shortcut Hint */}
-        <div className="flex-1 max-w-md mx-2">
+        <div className="hidden md:block flex-1 max-w-md mx-2">
           <div className="relative flex items-center">
             <Search className="w-4 h-4 text-slate-400 dark:text-cyan-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
@@ -137,15 +137,15 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({
           {/* Compare Basket Button */}
           <button
             onClick={() => setActiveTab('compare')}
-            aria-label={`비교함${compareCount > 0 ? ` ${compareCount}개` : ''}`}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition ${
+            aria-label={`${t.nav.compareBasket}${compareCount > 0 ? ` ${compareCount}` : ''}`}
+            className={`hidden sm:flex px-3 min-h-[44px] sm:min-h-0 sm:py-1.5 rounded-xl text-xs font-bold items-center gap-1.5 transition ${
               activeTab === 'compare'
                 ? 'bg-indigo-600 dark:bg-cyan-500 text-white dark:text-slate-950 font-black shadow-md shadow-indigo-600/30'
                 : 'bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:border-indigo-500/40 hover:text-indigo-600'
             }`}
           >
             <ArrowLeftRight className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">비교함</span>
+            <span className="hidden sm:inline">{t.nav.compareBasket}</span>
             {compareCount > 0 && (
               <span className="px-1.5 py-0.2 rounded-full bg-indigo-600 dark:bg-cyan-400 text-white dark:text-slate-950 font-black text-[10px] shadow-sm">
                 {compareCount}
@@ -160,7 +160,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({
               aria-label="언어 선택"
               value={language}
               onChange={(e) => setLanguage(e.target.value as Language)}
-              className="bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-white/10 rounded-xl pl-7 pr-3 py-1.5 text-xs font-bold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-indigo-500 cursor-pointer appearance-none shadow-sm"
+              className="min-h-[44px] md:min-h-0 bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-white/10 rounded-xl pl-7 pr-3 py-1.5 text-xs font-bold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-indigo-500 cursor-pointer appearance-none shadow-sm"
             >
               <option value="ko">🇰🇷 한국어</option>
               <option value="en">🇺🇸 English</option>
@@ -175,7 +175,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({
           {/* Theme Toggle Button */}
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-xl bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 hover:border-indigo-500 transition shadow-sm"
+            className="touch-target focus-ring md:min-w-0 md:min-h-0 grid place-items-center md:p-2 rounded-xl bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 hover:border-indigo-500 transition shadow-sm"
             title={theme === 'dark' ? '화사한 라이트 모드로 변경' : '다크 모드로 변경'}
           >
             {theme === 'dark' ? (

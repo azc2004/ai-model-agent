@@ -27,8 +27,24 @@ html.dark-mode {
   font-variant-numeric: tabular-nums;
 }
 
-.mobile-safe-bottom {
-  padding-bottom: calc(5rem + env(safe-area-inset-bottom));
+@media (max-width: 767px) {
+  .mobile-safe-bottom {
+    padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* the bar itself only needs to clear the home indicator, not the 5rem spacer */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }
 
 .focus-ring:focus-visible {
