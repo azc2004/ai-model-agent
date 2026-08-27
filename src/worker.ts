@@ -6,6 +6,60 @@ export interface Env {
   ASSETS: Fetcher;
 }
 
+// ─── 기사 썸네일 ─────────────────────────────────────────────────────────────
+// trend_news.image_url 이 있으면 그것을, 없으면 id 해시로 풀에서 결정론적 선택.
+// 상수 하나를 쓰면 모든 기사가 같은 그림이 되므로 분산이 필요하다.
+const FALLBACK_IMAGES = [
+  'photo-1620712943543-bcc4688e7485',
+  'photo-1526374965328-7f61d4dc18c5',
+  'photo-1558494949-ef010cbdcc31',
+  'photo-1618005182384-a83a8bd57fbe',
+  'photo-1507413245164-6160d8298b31',
+  'photo-1607799279861-4dd421887fb3',
+  'photo-1550751827-4bd374c3f58b',
+  'photo-1460925895917-afdab827c52f',
+  'photo-1532094349884-543bc11b234d',
+];
+
+function resolveImage(row: any): string {
+  const stored = typeof row?.image_url === 'string' ? row.image_url.trim() : '';
+  if (stored.startsWith('http')) return stored;
+  const key = String(row?.id ?? '');
+  let hash = 0;
+  for (let i = 0; i < key.length; i++) hash = (hash * 31 + key.charCodeAt(i)) >>> 0;
+  const id = FALLBACK_IMAGES[hash % FALLBACK_IMAGES.length];
+  return `https://images.unsplash.com/${id}?auto=format&fit=crop&w=800&q=80`;
+}
+
+// 배치는 key_takeaways 에 [요약, 개발자팁, PM팁, 비즈니스팁] 을 넣는다.
+// 이걸 버리고 캔 문구를 쓰면 모든 기사의 팁이 똑같아진다.
+const CANNED_INSIGHT = {
+  developer: '최신 AI 모델 아키텍처 수율을 적용하여 에이전트 시스템을 구축하세요.',
+  pm: '유저 인터페이스에 AI 에이전트 추론 과정을 효과적으로 가시화하세요.',
+  business: '고비용 상용 API를 오픈/경량 모델로 대체하여 TCO를 70% 절감하세요.',
+  researcher: '멀티 슈타인 강화학습 및 차세대 MoE 라우팅 논문을 분석하세요.',
+};
+
+function resolveInsight(takeaways: any[]) {
+  const pick = (i: number, fallback: string) => {
+    const value = Array.isArray(takeaways) && typeof takeaways[i] === 'string' ? takeaways[i].trim() : '';
+    return value || fallback;
+  };
+  return {
+    developer: pick(1, CANNED_INSIGHT.developer),
+    pm: pick(2, CANNED_INSIGHT.pm),
+    business: pick(3, CANNED_INSIGHT.business),
+    researcher: CANNED_INSIGHT.researcher,
+  };
+}
+
+// 역할별 팁으로 쓰인 항목은 요약에서 빼 중복 노출을 막는다.
+function resolveSummary(takeaways: any[], executiveSummary: string): any[] {
+  if (Array.isArray(takeaways) && takeaways.length >= 4) return [takeaways[0]];
+  if (Array.isArray(takeaways) && takeaways.length > 0) return takeaways;
+  return [executiveSummary];
+}
+
 // ─── 키워드 기반 렌즈 분류기 (백엔드 classify_article_lenses와 동일 로직) ──────
 function classifyLenses(title: string, summary: string, sourceName: string, category: string): string[] {
   const combined = (title + ' ' + summary + ' ' + sourceName + ' ' + category).toLowerCase();
@@ -264,15 +318,10 @@ export default {
             source_url: sources[0]?.url || "https://ai-compass.org",
             published_at: n.created_at || new Date().toISOString(),
             category: is_synthesized ? "🔮 다중 소스 융합 블로그" : (n.report_type || "심층 리포트"),
-            image_url: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80",
-            summary_bullets: takeaways.length > 0 ? takeaways : [n.executive_summary],
+            image_url: resolveImage(n),
+            summary_bullets: resolveSummary(takeaways, n.executive_summary),
             blog_summary: n.analytical_deep_dive,
-            actionable_insight: {
-              developer: "최신 AI 모델 아키텍처 수율을 적용하여 에이전트 시스템을 구축하세요.",
-              pm: "유저 인터페이스에 AI 에이전트 추론 과정을 효과적으로 가시화하세요.",
-              business: "고비용 상용 API를 오픈/경량 모델로 대체하여 TCO를 70% 절감하세요.",
-              researcher: "멀티 슈타인 강화학습 및 차세대 MoE 라우팅 논문을 분석하세요."
-            },
+            actionable_insight: resolveInsight(takeaways),
             impact_score: 98,
             tags,
             matched_lenses,
@@ -365,15 +414,10 @@ export default {
           source_url: sources[0]?.url || "https://ai-compass.org",
           published_at: n.created_at || new Date().toISOString(),
           category: is_synthesized ? "🔮 다중 소스 융합 블로그" : (n.report_type || "심층 리포트"),
-          image_url: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80",
-          summary_bullets: takeaways.length > 0 ? takeaways : [n.executive_summary],
+          image_url: resolveImage(n),
+          summary_bullets: resolveSummary(takeaways, n.executive_summary),
           blog_summary: n.analytical_deep_dive,
-          actionable_insight: {
-            developer: "최신 AI 모델 아키텍처 수율을 적용하여 에이전트 시스템을 구축하세요.",
-            pm: "유저 인터페이스에 AI 에이전트 추론 과정을 효과적으로 가시화하세요.",
-            business: "고비용 상용 API를 오픈/경량 모델로 대체하여 TCO를 70% 절감하세요.",
-            researcher: "멀티 슈타인 강화학습 및 차세대 MoE 라우팅 논문을 분석하세요."
-          },
+          actionable_insight: resolveInsight(takeaways),
           impact_score: 98,
           tags,
           matched_lenses,

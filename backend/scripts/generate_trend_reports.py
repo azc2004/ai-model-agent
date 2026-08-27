@@ -96,6 +96,27 @@ def load_config(environ: Mapping[str, str] | None = None) -> BatchConfig:
         ),
     )
 
+_IMG_PATTERNS = (
+    r'<media:content[^>]+url="([^"]+)"',
+    r'<media:thumbnail[^>]+url="([^"]+)"',
+    r'<enclosure[^>]+type="image/[^"]*"[^>]+url="([^"]+)"',
+    r'<enclosure[^>]+url="([^"]+)"[^>]+type="image/',
+    r'<img[^>]+src="([^"]+)"',
+)
+
+
+def extract_image(item_xml):
+    """RSS 항목에서 대표 이미지 URL을 뽑는다. 없으면 None."""
+    for pattern in _IMG_PATTERNS:
+        match = re.search(pattern, item_xml, re.IGNORECASE)
+        if not match:
+            continue
+        url = match.group(1).strip().replace("&amp;", "&")
+        if url.startswith("http") and not url.endswith(".svg"):
+            return url[:500]
+    return None
+
+
 def fetch_rss(feed_url):
     try:
         req = urllib.request.Request(feed_url, headers={"User-Agent": "curl/8.7.1"})
@@ -109,7 +130,7 @@ def fetch_rss(feed_url):
             desc = (re.search(r"<description><!\[CDATA\[([\s\S]*?)\]\]></description>", t) or re.search(r"<description>([^<]*)</description>", t))
             if title and link:
                 clean = re.sub(r"<[^>]+>", "", desc.group(1) if desc else "").strip()[:500]
-                arts.append({"title": title.group(1).strip(), "link": link.group(1).strip(), "summary": clean, "source": urllib.parse.urlparse(feed_url).hostname})
+                arts.append({"title": title.group(1).strip(), "link": link.group(1).strip(), "summary": clean, "source": urllib.parse.urlparse(feed_url).hostname, "image": extract_image(t)})
         return arts[:8]
     except Exception as e:
         print(f"  [RSS Skip] {feed_url}: {e}")
@@ -238,6 +259,14 @@ JSON으로만 응답하세요:
   "impact_score": 92
 }}"""
 
+def pick_image(cluster):
+    """클러스터에서 첫 번째 실제 썸네일을 대표 이미지로 쓴다. 없으면 None."""
+    for article in cluster:
+        if article.get("image"):
+            return article["image"]
+    return None
+
+
 def build_insert_sql(report, cluster, report_id):
     sources = json.dumps([{"title": a["source"], "url": a["link"]} for a in cluster])
     tags = json.dumps(report.get("tags", ["#AI트렌드", "#종합리포트"]))
@@ -248,11 +277,14 @@ def build_insert_sql(report, cluster, report_id):
     def esc(s):
         return (s or "").replace("'", "''")
 
+    image = pick_image(cluster)
+    image_sql = f"'{esc(image)}'" if image else "NULL"
+
     return (f"INSERT OR REPLACE INTO trend_news "
-           f"(id, title, report_type, executive_summary, analytical_deep_dive, key_takeaways, original_sources, tags, matched_lenses) VALUES ("
+           f"(id, title, report_type, executive_summary, analytical_deep_dive, key_takeaways, original_sources, tags, matched_lenses, image_url) VALUES ("
            f"'{esc(report_id)}', '{esc(report.get('title','종합 AI 트렌드 리포트'))}', "
            f"'🔮 종합 트렌드 리포트', '{esc(tldr)}', '{esc(report.get('blog_body',''))}', "
-           f"'{esc(key_takeaways)}', '{esc(sources)}', '{esc(tags)}', '{esc(matched_lenses)}')")
+           f"'{esc(key_takeaways)}', '{esc(sources)}', '{esc(tags)}', '{esc(matched_lenses)}', {image_sql})")
 
 
 def write_report(sql, runner=subprocess.run):
