@@ -264,7 +264,7 @@ export default {
             source_url: sources[0]?.url || "https://ai-compass.org",
             published_at: n.created_at || new Date().toISOString(),
             category: is_synthesized ? "🔮 다중 소스 융합 블로그" : (n.report_type || "심층 리포트"),
-            image_url: "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=800&q=80",
+            image_url: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80",
             summary_bullets: takeaways.length > 0 ? takeaways : [n.executive_summary],
             blog_summary: n.analytical_deep_dive,
             actionable_insight: {
@@ -365,7 +365,7 @@ export default {
           source_url: sources[0]?.url || "https://ai-compass.org",
           published_at: n.created_at || new Date().toISOString(),
           category: is_synthesized ? "🔮 다중 소스 융합 블로그" : (n.report_type || "심층 리포트"),
-          image_url: "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=800&q=80",
+          image_url: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80",
           summary_bullets: takeaways.length > 0 ? takeaways : [n.executive_summary],
           blog_summary: n.analytical_deep_dive,
           actionable_insight: {

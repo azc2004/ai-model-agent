@@ -322,7 +322,7 @@ TOPIC_IMAGE_MAP = [
 
 DEFAULT_IMAGES = {
     "OpenAI Blog": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
-    "Anthropic News": "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=800&q=80",
+    "Anthropic News": "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80",
     "Google DeepMind": "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80",
     "Meta AI Blog": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&w=800&q=80",
     "Microsoft Research": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
@@ -394,7 +394,7 @@ def get_image_url(entry, raw_html: str, source_name: str, title: str, summary: s
             return item["url"]
     return DEFAULT_IMAGES.get(
         source_name,
-        "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=800&q=80"
+        "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80"
     )
 
 
