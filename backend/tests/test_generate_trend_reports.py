@@ -9,7 +9,14 @@ from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).parents[1] / "scripts"))
 
-from generate_trend_reports import build_insert_sql, call_llm, load_config, write_report
+from generate_trend_reports import (
+    build_insert_sql,
+    call_llm,
+    extract_image,
+    load_config,
+    pick_image,
+    write_report,
+)
 from generate_trend_reports import (
     BatchConfig,
     BatchSummary,
@@ -324,6 +331,38 @@ class OrchestratorTests(unittest.TestCase):
         self.assertEqual(summary.source_rejected, 1)
         self.assertEqual(summary.reasons["irrelevant_source"], 1)
         self.assertEqual(generator_calls, [])
+
+    def test_extract_image_reads_every_supported_rss_shape(self):
+        cases = [
+            ('<media:content url="https://a.test/x.jpg"/>', "https://a.test/x.jpg"),
+            ('<media:thumbnail url="https://b.test/y.png" />', "https://b.test/y.png"),
+            ('<enclosure url="https://c.test/z.jpg" type="image/jpeg"/>', "https://c.test/z.jpg"),
+            ('<description><img src="https://d.test/w.jpg?a=1&amp;b=2"></description>',
+             "https://d.test/w.jpg?a=1&b=2"),
+        ]
+        for xml, expected in cases:
+            with self.subTest(xml=xml):
+                self.assertEqual(extract_image(xml), expected)
+
+    def test_extract_image_rejects_missing_and_unusable(self):
+        self.assertIsNone(extract_image("<title>no image</title>"))
+        self.assertIsNone(extract_image('<img src="https://e.test/icon.svg">'))
+        self.assertIsNone(extract_image('<img src="/relative/path.jpg">'))
+
+    def test_pick_image_takes_first_available_in_cluster(self):
+        self.assertEqual(
+            pick_image([{"image": None}, {"image": "https://x.test/y.jpg"}]),
+            "https://x.test/y.jpg",
+        )
+        self.assertIsNone(pick_image([{"image": None}, {}]))
+
+    def test_insert_sql_carries_image_or_null(self):
+        report = {"title": "t", "tldr": "s", "blog_body": "b"}
+        cluster = [{"source": "a.test", "link": "https://a.test/1", "image": "https://a.test/p.jpg"}]
+        self.assertIn("'https://a.test/p.jpg'", build_insert_sql(report, cluster, "id-1"))
+        self.assertIn("image_url", build_insert_sql(report, cluster, "id-1"))
+        bare = [{"source": "a.test", "link": "https://a.test/1"}]
+        self.assertTrue(build_insert_sql(report, bare, "id-2").rstrip().endswith("NULL)"))
 
     def test_exit_code_is_nonzero_when_nothing_saved(self):
         self.assertEqual(exit_code_for(BatchSummary(saved=0, failed=1)), 1)

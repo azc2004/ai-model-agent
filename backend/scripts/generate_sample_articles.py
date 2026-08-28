@@ -373,7 +373,7 @@ def create_sample_articles():
                 "source_url": "https://www.anthropic.com/news/agentic-tooling-2.0",
                 "published_at": datetime.now(timezone.utc).isoformat(),
                 "category": "빅테크 공식",
-                "image_url": "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=800&q=80",
+                "image_url": "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80",
                 "summary_bullets": [
                     "Anthropic이 브라우저 GUI, 마우스 클릭, 키보드 입력 및 API 연동을 스스로 판단하는 Computer Use 2.0 파이프라인을 공개했습니다.",
                     "OSWorld 벤치마크에서 복잡한 웹 조작 과업 완수율을 기존 18%에서 64%로 3.5배 대폭 향상시켰습니다.",

@@ -292,7 +292,7 @@ const CLIENT_FALLBACK_NEWS: NewsResponse = {
       source_url: "https://www.anthropic.com/news/agentic-tooling-2.0",
       published_at: new Date().toISOString(),
       category: "빅테크 공식",
-      image_url: "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=800&q=80",
+      image_url: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80",
       summary_bullets: [
         "Anthropic이 브라우저 GUI, 마우스 클릭, 키보드 입력 및 API 연동을 스스로 판단하는 Computer Use 2.0 파이프라인을 공개했습니다.",
         "OSWorld 벤치마크에서 복잡한 웹 조작 과업 완수율을 기존 18%에서 64%로 3.5배 대폭 향상시켰습니다.",
@@ -365,7 +365,7 @@ const CLIENT_FALLBACK_NEWS: NewsResponse = {
       source_url: "https://www.anthropic.com/news",
       published_at: new Date().toISOString(),
       category: "빅테크 공식",
-      image_url: "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=800&q=80",
+      image_url: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80",
       summary_bullets: [
         "Anthropic이 마우스 클릭, 키보드 입력, 브라우저 탐색을 스스로 수행하는 자율 Agentic 파이프라인 개방.",
         "복잡한 서류 정리 및 웹 사이트 데이터 수집 작업을 멀티 에이전트 분산 처리로 자동 완수.",
@@ -509,7 +509,7 @@ const CLIENT_FALLBACK_NEWS: NewsResponse = {
       source_url: "https://www.anthropic.com/news",
       published_at: new Date().toISOString(),
       category: "빅테크 공식",
-      image_url: "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=800&q=80",
+      image_url: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80",
       summary_bullets: [
         "Anthropic이 실시간 웹 앱 및 렌더링 아티팩트 창을 지식 파일 파이프라인과 통합 발표.",
         "코드 실행 워크스페이스 내에서 백엔드 및 UI 컴포넌트를 즉각 미리보기 가능한 차세대 워크플로우.",
@@ -1150,7 +1150,7 @@ export default function NewsPulseView() {
           <p>No articles found for the current search/lens filter.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 gap-4 sm:gap-6 mx-auto w-full max-w-5xl">
           {filteredArticles.map(article => (
             <div key={article.id} className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-xl transition-all duration-300 group">
               <div className="p-4 sm:p-6 h-full">
@@ -1163,7 +1163,9 @@ export default function NewsPulseView() {
                         alt={article.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         onError={(e) => {
-                          (e.target as HTMLElement).style.display = 'none';
+                          // 래퍼까지 숨기지 않으면 bg-slate-900 빈 박스가 남는다
+                          const wrapper = (e.target as HTMLElement).parentElement;
+                          if (wrapper) wrapper.style.display = 'none';
                         }}
                       />
                       <span className="absolute bottom-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded bg-black/60 text-white backdrop-blur-md">

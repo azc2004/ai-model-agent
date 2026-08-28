@@ -56,7 +56,8 @@ CREATE TABLE IF NOT EXISTS trend_news (
   analytical_deep_dive TEXT,
   key_takeaways TEXT,
   original_sources TEXT,
-  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  image_url TEXT
 );
 
 CREATE INDEX IF NOT EXISTS idx_models_provider ON models(provider_id);
