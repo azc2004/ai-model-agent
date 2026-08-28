@@ -5,6 +5,7 @@ import { fetchModels, fetchProviders } from '../api';
 import { CodeSnippetModal } from './CodeSnippetModal';
 import { Sparkles } from 'lucide-react';
 import { FilterSheet, type CatalogFilters } from './FilterSheet';
+import { track } from '../analytics';
 
 interface DashboardProps {
   onCompareSelect?: (modelId: string) => void;
@@ -649,6 +650,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     href={model.source_docs_url || model.official_url}
                     target="_blank"
                     rel="noreferrer"
+                    onClick={() => track('external_link_click', { label: model.name })}
                     className="flex-1 text-center py-2 px-2.5 rounded-xl text-xs font-black bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-900 dark:text-slate-100 transition-all border border-slate-300 dark:border-slate-700 shadow-sm"
                   >
                     {t.dashboard.officialDocs}
@@ -765,6 +767,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                             href={model.source_docs_url || model.official_url}
                             target="_blank"
                             rel="noreferrer"
+                            onClick={() => track('external_link_click', { label: model.name })}
                             className="text-xs font-bold text-slate-600 hover:text-blue-600 dark:text-slate-400 dark:hover:text-cyan-400 transition-colors whitespace-nowrap"
                           >
                             Docs ↗
@@ -854,6 +857,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     href={model.source_docs_url || model.official_url}
                     target="_blank"
                     rel="noreferrer"
+                    onClick={() => track('external_link_click', { label: model.name })}
                     className="text-xs font-bold text-slate-600 hover:text-blue-600 dark:text-slate-400 dark:hover:text-cyan-400 transition-colors px-1"
                   >
                     Docs ↗

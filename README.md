@@ -123,8 +123,24 @@ python3 -m unittest \
 | `POST` | `/api/v1/recommend/architecture` | 맞춤형 AI 아키텍처 추천 |
 | `POST` | `/api/v1/generate/markdown` | 5단계 파이프라인 마크다운 생성 |
 | `GET` | `/api/v1/news/pulse` | 24시간 정기 배치 수집된 AI 뉴스 & 실전 팁 조회 (`?lens=developer`) |
+| `POST` | `/api/v1/analytics/track` | 익명 사용 이벤트 수집 (세션 ID만, 개인정보 없음) |
+| `GET` | `/api/v1/admin/analytics/summary` | 이용현황 요약 (어드민 인증 필요, `?days=7\|14\|30`) |
 
 뉴스 생성·갱신용 공개 HTTP 엔드포인트는 제공하지 않습니다. 수동 실행은 GitHub Actions의 `news_batch.yml` workflow dispatch를 사용합니다.
+
+---
+
+## 📈 어드민 모니터링 페이지
+
+`/admin` 경로에서 탭별 조회수, 검색어, 비교 모델, 뉴스 열람, 공식 문서 클릭, 디바이스/국가 분포를 확인할 수 있습니다. 개인 식별 정보는 수집하지 않고 브라우저 localStorage에 저장된 익명 세션 ID로만 집계합니다.
+
+`ADMIN_PASSWORD` 시크릿이 없으면 어드민 페이지와 요약 API 모두 401로 차단됩니다(fail-closed). 최초 1회 설정:
+
+```bash
+npx wrangler secret put ADMIN_PASSWORD
+```
+
+브라우저로 `/admin` 접속 시 뜨는 기본 인증(Basic Auth) 창에 아이디는 아무 값, 비밀번호는 위에서 설정한 값을 입력합니다.
 
 ---
 

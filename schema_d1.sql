@@ -63,3 +63,19 @@ CREATE TABLE IF NOT EXISTS trend_news (
 CREATE INDEX IF NOT EXISTS idx_models_provider ON models(provider_id);
 CREATE INDEX IF NOT EXISTS idx_models_tier ON models(tier);
 CREATE INDEX IF NOT EXISTS idx_models_is_open ON models(is_open_weight);
+
+-- 익명 사용 로그. 개인 식별 정보 없이 세션 단위 행동만 기록한다.
+CREATE TABLE IF NOT EXISTS analytics_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  session_id TEXT NOT NULL,
+  event_type TEXT NOT NULL, -- page_view | search | compare_add | compare_remove | external_link_click | news_open
+  tab TEXT,
+  label TEXT,
+  device TEXT, -- mobile | desktop
+  country TEXT, -- Cloudflare edge에서 제공 (request.cf.country)
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_analytics_created ON analytics_events(created_at);
+CREATE INDEX IF NOT EXISTS idx_analytics_type ON analytics_events(event_type);
+CREATE INDEX IF NOT EXISTS idx_analytics_session ON analytics_events(session_id);
