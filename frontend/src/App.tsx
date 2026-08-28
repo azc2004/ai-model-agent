@@ -1,11 +1,12 @@
 // 🚀 Cloudflare Workers CI/CD Pipeline Active
-import React, { lazy, Suspense, useState, useEffect } from 'react';
+import React, { lazy, Suspense, useState, useEffect, useRef } from 'react';
 import type { ModelSpec, Provider } from './types';
 import { fetchModels, fetchProviders } from './api';
 import { LanguageProvider } from './context/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { AppShell } from './components/AppShell';
 import { isAppTab, type AppTab } from './navigation/navigationConfig';
+import { track } from './analytics';
 
 const Dashboard = lazy(() => import('./components/Dashboard').then((module) => ({ default: module.Dashboard })));
 const CompareView = lazy(() => import('./components/CompareView').then((module) => ({ default: module.CompareView })));
@@ -41,10 +42,15 @@ export const AppContent: React.FC = () => {
   // Global Search State
   const [globalSearchQuery, setGlobalSearchQuery] = useState<string>('');
 
+  const searchTrackTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const handleGlobalSearch = (query: string) => {
     setGlobalSearchQuery(query);
     if (activeTab !== 'dashboard') {
       setActiveTab('dashboard');
+    }
+    clearTimeout(searchTrackTimer.current);
+    if (query.trim()) {
+      searchTrackTimer.current = setTimeout(() => track('search', { label: query.trim() }), 600);
     }
   };
 
@@ -55,6 +61,11 @@ export const AppContent: React.FC = () => {
     url.searchParams.set('tab', tab);
     window.history.pushState({}, '', url.toString());
   };
+
+  // 탭 뷰가 실제로 바뀔 때마다 방문을 기록한다 — 초기 진입/네비게이션/뒤로가기를 한 곳에서 커버
+  useEffect(() => {
+    track('page_view', { tab: activeTab });
+  }, [activeTab]);
 
   // 브라우저 뒤로가기/앞으로가기 (popstate) 감지
   useEffect(() => {
@@ -87,9 +98,11 @@ export const AppContent: React.FC = () => {
   }, []);
 
   const handleToggleCompare = (modelId: string) => {
-    setSelectedModelIds((prev) =>
-      prev.includes(modelId) ? prev.filter((id) => id !== modelId) : [...prev, modelId]
-    );
+    setSelectedModelIds((prev) => {
+      const removing = prev.includes(modelId);
+      track(removing ? 'compare_remove' : 'compare_add', { label: modelId });
+      return removing ? prev.filter((id) => id !== modelId) : [...prev, modelId];
+    });
   };
 
   const handleClearCompare = () => {

@@ -4,6 +4,25 @@ import { recommendArchitecture, generateMarkdown } from './llm';
 export interface Env {
   DB: D1Database;
   ASSETS: Fetcher;
+  ADMIN_PASSWORD?: string;
+}
+
+// ─── 어드민 인증 ─────────────────────────────────────────────────────────────
+// ADMIN_PASSWORD 시크릿(wrangler secret put)이 없으면 항상 거부한다 — 미설정 상태로
+// 배포돼 어드민 페이지가 그대로 공개되는 사고를 막기 위한 fail-closed 기본값.
+function requireAdmin(request: Request, env: Env): Response | null {
+  const expected = env.ADMIN_PASSWORD;
+  const challenge = new Response('Unauthorized', {
+    status: 401,
+    headers: { 'WWW-Authenticate': 'Basic realm="LLM COMPASS Admin"' },
+  });
+  if (!expected) return challenge;
+  const header = request.headers.get('Authorization') || '';
+  if (!header.startsWith('Basic ')) return challenge;
+  let decoded = '';
+  try { decoded = atob(header.slice(6)); } catch { return challenge; }
+  const password = decoded.slice(decoded.indexOf(':') + 1);
+  return password === expected ? null : challenge;
 }
 
 // ─── 기사 썸네일 ─────────────────────────────────────────────────────────────
@@ -187,6 +206,77 @@ export default {
           'Access-Control-Allow-Headers': 'Content-Type'
         }
       });
+    }
+
+    // ─── 익명 사용 로그 수집 ────────────────────────────────────────────────
+    if (url.pathname === '/api/v1/analytics/track' && request.method === 'POST') {
+      const EVENT_TYPES = new Set(['page_view', 'search', 'compare_add', 'compare_remove', 'external_link_click', 'news_open']);
+      try {
+        const body: any = await request.json();
+        const eventType = String(body.event_type || '');
+        const sessionId = String(body.session_id || '');
+        if (!EVENT_TYPES.has(eventType) || !/^[a-zA-Z0-9-]{1,64}$/.test(sessionId)) {
+          return new Response(null, { status: 204, headers: { 'Access-Control-Allow-Origin': '*' } });
+        }
+        const tab = String(body.tab || '').slice(0, 32) || null;
+        const label = String(body.label || '').slice(0, 200) || null;
+        const device = body.device === 'mobile' ? 'mobile' : 'desktop';
+        const country = (request as any).cf?.country || null;
+        await env.DB.prepare(
+          'INSERT INTO analytics_events (session_id, event_type, tab, label, device, country) VALUES (?, ?, ?, ?, ?, ?)'
+        ).bind(sessionId, eventType, tab, label, device, country).run();
+      } catch {
+        // 수집 실패가 서비스 이용을 막으면 안 된다 — 조용히 무시
+      }
+      return new Response(null, { status: 204, headers: { 'Access-Control-Allow-Origin': '*' } });
+    }
+
+    // ─── 어드민: 이용현황 요약 ──────────────────────────────────────────────
+    if (url.pathname === '/api/v1/admin/analytics/summary') {
+      const denied = requireAdmin(request, env);
+      if (denied) return denied;
+      try {
+        const days = Math.min(Math.max(parseInt(url.searchParams.get('days') || '7', 10) || 7, 1), 90);
+        const since = `-${days} days`;
+        const db = env.DB;
+
+        const [totals, daily, topTabs, topSearches, topCompared, deviceBreakdown, countryBreakdown, topLinks, topNews] = await Promise.all([
+          db.prepare(`SELECT COUNT(*) AS events, COUNT(DISTINCT session_id) AS sessions FROM analytics_events WHERE created_at >= datetime('now', ?)`).bind(since).first(),
+          db.prepare(`SELECT date(created_at) AS day, COUNT(*) AS events, COUNT(DISTINCT session_id) AS sessions FROM analytics_events WHERE created_at >= datetime('now', ?) GROUP BY day ORDER BY day ASC`).bind(since).all(),
+          db.prepare(`SELECT tab AS label, COUNT(*) AS count FROM analytics_events WHERE event_type = 'page_view' AND created_at >= datetime('now', ?) AND tab IS NOT NULL GROUP BY tab ORDER BY count DESC LIMIT 10`).bind(since).all(),
+          db.prepare(`SELECT label, COUNT(*) AS count FROM analytics_events WHERE event_type = 'search' AND created_at >= datetime('now', ?) AND label IS NOT NULL GROUP BY label ORDER BY count DESC LIMIT 10`).bind(since).all(),
+          db.prepare(`SELECT label, COUNT(*) AS count FROM analytics_events WHERE event_type = 'compare_add' AND created_at >= datetime('now', ?) AND label IS NOT NULL GROUP BY label ORDER BY count DESC LIMIT 10`).bind(since).all(),
+          db.prepare(`SELECT device AS label, COUNT(*) AS count FROM analytics_events WHERE created_at >= datetime('now', ?) GROUP BY device`).bind(since).all(),
+          db.prepare(`SELECT country AS label, COUNT(*) AS count FROM analytics_events WHERE created_at >= datetime('now', ?) AND country IS NOT NULL GROUP BY country ORDER BY count DESC LIMIT 10`).bind(since).all(),
+          db.prepare(`SELECT label, COUNT(*) AS count FROM analytics_events WHERE event_type = 'external_link_click' AND created_at >= datetime('now', ?) AND label IS NOT NULL GROUP BY label ORDER BY count DESC LIMIT 10`).bind(since).all(),
+          db.prepare(`SELECT label, COUNT(*) AS count FROM analytics_events WHERE event_type = 'news_open' AND created_at >= datetime('now', ?) AND label IS NOT NULL GROUP BY label ORDER BY count DESC LIMIT 10`).bind(since).all(),
+        ]);
+
+        return new Response(JSON.stringify({
+          days,
+          totals: totals || { events: 0, sessions: 0 },
+          daily: daily.results,
+          top_tabs: topTabs.results,
+          top_searches: topSearches.results,
+          top_compared: topCompared.results,
+          device_breakdown: deviceBreakdown.results,
+          country_breakdown: countryBreakdown.results,
+          top_external_links: topLinks.results,
+          top_news: topNews.results,
+        }), { headers: { 'Content-Type': 'application/json' } });
+      } catch (err: any) {
+        return new Response(JSON.stringify({ error: err.message }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+      }
+    }
+
+    // ─── 어드민 페이지 서빙 (/admin) ────────────────────────────────────────
+    // Cloudflare 정적 자산은 clean-URL 규칙상 /admin.html 요청 자체를 /admin 으로
+    // 되돌려 리다이렉트한다. 그래서 경로를 .html 로 재작성하지 않고 원본 요청을
+    // 그대로 ASSETS 에 넘겨 admin.html 이 /admin 에서 바로 서빙되게 한다.
+    if (url.pathname === '/admin' || url.pathname === '/admin/') {
+      const denied = requireAdmin(request, env);
+      if (denied) return denied;
+      return env.ASSETS.fetch(request);
     }
 
     // D1 Edge API Routes - Models

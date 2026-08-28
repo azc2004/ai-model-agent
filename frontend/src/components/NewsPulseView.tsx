@@ -3,6 +3,7 @@ import { Newspaper, Users, Lightbulb, Briefcase, Microscope, Activity, Hash, Clo
 import { API_BASE_URL } from '../api';
 import { useLanguage } from '../context/LanguageContext';
 import { NewsDetailView } from './NewsDetailView';
+import { track } from '../analytics';
 
 interface ActionableInsight {
   developer?: string;
@@ -829,6 +830,7 @@ export default function NewsPulseView() {
 
   // 🔗 기사 상세 페이지 라우트 선택 및 URL 파라미터 동기화 (공유/북마크 지원)
   const handleSelectArticle = (article: NewsArticle) => {
+    track('news_open', { label: article.title });
     setSelectedArticle(article);
     const url = new URL(window.location.href);
     url.searchParams.set('tab', 'news');
