@@ -1,3 +1,4 @@
+import logging
 import os
 from datetime import datetime, timezone
 from dotenv import load_dotenv
@@ -37,6 +38,19 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+def _try_instrument(app: FastAPI) -> None:
+    """infra-agent 계측 적용 (optional — 미설치 시 스킵)."""
+    try:
+        from infra_agent import instrument
+    except ImportError:
+        logging.getLogger(__name__).debug("infra-agent 미설치 — 계측 스킵")
+        return
+    instrument(app, service_name="ai-model-agent")
+
+
+_try_instrument(app)
+
 
 @app.get("/")
 @app.head("/")
