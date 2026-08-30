@@ -2,6 +2,9 @@
 @import "tailwindcss";
 @import "./styles/tokens.css";
 
+/* Tailwind v4 defaults `dark:` to prefers-color-scheme; bind it to the class ThemeContext toggles instead. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --bg-light: #f8fafc;
   --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
