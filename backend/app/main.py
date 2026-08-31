@@ -17,6 +17,14 @@ from app.tco_calculator import calculate_tco
 from app.recommender import TRENDING_TEMPLATES, recommend_architecture
 from app.markdown_generator import create_markdown
 
+# Sentry 에러 추적 (SENTRY_DSN 미설정 시 no-op)
+import sentry_sdk
+sentry_sdk.init(
+    dsn=os.environ.get("SENTRY_DSN"),
+    environment=os.environ.get("SENTRY_ENV", "production"),
+    traces_sample_rate=0.0,  # 에러만 — 무료 쿼터 보존
+)
+
 app = FastAPI(
     title="LLM Compass API",
     description="전세계 AI LLM 모델 비용, 스펙, 벤치마크 비교 및 API vs 셀프호스팅 TCO 시뮬레이터 API",

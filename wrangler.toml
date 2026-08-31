@@ -1,6 +1,7 @@
 name = "ai-model-agent"
 main = "src/worker.ts"
 compatibility_date = "2025-01-01"
+compatibility_flags = ["nodejs_compat"]
 
 workers_dev = true
 
@@ -13,8 +14,28 @@ directory = "frontend/dist"
 binding = "ASSETS"
 run_worker_first = true
 
+[vars]
+# Sentry 에러 추적 (DSN은 공개 식별자 — 클라이언트 노출 전제 설계)
+SENTRY_DSN = "https://c76c936b0f42c1afd88881068be15820@o4511998126325760.ingest.us.sentry.io/4511998247370752"
+
 
 [[d1_databases]]
 binding = "DB"
 database_name = "llm-compass-db"
 database_id = "5b9b2878-ecb8-4201-9688-198b37811c66"
+
+# 관측 가능성 — 로그·트레이스를 Grafana Cloud로 export
+# (destination은 CF 대시보드에 등록: grafana-logs / grafana-traces).
+# persist = false — CF 대시보드 저장 없이 Grafana로만 전송.
+[observability]
+enabled = true
+
+[observability.traces]
+enabled = true
+destinations = ["grafana-traces"]
+persist = false
+
+[observability.logs]
+enabled = true
+destinations = ["grafana-logs"]
+persist = false

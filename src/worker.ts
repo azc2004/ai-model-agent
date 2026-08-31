@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/cloudflare';
 import { PROVIDERS, GPU_SPECS, TRENDING_TEMPLATES } from './data';
 import { calculateTCO } from './tco';
 import { recommendArchitecture, generateMarkdown } from './llm';
@@ -5,6 +6,16 @@ export interface Env {
   DB: D1Database;
   ASSETS: Fetcher;
   ADMIN_PASSWORD?: string;
+  SENTRY_DSN?: string;
+}
+
+/** 500 공통 응답 + Sentry 보고. */
+function fail(err: any): Response {
+  Sentry.captureException(err);
+  return new Response(JSON.stringify({ error: err.message }), {
+    status: 500,
+    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+  });
 }
 
 // ─── 어드민 인증 ─────────────────────────────────────────────────────────────
@@ -56,19 +67,22 @@ const CANNED_INSIGHT = {
   developer: '최신 AI 모델 아키텍처 수율을 적용하여 에이전트 시스템을 구축하세요.',
   pm: '유저 인터페이스에 AI 에이전트 추론 과정을 효과적으로 가시화하세요.',
   business: '고비용 상용 API를 오픈/경량 모델로 대체하여 TCO를 70% 절감하세요.',
-  researcher: '멀티 슈타인 강화학습 및 차세대 MoE 라우팅 논문을 분석하세요.',
 };
 
+// 배치가 넣는 key_takeaways 는 [요약, 개발자, PM, 비즈니스] 4칸이라 researcher 팁의
+// 원본이 없다. 캔 문구를 채우면 전 기사가 같은 문장을 달게 되므로, 5번째 항목이
+// 실제로 들어온 기사에만 researcher 를 싣고 없으면 필드를 생략한다(프론트에서 optional).
 function resolveInsight(takeaways: any[]) {
-  const pick = (i: number, fallback: string) => {
+  const pick = (i: number) => {
     const value = Array.isArray(takeaways) && typeof takeaways[i] === 'string' ? takeaways[i].trim() : '';
-    return value || fallback;
+    return value;
   };
+  const researcher = pick(4);
   return {
-    developer: pick(1, CANNED_INSIGHT.developer),
-    pm: pick(2, CANNED_INSIGHT.pm),
-    business: pick(3, CANNED_INSIGHT.business),
-    researcher: CANNED_INSIGHT.researcher,
+    developer: pick(1) || CANNED_INSIGHT.developer,
+    pm: pick(2) || CANNED_INSIGHT.pm,
+    business: pick(3) || CANNED_INSIGHT.business,
+    ...(researcher ? { researcher } : {}),
   };
 }
 
@@ -135,7 +149,67 @@ function classifyLenses(title: string, summary: string, sourceName: string, cate
   return selected;
 }
 
-export default {
+// ─── 기사 직렬화 ─────────────────────────────────────────────────────────────
+// pulse 목록과 단건 조회가 같은 표현을 내려야 한다. 예전에는 두 핸들러가 같은 50여 줄을
+// 각자 들고 있어 한쪽만 고치면 조용히 갈라졌다.
+//
+// trend_news 실제 컬럼은 id/title/report_type/executive_summary/analytical_deep_dive/
+// key_takeaways/original_sources/created_at/tags/matched_lenses/image_url 뿐이다.
+// source_name·multi_sources·primary_topic·is_synthesized 를 읽던 분기는 항상 undefined
+// 였으므로 제거했다.
+export function buildArticle(n: any) {
+  let takeaways: any[] = [];
+  let sources: any[] = [];
+  let tags = ["#AITrend", "#DeepSeek", "#Anthropic", "#SOTA"];
+
+  try { takeaways = JSON.parse(n.key_takeaways || '[]'); } catch {}
+  try { sources = JSON.parse(n.original_sources || '[]'); } catch {}
+  if (n.tags) { try { tags = JSON.parse(n.tags); } catch {} }
+
+  // ✅ 항상 실시간 재분류 (DB 저장 렌즈 무시 → 탭 중복 방지)
+  const summaryText = (Array.isArray(takeaways) ? takeaways.join(' ') : (typeof takeaways === 'string' ? takeaways : '')) || n.executive_summary || '';
+  const matched_lenses = classifyLenses(n.title || '', summaryText, sources[0]?.title || '', n.report_type || '');
+
+  // 교차 검증된 기사인지는 실제로 묶인 출처 수로만 판단한다. 제목 문자열 추측이나
+  // 존재하지 않는 is_synthesized 컬럼을 보던 분기는 전부 참이 되어 배지가 무의미했다.
+  const is_synthesized = sources.length >= 2;
+  if (is_synthesized && !matched_lenses.includes('synthesized')) matched_lenses.push('synthesized');
+
+  return {
+    id: n.id,
+    title: n.title,
+    source_name: sources[0]?.title || "AI Engineering Lab",
+    source_url: sources[0]?.url || "https://ai-compass.org",
+    published_at: n.created_at || new Date().toISOString(),
+    category: n.report_type || "심층 리포트",
+    image_url: resolveImage(n),
+    summary_bullets: resolveSummary(takeaways, n.executive_summary),
+    blog_summary: n.analytical_deep_dive,
+    actionable_insight: resolveInsight(takeaways),
+    impact_score: impactScore(n, sources),
+    tags,
+    matched_lenses,
+    is_synthesized,
+    multi_sources: is_synthesized
+      ? sources.map((s: any) => ({ name: s.title || s.name || "AI Source", url: s.url || "" }))
+      : undefined,
+  };
+}
+
+// 출처 개수와 신선도로만 만드는 값이다. DB에 별도 지표가 없어 리터럴 98을 박아두었더니
+// 전 기사가 같은 점수를 달고 나갔다. 진짜 영향도 지표가 생기면 이 함수를 갈아끼운다.
+// ponytail: 출처 수 + 신선도 휴리스틱. 실제 영향도 신호가 생기면 교체.
+export function impactScore(n: any, sources: any[]): number {
+  const richness = Math.min(sources.length, 5) * 6;          // 0 ~ 30
+  const ageHours = (Date.now() - Date.parse(n?.created_at || '')) / 3_600_000;
+  const freshness = !Number.isFinite(ageHours) ? 0 : ageHours <= 24 ? 10 : ageHours <= 72 ? 5 : 0;
+  return Math.min(60 + richness + freshness, 100);
+}
+
+export default Sentry.withSentry(
+  // SENTRY_DSN 미설정 시 SDK no-op (에러 전송 없음)
+  (env: Env) => ({ dsn: env.SENTRY_DSN, tracesSampleRate: 0 }),
+  {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
 
@@ -168,7 +242,7 @@ export default {
           headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
         });
       } catch (err: any) {
-        return new Response(JSON.stringify({ error: err.message }), { status: 500, headers: { 'Access-Control-Allow-Origin': '*' } });
+        return fail(err);
       }
     }
 
@@ -182,7 +256,7 @@ export default {
           headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
         });
       } catch (err: any) {
-        return new Response(JSON.stringify({ error: err.message }), { status: 500, headers: { 'Access-Control-Allow-Origin': '*' } });
+        return fail(err);
       }
     }
 
@@ -194,7 +268,7 @@ export default {
           headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
         });
       } catch (err: any) {
-        return new Response(JSON.stringify({ error: err.message }), { status: 500, headers: { 'Access-Control-Allow-Origin': '*' } });
+        return fail(err);
       }
     }
 
@@ -265,7 +339,7 @@ export default {
           top_news: topNews.results,
         }), { headers: { 'Content-Type': 'application/json' } });
       } catch (err: any) {
-        return new Response(JSON.stringify({ error: err.message }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+        return fail(err);
       }
     }
 
@@ -309,10 +383,7 @@ export default {
           },
         });
       } catch (err: any) {
-        return new Response(JSON.stringify({ error: err.message }), {
-          status: 500,
-          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-        });
+        return fail(err);
       }
     }
 
@@ -349,10 +420,7 @@ export default {
           },
         });
       } catch (err: any) {
-        return new Response(JSON.stringify({ error: err.message }), {
-          status: 500,
-          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-        });
+        return fail(err);
       }
     }
 
@@ -362,64 +430,7 @@ export default {
         const targetLens = url.searchParams.get('lens');
         const { results } = await env.DB.prepare('SELECT * FROM trend_news ORDER BY created_at DESC').all();
 
-        let articles = results.map((n: any) => {
-          let takeaways: any[] = [];
-          let sources: any[] = [];
-          let tags = ["#AITrend", "#DeepSeek", "#Anthropic", "#SOTA"];
-
-          try { takeaways = JSON.parse(n.key_takeaways || '[]'); } catch {}
-          try { sources = JSON.parse(n.original_sources || '[]'); } catch {}
-          if (n.tags) { try { tags = JSON.parse(n.tags); } catch {} }
-
-          // ✅ 항상 실시간 재분류 (DB 저장 렌즈 무시 → 탭 중복 방지)
-          const summaryText = (Array.isArray(takeaways) ? takeaways.join(' ') : (typeof takeaways === 'string' ? takeaways : '')) || n.executive_summary || '';
-          const matched_lenses = classifyLenses(
-            n.title || '',
-            summaryText,
-            sources[0]?.title || n.source_name || '',
-            n.report_type || ''
-          );
-
-          const is_synthesized = Boolean(
-            n.is_synthesized === 1 ||
-            n.is_synthesized === true ||
-            n.report_type?.includes('융합') ||
-            n.title?.includes('다중 소스 융합') ||
-            n.title?.includes('다중소스') ||
-            (n.id && String(n.id).includes('synth')) ||
-            (sources && sources.length >= 2)
-          );
-
-          if (is_synthesized && !matched_lenses.includes('synthesized')) {
-            matched_lenses.push('synthesized');
-          }
-
-          let multi_sources = undefined;
-          if (sources && sources.length >= 2) {
-            multi_sources = sources.map((s: any) => ({ name: s.title || s.name || "AI Source", url: s.url || "" }));
-          } else if (n.multi_sources) {
-            try { multi_sources = JSON.parse(n.multi_sources); } catch {}
-          }
-
-          return {
-            id: n.id,
-            title: n.title,
-            source_name: sources[0]?.title || (is_synthesized ? "다중 미디어 교차 검증단" : "AI Engineering Lab"),
-            source_url: sources[0]?.url || "https://ai-compass.org",
-            published_at: n.created_at || new Date().toISOString(),
-            category: is_synthesized ? "🔮 다중 소스 융합 블로그" : (n.report_type || "심층 리포트"),
-            image_url: resolveImage(n),
-            summary_bullets: resolveSummary(takeaways, n.executive_summary),
-            blog_summary: n.analytical_deep_dive,
-            actionable_insight: resolveInsight(takeaways),
-            impact_score: 98,
-            tags,
-            matched_lenses,
-            is_synthesized,
-            multi_sources,
-            primary_topic: n.primary_topic || (is_synthesized ? "Multi-Source Synthesis" : undefined)
-          };
-        });
+        let articles = results.map((n: any) => buildArticle(n));
 
         if (targetLens && targetLens !== 'all' && targetLens !== 'new') {
           if (targetLens === 'synthesized') {
@@ -441,10 +452,7 @@ export default {
           },
         });
       } catch (err: any) {
-        return new Response(JSON.stringify({ error: err.message }), {
-          status: 500,
-          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-        });
+        return fail(err);
       }
     }
 
@@ -459,62 +467,7 @@ export default {
           });
         }
 
-        let takeaways: any[] = [];
-        let sources: any[] = [];
-        let tags = ["#AITrend", "#DeepSeek", "#Anthropic", "#SOTA"];
-
-        try { takeaways = JSON.parse(n.key_takeaways || '[]'); } catch {}
-        try { sources = JSON.parse(n.original_sources || '[]'); } catch {}
-        if (n.tags) { try { tags = JSON.parse(n.tags); } catch {} }
-
-        // ✅ 항상 실시간 재분류 (DB 저장 렌즈 무시 → 탭 중복 방지)
-        const summaryText2 = (Array.isArray(takeaways) ? takeaways.join(' ') : (typeof takeaways === 'string' ? takeaways : '')) || n.executive_summary || '';
-        const matched_lenses = classifyLenses(
-          n.title || '',
-          summaryText2,
-          sources[0]?.title || n.source_name || '',
-          n.report_type || ''
-        );
-
-        const is_synthesized = Boolean(
-          n.is_synthesized === 1 ||
-          n.is_synthesized === true ||
-          n.report_type?.includes('융합') ||
-          n.title?.includes('다중 소스 융합') ||
-          n.title?.includes('다중소스') ||
-          (n.id && String(n.id).includes('synth')) ||
-          (sources && sources.length >= 2)
-        );
-
-        if (is_synthesized && !matched_lenses.includes('synthesized')) {
-          matched_lenses.push('synthesized');
-        }
-
-        let multi_sources = undefined;
-        if (sources && sources.length >= 2) {
-          multi_sources = sources.map((s: any) => ({ name: s.title || s.name || "AI Source", url: s.url || "" }));
-        } else if (n.multi_sources) {
-          try { multi_sources = JSON.parse(n.multi_sources); } catch {}
-        }
-
-        const article = {
-          id: n.id,
-          title: n.title,
-          source_name: sources[0]?.title || (is_synthesized ? "다중 미디어 교차 검증단" : "AI Engineering Lab"),
-          source_url: sources[0]?.url || "https://ai-compass.org",
-          published_at: n.created_at || new Date().toISOString(),
-          category: is_synthesized ? "🔮 다중 소스 융합 블로그" : (n.report_type || "심층 리포트"),
-          image_url: resolveImage(n),
-          summary_bullets: resolveSummary(takeaways, n.executive_summary),
-          blog_summary: n.analytical_deep_dive,
-          actionable_insight: resolveInsight(takeaways),
-          impact_score: 98,
-          tags,
-          matched_lenses,
-          is_synthesized,
-          multi_sources,
-          primary_topic: n.primary_topic || (is_synthesized ? "Multi-Source Synthesis" : undefined)
-        };
+        const article = buildArticle(n);
 
         return new Response(JSON.stringify(article), {
           headers: {
@@ -524,14 +477,12 @@ export default {
           },
         });
       } catch (err: any) {
-        return new Response(JSON.stringify({ error: err.message }), {
-          status: 500,
-          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-        });
+        return fail(err);
       }
     }
 
     // Fallthrough to Static Assets (Frontend)
     return env.ASSETS.fetch(request);
   },
-};
+  },
+);
