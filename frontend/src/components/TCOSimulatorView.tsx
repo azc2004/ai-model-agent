@@ -95,10 +95,11 @@ export const TCOSimulatorView: React.FC<TCOSimulatorViewProps> = ({ models }) =>
 
           {/* 1단계: 프로바이더 (공급자) 선택 */}
           <div>
-            <label className="block text-xs font-black text-slate-700 dark:text-slate-300 mb-1.5">
+            <label htmlFor="tco-provider" className="block text-xs font-black text-slate-700 dark:text-slate-300 mb-1.5">
               1단계: 프로바이더 (공급자) 선택
             </label>
             <select
+              id="tco-provider"
               value={selectedProvider}
               onChange={(e) => handleProviderChange(e.target.value)}
               className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-900 dark:text-white font-extrabold focus:outline-none focus:border-cyan-500 cursor-pointer shadow-sm"
@@ -115,7 +116,7 @@ export const TCOSimulatorView: React.FC<TCOSimulatorViewProps> = ({ models }) =>
           {/* 2단계: AI 모델 선택 */}
           <div>
             <div className="flex justify-between items-center mb-1.5">
-              <label className="block text-xs font-black text-slate-700 dark:text-slate-300">
+              <label htmlFor="tco-model" className="block text-xs font-black text-slate-700 dark:text-slate-300">
                 2단계: AI 모델 선택
               </label>
               <span className="text-[11px] text-cyan-600 dark:text-cyan-400 font-extrabold">
@@ -123,6 +124,7 @@ export const TCOSimulatorView: React.FC<TCOSimulatorViewProps> = ({ models }) =>
               </span>
             </div>
             <select
+              id="tco-model"
               value={selectedModelId}
               onChange={(e) => setSelectedModelId(e.target.value)}
               className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm text-cyan-700 dark:text-cyan-300 font-black focus:outline-none focus:border-cyan-500 cursor-pointer shadow-sm"
@@ -142,6 +144,7 @@ export const TCOSimulatorView: React.FC<TCOSimulatorViewProps> = ({ models }) =>
               <span className="font-mono text-cyan-600 dark:text-cyan-400 font-black text-sm">{inputTokensMillions}M</span>
             </div>
             <input
+              aria-label={t.tco.inputTokens}
               type="range"
               min="5"
               max="2000"
@@ -159,6 +162,7 @@ export const TCOSimulatorView: React.FC<TCOSimulatorViewProps> = ({ models }) =>
               <span className="font-mono text-cyan-600 dark:text-cyan-400 font-black text-sm">{outputTokensMillions}M</span>
             </div>
             <input
+              aria-label={t.tco.outputTokens}
               type="range"
               min="1"
               max="500"

@@ -1,4 +1,5 @@
 import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { API_BASE_URL } from '../api';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import { AdminApp } from './AdminApp';
@@ -26,14 +27,14 @@ test('renders KPI totals from the summary endpoint', async () => {
   render(<AdminApp />);
   await waitFor(() => expect(screen.getByText('총 이벤트')).toBeInTheDocument());
   expect(screen.getByText('순 방문 세션')).toBeInTheDocument();
-  expect(fetch).toHaveBeenCalledWith('/api/v1/admin/analytics/summary?days=7');
+  expect(fetch).toHaveBeenCalledWith(`${API_BASE_URL}/admin/analytics/summary?days=7`);
 });
 
 test('re-fetches when the date range changes', async () => {
   render(<AdminApp />);
   await waitFor(() => expect(screen.getByText('총 이벤트')).toBeInTheDocument());
   await userEvent.click(screen.getByRole('button', { name: '최근 30일' }));
-  await waitFor(() => expect(fetch).toHaveBeenLastCalledWith('/api/v1/admin/analytics/summary?days=30'));
+  await waitFor(() => expect(fetch).toHaveBeenLastCalledWith(`${API_BASE_URL}/admin/analytics/summary?days=30`));
 });
 
 test('shows a readable message on 401', async () => {

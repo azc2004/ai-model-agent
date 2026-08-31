@@ -836,7 +836,7 @@ ${article.summary_bullets?.join(' ') || article.title} 소식의 핵심은 기�
 * **👩‍💻 개발자/엔지니어**: ${article.actionable_insight?.developer || '신규 API 엔드포인트 및 가드레일 모듈을 사내 시스템 단에 이식하여 자동 테스트 파이프라인을 구축하세요.'}
 * **💡 기획자/PM**: ${article.actionable_insight?.pm || '사용자가 복잡한 입력을 하지 않아도 결과가 완성되는 Goal-driven 자율 인터랙션 UI를 서비스 로드맵에 우선 반영하세요.'}
 * **💼 비즈니스 리더**: ${article.actionable_insight?.business || '온프레미스 인프라와 상용 API 간의 비용 효율성을 산출하여 클라우드 TCO 절감 계획을 즉시 수립하세요.'}
-* **🔬 연구자/학계**: ${article.actionable_insight?.researcher || 'SOTA 추론 메커니즘과 새로운 벤치마크 평가 지표를 벤치마킹하여 연구 파이프라인에 검토 적용하세요.'}
+${article.actionable_insight?.researcher ? `* **🔬 연구자/학계**: ${article.actionable_insight.researcher}` : ''}
 
 ---
 

@@ -2,20 +2,33 @@ import * as Sentry from '@sentry/cloudflare';
 import { PROVIDERS, GPU_SPECS, TRENDING_TEMPLATES } from './data';
 import { calculateTCO } from './tco';
 import { recommendArchitecture, generateMarkdown } from './llm';
+import { ClientError } from './errors';
 export interface Env {
   DB: D1Database;
   ASSETS: Fetcher;
   ADMIN_PASSWORD?: string;
   SENTRY_DSN?: string;
+  TRACK_LIMITER: { limit(o: { key: string }): Promise<{ success: boolean }> };
 }
 
-/** 500 공통 응답 + Sentry 보고. */
+const JSON_CORS = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' };
+
+/**
+ * 공통 에러 응답 + Sentry 보고.
+ * 잘못된 요청까지 500 으로 돌려주면 실제 장애와 구분이 안 되고 알림이 오염된다.
+ * 서버 오류일 때 err.message 를 그대로 실으면 내부 구현(파서 위치, 쿼리문)이 새어나가므로
+ * 상세는 Sentry 로만 보내고 응답은 고정 문구를 쓴다.
+ */
 function fail(err: any): Response {
+  if (err instanceof ClientError) {
+    return new Response(JSON.stringify({ error: err.message }), { status: err.status, headers: JSON_CORS });
+  }
+  // request.json() 이 본문 파싱에 실패하면 SyntaxError 를 던진다 — 이것도 클라이언트 잘못이다.
+  if (err instanceof SyntaxError) {
+    return new Response(JSON.stringify({ error: 'Request body is not valid JSON' }), { status: 400, headers: JSON_CORS });
+  }
   Sentry.captureException(err);
-  return new Response(JSON.stringify({ error: err.message }), {
-    status: 500,
-    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-  });
+  return new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500, headers: JSON_CORS });
 }
 
 // ─── 어드민 인증 ─────────────────────────────────────────────────────────────
@@ -285,6 +298,11 @@ export default Sentry.withSentry(
     // ─── 익명 사용 로그 수집 ────────────────────────────────────────────────
     if (url.pathname === '/api/v1/analytics/track' && request.method === 'POST') {
       const EVENT_TYPES = new Set(['page_view', 'search', 'compare_add', 'compare_remove', 'external_link_click', 'news_open']);
+      // 인증이 없는 엔드포인트라 클라이언트가 보내는 session_id 로는 제한이 무의미하다
+      // (그냥 새로 만들면 된다). 실제 비용을 유발하는 주체인 IP 로 제한한다.
+      const rateKey = request.headers.get('CF-Connecting-IP') || 'unknown';
+      const { success } = await env.TRACK_LIMITER.limit({ key: rateKey });
+      if (!success) return new Response(null, { status: 429, headers: { 'Access-Control-Allow-Origin': '*' } });
       try {
         const body: any = await request.json();
         const eventType = String(body.event_type || '');

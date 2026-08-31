@@ -39,3 +39,10 @@ persist = false
 enabled = true
 destinations = ["grafana-logs"]
 persist = false
+
+# 익명 수집 엔드포인트는 인증이 없어 누구나 D1 쓰기를 유발할 수 있다.
+# 앱 코드로 카운터를 만드는 대신 플랫폼 레이트 리미터를 쓴다.
+[[ratelimits]]
+name = "TRACK_LIMITER"
+namespace_id = "1001"
+simple = { limit = 60, period = 60 }

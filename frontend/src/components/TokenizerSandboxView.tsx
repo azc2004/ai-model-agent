@@ -167,6 +167,7 @@ export const TokenizerSandboxView: React.FC<TokenizerSandboxViewProps> = ({
                 <span className="text-indigo-600 dark:text-cyan-400 font-extrabold">{outputTokenEstimate.toLocaleString()} tokens</span>
               </div>
               <input
+                aria-label="예상 출력 토큰"
                 type="range"
                 min={50}
                 max={4096}
@@ -249,6 +250,7 @@ export const TokenizerSandboxView: React.FC<TokenizerSandboxViewProps> = ({
               className="bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-900 dark:text-slate-100 font-bold focus:outline-none focus:border-indigo-500 shadow-sm"
             />
             <select
+              aria-label="모델 등급 필터"
               value={filterTier}
               onChange={(e) => setFilterTier(e.target.value)}
               className="bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-900 dark:text-slate-100 font-bold focus:outline-none focus:border-indigo-500 cursor-pointer shadow-sm"

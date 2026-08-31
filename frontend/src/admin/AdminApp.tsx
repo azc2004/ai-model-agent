@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { API_BASE_URL } from '../api';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface CountRow { label: string; count: number }
@@ -57,7 +58,7 @@ export const AdminApp: React.FC = () => {
     let cancelled = false;
     setLoading(true);
     setError(null);
-    fetch(`/api/v1/admin/analytics/summary?days=${days}`)
+    fetch(`${API_BASE_URL}/admin/analytics/summary?days=${days}`)
       .then((res) => {
         if (res.status === 401) throw new Error('인증이 필요합니다. 페이지를 새로고침해 로그인하세요.');
         if (!res.ok) throw new Error(`서버 오류 (${res.status})`);

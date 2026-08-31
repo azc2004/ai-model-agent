@@ -19,6 +19,14 @@ const NewsPulseView = lazy(() => import('./components/NewsPulseView'));
 const TokenizerSandboxView = lazy(() => import('./components/TokenizerSandboxView').then((module) => ({ default: module.TokenizerSandboxView })));
 const SpeedMonitorView = lazy(() => import('./components/SpeedMonitorView').then((module) => ({ default: module.SpeedMonitorView })));
 
+/** 검색어가 모델/프로바이더 이름에 실제로 걸리는지. 걸리지 않으면 서버로 보내지 않는다. */
+export function matchesCatalog(term: string, models: ModelSpec[], providers: Provider[]): boolean {
+  const needle = term.toLowerCase();
+  if (needle.length < 2) return false;
+  return models.some((m) => m.name?.toLowerCase().includes(needle) || m.provider_name?.toLowerCase().includes(needle))
+    || providers.some((p) => p.name?.toLowerCase().includes(needle));
+}
+
 export const AppContent: React.FC = () => {
   // URL query parameter ?tab= 및 ?article= 파싱으로 북마크/즐겨찾기 라우팅 초기화
   const getInitialTab = (): AppTab => {
@@ -49,8 +57,13 @@ export const AppContent: React.FC = () => {
       setActiveTab('dashboard');
     }
     clearTimeout(searchTrackTimer.current);
-    if (query.trim()) {
-      searchTrackTimer.current = setTimeout(() => track('search', { label: query.trim() }), 600);
+    const term = query.trim();
+    if (term) {
+      // 검색창은 자유 입력이라 원문을 그대로 올리면 PII 가 섞인 채 어드민 '인기 검색어'에
+      // 그대로 뜬다. 카탈로그에 실제로 걸리는 말만 라벨로 보내면 통계 가치는 유지하면서
+      // 아무렇게나 입력한 문자열은 브라우저 밖으로 나가지 않는다.
+      const label = matchesCatalog(term, models, providers) ? term : undefined;
+      searchTrackTimer.current = setTimeout(() => track('search', { label }), 600);
     }
   };
 

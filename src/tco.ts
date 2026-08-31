@@ -1,10 +1,11 @@
 import type { TCOInput, TCOComparisonResult, ModelSpec } from '../frontend/src/types';
+import { ClientError } from './errors';
 import { GPU_SPECS } from './data';
 
 export function calculateTCO(tcoInput: TCOInput, models: ModelSpec[]): TCOComparisonResult {
   const model = models.find(m => m.id === tcoInput.target_model_id);
   if (!model) {
-    throw new Error(`Model ID '${tcoInput.target_model_id}' not found`);
+    throw new ClientError(`Model ID '${tcoInput.target_model_id}' not found`, 404);
   }
 
   const input_m = tcoInput.monthly_input_tokens_m;

@@ -157,7 +157,7 @@ export const SpeedMonitorView: React.FC = () => {
           <h3 className="text-sm font-black text-slate-900 dark:text-white px-1">
             🏆 최적 인프라 서빙 랭킹 (Infrastructure Rank)
           </h3>
-          <div className="space-y-3 max-h-80 overflow-y-auto pr-1">
+          <div tabIndex={0} className="space-y-3 max-h-80 overflow-y-auto pr-1">
             {sortedData.map((p, idx) => (
               <div
                 key={p.provider}

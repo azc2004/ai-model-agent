@@ -203,6 +203,7 @@ export const TutorialView: React.FC = () => {
               </p>
               <div className="bg-slate-950 p-4 rounded-2xl font-mono text-xs text-emerald-400 border border-slate-800 relative">
                 <button
+                  aria-label="복사"
                   onClick={() => handleCopy(`mkdir -p .claude/skills/deploy_production .claude/skills/security_review .claude/subagents`, 'cmd_tree')}
                   className="absolute top-3 right-3 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition-all flex items-center gap-1"
                 >
@@ -237,13 +238,14 @@ export const TutorialView: React.FC = () => {
               </p>
               <div className="bg-slate-950 p-5 rounded-2xl font-mono text-xs text-slate-200 border border-slate-800 relative">
                 <button
+                  aria-label="복사"
                   onClick={() => handleCopy(`---\nname: deploy_production\ndescription: 빌드 검증 후 한국어 커밋 메시지로 main 브랜치 자동 배포\n---\n\n# Deploy Production Skill Directive\n1. Run \`npm run build\` or \`pytest\` to verify zero build errors.\n2. Formulate a concise Korean commit message adhering to conventions (feat/fix/chore).\n3. Stage all files with \`git add -A\`.\n4. Commit and push to remote \`main\` branch.`, 'code_skill_deploy')}
                   className="absolute top-4 right-4 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition-all flex items-center gap-1.5 shadow-md"
                 >
                   {copiedId === 'code_skill_deploy' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                   {copiedId === 'code_skill_deploy' ? '복사 완료!' : '스킬 코드 복사'}
                 </button>
-                <pre className="text-[11px] leading-relaxed text-emerald-400 pt-6 overflow-x-auto">
+                <pre tabIndex={0} className="text-[11px] leading-relaxed text-emerald-400 pt-6 overflow-x-auto">
 {`---
 name: deploy_production
 description: 빌드 검증 후 한국어 커밋 메시지로 main 브랜치 자동 배포
@@ -270,6 +272,7 @@ description: 빌드 검증 후 한국어 커밋 메시지로 main 브랜치 자�
               <div className="bg-slate-900 text-indigo-300 p-4 rounded-xl font-mono text-xs flex items-center justify-between border border-slate-800">
                 <span>claude mcp add codebase-memory npx -y @modelcontextprotocol/server-codebase-memory</span>
                 <button
+                  aria-label="복사"
                   onClick={() => handleCopy("claude mcp add codebase-memory npx -y @modelcontextprotocol/server-codebase-memory", "cmd_mcp_add")}
                   className="p-2 rounded-lg bg-indigo-600 text-white font-bold hover:bg-indigo-500"
                 >
@@ -303,13 +306,14 @@ description: 빌드 검증 후 한국어 커밋 메시지로 main 브랜치 자�
             </h3>
             <div className="bg-slate-950 p-5 rounded-2xl font-mono text-xs text-slate-200 border border-slate-800 relative">
               <button
+                aria-label="복사"
                 onClick={() => handleCopy(`agent_pipeline:\n  mode: autonomous\n  guardrails:\n    strict_types: true\n    prevent_oom: true\nskills:\n  - name: deploy_production\n    path: .claude/skills/deploy_production/SKILL.md`, 'code_antigravity')}
                 className="absolute top-4 right-4 px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs transition-all flex items-center gap-1.5"
               >
                 {copiedId === 'code_antigravity' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                 directives.yaml 코드 복사
               </button>
-              <pre className="text-[11px] leading-relaxed text-indigo-300 pt-6 overflow-x-auto">
+              <pre tabIndex={0} className="text-[11px] leading-relaxed text-indigo-300 pt-6 overflow-x-auto">
 {`agent_pipeline:
   mode: autonomous
   guardrails:
@@ -346,13 +350,14 @@ skills:
             </h3>
             <div className="bg-slate-950 p-5 rounded-2xl font-mono text-xs text-slate-200 border border-slate-800 relative">
               <button
+                aria-label="복사"
                 onClick={() => handleCopy(`# [Rule: No Superfluous Dependencies]\n1. Never install external libraries for date/string formatting.\n2. Ensure PEP 8 for Python & strict TypeScript types.\n3. Include Retry with exponential backoff on DB deadlock.`, 'code_cursorrules')}
                 className="absolute top-4 right-4 px-3.5 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs transition-all flex items-center gap-1.5"
               >
                 {copiedId === 'code_cursorrules' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                 .cursorrules 복사
               </button>
-              <pre className="text-[11px] leading-relaxed text-cyan-300 pt-6 overflow-x-auto">
+              <pre tabIndex={0} className="text-[11px] leading-relaxed text-cyan-300 pt-6 overflow-x-auto">
 {`# [Rule: No Superfluous Dependencies]
 1. Never install external libraries for date/string formatting.
 2. Ensure PEP 8 for Python & strict TypeScript types.
@@ -385,13 +390,14 @@ skills:
             </h3>
             <div className="bg-slate-950 p-5 rounded-2xl font-mono text-xs text-slate-200 border border-slate-800 relative">
               <button
+                aria-label="복사"
                 onClick={() => handleCopy(`from autogen_agentchat.agents import AssistantAgent\nfrom autogen_agentchat.teams import SelectorGroupChat\n\nplanner = AssistantAgent("planner", model_client=model_client, description="오케스트레이터 기획 에이전트")\ncoder = AssistantAgent("coder", model_client=model_client, description="코드 구현 서브 에이전트")\nreviewer = AssistantAgent("reviewer", model_client=model_client, description="보안 및 품질 검사 서브 에이전트")\n\nteam = SelectorGroupChat([planner, coder, reviewer], model_client=model_client)`, 'code_autogen')}
                 className="absolute top-4 right-4 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-all flex items-center gap-1.5"
               >
                 {copiedId === 'code_autogen' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                 Python 코드 복사
               </button>
-              <pre className="text-[11px] leading-relaxed text-emerald-400 pt-6 overflow-x-auto">
+              <pre tabIndex={0} className="text-[11px] leading-relaxed text-emerald-400 pt-6 overflow-x-auto">
 {`from autogen_agentchat.agents import AssistantAgent
 from autogen_agentchat.teams import SelectorGroupChat
 

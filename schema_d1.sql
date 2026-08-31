@@ -57,7 +57,11 @@ CREATE TABLE IF NOT EXISTS trend_news (
   key_takeaways TEXT,
   original_sources TEXT,
   created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-  image_url TEXT
+  image_url TEXT,
+  -- 뉴스 배치가 채우는 컬럼. 원격 DB에는 ALTER TABLE 로 뒤늦게 붙어 이 파일과 어긋나
+  -- 있었고, 이 스키마로 DB를 새로 만들면 배치가 깨졌다.
+  tags TEXT,
+  matched_lenses TEXT
 );
 
 CREATE INDEX IF NOT EXISTS idx_models_provider ON models(provider_id);

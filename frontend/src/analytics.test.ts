@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { API_BASE_URL } from './api';
 import { track } from './analytics';
 
 describe('analytics.track', () => {
@@ -18,7 +19,7 @@ describe('analytics.track', () => {
   it('posts to the tracking endpoint with the session id and event type', () => {
     track('search', { label: 'gpt-4' });
     expect(fetch).toHaveBeenCalledWith(
-      '/api/v1/analytics/track',
+      `${API_BASE_URL}/analytics/track`,
       expect.objectContaining({ method: 'POST', keepalive: true })
     );
     const body = JSON.parse((fetch as any).mock.calls[0][1].body);

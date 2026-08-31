@@ -694,8 +694,9 @@ export const ArchitectureAdvisor: React.FC = () => {
           {/* 3-Column Fine-Tuning Controls */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-3 border-t border-slate-200 dark:border-slate-800">
             <div>
-              <label className="block font-bold mb-1.5 text-slate-900 dark:text-slate-200">서비스 유형</label>
+              <label htmlFor="advisor-service-type" className="block font-bold mb-1.5 text-slate-900 dark:text-slate-200">서비스 유형</label>
               <select
+                id="advisor-service-type"
                 value={serviceType}
                 onChange={(e) => setServiceType(e.target.value)}
                 className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-bold focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer text-xs sm:text-sm"
@@ -714,6 +715,7 @@ export const ArchitectureAdvisor: React.FC = () => {
                 <span className="text-indigo-600 dark:text-indigo-400 font-extrabold">{monthlyRequests.toLocaleString()} 회</span>
               </div>
               <input
+                aria-label="월간 예상 요청 수"
                 type="range"
                 min="10000"
                 max="1000000"
