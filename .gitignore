@@ -47,3 +47,8 @@ Thumbs.db
 # Logs
 *.log
 logs/
+
+# Wrangler 로컬 상태 (실행할 때마다 바뀐다)
+# - cache/wrangler-account.json 은 Cloudflare 계정 ID·계정명을 담는다
+# - state/v3/**/*.sqlite-{shm,wal} 은 miniflare D1 에뮬레이터 상태다
+.wrangler/
