@@ -83,7 +83,7 @@ export async function fetchGPUSpecs(): Promise<GPUSpec[]> {
       tensor_cores: 528,
       form_factor: "SXM5",
       nvlink: true,
-      recommended_use: "초대형 LLM(70B+) 학습 · Mixture-of-Experts 풀스케일 추론 · 국가급 AI 인프라"
+      recommended_use: "useH200"
     },
     {
       id: "gh200",
@@ -101,7 +101,7 @@ export async function fetchGPUSpecs(): Promise<GPUSpec[]> {
       tensor_cores: 528,
       form_factor: "SXM5 + Grace CPU",
       nvlink: true,
-      recommended_use: "CPU-GPU 통합 초저지연 추론 · HPC 워크로드 · 멀티모달 대규모 서빙"
+      recommended_use: "useGH200"
     },
     {
       id: "h100-sxm",
@@ -119,7 +119,7 @@ export async function fetchGPUSpecs(): Promise<GPUSpec[]> {
       tensor_cores: 528,
       form_factor: "SXM5",
       nvlink: true,
-      recommended_use: "GPT-4급 학습 · Batch 대규모 추론 · AI 스타트업 핵심 인프라"
+      recommended_use: "useH100"
     },
     {
       id: "h100-pcie",
@@ -137,7 +137,7 @@ export async function fetchGPUSpecs(): Promise<GPUSpec[]> {
       tensor_cores: 528,
       form_factor: "PCIe 5.0",
       nvlink: false,
-      recommended_use: "온프레미스 서버 랙 설치 · 멀티 GPU 클러스터 구성 · 중규모 추론 서빙"
+      recommended_use: "useL40S"
     },
     {
       id: "a100-80gb",
@@ -155,7 +155,7 @@ export async function fetchGPUSpecs(): Promise<GPUSpec[]> {
       tensor_cores: 432,
       form_factor: "SXM4",
       nvlink: true,
-      recommended_use: "검증된 엔터프라이즈 추론 · Llama2 70B 4-bit 서빙 · 가성비 클라우드 배치"
+      recommended_use: "useA100"
     },
     {
       id: "l40s",
@@ -173,7 +173,7 @@ export async function fetchGPUSpecs(): Promise<GPUSpec[]> {
       tensor_cores: 568,
       form_factor: "PCIe 4.0",
       nvlink: false,
-      recommended_use: "Real-time Agentic 추론 · 미드사이즈 LLM 서빙 · 그래픽 + AI 혼합 워크로드"
+      recommended_use: "useL4"
     },
     // ─── 🔬 프로슈머 / 워크스테이션 (Prosumer / Workstation) ────────────────────
     {
@@ -190,9 +190,9 @@ export async function fetchGPUSpecs(): Promise<GPUSpec[]> {
       int8_tops: 182,
       cuda_cores: 18176,
       tensor_cores: 568,
-      form_factor: "PCIe 4.0 (워크스테이션)",
+      form_factor: "formPcieWorkstation",
       nvlink: false,
-      recommended_use: "로컬 Llama 70B 4-bit 실행 · 영상 생성 + LLM 동시 운용 · 개인 AI 연구실"
+      recommended_use: "useRtx6000"
     },
     {
       id: "a5000",
@@ -208,9 +208,9 @@ export async function fetchGPUSpecs(): Promise<GPUSpec[]> {
       int8_tops: 55.6,
       cuda_cores: 8192,
       tensor_cores: 256,
-      form_factor: "PCIe 4.0 (워크스테이션)",
+      form_factor: "formPcieWorkstation",
       nvlink: true,
-      recommended_use: "NVLink 듀얼 구성 48GB 확장 · 13B~34B 모델 로컬 서빙 · 3D·시뮬레이션 + AI 병행"
+      recommended_use: "useA6000"
     },
     // ─── 💻 개인용 (Consumer / Personal) ─────────────────────────────────────
     {
@@ -229,7 +229,7 @@ export async function fetchGPUSpecs(): Promise<GPUSpec[]> {
       tensor_cores: 512,
       form_factor: "PCIe 4.0 (Desktop)",
       nvlink: false,
-      recommended_use: "로컬 7B~13B 모델 빠른 추론 · LoRA 파인튜닝 · ComfyUI 이미지 생성"
+      recommended_use: "useRtx5090"
     },
     {
       id: "rtx-4080",
@@ -247,7 +247,7 @@ export async function fetchGPUSpecs(): Promise<GPUSpec[]> {
       tensor_cores: 320,
       form_factor: "PCIe 4.0 (Desktop)",
       nvlink: false,
-      recommended_use: "7B 모델 로컬 추론 · 가성비 개인 AI 서버 · Stable Diffusion XL"
+      recommended_use: "useRtx4090"
     },
     {
       id: "rtx-3090",
@@ -265,11 +265,11 @@ export async function fetchGPUSpecs(): Promise<GPUSpec[]> {
       tensor_cores: 328,
       form_factor: "PCIe 4.0 (Desktop)",
       nvlink: true,
-      recommended_use: "중고 가성비 최강 · 13B 모델 로컬 서빙 · NVLink 듀얼로 48GB 구성"
+      recommended_use: "useRtx3090"
     },
     {
       id: "m4-ultra",
-      name: "Apple M4 Ultra (128GB 통합메모리)",
+      name: "nameM4Ultra",
       tier: "prosumer",
       vram_gb: 128,
       memory_bandwidth_gbps: 800,
@@ -281,9 +281,9 @@ export async function fetchGPUSpecs(): Promise<GPUSpec[]> {
       int8_tops: 109,
       cuda_cores: 0,
       tensor_cores: 0,
-      form_factor: "Mac Studio (통합메모리)",
+      form_factor: "formMacStudio",
       nvlink: false,
-      recommended_use: "초저전력 70B 4-bit 로컬 추론 · macOS AI 개발환경 · 소음 없는 홈 AI 서버"
+      recommended_use: "useM4Ultra"
     },
     {
       id: "rx-7900-xtx",
@@ -301,7 +301,7 @@ export async function fetchGPUSpecs(): Promise<GPUSpec[]> {
       tensor_cores: 0,
       form_factor: "PCIe 4.0 (Desktop)",
       nvlink: false,
-      recommended_use: "ROCm 기반 오픈소스 LLM 추론 · Ollama + llama.cpp 최적화 · 가성비 대용량 VRAM"
+      recommended_use: "useMi300"
     }
   ];
 }

@@ -68,6 +68,9 @@ const TAB_LABEL_KEY: Record<GPUTier | 'all', 'tabAll' | 'tabEnterprise' | 'tabPr
 };
 
 // ─── 퍼포먼스 바 ────────────────────────────────────────────────────────────
+// api.ts 의 GPU 목록은 표시 문자열 대신 사전 키를 담는다. 키가 아닌 값이 오면 그대로 쓴다.
+const localize = (t: any, value?: string) => (value && t.gpu[value]) || value || '';
+
 const PerfBar: React.FC<{ value: number; max: number; color: string; label: string; unit: string }> = ({ value, max, color, label, unit }) => {
   const pct = Math.min(100, (value / max) * 100);
   return (
@@ -98,10 +101,10 @@ const GPUCard: React.FC<{ gpu: GPUSpec; maxBw: number; maxFp16: number; maxInt8:
         <span className={`text-[10px] font-black px-2 py-0.5 rounded-full border w-fit ${s.badge}`}>
           {t.gpu[TIER_LABEL_KEY[gpu.tier]]}
         </span>
-        <h3 className="text-base font-black text-slate-900 dark:text-white leading-tight">{gpu.name}</h3>
+        <h3 className="text-base font-black text-slate-900 dark:text-white leading-tight">{localize(t, gpu.name)}</h3>
         <div className="flex items-center gap-2 text-[10px] text-slate-500 dark:text-slate-400 font-semibold flex-wrap">
           <span className="flex items-center gap-0.5">
-            <Layers className="w-3 h-3" />{gpu.form_factor}
+            <Layers className="w-3 h-3" />{localize(t, gpu.form_factor)}
           </span>
           {gpu.nvlink && (
             <span className="flex items-center gap-0.5 text-amber-600 dark:text-amber-400 font-bold">
@@ -192,7 +195,7 @@ const GPUCard: React.FC<{ gpu: GPUSpec; maxBw: number; maxFp16: number; maxInt8:
         <div className="font-black mb-0.5 flex items-center gap-1">
           <ChevronRight className="w-3 h-3" /> {t.gpu.recommendedUse}
         </div>
-        {gpu.recommended_use}
+        {localize(t, gpu.recommended_use)}
       </div>
 
       <div className="pt-2 border-t border-slate-200 dark:border-slate-800 text-[10px] text-slate-400 font-semibold text-center">

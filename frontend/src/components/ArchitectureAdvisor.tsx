@@ -8,16 +8,16 @@ import { API_BASE_URL } from '../api';
 import { useLanguage } from '../context/LanguageContext';
 
 const INITIAL_SAMPLE_RESULT: ArchitectureRecommendationResult = {
-  service_name: "자율 코딩 에이전트 서비스 (미리 준비된 샘플)",
+  service_name: "sampleServiceName",
   monthly_requests: 100000,
   total_monthly_input_tokens_m: 200.0,
   total_monthly_output_tokens_m: 100.0,
   combos: [
     {
       id: "smart_balanced",
-      name: "Smart Orchestrated Router (스마트 최적 추천)",
+      name: "smartRouterName",
       tag: "RECOMMENDED",
-      description: "Groq/Llama-3.3 70B 분류기 + DeepSeek-R1 메인 엔진 조합으로 비용을 60% 절감하면서도 플래그십 95% 성능 구현",
+      description: "smartRouterDesc",
       items: [
         {
           role: "Router & Classifier (70% traffic)",
@@ -38,13 +38,13 @@ const INITIAL_SAMPLE_RESULT: ArchitectureRecommendationResult = {
       ],
       total_monthly_cost: 148.30,
       avg_arena_elo: 1358,
-      key_advantages: ["API 비용 60% 절감", "평균 응답 속도 P95 < 400ms", "Circuit Breaker 자동 장애 복구"]
+      key_advantages: ["advCost60", "advP95", "advCircuit"]
     },
     {
       id: "best_quality",
-      name: "Frontier Premier Quality (최고 품질)",
+      name: "bestName",
       tag: "FRONTIER",
-      description: "복잡한 추론과 정확도가 최우선인 미션 크리티컬 서비스용 최상위 플래그십 조합",
+      description: "bestDesc",
       items: [
         {
           role: "Frontier Single Engine (100% traffic)",
@@ -57,13 +57,13 @@ const INITIAL_SAMPLE_RESULT: ArchitectureRecommendationResult = {
       ],
       total_monthly_cost: 2100.00,
       avg_arena_elo: 1365,
-      key_advantages: ["최상위 추론/코딩 성능", "단일 API로 단순한 구조", "최고 수치 Elo 랭킹"]
+      key_advantages: ["advTopReason", "advSimple", "advElo"]
     },
     {
       id: "ultra_budget",
-      name: "Open-Weight Ultra Budget (극가성비)",
+      name: "budgetName",
       tag: "BUDGET",
-      description: "오픈웨이트 모델 및 저비용 서버리스 API 위주의 구성으로 대량 쿼리 처리 시 극단의 비용 절감 달성",
+      description: "budgetDesc",
       items: [
         {
           role: "Open-Weight Engine (100% traffic)",
@@ -76,7 +76,7 @@ const INITIAL_SAMPLE_RESULT: ArchitectureRecommendationResult = {
       ],
       total_monthly_cost: 41.40,
       avg_arena_elo: 1320,
-      key_advantages: ["극단의 API 비용 절감", "대용량 처리 최적화", "Open-Weight 유연성"]
+      key_advantages: ["advExtremeSave", "advHighVolume", "advOpenFlex"]
     }
   ],
   hosting_options: [
@@ -113,7 +113,9 @@ const INITIAL_SAMPLE_RESULT: ArchitectureRecommendationResult = {
 };
 
 export const ArchitectureAdvisor: React.FC = () => {
-  const { language } = useLanguage();
+  const { language, t: g } = useLanguage();
+  // 모듈 상수(SERVICE_TEMPLATES, INITIAL_SAMPLE_RESULT)는 사전 키를 담는다.
+  const L = (v?: string) => (v && (g.advisorModal as any)[v]) || v || '';
 
   const I18N_ADVISOR: Record<string, any> = {
     ko: {
@@ -429,10 +431,10 @@ export const ArchitectureAdvisor: React.FC = () => {
     {
       id: "code_agent",
       rank: 1,
-      title: "자율 코딩 에이전트 (Code Agent)",
+      title: "tplCodeTitle",
       category: "AI Agent",
       icon: "code",
-      description: "Cursor/Claude Code처럼 코드 분석, 버그 수정 및 자동 테스트를 수행하는 에이전트",
+      description: "tplCodeDesc",
       request: {
         service_type: "code_agent",
         monthly_requests: 100000,
@@ -445,10 +447,10 @@ export const ArchitectureAdvisor: React.FC = () => {
     {
       id: "rag",
       rank: 2,
-      title: "기업용 사내 RAG 챗봇 (Enterprise RAG)",
+      title: "tplRagTitle",
       category: "Enterprise RAG",
       icon: "database",
-      description: "사내 Confluence, Notion, PDF 문서를 기반으로 정확한 지식 답변을 주는 보안 챗봇",
+      description: "tplRagDesc",
       request: {
         service_type: "rag",
         monthly_requests: 200000,
@@ -461,10 +463,10 @@ export const ArchitectureAdvisor: React.FC = () => {
     {
       id: "multimodal",
       rank: 3,
-      title: "멀티모달 24/7 고객지원 CS 봇",
+      title: "tplMultiTitle",
       category: "Multimodal CS",
       icon: "headset",
-      description: "고객이 업로드한 이미지, 영수증, 화면 캡처를 분석하여 24시간 자동 응대하는 CS 봇",
+      description: "tplMultiDesc",
       request: {
         service_type: "multimodal",
         monthly_requests: 150000,
@@ -477,10 +479,10 @@ export const ArchitectureAdvisor: React.FC = () => {
     {
       id: "translation",
       rank: 4,
-      title: "글로벌 실시간 번역 & 로컬라이제이션",
+      title: "tplTransTitle",
       category: "Translation API",
       icon: "globe",
-      description: "다국어 사용자 메시지 및 고화질 웹페이지 콘텐츠를 0.1초 내 뉘앙스 손실 없이 번역",
+      description: "tplTransDesc",
       request: {
         service_type: "translation",
         monthly_requests: 500000,
@@ -493,10 +495,10 @@ export const ArchitectureAdvisor: React.FC = () => {
     {
       id: "content_creation",
       rank: 5,
-      title: "마케팅 콘텐츠 코파일럿 (Copilot)",
+      title: "tplContentTitle",
       category: "Content Creation",
       icon: "sparkles",
-      description: "블로그, SNS 포스트, 이메일 시퀀스 및 SEO 최적화 문구를 자동 생성하는 AI 도우미",
+      description: "tplContentDesc",
       request: {
         service_type: "content_creation",
         monthly_requests: 80000,
@@ -536,7 +538,9 @@ export const ArchitectureAdvisor: React.FC = () => {
       avg_input_tokens: avgInputTokens,
       avg_output_tokens: avgOutputTokens,
       requires_multimodal: requiresMultimodal,
-      requires_coding: requiresCoding
+      requires_coding: requiresCoding,
+      // 서버가 고정 문구를 이 언어로 내려준다 — 안 보내면 항상 한국어로 돌아온다
+      language
     };
 
     fetch(`${API_BASE_URL}/recommend/architecture`, {
@@ -645,12 +649,12 @@ export const ArchitectureAdvisor: React.FC = () => {
                   <h3 className={`font-black text-sm line-clamp-1 transition-colors ${
                     isSelected ? 'text-white' : 'text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400'
                   }`}>
-                    {tpl.title.split('(')[0]}
+                    {L(tpl.title).split('(')[0]}
                   </h3>
                   <p className={`text-xs mt-1.5 line-clamp-2 leading-relaxed font-semibold ${
                     isSelected ? 'text-indigo-100' : 'text-slate-600 dark:text-slate-300'
                   }`}>
-                    {tpl.description}
+                    {L(tpl.description)}
                   </p>
                 </div>
                 <div className={`mt-3 pt-2 border-t flex items-center justify-between text-xs font-black ${
@@ -750,23 +754,23 @@ export const ArchitectureAdvisor: React.FC = () => {
               <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
                 <div>
                   <span className="text-xs font-bold px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300">
-                    {t.serviceLabel} {result.service_name}
+                    {t.serviceLabel} {L(result.service_name)}
                   </span>
                   <h2 className="text-2xl font-black text-slate-900 dark:text-white mt-2">
-                    🎯 추천 아키텍처 모델 조합 & 호스팅 산출 결과
+                    {g.advisorModal.resultHeading}
                   </h2>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="text-right">
                     <div className="text-xs text-slate-500 font-bold">{t.monthlyRequestsShort}</div>
-                    <div className="text-base font-black text-indigo-600 dark:text-indigo-400">{result.monthly_requests.toLocaleString()} 회</div>
+                    <div className="text-base font-black text-indigo-600 dark:text-indigo-400">{result.monthly_requests.toLocaleString()} {g.advisorModal.callsSuffix}</div>
                   </div>
                   <button
                     onClick={() => setShowSpecBundleModal(true)}
                     className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-extrabold text-xs shadow-lg shadow-indigo-600/30 transition-all flex items-center gap-2"
                   >
                     <Layers className="w-4 h-4" />
-                    📦 5대 명세서 아티팩트 보기
+                    {g.advisorModal.artifactBtn}
                   </button>
                 </div>
               </div>
@@ -791,19 +795,19 @@ export const ArchitectureAdvisor: React.FC = () => {
                         </span>
                         <span className="text-xs font-black opacity-80">Elo: {combo.avg_arena_elo}</span>
                       </div>
-                      <h3 className="font-black text-base leading-tight">{combo.name}</h3>
-                      <p className="text-xs leading-relaxed opacity-90">{combo.description}</p>
+                      <h3 className="font-black text-base leading-tight">{L(combo.name)}</h3>
+                      <p className="text-xs leading-relaxed opacity-90">{L(combo.description)}</p>
                     </div>
 
                     <div className="pt-3 border-t border-slate-700/40 space-y-2">
                       <div className="flex justify-between items-center text-xs font-bold">
-                        <span>월 예상 API 비용</span>
+                        <span>{g.advisorModal.monthlyApiCost}</span>
                         <span className="text-base font-black text-cyan-400">${combo.total_monthly_cost.toFixed(2)}/mo</span>
                       </div>
                       <div className="space-y-1">
                         {combo.key_advantages.map((adv, idx) => (
                           <div key={idx} className="text-[11px] flex items-center gap-1.5 opacity-90">
-                            <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> {adv}
+                            <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> {L(adv)}
                           </div>
                         ))}
                       </div>
@@ -891,7 +895,7 @@ export const ArchitectureAdvisor: React.FC = () => {
             <div>
               <div className="flex justify-between font-bold mb-1.5 text-slate-900 dark:text-slate-200">
                 <span>{t.monthlyRequests}</span>
-                <span className="text-indigo-600 dark:text-indigo-400 font-extrabold">{monthlyRequests.toLocaleString()} 회</span>
+                <span className="text-indigo-600 dark:text-indigo-400 font-extrabold">{monthlyRequests.toLocaleString()} {g.advisorModal.callsSuffix}</span>
               </div>
               <input
                 aria-label={t.monthlyRequests}
@@ -1195,10 +1199,11 @@ const MoreRankingModal: React.FC<{
   onClose: () => void;
   onSelectScenario: (req: RecommendationRequest, title: string) => void;
 }> = ({ onClose, onSelectScenario }) => {
+  const { t: g } = useLanguage();
   const moreScenarios = [
     {
       rank: 6,
-      title: "의료 & 헬스케어 임상 데이터 질의응답 챗봇",
+      title: g.advisorModal.scMedTitle,
       category: "Medical AI Assistant",
       requests: 120000,
       req: {
@@ -1209,11 +1214,11 @@ const MoreRankingModal: React.FC<{
         requires_multimodal: false,
         requires_coding: false
       },
-      desc: "HIPAA 보안 준수 및 의학 논문/임상 데이터베이스 전용 보안 RAG"
+      desc: g.advisorModal.scMedDesc
     },
     {
       rank: 7,
-      title: "금융 & 주식 시장 실시간 감성 분석 API",
+      title: g.advisorModal.scFinTitle,
       category: "Financial Market Analytics",
       requests: 300000,
       req: {
@@ -1224,11 +1229,11 @@ const MoreRankingModal: React.FC<{
         requires_multimodal: false,
         requires_coding: false
       },
-      desc: "뉴스 스트림 및 재무제표 0.1초 파싱 ➔ 실시간 매수/매도 감성 스코어링"
+      desc: g.advisorModal.scFinDesc
     },
     {
       rank: 8,
-      title: "법률 계약서 검토 & 판례 추천 서비스",
+      title: g.advisorModal.scLawTitle,
       category: "Legal Tech Reviewer",
       requests: 60000,
       req: {
@@ -1239,11 +1244,11 @@ const MoreRankingModal: React.FC<{
         requires_multimodal: false,
         requires_coding: false
       },
-      desc: "계약서 독소 조항 자동 감지 및 대법원 판례 데이터베이스 연동 조항 추천"
+      desc: g.advisorModal.scLawDesc
     },
     {
       rank: 9,
-      title: "게임 NPC 지능형 대화 & 스크립트 에이전트",
+      title: g.advisorModal.scGameTitle,
       category: "Gaming AI NPC Agent",
       requests: 400000,
       req: {
@@ -1254,11 +1259,11 @@ const MoreRankingModal: React.FC<{
         requires_multimodal: false,
         requires_coding: false
       },
-      desc: "세계관 페르소나 보유 및 사용자 선택에 동적으로 변화하는 롤플레잉 NPC"
+      desc: g.advisorModal.scGameDesc
     },
     {
       rank: 10,
-      title: "이커머스 개인화 상품 추천 & 검색 챗봇",
+      title: g.advisorModal.scEcomTitle,
       category: "E-Commerce Recommendation",
       requests: 250000,
       req: {
@@ -1269,7 +1274,7 @@ const MoreRankingModal: React.FC<{
         requires_multimodal: true,
         requires_coding: false
       },
-      desc: "고객 착장 사진 검색 및 유저 구매 이력 기반 맞춤형 코디 제안"
+      desc: g.advisorModal.scEcomDesc
     }
   ];
 
@@ -1279,10 +1284,10 @@ const MoreRankingModal: React.FC<{
         <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
           <div>
             <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
-              <span>➕ 랭킹 더보기 (Top 6~10+ 추가 인기 서비스)</span>
+              <span>{g.advisorModal.moreTitle}</span>
             </h3>
             <p className="text-xs text-slate-600 dark:text-slate-400 font-bold mt-0.5">
-              선택 시 준비된 결과가 아닌, 생성 AI가 실시간 딥 리서치 마크다운 명세서 생성을 시작합니다.
+              {g.advisorModal.moreNotice}
             </p>
           </div>
           <button onClick={onClose} className="p-1.5 rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
@@ -1300,7 +1305,7 @@ const MoreRankingModal: React.FC<{
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-black px-2.5 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-800 dark:text-indigo-300 border border-indigo-300 dark:border-indigo-800">
-                    #{sc.rank}위
+                    #{sc.rank}{g.advisorModal.rankSuffix}
                   </span>
                   <span className="text-xs font-bold text-slate-500 dark:text-slate-400">{sc.category}</span>
                 </div>
@@ -1313,7 +1318,7 @@ const MoreRankingModal: React.FC<{
               </div>
 
               <div className="shrink-0 flex items-center gap-1 text-xs font-black text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-3 py-2 rounded-xl border border-indigo-200 dark:border-indigo-800 group-hover:bg-indigo-600 group-hover:text-white transition-all ml-3">
-                <span>실시간 생성</span>
+                <span>{g.advisorModal.liveGenerate}</span>
                 <ChevronRight className="w-4 h-4" />
               </div>
             </div>

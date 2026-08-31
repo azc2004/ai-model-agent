@@ -94,6 +94,20 @@ export const TutorialView: React.FC = () => {
         { id: 'comparison', title: '📊 Vergleich der Top 5 KI-Agenten-Tools', desc: 'Funktionen, Skills, Preise, Schutz' },
         { id: 'troubleshoot', title: '🛡️ Sicherheit & Fehlerbehebung', desc: 'Prompt Injection, OOM, Retry' }
       ]
+    },
+    fr: {
+      badge: "GUIDE DE RÉFÉRENCE — ARCHITECTURE AGENTIQUE IA 2026",
+      titleMain: "Équipes d’agents IA et sous-agents",
+      titleSub: "Tutoriel pratique et guide comparatif des outils",
+      description: "Fini le temps perdu à changer d’onglet et à copier-coller entre les fenêtres d’IA. Guide pratique couvrant Claude Code (équipes d’agents, sous-agents, skills, MCP), Google Antigravity, Cursor, AutoGen 0.4 et CrewAI.",
+      tabs: [
+        { id: 'claude_team', title: '🤖 Tutoriel 1 : équipes d’agents et sous-agents Claude', desc: 'Agent Teams, sous-agents, Skills, MCP' },
+        { id: 'antigravity', title: '🌌 Tutoriel 2 : Google Antigravity et Directives', desc: 'Skills agentiques DeepMind et directives.yaml' },
+        { id: 'cursor', title: '💻 Tutoriel 3 : Cursor et Cascade Rules', desc: '.cursorrules et extensions' },
+        { id: 'frameworks', title: '⚙️ Tutoriel 4 : AutoGen 0.4 et CrewAI', desc: 'Code multi-agents en Python' },
+        { id: 'comparison', title: '📊 Comparatif des 5 principaux outils d’agents IA', desc: 'Fonctionnalités, skills, tarifs, garde-fous' },
+        { id: 'troubleshoot', title: '🛡️ Guide sécurité et dépannage', desc: 'Injection de prompt, OOM, retry' }
+      ]
     }
   };
 
