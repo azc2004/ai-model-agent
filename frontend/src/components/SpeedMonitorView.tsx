@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import {
   BarChart,
   Bar,
@@ -44,6 +45,7 @@ const BENCHMARK_PROVIDERS: Record<string, ProviderSpeedData[]> = {
 };
 
 export const SpeedMonitorView: React.FC = () => {
+  const { t } = useLanguage();
   const [selectedModelKey, setSelectedModelKey] = useState<string>("llama-3.3-70b");
   const [metricMode, setMetricMode] = useState<"tps" | "ttft">("tps");
 
@@ -61,10 +63,10 @@ export const SpeedMonitorView: React.FC = () => {
           ⚡ Real-time Latency & Throughput Speed Monitor
         </div>
         <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
-          프로바이더별 실시간 추론 지연시간(TTFT) & 속도(TPS) 벤치마크
+          {t.speed.subtitle}
         </h1>
         <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base font-semibold max-w-3xl mx-auto leading-relaxed">
-          동일한 오픈/상용 AI 모델이라도 서빙 아키텍처(Groq LPU vs Cerebras WSE vs H100 Cluster)에 따라 최대 15배 속도 차이가 발생합니다. 최적의 인프라를 실시간 비교하세요.
+          {t.speed.description}
         </p>
       </div>
 
@@ -72,10 +74,10 @@ export const SpeedMonitorView: React.FC = () => {
       <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4 shadow-md backdrop-blur-md">
         {/* Model Selector */}
         <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-          <span className="text-xs font-extrabold text-slate-700 dark:text-slate-300 mr-1">대상 모델:</span>
+          <span className="text-xs font-extrabold text-slate-700 dark:text-slate-300 mr-1">{t.speed.targetModel}</span>
           {[
-            { key: "llama-3.3-70b", name: "Llama 3.3 70B (오픈 대표)" },
-            { key: "deepseek-r1", name: "DeepSeek R1 (추론 특화)" },
+            { key: "llama-3.3-70b", name: `Llama 3.3 70B (${t.speed.modelLlamaTag})` },
+            { key: "deepseek-r1", name: `DeepSeek R1 (${t.speed.modelDeepseekTag})` },
             { key: "gpt-4o-mini", name: "GPT-4o mini" },
             { key: "claude-3-5-sonnet", name: "Claude 3.5 Sonnet" }
           ].map((m) => (
@@ -103,7 +105,7 @@ export const SpeedMonitorView: React.FC = () => {
                 : "text-slate-600 dark:text-slate-400 hover:text-slate-900"
             }`}
           >
-            🚀 초당 출력 속도 (TPS - 높을수록 우수)
+            {t.speed.tabTps}
           </button>
           <button
             onClick={() => setMetricMode("ttft")}
@@ -113,7 +115,7 @@ export const SpeedMonitorView: React.FC = () => {
                 : "text-slate-600 dark:text-slate-400 hover:text-slate-900"
             }`}
           >
-            ⏱️ 첫 토큰 지연시간 (TTFT ms - 낮을수록 우수)
+            {t.speed.tabTtft}
           </button>
         </div>
       </div>
@@ -124,9 +126,9 @@ export const SpeedMonitorView: React.FC = () => {
         <div className="lg:col-span-7 bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 space-y-4 shadow-md backdrop-blur-md">
           <h3 className="text-sm font-black text-slate-900 dark:text-white flex items-center justify-between">
             <span>
-              📊 프로바이더별 {metricMode === "tps" ? "초당 생성 토큰 수 (Tokens/sec)" : "첫 응답 지연시간 (TTFT ms)"}
+              {t.speed.chartByProvider} {metricMode === "tps" ? t.speed.metricTps : t.speed.metricTtft}
             </span>
-            <span className="text-xs font-bold text-slate-500">실시간 데이터 갱신 완료</span>
+            <span className="text-xs font-bold text-slate-500">{t.speed.refreshed}</span>
           </h3>
 
           <div className="h-72 w-full pt-4">
@@ -139,7 +141,7 @@ export const SpeedMonitorView: React.FC = () => {
                   contentStyle={{ backgroundColor: "#ffffff", borderColor: "#cbd5e1", borderRadius: "12px", color: "#0f172a", fontWeight: "bold" }}
                   formatter={(value: any) => [
                     metricMode === "tps" ? `${value} tokens/sec` : `${value} ms`,
-                    metricMode === "tps" ? "출력 속도" : "첫 토큰 지연시간"
+                    metricMode === "tps" ? t.speed.legendTps : t.speed.legendTtft
                   ]}
                 />
                 <Bar dataKey={metricMode === "tps" ? "tps" : "ttft_ms"} radius={[0, 8, 8, 0]}>
@@ -155,7 +157,7 @@ export const SpeedMonitorView: React.FC = () => {
         {/* Right: Detailed Provider Ranking Cards */}
         <div className="lg:col-span-5 space-y-3">
           <h3 className="text-sm font-black text-slate-900 dark:text-white px-1">
-            🏆 최적 인프라 서빙 랭킹 (Infrastructure Rank)
+            {t.speed.rankTitle}
           </h3>
           <div tabIndex={0} className="space-y-3 max-h-80 overflow-y-auto pr-1">
             {sortedData.map((p, idx) => (

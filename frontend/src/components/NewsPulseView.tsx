@@ -110,6 +110,7 @@ const I18N_TEXTS = {
     resLabel: "[연구/학계]",
     lenses: {
       all: '🔥 전체',
+      new: "✨ 최신 속보 (NEW)",
       developer: '👩‍💻 코딩 & 프레임워크',
       agent: '🤖 Agent & 오토메이션',
       pm: '💡 기획 & UX',
@@ -138,6 +139,7 @@ const I18N_TEXTS = {
     resLabel: "[Researcher]",
     lenses: {
       all: '🔥 All Feed',
+      new: "✨ Latest (NEW)",
       developer: '👩‍💻 Coding & Dev',
       agent: '🤖 Agent & Automation',
       pm: '💡 Product & UX',
@@ -166,6 +168,7 @@ const I18N_TEXTS = {
     resLabel: "[研究/学術]",
     lenses: {
       all: '🔥 全体',
+      new: "✨ 最新速報 (NEW)",
       developer: '👩‍💻 コーディング＆開発',
       agent: '🤖 エージェント＆自動化',
       pm: '💡 企画＆UX',
@@ -194,6 +197,7 @@ const I18N_TEXTS = {
     resLabel: "[研究/学术]",
     lenses: {
       all: '🔥 全部',
+      new: "✨ 最新快讯 (NEW)",
       developer: '👩‍💻 编程与开发',
       agent: '🤖 智能体与自动化',
       pm: '💡 产品与 UX',
@@ -222,6 +226,7 @@ const I18N_TEXTS = {
     resLabel: "[Investigador]",
     lenses: {
       all: '🔥 Todo',
+      new: "✨ Novedades (NEW)",
       developer: '👩‍💻 Código y Dev',
       agent: '🤖 Agentes y Automatización',
       pm: '💡 Producto y UX',
@@ -250,6 +255,7 @@ const I18N_TEXTS = {
     resLabel: "[Forscher]",
     lenses: {
       all: '🔥 Alle Feed',
+      new: "✨ Neuestes (NEW)",
       developer: '👩‍💻 Coden & Dev',
       agent: '🤖 Agenten & Automation',
       pm: '💡 Produkt & UX',
@@ -278,6 +284,7 @@ const I18N_TEXTS = {
     resLabel: "[Chercheur]",
     lenses: {
       all: '🔥 Tous',
+      new: "✨ Dernières (NEW)",
       developer: '👩‍💻 Code & Dev',
       agent: '🤖 Agents & Automatisation',
       pm: '💡 Produit & UX',

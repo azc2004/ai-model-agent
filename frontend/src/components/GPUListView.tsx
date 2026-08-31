@@ -5,10 +5,9 @@ import { Cpu, Zap, HardDrive, Building2, User, Wrench, ChevronRight, Link2, Acti
 import { useLanguage } from '../context/LanguageContext';
 
 // ─── 탭 메타데이터 ───────────────────────────────────────────────────────────
-const TIERS: { key: GPUTier | 'all'; label: string; icon: React.ReactNode; color: string; bg: string; border: string }[] = [
+const TIERS: { key: GPUTier | 'all'; icon: React.ReactNode; color: string; bg: string; border: string }[] = [
   {
     key: 'all',
-    label: '전체 보기',
     icon: <Layers className="w-3.5 h-3.5" />,
     color: 'text-slate-700 dark:text-slate-200',
     bg: 'bg-slate-100 dark:bg-slate-800',
@@ -16,7 +15,6 @@ const TIERS: { key: GPUTier | 'all'; label: string; icon: React.ReactNode; color
   },
   {
     key: 'enterprise',
-    label: '🏢 기업용 (Datacenter)',
     icon: <Building2 className="w-3.5 h-3.5" />,
     color: 'text-violet-700 dark:text-violet-300',
     bg: 'bg-violet-50 dark:bg-violet-950',
@@ -24,7 +22,6 @@ const TIERS: { key: GPUTier | 'all'; label: string; icon: React.ReactNode; color
   },
   {
     key: 'prosumer',
-    label: '🔬 프로슈머 (Workstation)',
     icon: <Wrench className="w-3.5 h-3.5" />,
     color: 'text-sky-700 dark:text-sky-300',
     bg: 'bg-sky-50 dark:bg-sky-950',
@@ -32,7 +29,6 @@ const TIERS: { key: GPUTier | 'all'; label: string; icon: React.ReactNode; color
   },
   {
     key: 'consumer',
-    label: '💻 개인용 (Consumer)',
     icon: <User className="w-3.5 h-3.5" />,
     color: 'text-emerald-700 dark:text-emerald-300',
     bg: 'bg-emerald-50 dark:bg-emerald-950',
@@ -58,10 +54,17 @@ const TIER_STYLES: Record<GPUTier, { badge: string; glow: string; accent: string
   },
 };
 
-const TIER_LABEL: Record<GPUTier, string> = {
-  enterprise: '🏢 기업용 데이터센터',
-  prosumer: '🔬 프로슈머 워크스테이션',
-  consumer: '💻 개인용 소비자',
+// 라벨은 언어별 사전에서 온다 — 모듈 상수로 두면 언어 전환이 반영되지 않는다.
+const TIER_LABEL_KEY: Record<GPUTier, 'groupEnterprise' | 'groupProsumer' | 'groupConsumer'> = {
+  enterprise: 'groupEnterprise',
+  prosumer: 'groupProsumer',
+  consumer: 'groupConsumer',
+};
+const TAB_LABEL_KEY: Record<GPUTier | 'all', 'tabAll' | 'tabEnterprise' | 'tabProsumer' | 'tabConsumer'> = {
+  all: 'tabAll',
+  enterprise: 'tabEnterprise',
+  prosumer: 'tabProsumer',
+  consumer: 'tabConsumer',
 };
 
 // ─── 퍼포먼스 바 ────────────────────────────────────────────────────────────
@@ -85,6 +88,7 @@ const PerfBar: React.FC<{ value: number; max: number; color: string; label: stri
 
 // ─── GPU 카드 ────────────────────────────────────────────────────────────────
 const GPUCard: React.FC<{ gpu: GPUSpec; maxBw: number; maxFp16: number; maxInt8: number }> = ({ gpu, maxBw, maxFp16, maxInt8 }) => {
+  const { t } = useLanguage();
   const s = TIER_STYLES[gpu.tier];
 
   return (
@@ -92,7 +96,7 @@ const GPUCard: React.FC<{ gpu: GPUSpec; maxBw: number; maxFp16: number; maxInt8:
       {/* 헤더 */}
       <div className="flex flex-col gap-1.5">
         <span className={`text-[10px] font-black px-2 py-0.5 rounded-full border w-fit ${s.badge}`}>
-          {TIER_LABEL[gpu.tier]}
+          {t.gpu[TIER_LABEL_KEY[gpu.tier]]}
         </span>
         <h3 className="text-base font-black text-slate-900 dark:text-white leading-tight">{gpu.name}</h3>
         <div className="flex items-center gap-2 text-[10px] text-slate-500 dark:text-slate-400 font-semibold flex-wrap">
@@ -122,7 +126,7 @@ const GPUCard: React.FC<{ gpu: GPUSpec; maxBw: number; maxFp16: number; maxInt8:
         </div>
         <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
           <div className="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 flex items-center gap-1 mb-1">
-            <Zap className="w-3 h-3 text-blue-500" />대역폭
+            <Zap className="w-3 h-3 text-blue-500" />{t.gpu.bandwidth}
           </div>
           <div className="text-lg font-black text-slate-900 dark:text-white font-mono leading-none">
             {gpu.memory_bandwidth_gbps.toLocaleString()} <span className="text-xs font-bold text-slate-400">GB/s</span>
@@ -132,9 +136,9 @@ const GPUCard: React.FC<{ gpu: GPUSpec; maxBw: number; maxFp16: number; maxInt8:
 
       {/* 성능 바 */}
       <div className="space-y-2">
-        <PerfBar value={gpu.memory_bandwidth_gbps} max={maxBw}   color="bg-blue-500"    label="메모리 대역폭"   unit="GB/s" />
-        <PerfBar value={gpu.fp16_tflops}           max={maxFp16} color="bg-violet-500"  label="FP16 연산 성능" unit="TFLOPS" />
-        <PerfBar value={gpu.int8_tops}             max={maxInt8} color="bg-emerald-500" label="INT8 추론 성능"  unit="TOPS" />
+        <PerfBar value={gpu.memory_bandwidth_gbps} max={maxBw}   color="bg-blue-500"    label={t.gpu.perfBandwidth}   unit="GB/s" />
+        <PerfBar value={gpu.fp16_tflops}           max={maxFp16} color="bg-violet-500"  label={t.gpu.perfFp16} unit="TFLOPS" />
+        <PerfBar value={gpu.int8_tops}             max={maxInt8} color="bg-emerald-500" label={t.gpu.perfInt8}  unit="TOPS" />
       </div>
 
       {/* CUDA / Tensor 코어 */}
@@ -142,13 +146,13 @@ const GPUCard: React.FC<{ gpu: GPUSpec; maxBw: number; maxFp16: number; maxInt8:
         <div className="grid grid-cols-2 gap-2.5">
           {gpu.cuda_cores > 0 && (
             <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-center">
-              <div className="text-[10px] font-bold text-slate-400 mb-0.5">CUDA 코어</div>
+              <div className="text-[10px] font-bold text-slate-400 mb-0.5">{t.gpu.cudaCores}</div>
               <div className="text-sm font-black text-slate-800 dark:text-slate-100 font-mono">{gpu.cuda_cores.toLocaleString()}</div>
             </div>
           )}
           {gpu.tensor_cores > 0 && (
             <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-center">
-              <div className="text-[10px] font-bold text-slate-400 mb-0.5">Tensor 코어</div>
+              <div className="text-[10px] font-bold text-slate-400 mb-0.5">{t.gpu.tensorCores}</div>
               <div className="text-sm font-black text-slate-800 dark:text-slate-100 font-mono">{gpu.tensor_cores.toLocaleString()}</div>
             </div>
           )}
@@ -158,7 +162,7 @@ const GPUCard: React.FC<{ gpu: GPUSpec; maxBw: number; maxFp16: number; maxInt8:
       {/* 가격 정보 */}
       <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-1.5 text-xs font-bold">
         <div className="flex justify-between items-center text-slate-600 dark:text-slate-300">
-          <span>하드웨어 권장 소비자가</span>
+          <span>{t.gpu.purchasePrice}</span>
           <span className="font-mono text-emerald-600 dark:text-emerald-400 font-black">
             ${gpu.purchase_price_usd.toLocaleString()}
           </span>
@@ -166,19 +170,19 @@ const GPUCard: React.FC<{ gpu: GPUSpec; maxBw: number; maxFp16: number; maxInt8:
         {gpu.cloud_hourly_on_demand !== null ? (
           <>
             <div className="flex justify-between items-center text-slate-600 dark:text-slate-300">
-              <span>클라우드 On-Demand</span>
+              <span>{t.gpu.cloudOnDemand}</span>
               <span className={`font-mono font-black ${s.accent}`}>${gpu.cloud_hourly_on_demand.toFixed(2)}/hr</span>
             </div>
             {gpu.cloud_hourly_spot !== null && (
               <div className="flex justify-between items-center text-slate-600 dark:text-slate-300">
-                <span>클라우드 Spot 인스턴스</span>
+                <span>{t.gpu.cloudSpot}</span>
                 <span className="font-mono text-cyan-600 dark:text-cyan-400 font-black">${gpu.cloud_hourly_spot.toFixed(2)}/hr</span>
               </div>
             )}
           </>
         ) : (
           <div className="text-slate-400 dark:text-slate-500 text-[10px] font-semibold text-center py-0.5">
-            클라우드 서비스 미제공 (온프레미스 전용)
+            {t.gpu.noCloud}
           </div>
         )}
       </div>
@@ -186,7 +190,7 @@ const GPUCard: React.FC<{ gpu: GPUSpec; maxBw: number; maxFp16: number; maxInt8:
       {/* 추천 용도 */}
       <div className={`rounded-xl px-3 py-2.5 border ${s.badge} text-[10px] font-semibold leading-relaxed`}>
         <div className="font-black mb-0.5 flex items-center gap-1">
-          <ChevronRight className="w-3 h-3" /> 추천 용도
+          <ChevronRight className="w-3 h-3" /> {t.gpu.recommendedUse}
         </div>
         {gpu.recommended_use}
       </div>
@@ -260,7 +264,7 @@ export const GPUListView: React.FC = () => {
               }`}
             >
               {tier.icon}
-              {tier.label}
+              {t.gpu[TAB_LABEL_KEY[tier.key]]}
               <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-black ${isActive ? 'bg-white/40 dark:bg-black/20' : 'bg-slate-100 dark:bg-slate-800'}`}>
                 {counts[tier.key] ?? 0}
               </span>
@@ -273,9 +277,9 @@ export const GPUListView: React.FC = () => {
       {activeTab !== 'all' && filtered.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
-            { icon: <HardDrive className="w-4 h-4 text-cyan-500" />, label: '최대 VRAM', value: `${Math.max(...filtered.map(g => g.vram_gb))} GB` },
-            { icon: <Activity className="w-4 h-4 text-violet-500" />, label: '최고 FP16', value: `${Math.max(...filtered.map(g => g.fp16_tflops))} TF` },
-            { icon: <Zap className="w-4 h-4 text-emerald-500" />, label: '최고 INT8', value: `${Math.max(...filtered.map(g => g.int8_tops))} TOPS` },
+            { icon: <HardDrive className="w-4 h-4 text-cyan-500" />, label: t.gpu.maxVram, value: `${Math.max(...filtered.map(g => g.vram_gb))} GB` },
+            { icon: <Activity className="w-4 h-4 text-violet-500" />, label: t.gpu.topFp16, value: `${Math.max(...filtered.map(g => g.fp16_tflops))} TF` },
+            { icon: <Zap className="w-4 h-4 text-emerald-500" />, label: t.gpu.topInt8, value: `${Math.max(...filtered.map(g => g.int8_tops))} TOPS` },
           ].map((stat, i) => (
             <div key={i} className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-3 flex items-center gap-3">
               <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-950">{stat.icon}</div>

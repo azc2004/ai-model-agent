@@ -24,9 +24,9 @@ export const CompareView: React.FC<CompareViewProps> = ({
     return (
       <div className="bg-white dark:bg-slate-900 p-12 rounded-2xl border border-slate-200 dark:border-slate-800 text-center space-y-4 shadow-md">
         <ArrowLeftRight className="w-12 h-12 text-slate-400 dark:text-slate-500 mx-auto" />
-        <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">비교할 모델이 선택되지 않았습니다.</h3>
+        <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">{t.compare.emptyTitle}</h3>
         <p className="text-slate-600 dark:text-slate-400 text-sm max-w-md mx-auto font-semibold">
-          모델 카탈로그 대시보드에서 비교하고 싶은 LLM 모델 카드의 '+ 비교하기' 버튼을 눌러 추가해주세요.
+          {t.compare.emptyDesc}
         </p>
       </div>
     );
@@ -57,7 +57,7 @@ export const CompareView: React.FC<CompareViewProps> = ({
       </div>
 
       {/* Comparison Grid Table */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-x-auto shadow-md" tabIndex={0} aria-label="모델 비교표, 좌우로 스크롤 가능">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-x-auto shadow-md" tabIndex={0} aria-label={t.compare.tableAria}>
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">

@@ -96,7 +96,7 @@ export const TCOSimulatorView: React.FC<TCOSimulatorViewProps> = ({ models }) =>
           {/* 1단계: 프로바이더 (공급자) 선택 */}
           <div>
             <label htmlFor="tco-provider" className="block text-xs font-black text-slate-700 dark:text-slate-300 mb-1.5">
-              1단계: 프로바이더 (공급자) 선택
+              {t.tco.step1Provider}
             </label>
             <select
               id="tco-provider"
@@ -117,10 +117,10 @@ export const TCOSimulatorView: React.FC<TCOSimulatorViewProps> = ({ models }) =>
           <div>
             <div className="flex justify-between items-center mb-1.5">
               <label htmlFor="tco-model" className="block text-xs font-black text-slate-700 dark:text-slate-300">
-                2단계: AI 모델 선택
+                {t.tco.step2Model}
               </label>
               <span className="text-[11px] text-cyan-600 dark:text-cyan-400 font-extrabold">
-                {filteredModels.length}개 모델 검색됨
+                {filteredModels.length} {t.tco.modelsFound}
               </span>
             </div>
             <select
@@ -203,13 +203,13 @@ export const TCOSimulatorView: React.FC<TCOSimulatorViewProps> = ({ models }) =>
             </h4>
             <div className="space-y-2 text-slate-300">
               <div className="flex justify-between">
-                <span>필요 VRAM 용량:</span>
+                <span>{t.tco.vramNeeded}</span>
                 <span className="font-bold text-cyan-400">
                   {((result?.self_hosted.total_vram_gb ?? 32)).toFixed(1)} GB
                 </span>
               </div>
               <div className="flex justify-between text-slate-400 text-[11px]">
-                <span>- 모델 가중치 (Weights):</span>
+                <span>{t.tco.modelWeights}</span>
                 <span>{(((result?.self_hosted.total_vram_gb ?? 32) * 0.75)).toFixed(1)} GB</span>
               </div>
               <div className="flex justify-between text-slate-400 text-[11px]">
@@ -217,7 +217,7 @@ export const TCOSimulatorView: React.FC<TCOSimulatorViewProps> = ({ models }) =>
                 <span>{(((result?.self_hosted.total_vram_gb ?? 32) * 0.25)).toFixed(1)} GB</span>
               </div>
               <div className="pt-2 border-t border-slate-800 flex justify-between font-bold text-emerald-400">
-                <span>추천 GPU 구성:</span>
+                <span>{t.tco.recommendedGpu}</span>
                 <span>{result?.self_hosted.recommended_gpu ?? 'NVIDIA H100 80GB'} x {result?.self_hosted.gpu_count ?? 1}</span>
               </div>
             </div>

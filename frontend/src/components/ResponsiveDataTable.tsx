@@ -1,3 +1,4 @@
+import { useLanguage } from '../context/LanguageContext';
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
@@ -16,7 +17,8 @@ interface ResponsiveDataTableProps<T> {
   caption?: string;
 }
 
-export function ResponsiveDataTable<T>({ rows, columns, getRowId, caption = '분석 데이터' }: ResponsiveDataTableProps<T>) {
+export function ResponsiveDataTable<T>({ rows, columns, getRowId, caption }: ResponsiveDataTableProps<T>) {
+  const { t } = useLanguage();
   const [expanded, setExpanded] = useState<Set<React.Key>>(new Set());
   const primary = columns.filter((column) => column.priority === 'primary');
   const secondary = columns.filter((column) => column.priority === 'secondary');
@@ -25,10 +27,10 @@ export function ResponsiveDataTable<T>({ rows, columns, getRowId, caption = '분
   });
 
   return <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
-    <p className="sr-only" id="table-scroll-hint">표는 좌우로 스크롤할 수 있습니다.</p>
+    <p className="sr-only" id="table-scroll-hint">{t.leaderboard.scrollHint}</p>
     <div className={`overflow-x-auto ${secondary.length > 0 ? 'hidden md:block' : ''}`} aria-describedby="table-scroll-hint" tabIndex={0}>
       <table className="w-full min-w-[680px] border-collapse text-left">
-        <caption className="sr-only">{caption}</caption>
+        <caption className="sr-only">{caption ?? t.leaderboard.tableCaption}</caption>
         <thead className="sticky top-0 z-10 bg-slate-100 dark:bg-slate-800"><tr>{columns.map((column, index) => <th key={column.key} scope="col" className={`${index === 0 ? 'sticky left-0 z-20 bg-slate-100 dark:bg-slate-800' : ''} ${column.numeric ? 'text-right' : ''} p-4 text-xs font-black`}>{column.header}</th>)}</tr></thead>
         <tbody className="divide-y divide-slate-200 dark:divide-slate-800">{rows.map((row, rowIndex) => <tr key={getRowId(row)}>{columns.map((column, columnIndex) => <td key={column.key} className={`${columnIndex === 0 ? 'sticky left-0 bg-white dark:bg-slate-900' : ''} ${column.numeric ? 'numeric text-right' : ''} p-4 text-sm`}>{column.render(row, rowIndex)}</td>)}</tr>)}</tbody>
       </table>

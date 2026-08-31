@@ -126,6 +126,29 @@ export const ArchitectureAdvisor: React.FC = () => {
       calcBtn: "⚡ 5대 개발명세서 아티팩트 자동 생성",
       resultHeading: "🎯 추천 아키텍처 모델 조합 & 호스팅 산출 결과",
       artifactBtn: "📦 5대 명세서 아티팩트 보기",
+      rankSuffix: "위",
+      moreRanking: "➕ 랭킹 더보기",
+      moreRankingDesc: "의료, 금융, 법률, 게임 NPC 등 추가 인기 시나리오 탐색",
+      moreRankingFull: "➕ 랭킹 더보기 (Top 6~10+ 추가 인기 서비스)",
+      liveMarkdown: "⚡ 실시간 마크다운 생성",
+      calculating: "고객 요구사항을 바탕으로 최적의 LLM 조합과 OpEx 호스팅 인프라 비용을 산출하고 있습니다...",
+      serviceLabel: "서비스:",
+      monthlyRequestsShort: "월간 예상 요청",
+      freeformHeading: "💬 서비스 요구사항 자유 묘사 & 커스터마이저 입력창",
+      intentAuto: "AI 의도 자동분석",
+      freeformPlaceholder: "자유로운 문장으로 구현하려는 AI 서비스와 조건을 입력하세요 (자연어 프롬프트 입력)",
+      chipRag: "💡 사내 문서 RAG 챗봇",
+      chipCode: "💡 코드 수정 에이전트",
+      chipCs: "💡 멀티모달 CS 챗봇",
+      serviceType: "서비스 유형",
+      monthlyRequests: "월간 예상 요청 수",
+      req10k: "1만",
+      req500k: "50만",
+      req1m: "100만 회",
+      specialOptions: "특수 기능 옵션",
+      needMultimodal: "🖼️ 멀티모달 (비전/이미지) 필요",
+      needCoding: "⚡ 복잡 추론 & 코드 생성 필요",
+      recalcBtn: "⚡ 추천 아키텍처 재산출 & 5대 명세서 마크다운 생성하기",
       researchProgress: {
         step1: "1. 유저 요구사항 자연어 의도 파악 및 도메인 분석",
         step2: "2. 전세계 LLM Leaderboard (Elo/MMLU) 상위 100개 모델 지표 검증",
@@ -144,6 +167,29 @@ export const ArchitectureAdvisor: React.FC = () => {
       calcBtn: "⚡ Generate 5 Architecture Spec Artifacts",
       resultHeading: "🎯 Recommended Architecture Combinations & Cost Results",
       artifactBtn: "📦 View 5 Spec Artifacts",
+      rankSuffix: "",
+      moreRanking: "➕ More rankings",
+      moreRankingDesc: "Explore more popular scenarios: healthcare, finance, legal, game NPCs and more",
+      moreRankingFull: "➕ More rankings (Top 6–10+ popular services)",
+      liveMarkdown: "⚡ Live Markdown generation",
+      calculating: "Computing the best LLM combination and OpEx hosting costs from your requirements...",
+      serviceLabel: "Service:",
+      monthlyRequestsShort: "Est. monthly requests",
+      freeformHeading: "💬 Describe your service requirements freely",
+      intentAuto: "Auto intent analysis",
+      freeformPlaceholder: "Describe the AI service you want to build and its constraints in plain language",
+      chipRag: "💡 Internal-docs RAG chatbot",
+      chipCode: "💡 Code-fixing agent",
+      chipCs: "💡 Multimodal support chatbot",
+      serviceType: "Service type",
+      monthlyRequests: "Estimated monthly requests",
+      req10k: "10K",
+      req500k: "500K",
+      req1m: "1M calls",
+      specialOptions: "Special capability options",
+      needMultimodal: "🖼️ Needs multimodal (vision/image)",
+      needCoding: "⚡ Needs complex reasoning & code generation",
+      recalcBtn: "⚡ Recalculate architecture & generate the 5 Markdown specs",
       researchProgress: {
         step1: "1. Analyzing user requirements & domain intent",
         step2: "2. Verifying top 100 LLM leaderboard (Elo/MMLU) metrics",
@@ -162,6 +208,29 @@ export const ArchitectureAdvisor: React.FC = () => {
       calcBtn: "⚡ 5大設計仕様書アーティファクトを自動生成",
       resultHeading: "🎯 推奨アーキテクチャモデル構成 & ホスティング試算結果",
       artifactBtn: "📦 5大仕様書アーティファクトを見る",
+      rankSuffix: "位",
+      moreRanking: "➕ ランキングをもっと見る",
+      moreRankingDesc: "医療・金融・法務・ゲームNPCなど、さらに人気のシナリオを見る",
+      moreRankingFull: "➕ ランキングをもっと見る (Top 6〜10+ の人気サービス)",
+      liveMarkdown: "⚡ リアルタイム Markdown 生成",
+      calculating: "ご要望をもとに最適なLLM構成とOpExホスティング費用を算出しています...",
+      serviceLabel: "サービス:",
+      monthlyRequestsShort: "月間想定リクエスト",
+      freeformHeading: "💬 サービス要件を自由に記述",
+      intentAuto: "AI 意図自動分析",
+      freeformPlaceholder: "作りたいAIサービスと条件を自然な文章で入力してください",
+      chipRag: "💡 社内ドキュメント RAG チャットボット",
+      chipCode: "💡 コード修正エージェント",
+      chipCs: "💡 マルチモーダル CS チャットボット",
+      serviceType: "サービス種別",
+      monthlyRequests: "月間想定リクエスト数",
+      req10k: "1万",
+      req500k: "50万",
+      req1m: "100万回",
+      specialOptions: "特殊機能オプション",
+      needMultimodal: "🖼️ マルチモーダル(視覚/画像)が必要",
+      needCoding: "⚡ 複雑な推論とコード生成が必要",
+      recalcBtn: "⚡ アーキテクチャを再計算し5つのMarkdown仕様を生成",
       researchProgress: {
         step1: "1. ユーザー要件の分析",
         step2: "2. Top 100 LLM リーダーボード指標の検証",
@@ -180,6 +249,29 @@ export const ArchitectureAdvisor: React.FC = () => {
       calcBtn: "⚡ 自动生成 5 大架构设计规范产物",
       resultHeading: "🎯 推荐架构模型组合与托管演算结果",
       artifactBtn: "📦 查看 5 大规范产物",
+      rankSuffix: "名",
+      moreRanking: "➕ 查看更多排名",
+      moreRankingDesc: "探索更多热门场景：医疗、金融、法律、游戏 NPC 等",
+      moreRankingFull: "➕ 查看更多排名（第 6~10+ 名热门服务）",
+      liveMarkdown: "⚡ 实时生成 Markdown",
+      calculating: "正在根据您的需求计算最优 LLM 组合与 OpEx 托管成本...",
+      serviceLabel: "服务：",
+      monthlyRequestsShort: "每月预计请求",
+      freeformHeading: "💬 自由描述你的服务需求",
+      intentAuto: "AI 意图自动分析",
+      freeformPlaceholder: "请用自然语言描述你想构建的 AI 服务及其条件",
+      chipRag: "💡 内部文档 RAG 聊天机器人",
+      chipCode: "💡 代码修复智能体",
+      chipCs: "💡 多模态客服机器人",
+      serviceType: "服务类型",
+      monthlyRequests: "每月预计请求数",
+      req10k: "1万",
+      req500k: "50万",
+      req1m: "100万次",
+      specialOptions: "特殊功能选项",
+      needMultimodal: "🖼️ 需要多模态（视觉/图像）",
+      needCoding: "⚡ 需要复杂推理与代码生成",
+      recalcBtn: "⚡ 重新计算架构并生成 5 份 Markdown 规范",
       researchProgress: {
         step1: "1. 分析用户需求与意图",
         step2: "2. 验证前 100 大 LLM 排行榜指标",
@@ -198,6 +290,29 @@ export const ArchitectureAdvisor: React.FC = () => {
       calcBtn: "⚡ Generar 5 Artefactos de Especificación",
       resultHeading: "🎯 Combinaciones de Modelos Recomendadas",
       artifactBtn: "📦 Ver 5 Artefactos de Especificación",
+      rankSuffix: ".º",
+      moreRanking: "➕ Ver más del ranking",
+      moreRankingDesc: "Explora más escenarios populares: salud, finanzas, legal, NPC de videojuegos y más",
+      moreRankingFull: "➕ Ver más del ranking (Top 6-10+ servicios populares)",
+      liveMarkdown: "⚡ Generación de Markdown en vivo",
+      calculating: "Calculando la mejor combinación de LLM y los costes de alojamiento OpEx...",
+      serviceLabel: "Servicio:",
+      monthlyRequestsShort: "Solicitudes mensuales est.",
+      freeformHeading: "💬 Describe libremente los requisitos de tu servicio",
+      intentAuto: "Análisis automático de intención",
+      freeformPlaceholder: "Describe en lenguaje natural el servicio de IA que quieres construir y sus condiciones",
+      chipRag: "💡 Chatbot RAG de documentos internos",
+      chipCode: "💡 Agente de corrección de código",
+      chipCs: "💡 Chatbot de soporte multimodal",
+      serviceType: "Tipo de servicio",
+      monthlyRequests: "Solicitudes mensuales estimadas",
+      req10k: "10 mil",
+      req500k: "500 mil",
+      req1m: "1 M llamadas",
+      specialOptions: "Opciones de capacidades especiales",
+      needMultimodal: "🖼️ Requiere multimodal (visión/imagen)",
+      needCoding: "⚡ Requiere razonamiento complejo y generación de código",
+      recalcBtn: "⚡ Recalcular la arquitectura y generar las 5 especificaciones Markdown",
       researchProgress: {
         step1: "1. Analizando requisitos del usuario",
         step2: "2. Verificando métricas de clasificación de LLM",
@@ -216,6 +331,29 @@ export const ArchitectureAdvisor: React.FC = () => {
       calcBtn: "⚡ 5 Architektur-Spezifikationen generieren",
       resultHeading: "🎯 Empfohlene Modellkombinationen & Ergebnisse",
       artifactBtn: "📦 5 Spezifikations-Artefakte anzeigen",
+      rankSuffix: ".",
+      moreRanking: "➕ Mehr Rankings",
+      moreRankingDesc: "Weitere beliebte Szenarien entdecken: Gesundheit, Finanzen, Recht, Spiel-NPCs und mehr",
+      moreRankingFull: "➕ Mehr Rankings (Top 6–10+ beliebte Dienste)",
+      liveMarkdown: "⚡ Live-Markdown-Generierung",
+      calculating: "Berechne die beste LLM-Kombination und die OpEx-Hostingkosten ...",
+      serviceLabel: "Service:",
+      monthlyRequestsShort: "Gesch. monatliche Anfragen",
+      freeformHeading: "💬 Beschreiben Sie Ihre Anforderungen frei",
+      intentAuto: "Automatische Absichtsanalyse",
+      freeformPlaceholder: "Beschreiben Sie in natürlicher Sprache den gewünschten KI-Dienst und seine Anforderungen",
+      chipRag: "💡 RAG-Chatbot für interne Dokumente",
+      chipCode: "💡 Agent zur Codekorrektur",
+      chipCs: "💡 Multimodaler Support-Chatbot",
+      serviceType: "Diensttyp",
+      monthlyRequests: "Geschätzte monatliche Anfragen",
+      req10k: "10 Tsd.",
+      req500k: "500 Tsd.",
+      req1m: "1 Mio. Aufrufe",
+      specialOptions: "Optionen für Spezialfunktionen",
+      needMultimodal: "🖼️ Multimodal (Vision/Bild) erforderlich",
+      needCoding: "⚡ Komplexes Reasoning & Codegenerierung erforderlich",
+      recalcBtn: "⚡ Architektur neu berechnen & die 5 Markdown-Spezifikationen erzeugen",
       researchProgress: {
         step1: "1. Analyse der Benutzeranforderungen",
         step2: "2. Überprüfung der Top-100-LLM-Metriken",
@@ -223,7 +361,48 @@ export const ArchitectureAdvisor: React.FC = () => {
         step4: "4. Zuordnung von Multi-Modell-Routing",
         step5: "5. Erstellung von 5 Architektur-Dokumenten..."
       }
-    }
+    },
+    fr: {
+      title: "Simulateur d’architecture IA et d’hébergement sur mesure",
+      subtitle: "Indiquez le trafic et les exigences de votre service. Génère trois combinaisons — performance maximale, routage intelligent et budget minimal — ainsi que cinq spécifications Markdown (.md).",
+      topRankingTitle: "TOP 5 des architectures IA les plus déployées aujourd’hui",
+      rankingInfoBtn: "Critères de classement et fréquence de mise à jour",
+      instantResultNotice: "⚡ Recommandations précalculées disponibles",
+      customInputHeading: "💡 Générer une architecture adaptée à vos besoins",
+      calcBtn: "⚡ Générer les 5 artefacts de spécification",
+      resultHeading: "🎯 Combinaisons d’architecture recommandées et coûts estimés",
+      artifactBtn: "📦 Voir les 5 artefacts",
+      rankSuffix: "e",
+      moreRanking: "➕ Voir plus du classement",
+      moreRankingDesc: "Découvrez d’autres scénarios populaires : santé, finance, juridique, PNJ de jeux et plus",
+      moreRankingFull: "➕ Voir plus du classement (Top 6 à 10+ services populaires)",
+      liveMarkdown: "⚡ Génération Markdown en direct",
+      calculating: "Calcul de la meilleure combinaison de LLM et des coûts d’hébergement OpEx...",
+      serviceLabel: "Service :",
+      monthlyRequestsShort: "Requêtes mensuelles estimées",
+      freeformHeading: "💬 Décrivez librement les besoins de votre service",
+      intentAuto: "Analyse automatique de l’intention",
+      freeformPlaceholder: "Décrivez en langage naturel le service IA souhaité et ses contraintes",
+      chipRag: "💡 Chatbot RAG sur documents internes",
+      chipCode: "💡 Agent de correction de code",
+      chipCs: "💡 Chatbot de support multimodal",
+      serviceType: "Type de service",
+      monthlyRequests: "Requêtes mensuelles estimées",
+      req10k: "10 k",
+      req500k: "500 k",
+      req1m: "1 M appels",
+      specialOptions: "Options de capacités spéciales",
+      needMultimodal: "🖼️ Multimodal requis (vision/image)",
+      needCoding: "⚡ Raisonnement complexe et génération de code requis",
+      recalcBtn: "⚡ Recalculer l’architecture et générer les 5 spécifications Markdown",
+      researchProgress: {
+        step1: "1. Analyse des besoins utilisateur et du domaine",
+        step2: "2. Vérification des 100 premiers modèles du classement LLM (Elo/MMLU)",
+        step3: "3. Calcul des coûts OpEx et du rapport coût/performance GPU selon le trafic",
+        step4: "4. Association des combinaisons de routage multi-modèles et des options d’hébergement",
+        step5: "5. Rédaction des cinq artefacts de conception Markdown..."
+      }
+    },
   };
 
   const t = I18N_ADVISOR[language as keyof typeof I18N_ADVISOR] || I18N_ADVISOR.en;
@@ -459,7 +638,7 @@ export const ArchitectureAdvisor: React.FC = () => {
                           tpl.rank === 2 ? 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700' :
                           'bg-amber-100/80 dark:bg-amber-950/40 text-amber-800 dark:text-amber-400 border border-amber-300 dark:border-amber-800'
                     }`}>
-                      #{tpl.rank}위
+                      #{tpl.rank}{t.rankSuffix}
                     </span>
                     {getTemplateIcon(tpl.icon)}
                   </div>
@@ -496,14 +675,14 @@ export const ArchitectureAdvisor: React.FC = () => {
                 <Sparkles className="w-5 h-5 text-indigo-600 dark:text-indigo-400 group-hover:rotate-12 transition-transform" />
               </div>
               <h3 className="font-black text-sm text-indigo-950 dark:text-indigo-200 group-hover:text-indigo-600">
-                ➕ 랭킹 더보기
+                {t.moreRanking}
               </h3>
               <p className="text-xs mt-1.5 leading-relaxed font-bold text-indigo-700 dark:text-indigo-300/80">
-                의료, 금융, 법률, 게임 NPC 등 추가 인기 시나리오 탐색
+                {t.moreRankingDesc}
               </p>
             </div>
             <div className="mt-3 pt-2 border-t border-indigo-200 dark:border-indigo-800/60 flex items-center justify-between text-xs font-black text-indigo-900 dark:text-indigo-300">
-              <span>⚡ 실시간 마크다운 생성</span>
+              <span>{t.liveMarkdown}</span>
               <ChevronRight className="w-4 h-4 opacity-70 group-hover:translate-x-1 transition-transform" />
             </div>
           </button>
@@ -517,7 +696,7 @@ export const ArchitectureAdvisor: React.FC = () => {
             <div className="flex items-center justify-between text-xs font-black text-slate-800 dark:text-slate-100">
               <span className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400 animate-spin" />
-                고객 요구사항을 바탕으로 최적의 LLM 조합과 OpEx 호스팅 인프라 비용을 산출하고 있습니다...
+                {t.calculating}
               </span>
               <span className="text-indigo-600 dark:text-indigo-400 font-black text-base">{researchProgress}% ANALYZING</span>
             </div>
@@ -571,7 +750,7 @@ export const ArchitectureAdvisor: React.FC = () => {
               <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
                 <div>
                   <span className="text-xs font-bold px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300">
-                    서비스: {result.service_name}
+                    {t.serviceLabel} {result.service_name}
                   </span>
                   <h2 className="text-2xl font-black text-slate-900 dark:text-white mt-2">
                     🎯 추천 아키텍처 모델 조합 & 호스팅 산출 결과
@@ -579,7 +758,7 @@ export const ArchitectureAdvisor: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="text-right">
-                    <div className="text-xs text-slate-500 font-bold">월간 예상 요청</div>
+                    <div className="text-xs text-slate-500 font-bold">{t.monthlyRequestsShort}</div>
                     <div className="text-base font-black text-indigo-600 dark:text-indigo-400">{result.monthly_requests.toLocaleString()} 회</div>
                   </div>
                   <button
@@ -642,10 +821,10 @@ export const ArchitectureAdvisor: React.FC = () => {
         <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
           <div className="flex items-center gap-2.5 font-black text-xl text-slate-900 dark:text-white">
             <Layers className="w-6 h-6 text-indigo-500 dark:text-indigo-400" />
-            <span>💬 서비스 요구사항 자유 묘사 & 커스터마이저 입력창</span>
+            <span>{t.freeformHeading}</span>
           </div>
           <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950 px-3 py-1 rounded-full border border-indigo-200 dark:border-indigo-800">
-            AI 의도 자동분석
+            {t.intentAuto}
           </span>
         </div>
 
@@ -653,7 +832,7 @@ export const ArchitectureAdvisor: React.FC = () => {
           {/* Natural Language Prompt Chat Bar */}
           <div className="space-y-2">
             <label className="block font-bold text-slate-900 dark:text-slate-200">
-              자유로운 문장으로 구현하려는 AI 서비스와 조건을 입력하세요 (자연어 프롬프트 입력)
+              {t.freeformPlaceholder}
             </label>
             <div className="relative">
               <textarea
@@ -672,21 +851,21 @@ export const ArchitectureAdvisor: React.FC = () => {
                 onClick={() => setCustomPrompt("사내 Confluence/PDF 문서를 RAG로 답변하는 보안 챗봇 구축")}
                 className="text-xs bg-indigo-50 dark:bg-slate-950 border border-indigo-200 dark:border-slate-800 hover:border-indigo-500 text-indigo-700 dark:text-indigo-300 px-3 py-1.5 rounded-xl transition-colors font-semibold shadow-sm"
               >
-                💡 사내 문서 RAG 챗봇
+                {t.chipRag}
               </button>
               <button
                 type="button"
                 onClick={() => setCustomPrompt("Python/JS 버그 자동 수정 및 리팩토링 에이전트")}
                 className="text-xs bg-indigo-50 dark:bg-slate-950 border border-indigo-200 dark:border-slate-800 hover:border-indigo-500 text-indigo-700 dark:text-indigo-300 px-3 py-1.5 rounded-xl transition-colors font-semibold shadow-sm"
               >
-                💡 코드 수정 에이전트
+                {t.chipCode}
               </button>
               <button
                 type="button"
                 onClick={() => setCustomPrompt("영수증 이미지 OCR 해석 및 24/7 고객응대 멀티모달 CS봇")}
                 className="text-xs bg-indigo-50 dark:bg-slate-950 border border-indigo-200 dark:border-slate-800 hover:border-indigo-500 text-indigo-700 dark:text-indigo-300 px-3 py-1.5 rounded-xl transition-colors font-semibold shadow-sm"
               >
-                💡 멀티모달 CS 챗봇
+                {t.chipCs}
               </button>
             </div>
           </div>
@@ -694,7 +873,7 @@ export const ArchitectureAdvisor: React.FC = () => {
           {/* 3-Column Fine-Tuning Controls */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-3 border-t border-slate-200 dark:border-slate-800">
             <div>
-              <label htmlFor="advisor-service-type" className="block font-bold mb-1.5 text-slate-900 dark:text-slate-200">서비스 유형</label>
+              <label htmlFor="advisor-service-type" className="block font-bold mb-1.5 text-slate-900 dark:text-slate-200">{t.serviceType}</label>
               <select
                 id="advisor-service-type"
                 value={serviceType}
@@ -711,11 +890,11 @@ export const ArchitectureAdvisor: React.FC = () => {
 
             <div>
               <div className="flex justify-between font-bold mb-1.5 text-slate-900 dark:text-slate-200">
-                <span>월간 예상 요청 수</span>
+                <span>{t.monthlyRequests}</span>
                 <span className="text-indigo-600 dark:text-indigo-400 font-extrabold">{monthlyRequests.toLocaleString()} 회</span>
               </div>
               <input
-                aria-label="월간 예상 요청 수"
+                aria-label={t.monthlyRequests}
                 type="range"
                 min="10000"
                 max="1000000"
@@ -725,14 +904,14 @@ export const ArchitectureAdvisor: React.FC = () => {
                 className="w-full accent-indigo-600 rounded-lg cursor-pointer h-2.5 mt-2"
               />
               <div className="flex justify-between text-[10px] text-slate-500 font-semibold mt-1">
-                <span>1만</span>
-                <span>50만</span>
-                <span>100만 회</span>
+                <span>{t.req10k}</span>
+                <span>{t.req500k}</span>
+                <span>{t.req1m}</span>
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="block font-bold mb-1 text-slate-900 dark:text-slate-200">특수 기능 옵션</label>
+              <label className="block font-bold mb-1 text-slate-900 dark:text-slate-200">{t.specialOptions}</label>
               <div className="space-y-2 bg-slate-50 dark:bg-slate-950 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
                 <label className="flex items-center gap-2 cursor-pointer font-bold text-xs text-slate-900 dark:text-slate-200 select-none">
                   <input
@@ -741,7 +920,7 @@ export const ArchitectureAdvisor: React.FC = () => {
                     onChange={(e) => setRequiresMultimodal(e.target.checked)}
                     className="w-4 h-4 accent-indigo-600 rounded"
                   />
-                  <span>🖼️ 멀티모달 (비전/이미지) 필요</span>
+                  <span>{t.needMultimodal}</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer font-bold text-xs text-slate-900 dark:text-slate-200 select-none">
                   <input
@@ -750,7 +929,7 @@ export const ArchitectureAdvisor: React.FC = () => {
                     onChange={(e) => setRequiresCoding(e.target.checked)}
                     className="w-4 h-4 accent-indigo-600 rounded"
                   />
-                  <span>⚡ 복잡 추론 & 코드 생성 필요</span>
+                  <span>{t.needCoding}</span>
                 </label>
               </div>
             </div>
@@ -762,7 +941,7 @@ export const ArchitectureAdvisor: React.FC = () => {
             className="w-full mt-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 hover:from-indigo-500 hover:to-purple-500 text-white font-black py-4 rounded-2xl shadow-xl shadow-indigo-600/30 transition-all flex items-center justify-center gap-2 active:scale-98 text-base"
           >
             {loading ? <Sparkles className="w-6 h-6 animate-spin" /> : <Zap className="w-6 h-6" />}
-            ⚡ 추천 아키텍처 재산출 & 5대 명세서 마크다운 생성하기
+            {t.recalcBtn}
           </button>
         </div>
       </div>
