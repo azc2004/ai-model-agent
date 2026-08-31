@@ -8,6 +8,11 @@ on:
       - 'frontend/**'
       - '.github/workflows/cloudflare-pages.yml'
       - 'wrangler.toml'
+      # Worker 소스와 그 의존성. 빠져 있어서 src/worker.ts 를 고쳐도 배포되지 않았고,
+      # 고쳤다고 믿은 채 프로덕션은 옛 코드로 도는 상태가 만들어졌다.
+      - 'src/**'
+      - 'package.json'
+      - 'package-lock.json'
   workflow_dispatch:
 
 jobs:
