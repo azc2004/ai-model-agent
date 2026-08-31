@@ -95,6 +95,8 @@ const I18N_TEXTS = {
     pulses: "개 펄스",
     updated: "방금 전 갱신",
     refresh: "새로고침",
+    loadFailed: "뉴스를 불러오지 못했습니다. 잠시 후 새로고침해 주세요.",
+    noArticles: "검색어나 렌즈 조건에 맞는 기사가 없습니다.",
     searchPlaceholder: "🔍 AI 트렌드 뉴스 키워드, 기업, 기술 검색 (예: OpenAI, Agent, 보안...)",
     searchResultCount: "개 기사 검색됨",
     factTitle: "핵심 3줄 요약 (Fact)",
@@ -121,6 +123,8 @@ const I18N_TEXTS = {
     pulses: "Pulses",
     updated: "Just updated",
     refresh: "Refresh",
+    loadFailed: "Could not load the news feed. Please refresh in a moment.",
+    noArticles: "No articles found for the current search/lens filter.",
     searchPlaceholder: "🔍 Search keywords, tech, company (e.g. OpenAI, Agent, Security...)",
     searchResultCount: "articles found",
     factTitle: "Key 3-Bullet Summary (Fact)",
@@ -147,6 +151,8 @@ const I18N_TEXTS = {
     pulses: "件のパルス",
     updated: "更新完了",
     refresh: "更新",
+    loadFailed: "ニュースを読み込めませんでした。しばらくしてから更新してください。",
+    noArticles: "検索条件やレンズに一致する記事がありません。",
     searchPlaceholder: "🔍 キーワード・技術・企業検索 (例: OpenAI, Agent, セキュリティ...)",
     searchResultCount: "件ヒット",
     factTitle: "要約 3つのポイント (Fact)",
@@ -173,6 +179,8 @@ const I18N_TEXTS = {
     pulses: "条脉搏",
     updated: "刚刚更新",
     refresh: "刷新",
+    loadFailed: "无法加载新闻。请稍后刷新。",
+    noArticles: "没有符合当前搜索或视角筛选的文章。",
     searchPlaceholder: "🔍 搜索关键词、技术或公司 (例: OpenAI, Agent, 安全...)",
     searchResultCount: "条结果",
     factTitle: "核心 3 条摘要 (Fact)",
@@ -199,6 +207,8 @@ const I18N_TEXTS = {
     pulses: "Noticias",
     updated: "Actualizado",
     refresh: "Actualizar",
+    loadFailed: "No se pudieron cargar las noticias. Actualiza en un momento.",
+    noArticles: "No hay artículos para la búsqueda o el filtro actual.",
     searchPlaceholder: "🔍 Buscar palabras clave, empresas o tecnología...",
     searchResultCount: "artículos encontrados",
     factTitle: "Resumen de 3 Puntos (Fact)",
@@ -225,6 +235,8 @@ const I18N_TEXTS = {
     pulses: "Nachrichten",
     updated: "Aktualisiert",
     refresh: "Aktualisieren",
+    loadFailed: "Nachrichten konnten nicht geladen werden. Bitte in Kürze aktualisieren.",
+    noArticles: "Keine Artikel für die aktuelle Suche bzw. den Filter.",
     searchPlaceholder: "🔍 Stichwort, Unternehmen oder Technologie suchen...",
     searchResultCount: "Artikel gefunden",
     factTitle: "Kernpunkte 3-Zeilen (Fact)",
@@ -251,6 +263,8 @@ const I18N_TEXTS = {
     pulses: "Articles",
     updated: "Mis à jour",
     refresh: "Actualiser",
+    loadFailed: "Impossible de charger les actualités. Veuillez actualiser dans un instant.",
+    noArticles: "Aucun article ne correspond à la recherche ou au filtre actuel.",
     searchPlaceholder: "🔍 Rechercher par mots-clés, entreprises...",
     searchResultCount: "articles trouvés",
     factTitle: "Résumé en 3 Points (Fact)",
@@ -283,417 +297,6 @@ const LENSES = [
   { id: 'business', label: '💼 비즈니스 & TCO', icon: Briefcase, desc: 'ROI, 클라우드 호스팅 TCO, 사내 보안 IAM' },
   { id: 'researcher', label: '🔬 최신 논문 & 학계', icon: Microscope, desc: 'SOTA 벤치마크, MCTS, ArXiv 논문 요약' }
 ];
-
-const CLIENT_FALLBACK_NEWS: NewsResponse = {
-  articles: [
-    {
-      id: "sample-agentic-computer-use",
-      title: "[심층 기술 분석] Anthropic Computer Use 2.0: GUI 자율 제어 및 Agentic 오케스트레이션 분석",
-      source_name: "Anthropic AI Engineering",
-      source_url: "https://www.anthropic.com/news/agentic-tooling-2.0",
-      published_at: new Date().toISOString(),
-      category: "빅테크 공식",
-      image_url: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80",
-      summary_bullets: [
-        "Anthropic이 브라우저 GUI, 마우스 클릭, 키보드 입력 및 API 연동을 스스로 판단하는 Computer Use 2.0 파이프라인을 공개했습니다.",
-        "OSWorld 벤치마크에서 복잡한 웹 조작 과업 완수율을 기존 18%에서 64%로 3.5배 대폭 향상시켰습니다.",
-        "Human-in-the-loop 결제 및 민감 데이터 변경 승인 가드레일을 기본 탑재하여 사내 보안 유출을 철저히 차단합니다."
-      ],
-      blog_summary: `# 📊 [심층 기술 분석 & 아키텍처 재구성] Anthropic Computer Use 2.0: GUI 자율 제어 및 Agentic 오케스트레이션 분석\n\n> **분석 대상**: Anthropic AI Engineering 공식 발표 | **분석 유형**: 심층 분석 및 아키텍처 재구성 리포트 | **검증**: ✅ Multi-Source Cross-Validated\n\n---\n\n### 1. 🔍 배경 분석: 왜 단순 API 연동에서 GUI 자율 제어(Computer Use)로 패러다임이 전환되는가?\n전통적인 기업 업무 자동화(RPA 및 API Integration)는 시스템이 개편되거나 API 명세가 변경될 때마다 엔지니어가 코드를 수동 수정해야 하는 **'강한 결합(Tight Coupling)과 높은 유지보수 비용'** 한계에 직면해 있었습니다.\n\nAnthropic의 **Computer Use 2.0**은 기존 방식의 한계를 깨고, 인간처럼 웹/데스크톱 화면(GUI)의 픽셀(Pixel)을 시각적으로 인식하여 **마우스 이동, 클릭, 타이핑, API 호출 판단을 스스로 수행하는 자율 오케스트레이션**으로 기술 패러다임을 근본적으로 재구성합니다.\n\n---\n\n### 2. 🏗️ 재구성된 엔드투엔드 시스템 아키텍처 & 자율 루프 (Reconstructed System Architecture)\n\n\`\`\`mermaid\nflowchart TD\n    subgraph Step1 ["1단계: 목표 수립 & 분해"]\n        A[👤 사용자 업무 요청\\nUser Goal / Natural Language] --> B[🧠 Planner Agent\\nTask Decomposition & Reasoning]\n    end\n\n    subgraph Step2 ["2단계: 실시간 보안 검증"]\n        B --> C{🛡️ 보안 검증 가드레일\\nHuman-in-the-loop Gate}\n        C -- ❌ 민감 데이터/결제 --> D[🛑 사용자 모달 승인 요청\\nApproval Gate]\n        D -- 승인 완료 --> E[🤖 GUI Worker Agent]\n        C -- ✅ 일반 통과 --> E\n    end\n\n    subgraph Step3 ["3단계: VLA 조작 실행"]\n        E --> F[💻 OS / Browser GUI Execution\\nMouse Click, Type, Scroll]\n    end\n\n    subgraph Step4 ["4단계: 비전 캡처 평가 & 피드백"]\n        F --> G[👁️ Vision Evaluator\\nScreen Capture & State Feedback]\n        G -- 과업 미완수 / 오차 발생 --> B\n        G -- ✅ 최종 과업 달성 --> H[🎉 완료 리포트 및 결과 제출]\n    end\n\`\`\`\n\n---\n\n### 3. ⚡ 3대 핵심 메커니즘 심층 분석 (Critical Technical Deep-Dive)\n\n#### 메커니즘 A. 1000x1000 정규화 그리드 좌표 인식 (Vision-Language-Action Grounding)\n- **분석**: 화면 해상도가 달라져도 클릭 정확도를 보장하기 위해, 입력 캡처 이미지를 1000x1000 정규화 그리드로 변환한 후 클릭/드래그 대상을 시각적 좌표로 계산합니다.\n- **효과**: 마우스 클릭 좌표 오차를 ±2px 이내로 제어하여 웹 상의 미세한 버튼도 정확하게 조작합니다.\n\n#### 메커니즘 B. Self-Correction 오토메이션 피드백 루프\n- **분석**: 마우스 클릭 후 팝업 모달이나 로딩 지연이 발생할 경우, 비전 평가기(Vision Evaluator)가 이전 화면과의 델타(Delta)를 비교하여 팝업 닫기나 Scroll Down을 자율 판단합니다.\n\n#### 메커니즘 C. 델타 프레임(Delta Frame) 캡처 기반 토큰 절감\n- **분석**: 매 초 전체 고화질 스크린샷을 전송할 때 발생하는 막대한 비전 토큰 비용을 방지하기 위해, 변경된 영역만 크롭(Crop)하여 전송하는 델타 캡처 기술을 채택했습니다.\n\n---\n\n### 4. ⚖️ 기술 방식별 구조적 Trade-off & 실무 비교 분석 Matrix\n\n| 비교 파라미터 | 전통적 RPA (UiPath 등) | 백엔드 REST API 연동 | Anthropic Computer Use 2.0 (본 기술) |\n| :--- | :--- | :--- | :--- |\n| **구축 방식** | 수동 클릭 좌표/DOM 엘리먼트 지정 | API 엔드포인트 파싱 & 연동 코드 작성 | **자연어 목표 입력 후 에이전트 자율 시각 조작** |\n| **UI 변경 대응력** | DOM 구조 변경 시 100% 오류 발생 | API 스펙 변경 시 연동 장애 발생 | **화면 레이아웃 변경 시에도 시각적 추론으로 자율 적응** |\n| **도입 소요 기간** | 2~3주 (스크립트 작성) | 3~4주 (백엔드 개발) | **1일 이내 (SDK 이식 및 가드레일 설정)** |\n| **비용 구조** | 솔루션 라이선스 비용 | 백엔드 유지보수 공수 | **비전 캡처 토큰 소비 (델타 캡처 시 60% 절감)** |\n\n---\n\n### 5. 💻 실무 이식 코드 레시피 (Implementation Recipe)\n\n\`\`\`python\nimport anthropic\nfrom anthropic import Anthropic\n\nclient = Anthropic(api_key=\"YOUR_ANTHROPIC_API_KEY\")\n\nresponse = client.beta.messages.create(\n    model=\"claude-3-7-sonnet-20250219\",\n    max_tokens=4096,\n    tools=[{\n        \"type\": \"computer_20241022\",\n        \"name\": \"computer\",\n        \"display_width_px\": 1920,\n        \"display_height_px\": 1080,\n        \"display_number\": 1\n    }],\n    messages=[{\n        \"role\": \"user\",\n        \"content\": \"사내 ERP 웹사이트에 접속하여 지난달 미결제 매출 명세서를 조회하고 PDF로 다운로드하세요.\"\n    }],\n    betas=[\"computer-use-2024-10-22\"]\n)\n\nprint(\"Agent Action Plan Execution:\", response.content)\n\`\`\`\n\n> 🛡️ **Production Guardrail & Security Warning (실무 경고)**:\n> - **Human-in-the-loop 승인**: 금융 결제, 회원 개인정보 삭제 등 파괴적 행동 시 반드시 사용자 승인을 거치도록 IAM 권한을 분리하세요.\n\n---\n\n### 6. 🎯 4개 직무 관점별 실전 대응 전략 (Strategic Action Plan)\n\n* **👩‍💻 엔지니어/개발자**: Anthropic Computer Use SDK를 도입하여 기존 수동 API 연동 대신 비전 자율 조작 파이프라인으로 전환하세요.\n* **💡 기획자/PM**: 사용자가 일일이 입력하지 않고 목표만 던져도 결과가 완수되는 Goal-driven 자율 UX를 서비스 로드맵에 우선 편성하세요.\n* **💼 비즈니스 리더**: 반복적인 서류 데이터 수집 및 외주 단순 입력 작업을 자율 에이전트에 위임하여 운영 비용을 75% 절감하세요.\n* **🔬 연구자/학계**: Vision-Language-Action(VLA) 모델의 픽셀 그라운딩 정확도 향상 및 델타 프레임 최적화 알고리즘 연구를 벤치마킹하세요.`,
-      actionable_insight: {
-        developer: "Computer Use SDK를 도입하여 단순 API 연동을 넘어 자율 브라우저 GUI 오케스트레이션 시스템을 구축하세요.",
-        pm: "에이전트 판단 시 금융 결제나 민감 정보 변경 단계에 Human-in-the-loop 승인 모달 UX를 설계하세요.",
-        business: "반복적인 서류 조회 및 외부 데이터 수집 작업을 자율 에이전트에 위임하여 인건비와 소요 시간을 75% 단축하세요.",
-        researcher: "Vision-Language-Action (VLA) 모델의 프레임 간 그라운딩 오차 저감 알고리즘을 분석하세요."
-      },
-      impact_score: 98,
-      tags: ["#Anthropic", "#AgenticAI", "#ComputerUse", "#SOTA"],
-      matched_lenses: ["developer", "agent", "pm", "business"]
-    },
-    {
-      id: "sample-deepseek-r1-moe",
-      title: "[심층 기술 분석] DeepSeek R1 / V3: 671B MoE 자율 강화학습(RL) 아키텍처 분석",
-      source_name: "DeepSeek AI Lab",
-      source_url: "https://github.com/deepseek-ai/DeepSeek-R1",
-      published_at: new Date().toISOString(),
-      category: "최신 논문 & 학계",
-      image_url: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80",
-      summary_bullets: [
-        "DeepSeek R1은 감독 학습(SFT) 없이 오직 자율 강화학습(RL)만으로 AIME 2024 수학 올림피아드 79.8%를 기록했습니다.",
-        "671B 전체 파라미터 중 파스당 37B만 활성화하는 DeepSeekMoE 아키텍처로 추론 API 가격을 OpenAI o1 대비 96% 절감했습니다.",
-        "Group Relative Policy Optimization (GRPO) 알고리즘을 적용하여 Critic 모델 없이도 높은 학습 안정성을 입증했습니다."
-      ],
-      blog_summary: `# 📊 [심층 기술 분석 & 아키텍처 재구성] DeepSeek R1 / V3: 671B MoE 자율 강화학습(RL) 아키텍처 분석\n\n> **분석 대상**: DeepSeek AI Lab 공식 논문 & 기술 발표 | **분석 유형**: 심층 분석 및 아키텍처 재구성 리포트 | **검증**: ✅ Multi-Source Cross-Validated\n\n---\n\n### 1. 🔍 배경 분석: 왜 감독 학습(SFT) 중심에서 자율 강화학습(RL)으로 패러다임이 전환되는가?\n기존 대형 언어 모델(LLM) 학습은 사람이 직접 작성한 고비용 정답 데이터(Supervised Fine-Tuning)에 종속되어 있어, **'사람의 능력을 넘어서는 초지능 추론'**을 학습시키는 데 한계가 있었습니다.\n\n**DeepSeek R1**은 감독 학습(SFT) 단계를 대폭 건너뛰고, 오직 **자율 강화학습(RL)**만으로 모델 스스로 오류를 수정하고 반성(Self-Correction & Reflection)하는 **Chain-of-Thought 자율 진화 아키텍처**를 완성했습니다.\n\n---\n\n### 2. 🏗️ 재구성된 DeepSeekMoE & RL 추론 파이프라인 (Reconstructed Pipeline)\n\n\`\`\`mermaid\nflowchart LR\n    subgraph Step1 ["1단계: 압축 토큰 보존"]\n        Prompt[입력 프롬프트] --> MLA[Multi-Head Latent Attention\\n(KV 캐시 메모리 93% 절감)]\n    end\n\n    subgraph Step2 ["2단계: DeepSeekMoE 라우팅"]\n        MLA --> Router{Dynamic Router\\n(Top-8 Expert Selector)}\n        Router --> E1[Shared Expert 1]\n        Router --> E2[Routed Expert 12]\n        Router --> E3[Routed Expert 48]\n    end\n\n    subgraph Step3 ["3단계: GRPO 보상 기반 추론"]\n        E1 & E2 & E3 --> CoT[Self-Correction & Reflection\\n(아하 순간 CoT 자율 생성)]\n        CoT --> Rewards{GRPO Reward Engine\\n(Critic 모델 없이 상대 보상 측정)}\n    end\n\n    Rewards --> Output[최종 정밀 추론 답변 리턴]\n\`\`\`\n\n---\n\n### 3. ⚡ 3대 핵심 메커니즘 심층 분석 (Critical Technical Deep-Dive)\n\n#### 메커니즘 A. 파스당 37B만 활성화하는 671B DeepSeekMoE 구조\n- **분석**: 전체 671B 파라미터 중 요청 1건당 딱 37B 전문가(Expert) 파라미터만 동적으로 선택 활성화합니다.\n- **효과**: Dense 모델 대비 서빙 연산량을 1/18로 감축하여 추론 가격을 OpenAI o1 대비 **96% 절감**했습니다.\n\n#### 메커니즘 B. Multi-Head Latent Attention (MLA) 메모리 혁신\n- **분석**: KV 캐시 메모리 사용량을 획기적으로 줄이기 위해 Key-Value 벡터를 저차원 잠재 공간(Latent Space)으로 압축 저장합니다.\n- **효과**: 동일 GPU 노드에서 동시 처리 가능한 유저 쿼리 수(Throughput)를 4배 이상 확대했습니다.\n\n#### 메커니즘 C. Critic 모델을 제거한 GRPO (Group Relative Policy Optimization)\n- **분석**: 기존 PPO 학습 시 필요했던 대형 Critic(가치 평가) 모델을 제거하고, 그룹 내 $Q$개 답변의 상대적 평균/표준편차 보상으로 학습을 진행합니다.\n- **효과**: RL 학습 과정에서의 메모리 전력 소비를 절반으로 낮추고 학습 안정성을 극대화했습니다.\n\n---\n\n### 4. ⚖️ 주요 프론티어 추론 모델 성능 및 TCO 비교 분석 Matrix\n\n| 평가 파라미터 | DeepSeek R1 (671B MoE) | OpenAI o1 (Latest) | Claude 3.7 Sonnet (Thinking) |\n| :--- | :--- | :--- | :--- |\n| **핵심 추론 아키텍처** | DeepSeekMoE + GRPO RL | Closed Frontier MoE | Hybrid Thinking Engine |\n| **AIME 2024 (수학 올림피아드)** | **79.8%** | 79.2% | 78.5% |\n| **SWE-Bench Verified (코딩)** | 49.2% | 48.9% | **70.3%** |\n| **1M 토큰 당 API 비용 (Input/Output)**| **$0.55 / $2.19 (96% 절감)** | $15.00 / $60.00 | $3.00 / $15.00 |\n| **온프레미스 사내망 서빙** | **가능 (8x H800 노드)** | 불가능 (클라우드 전용) | 불가능 (클라우드 전용) |\n\n---\n\n### 5. 💻 실무 이식 코드 레시피 (Implementation Recipe)\n\n\`\`\`python\nfrom openai import OpenAI\n\nclient = OpenAI(api_key=\"YOUR_DEEPSEEK_API_KEY\", base_url=\"https://api.deepseek.com/v1\")\n\nresponse = client.chat.completions.create(\n    model=\"deepseek-reasoner\",\n    messages=[{\"role\": \"user\", \"content\": \"PostgreSQL 1M TPS 처리를 위한 파티셔닝 전략 수립\"}]\n)\n\nprint(\"Reasoning Process:\", response.choices[0].message.reasoning_content)\nprint(\"Final Answer:\", response.choices[0].message.content)\n\`\`\`\n\n> 🛡️ **Production Guardrail & Security Warning (실무 경고)**:\n> - **UI 펼치기/접기 디자인**: 유저 화면 렌더링 시 장황한 \`reasoning_content\`는 기본적으로 접힘(Collapsed) 상태로 제공하여 읽기 피로도를 방지하세요.\n\n---\n\n### 6. 🎯 4개 직무 관점별 실전 대응 전략 (Strategic Action Plan)\n\n* **👩‍💻 엔지니어/개발자**: vLLM 및 SGLang FP8 양자화 서빙 파이프라인을 구축하여 8x H800 노드에서 671B MoE 모델을 고속 서빙하세요.\n* **💡 기획자/PM**: 추론 시간과 정확도 밸런스를 유저가 직접 조절하는 Thinking Budget 선택 인터페이스를 제공하세요.\n* **💼 비즈니스 리더**: 고비용 상용 추론 API를 DeepSeek R1 기반 로컬/오픈 API로 대체하여 월 인프라 TCO를 80% 이상 절감하세요.\n* **🔬 연구자/학계**: Critic 모델 없이 그룹 상대 보상으로 유전자 알고리즘 학습을 수행하는 GRPO 수학적 원리를 분석하세요.`,
-      actionable_insight: {
-        developer: "vLLM 및 SGLang FP8 양자화 서빙 파이프라인을 구축하여 8x H800 노드에서 671B MoE 모델을 고속 서빙하세요.",
-        pm: "에이전트의 사고 과정(Thinking)을 유저 인터페이스에 펼치기/접기 형태로 직관적으로 시각화하세요.",
-        business: "고비용 상용 추론 API를 DeepSeek R1 기반 로컬/오픈 API로 대체하여 월 인프라 TCO를 80% 이상 절감하세요.",
-        researcher: "Critic 모델 없이 그룹 상대 보상으로 유전자 알고리즘 학습을 수행하는 GRPO 수학적 원리를 분석하세요."
-      },
-      impact_score: 96,
-      tags: ["#DeepSeek", "#MoE", "#Reasoning", "#GRPO", "#SOTA"],
-      matched_lenses: ["developer", "researcher", "business"]
-    },
-    {
-      id: "sample-w3c-cool-uris",
-      title: "[심층 기술 분석] Cool URIs don't change: W3C 영구 웹 아키텍처 및 시스템 지속성 분석",
-      source_name: "W3C Web Architecture",
-      source_url: "https://www.w3.org/Provider/Style/URI",
-      published_at: new Date().toISOString(),
-      category: "IT 매체",
-      image_url: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80",
-      summary_bullets: [
-        "W3C 창시자 팀 버너스 리의 원칙에 따라, 웹 기술 스택 및 DB 스키마 변경 시에도 URL이 파손되지 않는 디커플링 구조를 제시합니다.",
-        "URL 경로에 백엔드 확장자(.php, .asp)나 내부 데이터베이스 PK를 노출하지 않는 것이 영구적 웹 자산 보존의 핵심입니다.",
-        "Nginx / Cloudflare Edge 프록시 추상화 레이어를 적용하여 5년 경과 후 깨진 링크 비율(Link Rot)을 68%에서 3% 이내로 감소시킵니다."
-      ],
-      blog_summary: `# 📊 [심층 기술 분석 & 아키텍처 재구성] Cool URIs don't change: W3C 영구 웹 아키텍처 및 시스템 지속성 분석\n\n> **분석 대상**: W3C Web Architecture (Tim Berners-Lee) | **분석 유형**: 심층 분석 및 아키텍처 재구성 리포트 | **검증**: ✅ Multi-Source Cross-Validated\n\n---\n\n### 1. 🔍 배경 분석: 왜 개발 프레임워크 변경 시 URL 파손(Link Rot) 문제가 발생하는가?\n많은 기업들이 웹 서비스나 백엔드 시스템을 리팩토링(PHP ➔ Node.js ➔ Python/Go)할 때 \`/page.php\` 또는 \`/servlet/item?id=99\`와 같은 파일 확장자나 DB PK를 URL 주소에 직접 노출하는 **'강결합 주소 설계'** 오류를 범하고 있습니다.\n\n이로 인해 시스템 개편 시마다 기존 북마크나 검색엔진 인덱스 링크가 깨져 **5년 경과 시 68%의 링크 파손율(Link Rot)**이 발생하고 기업의 디지털 웹 자산 가치가 상실되는 심각한 문제가 일어납니다.\n\n---\n\n### 2. 🏗️ 재구성된 W3C 영구 디커플링 아키텍처 (Reconstructed Architecture)\n\n\`\`\`mermaid\nflowchart TD\n    subgraph Client_Layer ["1계층: 클라이언트 외부 영구 주소"]\n        User[웹 브라우저 / 외부 API Client] -->|영구 식별자 요청| CoolURI["https://example.com/docs/api-guidelines"]\n    end\n\n    subgraph Abstraction_Layer ["2계층: 추상화 & 프록시 레이어"]\n        CoolURI --> ReverseProxy[Nginx / Cloudflare Edge Proxy]\n        ReverseProxy -->|내부 주소 맵핑 분리| Router{Internal Router}\n    end\n\n    subgraph Storage_Layer ["3계층: 백엔드 & 저장소 (자유롭게 개편 가능)"]\n        Router -->|2020년| Server1[PHP / Apache Server]\n        Router -->|2024년| Server2[Node.js / Express Server]\n        Router -->|2026년| Server3[FastAPI / Python Microservice]\n    end\n\`\`\`\n\n---\n\n### 3. ⚡ 3대 핵심 메커니즘 심층 분석 (Critical Technical Deep-Dive)\n\n#### 메커니즘 A. 기술 스택 및 파일 확장자의 완전한 격리\n- **분석**: URI 경로에 \`.php\`, \`.asp\`, \`cgi-bin\` 등 백엔드 구현 기술을 완전히 삭제하고, 식별 대상 자원(Resource)의 명사형 이름만 남깁니다.\n- **효과**: 백엔드 프레임워크를 전면 재작성하더라도 외부 클라이언트 주소는 단 1px도 변경되지 않습니다.\n\n#### 메커니즘 B. 리버스 프록시(Reverse Proxy) 기반 URL 맵핑 추상화\n- **분석**: Edge 리버스 프록시(Nginx / Cloudflare Worker)가 외부 요청 URI를 내부 마이크로서비스 라우트로 실시간 맵핑 릴레이합니다.\n\n#### 메커니즘 C. 301 Permanent Redirect 통한 영구 자산 승계\n- **분석**: 불가피한 주소 변경 시 임시 302가 아닌 301 Permanent Redirect 헤더를 응답하여 검색엔진 백링크 점수를 100% 보존합니다.\n\n---\n\n### 4. ⚖️ 나쁜 URI 패턴 vs W3C 영구 Cool URI 패턴 비교 분석 Matrix\n\n| 비교 구분 | 나쁜 URI 패턴 (Bad Practice) | 영구적 Cool URI 패턴 (Best Practice) | 구조적 개선 효과 |\n| :--- | :--- | :--- | :--- |\n| **기술 스택 노출** | \`/page.php\`, \`/index.asp\` | \`/docs/guidelines\`, \`/articles/123\` | **백엔드 언어 변경 시 주소가 파손되지 않음** |\n| **날짜/버전 과도 포함**| \`/2026/08/10/article.html\` | \`/articles/cool-uris-architecture\` | **콘텐츠 카테고리 재편 시 영구 지속성 유지** |\n| **DB PK 및 내부 경로**| \`/servlet/db/item_v2.jsp?id=99\` | \`/products/wireless-keyboard\` | **DB 스키마 리팩토링 시 외부에 영향을 주지 않음** |\n| **조직/부서명 포함**| \`/marketing/reports/2026\` | \`/reports/2026\` | **회사 조직 개편이나 부서 통합 시 링크 유지** |\n\n---\n\n### 5. 💻 실무 이식 Nginx 영구 프록시 연동 코드 레시피 (Implementation Recipe)\n\n\`\`\`nginx\nserver {\n    listen 80;\n    server_name example.com;\n\n    location /docs/api-guidelines {\n        proxy_pass http://internal-microservice-cluster:8000/v3/guidelines;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n    }\n\n    location ~ ^/page\\.php$ {\n        return 301 https://$host/docs/api-guidelines;\n    }\n}\n\`\`\`\n\n> 🛡️ **Production Guardrail Warning (실무 경고)**:\n> - **Canonical Tag 선언**: 동일 콘텐츠가 복수 주소로 노출될 가능성을 방지하기 위해 HTML \`<link rel=\"canonical\" href=\"...\">\` 태그를 반드시 선언하세요.\n\n---\n\n### 6. 🎯 4개 직무 관점별 실전 대응 전략 (Strategic Action Plan)\n\n* **👩‍💻 엔지니어/개발자**: Nginx/Cloudflare Edge Worker를 적용하여 외부 영구 URI 주소와 내부 백엔드 파일/기술 스택을 완전히 디커플링하세요.\n* **💡 기획자/PM**: 콘텐츠 URL 설계 시 날짜나 부서명 대신 영구 식별자 Slug 방식을 서비스 라우팅 표준으로 채택하세요.\n* **💼 비즈니스 리더**: SEO 검색엔진 순위 유지 및 68%의 깨진 링크 발생 방지를 통해 브랜드 디지털 웹 자산 가치를 유지하세요.\n* **🔬 연구자/학계**: HTTP Content Negotiation 메커니즘을 적용하여 자원의 식별자와 표상(Representation)을 분리하는 웹 아키텍처 원리를 연구하세요.`,
-      actionable_insight: {
-        developer: "Nginx 및 Cloudflare Edge Worker 단에 URL 라우팅 추상화 레이어를 배치하여 파일 확장자와 서버 경로를 완벽히 분리하세요.",
-        pm: "검색엔진 SEO 및 유저 가독성 모두에 친화적인 시맨틱 Slug URL 디자인 지침을 수립하세요.",
-        business: "주소 변경으로 인한 검색 노출 패널티 및 브랜드 백링크 자산 손실 위험을 사전에 완벽히 차단하세요.",
-        researcher: "학술 논문 및 연구 데이터셋 보관을 위한 Digital Object Identifier (DOI) 지속성 아키텍처를 연구하세요."
-      },
-      impact_score: 92,
-      tags: ["#W3C", "#WebArchitecture", "#URI", "#Infrastructure"],
-      matched_lenses: ["developer", "pm", "business"]
-    },
-    // 🤖 Agent & 오토메이션 특화 (Agent Lens)
-    {
-      id: "fb-agent-1",
-      title: "Anthropic, 멀티 에이전트 자율 업무 워크플로우를 위한 Computer Use & Agentic Tooling 프레임워크 발표",
-      source_name: "Anthropic News",
-      source_url: "https://www.anthropic.com/news",
-      published_at: new Date().toISOString(),
-      category: "빅테크 공식",
-      image_url: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80",
-      summary_bullets: [
-        "Anthropic이 마우스 클릭, 키보드 입력, 브라우저 탐색을 스스로 수행하는 자율 Agentic 파이프라인 개방.",
-        "복잡한 서류 정리 및 웹 사이트 데이터 수집 작업을 멀티 에이전트 분산 처리로 자동 완수.",
-        "에이전트 판단 행동에 대한 보안 가드레일 및 인간 승인 루프(Human-in-the-loop) 기본 내장."
-      ],
-      actionable_insight: {
-        developer: "Agentic Tooling SDK를 도입하여 단순 백엔드 API 연동을 넘어 브라우저 GUI 자동화 프로세스를 수립하세요.",
-        pm: "에이전트가 복잡한 업무를 대행할 때 승인(Human-in-the-loop) 인터랙션을 설계하여 보안 이탈 위험을 차단하세요.",
-        business: "반복적인 사내 데이터 처리 업무를 자율 에이전트에 위임하여 인건비 및 업무 처리 시간을 80% 단축하세요."
-      },
-      impact_score: 99,
-      tags: ["#Anthropic", "#AgenticAI", "#ComputerUse", "#자율에이전트"],
-      matched_lenses: ["agent"]
-    },
-    {
-      id: "fb-agent-2",
-      title: "Microsoft AutoGen 0.4 발표, 멀티 에이전트 간 분산 협업 및 실시간 자율 자가 오류 교정 엔진 탑재",
-      source_name: "Microsoft AI Blog",
-      source_url: "https://blogs.microsoft.com/ai/",
-      published_at: new Date().toISOString(),
-      category: "빅테크 공식",
-      image_url: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
-      summary_bullets: [
-        "마이크로소프트가 자율 멀티 에이전트 오케스트레이션 프레임워크 AutoGen 0.4 버전을 공식 출시함.",
-        "에이전트 간 대화 도중 오류 발생 시 스스로 코드와 추론을 수정하는 Self-Correction 오토메이션 루프 구현.",
-        "기업 사내 ERP, CRM, 데이터베이스와 보안 연동되는 엔터프라이즈 멀티 에이전트 허브 지원."
-      ],
-      actionable_insight: {
-        developer: "AutoGen 0.4 분산 메시지 버스를 활용해 독립적으로 구동되는 전문가 에이전트 시스템을 구축하세요.",
-        business: "엔터프라이즈 ERP/CRM과 에이전트를 결합하여 자율 보고서 생성 및 업무 자동화를 도입하세요."
-      },
-      impact_score: 97,
-      tags: ["#Microsoft", "#AutoGen", "#MultiAgent", "#자율오토메이션"],
-      matched_lenses: ["agent"]
-    },
-    {
-      id: "fb-agent-3",
-      title: "AutoGPT 3.0 출시, 복잡한 웹 탐색/시장 조사/데이터 정리를 인간 개입 없이 완전 자동 완수하는 AI 에이전트",
-      source_name: "VentureBeat AI",
-      source_url: "https://venturebeat.com/category/ai/",
-      published_at: new Date().toISOString(),
-      category: "IT 매체",
-      image_url: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
-      summary_bullets: [
-        "AutoGPT 오픈소스 프로젝트가 자율 목표 설정 및 단계별 실행 성능이 극대화된 3.0 엔진을 선보임.",
-        "구글 검색, 웹 스크래핑, 엑셀 파일 생성을 단 하나의 목표 프롬프트만으로 끝까지 실행.",
-        "작업 실패 시 다른 대안 경로를 스스로 탐색하는 지능형 재시도(Retry with Backoff) 내장."
-      ],
-      actionable_insight: {
-        developer: "자율 재시도 알고리즘을 활용해 크롤링 및 수집 파이프라인의 에러 복구력을 강화하세요.",
-        pm: "사용자가 복잡한 조작 없이 단 한 줄의 목표 입력으로 결과를 얻는 에이전트 기반 목표 중심 UI를 구축하세요."
-      },
-      impact_score: 93,
-      tags: ["#AutoGPT", "#Agent", "#업무자동화", "#WebAgent"],
-      matched_lenses: ["agent"]
-    },
-
-    // 👩‍💻 개발자/엔지니어 특화 (Developer Lens)
-    {
-      id: "fb-dev-1",
-      title: "OpenAI & Microsoft, 저비용 고효율 모델 Fine-Tuning API 및 추론 지연시간 35% 단축 기술 정식 출시",
-      source_name: "OpenAI Blog",
-      source_url: "https://openai.com/news/",
-      published_at: new Date().toISOString(),
-      category: "🔮 다중 소스 융합 블로그",
-      image_url: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
-      is_synthesized: true,
-      multi_sources: [
-        { name: "OpenAI Official", url: "https://openai.com/news/" },
-        { name: "Microsoft Research", url: "https://www.microsoft.com/en-us/research/" },
-        { name: "VentureBeat AI", url: "https://venturebeat.com/category/ai/" }
-      ],
-      primary_topic: "Fine-Tuning API & Latency Optimization",
-      summary_bullets: [
-        "OpenAI 및 Microsoft Research가 저비용 고효율 파인튜닝과 추론 성능을 극대화한 신규 엔드포인트를 공식 개방함.",
-        "기업 도메인에 특화된 사용자 맞춤형 커스텀 모델 생성을 60% 이상 저렴한 비용으로 제공.",
-        "개발자 콘솔을 통한 추론 지연 시간(Latency) 35% 단축 및 9월 말까지 파인튜닝 토큰 혜택 부여."
-      ],
-      actionable_insight: {
-        developer: "기존 RAG 파이프라인에서 복잡한 전처리 대신 커스텀 모델 파인튜닝을 도입해 API 호스트 비용을 60% 절감하세요.",
-        pm: "사용자 도메인 특화 챗봇의 응답 일관성을 끌어올려 UX 이탈률을 감소시킬 시점입니다.",
-        business: "엔터프라이즈 사내 지식 기반 도메인을 고성능 소형 파인튜닝 모델로 대체하여 TCO를 최적화하세요."
-      },
-      impact_score: 98,
-      tags: ["#OpenAI", "#FineTuning", "#GPT4o", "#개발자API"],
-      matched_lenses: ["developer", "synthesized"]
-    },
-    {
-      id: "fb-dev-2",
-      title: "Google DeepMind & ArXiv, SWE-bench 42% 상회하는 코드 리팩토링 및 런타임 버그 수술용 자율 코딩 에이전트 공개",
-      source_name: "Google DeepMind",
-      source_url: "https://deepmind.google/blog/",
-      published_at: new Date().toISOString(),
-      category: "🔮 다중 소스 융합 블로그",
-      image_url: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80",
-      is_synthesized: true,
-      multi_sources: [
-        { name: "Google DeepMind", url: "https://deepmind.google/blog/" },
-        { name: "ArXiv AI Papers", url: "https://arxiv.org/abs/2608.001" }
-      ],
-      primary_topic: "Autonomous Coding Agent & SWE-Bench",
-      summary_bullets: [
-        "구글 딥마인드와 ArXiv 커뮤니티가 멀티모달 화면 뷰어와 지식 그래프를 연동한 자율 개발 에이전트 엔진을 공개함.",
-        "SWE-bench 파이프라인 벤치마크에서 기존 LLM 대비 코드 수정 및 자동 테스트 성공률 42% 상회.",
-        "개발자가 작성한 요구사항 명세서만으로 전체 프론트엔드/백엔드 모듈 빌드 자동 완성."
-      ],
-      actionable_insight: {
-        developer: "codebase-memory-mcp와 결합하여 레거시 코드베이스 리팩토링 작업을 에이전트에 위임해 개발 속도를 3배 높이세요.",
-        pm: "새로운 모듈 기획 시 스펙 문서(spec.md)의 EARS 구문을 정밀화하여 에이전트 자동 구현 성공률을 높이세요."
-      },
-      impact_score: 95,
-      tags: ["#GoogleDeepMind", "#AgenticAI", "#SWEbench", "#자율코딩"],
-      matched_lenses: ["developer", "agent", "synthesized"]
-    },
-    {
-      id: "fb-dev-3",
-      title: "LangChain & LlamaIndex, 멀티 에이전트 메모리 분산 및 로컬 임베딩 벡터 속도 5배 향상 프레임워크 공개",
-      source_name: "LangChain Blog",
-      source_url: "https://blog.langchain.dev/",
-      published_at: new Date().toISOString(),
-      category: "연구/학계",
-      image_url: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
-      summary_bullets: [
-        "LangChain 0.3 버전 업데이트를 통해 멀티 에이전트 간 비동기 메모리 공유 구조가 정식 통합됨.",
-        "LlamaIndex와의 분산 백엔드 결합으로 100만 건 이상의 벡터 검색 지연 시간을 20ms 이하로 단축.",
-        "로컬 환경에서의 Ollama / vLLM 서빙 호환 라우터 기본 내장."
-      ],
-      actionable_insight: {
-        developer: "vLLM과 LangChain 0.3 비동기 체인을 결합하여 에이전트 응답 속도를 20ms 수준으로 최적화하세요."
-      },
-      impact_score: 89,
-      tags: ["#LangChain", "#LlamaIndex", "#RAG", "#VectorDB"],
-      matched_lenses: ["developer", "agent"]
-    },
-
-    // 💡 기획/PM 특화 (PM Lens)
-    {
-      id: "fb-pm-1",
-      title: "Anthropic, Claude 3.5 Sonnet Interactive Artifacts 아키텍처 및 프로토타입 자동화 UX 가이드 발표",
-      source_name: "Anthropic News",
-      source_url: "https://www.anthropic.com/news",
-      published_at: new Date().toISOString(),
-      category: "빅테크 공식",
-      image_url: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80",
-      summary_bullets: [
-        "Anthropic이 실시간 웹 앱 및 렌더링 아티팩트 창을 지식 파일 파이프라인과 통합 발표.",
-        "코드 실행 워크스페이스 내에서 백엔드 및 UI 컴포넌트를 즉각 미리보기 가능한 차세대 워크플로우.",
-        "엔터프라이즈 기획팀의 프로토타이핑 시간을 3일에서 1시간으로 단축하는 UX 패턴 제시."
-      ],
-      actionable_insight: {
-        pm: "인터랙티브 아티팩트 뷰어를 활용해 프로토타입 UI 제작 시간을 기존 3일에서 1시간으로 단축하세요."
-      },
-      impact_score: 94,
-      tags: ["#Anthropic", "#Claude35", "#Artifacts", "#서비스기획"],
-      matched_lenses: ["pm"]
-    },
-    {
-      id: "fb-pm-2",
-      title: "MIT Tech Review, AI 챗봇 이탈률 줄이는 대화형 UX 및 멀티모달 인터랙션 디자인 패턴 발표",
-      source_name: "MIT Tech Review",
-      source_url: "https://www.technologyreview.com/",
-      published_at: new Date().toISOString(),
-      category: "IT 매체",
-      image_url: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=800&q=80",
-      summary_bullets: [
-        "글로벌 서비스 100개의 AI 대화형 UI를 분석하여 사용자 만족도가 높은 5대 UX 레이아웃 정립.",
-        "텍스트 응답 지연 시 실시간 컴포넌트 렌더링 스켈레톤과 스트리밍 애니메이션 기법의 효과 입증.",
-        "사용자의 의도를 선제적으로 파악하는 지능형 대화 숏컷(Recommended Prompts) 설계법 제시."
-      ],
-      actionable_insight: {
-        pm: "대화 상단에 추천 프롬프트 칩과 스트리밍 스켈레톤 UI를 도입해 이탈률을 25% 절감하세요."
-      },
-      impact_score: 91,
-      tags: ["#MITTechReview", "#AIUX", "#챗봇기획", "#프로덕트디자인"],
-      matched_lenses: ["pm"]
-    },
-    {
-      id: "fb-pm-3",
-      title: "AWS, 에이전트 AI 기반 데이터 온보딩 기획 프레임워크 공개... 수주 소요 작업을 40분으로 단축",
-      source_name: "AWS Machine Learning",
-      source_url: "https://aws.amazon.com/blogs/machine-learning/",
-      published_at: new Date().toISOString(),
-      category: "빅테크 공식",
-      image_url: "https://images.unsplash.com/photo-1607799279861-4dd421887fb3?auto=format&fit=crop&w=800&q=80",
-      summary_bullets: [
-        "AWS가 포뮬러 1®과의 협업을 통해 Amazon Bedrock 에이전트 기반 데이터 기획 파이프라인 구축.",
-        "기존 데이터 소스 온보딩 요구사항 수집 및 분석 시간을 최대 8주에서 40분으로 단축.",
-        "비엔지니어 기획자도 자연어 명령만으로 데이터 스키마를 구성하는 기획 자동화 실현."
-      ],
-      actionable_insight: {
-        pm: "데이터 통합 프로젝트의 병목 현상을 식별하고 에이전트 AI 도입으로 프로덕트 출시 속도를 끌어올리세요."
-      },
-      impact_score: 92,
-      tags: ["#AWS", "#Bedrock", "#데이터기획", "#온보딩자동화"],
-      matched_lenses: ["pm"]
-    },
-
-    // 💼 비즈니스/임원 특화 (Business Lens)
-    {
-      id: "fb-biz-1",
-      title: "VentureBeat, Enterprise AI 도입 기업 74%가 API 대신 자수성가 셀프호스팅 TCO 절감 달성",
-      source_name: "VentureBeat AI",
-      source_url: "https://venturebeat.com/category/ai/",
-      published_at: new Date().toISOString(),
-      category: "IT 매체",
-      image_url: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80",
-      summary_bullets: [
-        "포춘 500대 기업의 2026년 AI 예산 집행 보고서 결과 상율 74%가 하이브리드 TCO 구조를 선택함.",
-        "일일 트래픽 100만 건 이상 구간에서는 상용 API 대비 온프레미스 GPU 호스팅이 55% 비용 우위 달성.",
-        "사내 데이터 유출 방지를 위한 온프레미스 오픈웨이트(Llama 3, Qwen 2.5) 자산화 흐름 가속."
-      ],
-      actionable_insight: {
-        business: "사내 민감 정보 유출 방지 및 일일 호출량 100만 건 초과 구간에서 오픈웨이트 호스팅 전환으로 TCO 55%를 절감하세요."
-      },
-      impact_score: 96,
-      tags: ["#VentureBeat", "#AITCO", "#비즈니스전략", "#GPU호스팅"],
-      matched_lenses: ["business"]
-    },
-    {
-      id: "fb-biz-2",
-      title: "Gartner 2026 AI 레포트, 에이전트 워크플로우 도입으로 엔터프라이즈 운영비 40% 절감 예측",
-      source_name: "Gartner Newsroom",
-      source_url: "https://www.gartner.com/en/newsroom",
-      published_at: new Date().toISOString(),
-      category: "IT 매체",
-      image_url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
-      summary_bullets: [
-        "가트너가 2026년 전 세계 기업의 AI 도입 트렌드 분석 보고서를 발간함.",
-        "단순 생성형 AI 챗봇을 넘어 업무를 자동 수행하는 에이전트 워크플로우 도입이 핵심 차별화 요소로 부상.",
-        "에이전트 오토메이션을 적용한 솔루션의 OpEx 절감률이 평균 40%에 달함."
-      ],
-      actionable_insight: {
-        business: "단순 챗봇 서비스에서 자율 수행 에이전트로 프로덕트를 고도화하여 시장 경쟁력을 확보하세요."
-      },
-      impact_score: 95,
-      tags: ["#Gartner", "#OpEx절감", "#AI전략", "#엔터프라이즈"],
-      matched_lenses: ["business"]
-    },
-
-    // 🔬 연구/학계 특화 (Researcher Lens)
-    {
-      id: "fb-res-1",
-      title: "ArXiv & Hugging Face, SOTA 추론 성능 상회하는 MCTS 기반 차세대 프런티어 논문 심사 공개",
-      source_name: "ArXiv AI Papers",
-      source_url: "https://arxiv.org/abs/2608.001",
-      published_at: new Date().toISOString(),
-      category: "연구/학계",
-      image_url: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80",
-      summary_bullets: [
-        "Monte Carlo Tree Search(MCTS)와 LLM의 테스트 타임 컴퓨팅(Test-time Compute) 결합 신논문 발표.",
-        "기존 단일 추론 방식 대비 수학 및 복잡 논리 증명 정확도(Math-500) 18.4% 상승 달성.",
-        "Open-weights 프런티어 모델에서의 추론 스트리밍 시 토큰 생성 경로 탐색 최적화 알고리즘 구체화."
-      ],
-      actionable_insight: {
-        researcher: "Test-time Compute 파이프라인과 MCTS 알고리즘을 결합한 SOTA 추론 메커니즘을 벤치마킹하세요."
-      },
-      impact_score: 97,
-      tags: ["#ArXiv", "#HuggingFace", "#MCTS", "#TestTimeCompute"],
-      matched_lenses: ["researcher"]
-    },
-    {
-      id: "fb-res-2",
-      title: "Stanford AI Lab, hallucination 0.1% 미만 달성하는 3-Tier Verifier 아키텍처 논문 발표",
-      source_name: "Stanford AI Lab",
-      source_url: "https://ai.stanford.edu/blog/",
-      published_at: new Date().toISOString(),
-      category: "연구/학계",
-      image_url: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=800&q=80",
-      summary_bullets: [
-        "스탠포드 연구진이 환각 현상을 0.1% 미만으로 억제하는 결정론적 검증 파이프라인 제시.",
-        "Router ➔ Generator ➔ Critique ➔ Deterministic Validator 4단계 루프 알고리즘 수식 입증.",
-        "의료 및 법률 등 미션 크리티컬 도메인에서의 높은 답변 신뢰성 확보 방법 제시."
-      ],
-      actionable_insight: {
-        researcher: "4단계 Critique 루프 알고리즘을 프로덕션 검증 시스템에 이식하여 답변 환각율을 0.1%로 낮추세요."
-      },
-      impact_score: 96,
-      tags: ["#StanfordAI", "#Hallucination", "#Verifier", "#AI연구"],
-      matched_lenses: ["researcher"]
-    },
-
-    // 🛡️ AI 보안 & TCO 특화
-    {
-      id: "fb-sec-1",
-      title: "OWASP Top 10 for LLM 2026 개정판 발표... Prompt Injection 및 Indirect System Override 방어 가이드",
-      source_name: "OWASP Foundation",
-      source_url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
-      published_at: new Date().toISOString(),
-      category: "IT 매체",
-      image_url: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80",
-      summary_bullets: [
-        "OWASP가 2026년 기준 LLM 서비스 보안 취약점 1위로 간접 프롬프트 인젝션(Indirect Prompt Injection)을 지정.",
-        "외부 웹사이트 크롤링 및 PDF 분석 시 악의적 에이전트 오버라이드 지침이 삽입되는 위협 차단 솔루션 제시.",
-        "입력 샌드박싱과 출력 정규식 Sanitizer 필터링의 필후성 강조."
-      ],
-      actionable_insight: {
-        developer: "입력 프롬프트 산화 필터와 Output JSON 스키마 검증 루틴을 도입해 프롬프트 탈옥 위험을 무력화하세요.",
-        pm: "외부 데이터 수집 기능 추가 시 보안 가드레일을 기본 스펙으로 정의하세요."
-      },
-      impact_score: 98,
-      tags: ["#OWASP", "#LLM보안", "#PromptInjection", "#보안가드레일"],
-      matched_lenses: ["developer", "pm", "business"]
-    },
-    {
-      id: "fb-tco-1",
-      title: "SemiAnalysis, NVIDIA H100 vs L40S vs Cloud API 비용 분기점 정밀 대조 분석",
-      source_name: "SemiAnalysis",
-      source_url: "https://semianalysis.com/",
-      published_at: new Date().toISOString(),
-      category: "IT 매체",
-      image_url: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80",
-      summary_bullets: [
-        "글로벌 반도체 전문 분석 기관이 Cloud API 대비 독립 GPU 클러스터 TCO 손익분기점을 발표.",
-        "Token/sec 수율 대비 H100 SXM5는 대규모 Batch 추론에서, L40S는 Real-time Agentic 추론에서 40% 가성비 우위.",
-        "상용 API 사용 시 월 $15,000 이상 발생 구간부터 독립 GPU 서버리스 호스팅이 6개월 내 손익분기점(BEP) 달성."
-      ],
-      actionable_insight: {
-        business: "월간 API 지출이 $15,000를 상회할 때 L40S 서버리스 GPU 호스팅으로 전환하여 6개월 내 BEP를 달성하세요."
-      },
-      impact_score: 96,
-      tags: ["#SemiAnalysis", "#GPU비용", "#H100", "#L40S", "#TCO분석"],
-      matched_lenses: ["business", "developer"]
-    }
-  ],
-  total_count: 15,
-  last_updated: new Date().toISOString()
-};
 
 export default function NewsPulseView() {
   const { language } = useLanguage();
@@ -846,26 +449,12 @@ export default function NewsPulseView() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // 🚀 0초 마운트 즉시 URL ?article= 파라미터 감지 및 동기적 즉각 개방
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const articleId = params.get('article');
-    if (articleId) {
-      const foundInFallback = CLIENT_FALLBACK_NEWS.articles.find(a => a.id === articleId);
-      if (foundInFallback) {
-        setSelectedArticle(foundInFallback);
-      }
-    }
-  }, []);
-
   // API 데이터 로드 완료 시 갱신
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const articleId = params.get('article');
     if (articleId) {
-      const foundInData = newsData?.articles?.find(a => a.id === articleId);
-      const foundInFallback = CLIENT_FALLBACK_NEWS.articles.find(a => a.id === articleId);
-      const target = foundInData || foundInFallback;
+      const target = newsData?.articles?.find(a => a.id === articleId);
       if (target) {
         setSelectedArticle(target);
       }
@@ -881,9 +470,7 @@ export default function NewsPulseView() {
       setActiveLensState(lensParam);
 
       if (articleId) {
-        const foundInData = newsData?.articles?.find(a => a.id === articleId);
-        const foundInFallback = CLIENT_FALLBACK_NEWS.articles.find(a => a.id === articleId);
-        const target = foundInData || foundInFallback;
+        const target = newsData?.articles?.find(a => a.id === articleId);
         if (target) {
           setSelectedArticle(target);
           return;
@@ -928,25 +515,14 @@ export default function NewsPulseView() {
       const data = await res.json();
       if (data && data.articles && data.articles.length > 0) {
         setNewsData(data);
+        setError(null);
       }
     } catch (err: any) {
       clearTimeout(timeoutId);
-      console.warn("Using Client Fallback News due to network or timeout:", err);
-      setNewsData(prev => {
-        if (prev && prev.articles && prev.articles.length > 0) {
-          return prev;
-        }
-        const filteredFallback = (lens === 'all' || lens === 'new')
-          ? CLIENT_FALLBACK_NEWS.articles 
-          : (lens === 'synthesized')
-            ? CLIENT_FALLBACK_NEWS.articles.filter(a => a.is_synthesized || a.category?.includes('융합') || a.matched_lenses?.includes('synthesized'))
-            : CLIENT_FALLBACK_NEWS.articles.filter(a => a.matched_lenses.includes(lens));
-        return {
-          articles: filteredFallback,
-          total_count: filteredFallback.length,
-          last_updated: CLIENT_FALLBACK_NEWS.last_updated
-        };
-      });
+      // 예전에는 번들에 넣어둔 가짜 기사를 대신 보여줬다. 실패를 실제 뉴스처럼
+      // 위장하는 것이라 로드 실패는 실패라고 말한다.
+      console.warn('News fetch failed:', err);
+      setError(t.loadFailed);
     } finally {
       setLoading(false);
     }
@@ -1149,7 +725,7 @@ export default function NewsPulseView() {
       ) : filteredArticles.length === 0 ? (
         <div className="bg-gray-50 dark:bg-gray-800/50 text-gray-500 p-10 rounded-xl text-center border border-gray-200 dark:border-gray-700">
           <Newspaper className="w-12 h-12 mx-auto mb-3 opacity-20" />
-          <p>No articles found for the current search/lens filter.</p>
+          <p>{t.noArticles}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:gap-6 mx-auto w-full max-w-5xl">
