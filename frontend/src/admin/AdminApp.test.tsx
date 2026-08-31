@@ -17,6 +17,8 @@ const SUMMARY = {
   country_breakdown: [{ label: 'KR', count: 12 }],
   top_external_links: [],
   top_news: [],
+  crawlers: [{ label: 'GPTBot', count: 12, last_seen: '2026-08-31 09:00:00' }],
+  crawler_paths: [{ label: '/models/gpt-4o', count: 5 }],
 };
 
 beforeEach(() => {

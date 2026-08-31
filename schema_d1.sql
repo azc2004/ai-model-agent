@@ -83,6 +83,18 @@ CREATE TABLE IF NOT EXISTS analytics_events (
   created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
+-- 크롤러 방문 기록. analytics_events 에 섞으면 사람 세션 수가 오염되므로 분리한다.
+-- 워커가 자산보다 먼저 실행되므로 SPA 셸이 아니라 실제 요청 시점에 기록된다.
+CREATE TABLE IF NOT EXISTS crawler_hits (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  bot TEXT NOT NULL,        -- GPTBot | ClaudeBot | PerplexityBot | Googlebot | ...
+  path TEXT NOT NULL,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_crawler_created ON crawler_hits(created_at);
+CREATE INDEX IF NOT EXISTS idx_crawler_bot ON crawler_hits(bot);
+
 CREATE INDEX IF NOT EXISTS idx_analytics_created ON analytics_events(created_at);
 CREATE INDEX IF NOT EXISTS idx_analytics_type ON analytics_events(event_type);
 CREATE INDEX IF NOT EXISTS idx_analytics_session ON analytics_events(session_id);

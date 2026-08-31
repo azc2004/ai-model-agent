@@ -285,3 +285,31 @@ export function llmsTxt(modelCount: number, newsCount: number, providerCount: nu
 - [뉴스 API](${SITE}/api/v1/news/pulse): JSON
 `;
 }
+
+
+// ─── 크롤러 식별 ──────────────────────────────────────────────────────────────
+// 목적은 차단이 아니라 관측이다. "문을 열었는데 실제로 들어오고 있나" 를 본다.
+// User-Agent 는 위조 가능하므로 이 수치는 정확한 감사 기록이 아니라 추세 지표다.
+const BOTS: Array<[string, RegExp]> = [
+  ['GPTBot',        /GPTBot/i],
+  ['OAI-SearchBot', /OAI-SearchBot/i],
+  ['ChatGPT-User',  /ChatGPT-User/i],
+  ['ClaudeBot',     /ClaudeBot|Claude-Web|anthropic-ai/i],
+  ['PerplexityBot', /PerplexityBot|Perplexity-User/i],
+  ['Google-Extended', /Google-Extended/i],
+  ['Googlebot',     /Googlebot/i],
+  ['Bingbot',       /bingbot/i],
+  ['Applebot',      /Applebot/i],
+  ['Bytespider',    /Bytespider/i],
+  ['Amazonbot',     /Amazonbot/i],
+  ['MetaBot',       /meta-externalagent|FacebookBot/i],
+  ['CCBot',         /CCBot/i],
+  ['YandexBot',     /YandexBot/i],
+  ['DuckDuckBot',   /DuckDuckBot/i],
+];
+
+export function classifyBot(ua: string | null): string | null {
+  if (!ua) return null;
+  for (const [name, re] of BOTS) if (re.test(ua)) return name;
+  return null;
+}

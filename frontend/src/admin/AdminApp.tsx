@@ -3,6 +3,7 @@ import { API_BASE_URL } from '../api';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface CountRow { label: string; count: number }
+interface CrawlerRow extends CountRow { last_seen: string }
 interface DailyRow { day: string; events: number; sessions: number }
 interface Summary {
   days: number;
@@ -15,6 +16,8 @@ interface Summary {
   country_breakdown: CountRow[];
   top_external_links: CountRow[];
   top_news: CountRow[];
+  crawlers: CrawlerRow[];
+  crawler_paths: CountRow[];
 }
 
 const RANGE_OPTIONS = [7, 14, 30] as const;
@@ -139,6 +142,31 @@ export const AdminApp: React.FC = () => {
               <RankedList title="⚖️ 많이 비교한 모델" rows={data.top_compared} />
               <RankedList title="📰 많이 읽은 기사" rows={data.top_news} />
               <RankedList title="🔗 많이 클릭한 공식 문서" rows={data.top_external_links} />
+
+              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <h3 className="mb-1 text-sm font-black text-slate-900">🤖 크롤러 방문</h3>
+                <p className="mb-3 text-[11px] text-slate-500">
+                  AI 크롤러가 실제로 콘텐츠를 읽어 가는지 본다. User-Agent 는 위조 가능하므로 추세 지표로만 쓴다.
+                </p>
+                {(data.crawlers ?? []).length === 0 ? (
+                  <p className="text-xs text-slate-500">아직 방문 기록이 없다. 색인에는 보통 며칠이 걸린다.</p>
+                ) : (
+                  <ul className="space-y-2">
+                    {(data.crawlers ?? []).map((row) => (
+                      <li key={row.label} className="flex items-center justify-between gap-3 text-xs">
+                        <span className="font-semibold text-slate-700">{row.label}</span>
+                        <span className="flex items-center gap-2 text-slate-500">
+                          <span className="tabular-nums font-bold text-slate-900">{row.count.toLocaleString()}</span>
+                          <span className="text-[10px]">{(row.last_seen || '').slice(0, 16)}</span>
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
+              <RankedList title="🕸️ 크롤러가 많이 읽은 경로" rows={data.crawler_paths ?? []} />
+
 
               <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <h3 className="mb-3 text-sm font-black text-slate-900">디바이스 비중</h3>

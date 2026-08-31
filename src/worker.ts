@@ -241,6 +241,17 @@ export default Sentry.withSentry(
     const url = new URL(request.url);
 
     
+    // 크롤러 방문 기록. 응답을 막지 않도록 waitUntil 로 흘려보낸다.
+    // 실패해도 조용히 넘어간다 — 관측이 서빙을 방해하면 안 된다.
+    const bot = seo.classifyBot(request.headers.get('User-Agent'));
+    if (bot && request.method === 'GET') {
+      console.log(JSON.stringify({ event: 'crawler_hit', bot, path: url.pathname }));
+      ctx.waitUntil(
+        env.DB.prepare('INSERT INTO crawler_hits (bot, path) VALUES (?, ?)')
+          .bind(bot, url.pathname.slice(0, 200)).run().then(() => undefined, () => undefined)
+      );
+    }
+
     // ─── 크롤러가 읽을 수 있는 HTML ────────────────────────────────────────
     // SPA 는 JS 실행 후에만 본문이 생기는데 AI 크롤러는 JS 를 실행하지 않는다.
     // 워커가 자산보다 먼저 실행되고 D1 을 쥐고 있으므로 여기서 바로 렌더한다.
@@ -397,7 +408,7 @@ export default Sentry.withSentry(
         const since = `-${days} days`;
         const db = env.DB;
 
-        const [totals, daily, topTabs, topSearches, topCompared, deviceBreakdown, countryBreakdown, topLinks, topNews] = await Promise.all([
+        const [totals, daily, topTabs, topSearches, topCompared, deviceBreakdown, countryBreakdown, topLinks, topNews, crawlers, crawlerPaths] = await Promise.all([
           db.prepare(`SELECT COUNT(*) AS events, COUNT(DISTINCT session_id) AS sessions FROM analytics_events WHERE created_at >= datetime('now', ?)`).bind(since).first(),
           db.prepare(`SELECT date(created_at) AS day, COUNT(*) AS events, COUNT(DISTINCT session_id) AS sessions FROM analytics_events WHERE created_at >= datetime('now', ?) GROUP BY day ORDER BY day ASC`).bind(since).all(),
           db.prepare(`SELECT tab AS label, COUNT(*) AS count FROM analytics_events WHERE event_type = 'page_view' AND created_at >= datetime('now', ?) AND tab IS NOT NULL GROUP BY tab ORDER BY count DESC LIMIT 10`).bind(since).all(),
@@ -407,6 +418,9 @@ export default Sentry.withSentry(
           db.prepare(`SELECT country AS label, COUNT(*) AS count FROM analytics_events WHERE created_at >= datetime('now', ?) AND country IS NOT NULL GROUP BY country ORDER BY count DESC LIMIT 10`).bind(since).all(),
           db.prepare(`SELECT label, COUNT(*) AS count FROM analytics_events WHERE event_type = 'external_link_click' AND created_at >= datetime('now', ?) AND label IS NOT NULL GROUP BY label ORDER BY count DESC LIMIT 10`).bind(since).all(),
           db.prepare(`SELECT label, COUNT(*) AS count FROM analytics_events WHERE event_type = 'news_open' AND created_at >= datetime('now', ?) AND label IS NOT NULL GROUP BY label ORDER BY count DESC LIMIT 10`).bind(since).all(),
+          // 크롤러는 analytics_events 와 분리된 테이블에 쌓인다 — 사람 세션 수를 오염시키지 않는다.
+          db.prepare(`SELECT bot AS label, COUNT(*) AS count, MAX(created_at) AS last_seen FROM crawler_hits WHERE created_at >= datetime('now', ?) GROUP BY bot ORDER BY count DESC`).bind(since).all(),
+          db.prepare(`SELECT path AS label, COUNT(*) AS count FROM crawler_hits WHERE created_at >= datetime('now', ?) GROUP BY path ORDER BY count DESC LIMIT 10`).bind(since).all(),
         ]);
 
         return new Response(JSON.stringify({
@@ -420,6 +434,8 @@ export default Sentry.withSentry(
           country_breakdown: countryBreakdown.results,
           top_external_links: topLinks.results,
           top_news: topNews.results,
+          crawlers: crawlers.results,
+          crawler_paths: crawlerPaths.results,
         }), { headers: { 'Content-Type': 'application/json' } });
       } catch (err: any) {
         return fail(err);
