@@ -7,7 +7,12 @@ import { Dashboard } from './Dashboard';
 
 vi.mock('../api', () => ({ fetchModels: vi.fn().mockResolvedValue([]), fetchProviders: vi.fn().mockResolvedValue([]) }));
 
-beforeEach(() => localStorage.clear());
+beforeEach(() => {
+  localStorage.clear();
+  // 라벨이 언어에 따라 달라진다. jsdom 의 navigator.language 에 기대면 en 으로 떨어지므로
+  // 검사할 언어를 명시한다.
+  localStorage.setItem('llm_compass_lang', 'ko');
+});
 
 test('persists the selected catalog density', async () => {
   render(<LanguageProvider><Dashboard /></LanguageProvider>);

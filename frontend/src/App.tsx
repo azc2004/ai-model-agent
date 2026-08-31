@@ -2,7 +2,7 @@
 import React, { lazy, Suspense, useState, useEffect, useRef } from 'react';
 import type { ModelSpec, Provider } from './types';
 import { fetchModels, fetchProviders } from './api';
-import { LanguageProvider } from './context/LanguageContext';
+import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { AppShell } from './components/AppShell';
 import { isAppTab, type AppTab } from './navigation/navigationConfig';
@@ -28,6 +28,7 @@ export function matchesCatalog(term: string, models: ModelSpec[], providers: Pro
 }
 
 export const AppContent: React.FC = () => {
+  const { language } = useLanguage();
   // URL query parameter ?tab= 및 ?article= 파싱으로 북마크/즐겨찾기 라우팅 초기화
   const getInitialTab = (): AppTab => {
     const params = new URLSearchParams(window.location.search);
@@ -96,7 +97,7 @@ export const AppContent: React.FC = () => {
       try {
         setLoading(true);
         const [modelsData, providersData] = await Promise.all([
-          fetchModels(),
+          fetchModels({ lang: language }),
           fetchProviders(),
         ]);
         setModels(modelsData);
@@ -108,7 +109,7 @@ export const AppContent: React.FC = () => {
       }
     };
     loadData();
-  }, []);
+  }, [language]);
 
   const handleToggleCompare = (modelId: string) => {
     setSelectedModelIds((prev) => {

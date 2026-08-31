@@ -219,6 +219,19 @@ export function impactScore(n: any, sources: any[]): number {
   return Math.min(60 + richness + freshness, 100);
 }
 
+// 요청 언어에 맞는 모델 설명을 고른다. description_i18n 에 해당 언어가 없으면
+// 원문(description)으로 폴백한다 — 번역 백필이 끝나지 않은 행도 그대로 동작한다.
+const SUPPORTED_LANGS = new Set(['ko', 'en', 'ja', 'zh', 'es', 'de', 'fr']);
+function localizedDescription(m: any, lang: string): string {
+  if (!SUPPORTED_LANGS.has(lang)) return m.description || '';
+  try {
+    const byLang = JSON.parse(m.description_i18n || '{}');
+    const picked = byLang?.[lang];
+    if (typeof picked === 'string' && picked.trim()) return picked;
+  } catch {}
+  return m.description || '';
+}
+
 export default Sentry.withSentry(
   // SENTRY_DSN 미설정 시 SDK no-op (에러 전송 없음)
   (env: Env) => ({ dsn: env.SENTRY_DSN, tracesSampleRate: 0 }),
@@ -374,12 +387,15 @@ export default Sentry.withSentry(
     // D1 Edge API Routes - Models
     if (url.pathname === '/api/v1/models') {
       try {
+        const lang = url.searchParams.get('lang') || 'ko';
         const { results } = await env.DB.prepare(`
           SELECT * FROM models ORDER BY is_verified DESC, name ASC
         `).all();
 
         const models = results.map((m: any) => ({
           ...m,
+          description: localizedDescription(m, lang),
+          description_i18n: undefined,   // 전 언어 번역본을 매 요청에 실어 보낼 이유가 없다
           is_open_weight: Boolean(m.is_open_weight),
           is_verified: Boolean(m.is_verified),
           supports_reasoning: Boolean(m.supports_reasoning),

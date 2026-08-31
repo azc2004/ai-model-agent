@@ -56,6 +56,22 @@ export interface TranslationDictionary {
     compareButton: string;
     compared: string;
     officialDocs: string;
+    arenaElo: string;
+    apiCode: string;
+    specialFilters: string;
+    filterNew: string;
+    filterReasoning: string;
+    filterWebSearch: string;
+    filterLitellm: string;
+    densityComfortable: string;
+    densityCompact: string;
+    densityComfortableAria: string;
+    densityCompactAria: string;
+    sortBy: string;
+    sortAsc: string;
+    sortDesc: string;
+    sortAscTitle: string;
+    sortDescTitle: string;
   };
   tco: {
     title: string;
@@ -304,7 +320,23 @@ export const translations: Record<Language, TranslationDictionary> = {
       outputPrice: "출력 1M 토큰",
       compareButton: "+ 비교하기",
       compared: "비교 중",
-      officialDocs: "공식 문서 ↗"
+      officialDocs: "공식 문서 ↗",
+      arenaElo: "Arena ELO 랭킹",
+      apiCode: "API 코드",
+      specialFilters: "⚡ 특수 기능 필터:",
+      filterNew: "✨ 신규/최신 모델만 (NEW)",
+      filterReasoning: "Reasoning (추론/CoT) 지원만",
+      filterWebSearch: "실시간 Web Search 지원만",
+      filterLitellm: "LiteLLM 검증 모델만",
+      densityComfortable: "여유",
+      densityCompact: "컴팩트",
+      densityComfortableAria: "여유로운 밀도",
+      densityCompactAria: "컴팩트 밀도",
+      sortBy: "정렬 기준:",
+      sortAsc: "▲ 오름차순",
+      sortDesc: "▼ 내림차순",
+      sortAscTitle: "오름차순 정렬",
+      sortDescTitle: "내림차순 정렬"
     },
     tco: {
       title: "셀프호스팅 TCO 손익분기 시뮬레이터",
@@ -551,7 +583,23 @@ export const translations: Record<Language, TranslationDictionary> = {
       outputPrice: "Output 1M Tokens",
       compareButton: "+ Compare",
       compared: "Added",
-      officialDocs: "Official Docs ↗"
+      officialDocs: "Official Docs ↗",
+      arenaElo: "Arena ELO rank",
+      apiCode: "API code",
+      specialFilters: "⚡ Capability filters:",
+      filterNew: "✨ New models only",
+      filterReasoning: "Reasoning (CoT) support only",
+      filterWebSearch: "Live web search only",
+      filterLitellm: "LiteLLM-verified only",
+      densityComfortable: "Comfortable",
+      densityCompact: "Compact",
+      densityComfortableAria: "Comfortable density",
+      densityCompactAria: "Compact density",
+      sortBy: "Sort by:",
+      sortAsc: "▲ Ascending",
+      sortDesc: "▼ Descending",
+      sortAscTitle: "Sort ascending",
+      sortDescTitle: "Sort descending"
     },
     tco: {
       title: "Self-Hosting TCO Break-Even Simulator",
@@ -798,7 +846,23 @@ export const translations: Record<Language, TranslationDictionary> = {
       outputPrice: "出力 1Mトークン",
       compareButton: "+ 比較に追加",
       compared: "追加済み",
-      officialDocs: "公式文書 ↗"
+      officialDocs: "公式文書 ↗",
+      arenaElo: "Arena ELO ランキング",
+      apiCode: "API コード",
+      specialFilters: "⚡ 特殊機能フィルター:",
+      filterNew: "✨ 新着モデルのみ",
+      filterReasoning: "推論 (CoT) 対応のみ",
+      filterWebSearch: "リアルタイム Web 検索対応のみ",
+      filterLitellm: "LiteLLM 検証済みのみ",
+      densityComfortable: "ゆったり",
+      densityCompact: "コンパクト",
+      densityComfortableAria: "ゆったりした表示密度",
+      densityCompactAria: "コンパクトな表示密度",
+      sortBy: "並び替え:",
+      sortAsc: "▲ 昇順",
+      sortDesc: "▼ 降順",
+      sortAscTitle: "昇順に並び替え",
+      sortDescTitle: "降順に並び替え"
     },
     tco: {
       title: "セルフホスティングTCO損益分岐シミュレーター",
@@ -1045,7 +1109,23 @@ export const translations: Record<Language, TranslationDictionary> = {
       outputPrice: "输出 1M Tokens",
       compareButton: "+ 加入对比",
       compared: "已加入",
-      officialDocs: "官方文档 ↗"
+      officialDocs: "官方文档 ↗",
+      arenaElo: "Arena ELO 排名",
+      apiCode: "API 代码",
+      specialFilters: "⚡ 特殊功能筛选：",
+      filterNew: "✨ 仅显示新模型",
+      filterReasoning: "仅支持推理 (CoT)",
+      filterWebSearch: "仅支持实时联网搜索",
+      filterLitellm: "仅 LiteLLM 已验证",
+      densityComfortable: "宽松",
+      densityCompact: "紧凑",
+      densityComfortableAria: "宽松密度",
+      densityCompactAria: "紧凑密度",
+      sortBy: "排序方式：",
+      sortAsc: "▲ 升序",
+      sortDesc: "▼ 降序",
+      sortAscTitle: "按升序排序",
+      sortDescTitle: "按降序排序"
     },
     tco: {
       title: "自托管 TCO 盈亏平衡模拟器",
@@ -1282,7 +1362,23 @@ export const translations: Record<Language, TranslationDictionary> = {
       outputPrice: "Precio Salida / 1M",
       compareButton: "Comparar",
       compared: "En Comparación",
-      officialDocs: "Docs Oficiales"
+      officialDocs: "Docs Oficiales",
+      arenaElo: "Ranking Arena ELO",
+      apiCode: "Código de API",
+      specialFilters: "⚡ Filtros de capacidades:",
+      filterNew: "✨ Solo modelos nuevos",
+      filterReasoning: "Solo con soporte de razonamiento (CoT)",
+      filterWebSearch: "Solo con búsqueda web en vivo",
+      filterLitellm: "Solo verificados por LiteLLM",
+      densityComfortable: "Cómoda",
+      densityCompact: "Compacta",
+      densityComfortableAria: "Densidad cómoda",
+      densityCompactAria: "Densidad compacta",
+      sortBy: "Ordenar por:",
+      sortAsc: "▲ Ascendente",
+      sortDesc: "▼ Descendente",
+      sortAscTitle: "Ordenar de forma ascendente",
+      sortDescTitle: "Ordenar de forma descendente"
     },
     tco: {
       title: "Simulador TCO: API SaaS vs GPU Autoalojada",
@@ -1519,7 +1615,23 @@ export const translations: Record<Language, TranslationDictionary> = {
       outputPrice: "Output Preis / 1M",
       compareButton: "Vergleichen",
       compared: "Im Vergleich",
-      officialDocs: "Offizielle Doku"
+      officialDocs: "Offizielle Doku",
+      arenaElo: "Arena-ELO-Rang",
+      apiCode: "API-Code",
+      specialFilters: "⚡ Fähigkeitsfilter:",
+      filterNew: "✨ Nur neue Modelle",
+      filterReasoning: "Nur mit Reasoning-Unterstützung (CoT)",
+      filterWebSearch: "Nur mit Live-Websuche",
+      filterLitellm: "Nur LiteLLM-verifiziert",
+      densityComfortable: "Komfortabel",
+      densityCompact: "Kompakt",
+      densityComfortableAria: "Komfortable Dichte",
+      densityCompactAria: "Kompakte Dichte",
+      sortBy: "Sortieren nach:",
+      sortAsc: "▲ Aufsteigend",
+      sortDesc: "▼ Absteigend",
+      sortAscTitle: "Aufsteigend sortieren",
+      sortDescTitle: "Absteigend sortieren"
     },
     tco: {
       title: "TCO Simulator: SaaS API vs. Self-Hosted GPU",
@@ -1756,7 +1868,23 @@ export const translations: Record<Language, TranslationDictionary> = {
       outputPrice: "Prix Sortie / 1M",
       compareButton: "Comparer",
       compared: "Comparé",
-      officialDocs: "Docs Officielles"
+      officialDocs: "Docs Officielles",
+      arenaElo: "Classement Arena ELO",
+      apiCode: "Code d’API",
+      specialFilters: "⚡ Filtres de capacités :",
+      filterNew: "✨ Nouveaux modèles uniquement",
+      filterReasoning: "Uniquement avec raisonnement (CoT)",
+      filterWebSearch: "Uniquement avec recherche web en direct",
+      filterLitellm: "Uniquement vérifiés par LiteLLM",
+      densityComfortable: "Confortable",
+      densityCompact: "Compacte",
+      densityComfortableAria: "Densité confortable",
+      densityCompactAria: "Densité compacte",
+      sortBy: "Trier par :",
+      sortAsc: "▲ Croissant",
+      sortDesc: "▼ Décroissant",
+      sortAscTitle: "Trier par ordre croissant",
+      sortDescTitle: "Trier par ordre décroissant"
     },
     tco: {
       title: "Simulateur TCO : API SaaS vs GPU Auto-hébergé",

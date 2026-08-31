@@ -37,7 +37,21 @@ jobs:
           npx wrangler d1 execute llm-compass-db --remote --file=seed_models_batch.sql
           echo "✅ D1 모델 카탈로그 갱신 완료!"
 
-      - name: 📊 5. 완료 확인
+      - name: 🌐 5. 신규 모델 설명 다국어 백필
+        run: |
+          echo "🌐 description_i18n 이 비어 있는 모델 번역 중..."
+          python3 backend/scripts/translate_model_descriptions.py --missing-only
+          if [ -s seed_model_i18n.sql ]; then
+            npx wrangler d1 execute llm-compass-db --remote --file=seed_model_i18n.sql
+            echo "✅ 다국어 설명 갱신 완료"
+          else
+            echo "ℹ️ 새로 번역할 모델 없음"
+          fi
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: 📊 6. 완료 확인
         run: |
           echo "📈 D1 최신 모델 수 확인..."
           curl -s "https://ai-model-agent.ai-azc2004.workers.dev/api/v1/models" | \

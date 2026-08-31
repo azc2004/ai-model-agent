@@ -383,7 +383,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
         <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           {/* Feature Filter Chips */}
           <div className="w-full sm:w-auto flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden text-xs font-medium">
-            <span className="text-slate-500 dark:text-slate-400 font-extrabold shrink-0 mr-1 whitespace-nowrap">⚡ 특수 기능 필터:</span>
+            <span className="text-slate-500 dark:text-slate-400 font-extrabold shrink-0 mr-1 whitespace-nowrap">{t.dashboard.specialFilters}</span>
 
             <button
               onClick={() => setOnlyNew(!onlyNew)}
@@ -394,7 +394,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               }`}
             >
               <Sparkles className="w-3.5 h-3.5 text-rose-500 dark:text-rose-400 fill-rose-500 animate-pulse" />
-              <span>✨ 신규/최신 모델만 (NEW)</span>
+              <span>{t.dashboard.filterNew}</span>
             </button>
 
             <button
@@ -405,7 +405,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   : 'bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-purple-400'
               }`}
             >
-              <span>🧠</span> Reasoning (추론/CoT) 지원만
+              <span>🧠</span> {t.dashboard.filterReasoning}
             </button>
 
             <button
@@ -416,7 +416,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   : 'bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-blue-400'
               }`}
             >
-              <span>🌐</span> 실시간 Web Search 지원만
+              <span>🌐</span> {t.dashboard.filterWebSearch}
             </button>
 
             <button
@@ -427,7 +427,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   : 'bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-emerald-400'
               }`}
             >
-              <span>🛡️</span> LiteLLM 검증 모델만
+              <span>🛡️</span> {t.dashboard.filterLitellm}
             </button>
 
             {(onlyNew || reasoningOnly || webSearchOnly || verifiedOnly || selectedProvider !== 'all' || selectedTier !== 'all' || selectedLicense !== 'all' || searchTerm) && (
@@ -451,8 +451,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
           {/* View Mode Switcher */}
           <div className="flex items-center bg-slate-100 dark:bg-slate-950 p-1 border border-slate-200 dark:border-slate-800 rounded-xl shrink-0 self-end sm:self-auto">
-            <button aria-label="여유로운 밀도" aria-pressed={density === 'comfortable'} onClick={() => changeDensity('comfortable')} className={`touch-target px-2 rounded-lg text-xs font-bold ${density === 'comfortable' ? 'bg-white dark:bg-slate-800' : ''}`}>여유</button>
-            <button aria-label="컴팩트 밀도" aria-pressed={density === 'compact'} onClick={() => changeDensity('compact')} className={`touch-target px-2 rounded-lg text-xs font-bold ${density === 'compact' ? 'bg-white dark:bg-slate-800' : ''}`}>컴팩트</button>
+            <button aria-label={t.dashboard.densityComfortableAria} aria-pressed={density === 'comfortable'} onClick={() => changeDensity('comfortable')} className={`touch-target px-2 rounded-lg text-xs font-bold ${density === 'comfortable' ? 'bg-white dark:bg-slate-800' : ''}`}>{t.dashboard.densityComfortable}</button>
+            <button aria-label={t.dashboard.densityCompactAria} aria-pressed={density === 'compact'} onClick={() => changeDensity('compact')} className={`touch-target px-2 rounded-lg text-xs font-bold ${density === 'compact' ? 'bg-white dark:bg-slate-800' : ''}`}>{t.dashboard.densityCompact}</button>
             <button
               onClick={() => setViewMode('grid')}
               className={`px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1.5 transition-all ${
@@ -502,7 +502,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           <span className="font-black text-cyan-600 dark:text-cyan-400 text-base">{sortedModels.length}</span> {t.dashboard.modelsFound}
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-slate-600 dark:text-slate-400 text-xs font-extrabold">정렬 기준:</span>
+          <span className="text-slate-600 dark:text-slate-400 text-xs font-extrabold">{t.dashboard.sortBy}</span>
           <select
             aria-label="정렬 기준"
             value={sortKey}
@@ -521,9 +521,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
           <button
             onClick={() => setSortDir(d => d === 'asc' ? 'desc' : 'asc')}
             className="px-3 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:border-cyan-500 text-slate-900 dark:text-cyan-300 font-extrabold text-xs rounded-xl transition-all shadow-sm flex items-center gap-1"
-            title={sortDir === 'asc' ? '오름차순 정렬' : '내림차순 정렬'}
+            title={sortDir === 'asc' ? t.dashboard.sortAscTitle : t.dashboard.sortDescTitle}
           >
-            {sortDir === 'asc' ? '▲ 오름차순' : '▼ 내림차순'}
+            {sortDir === 'asc' ? t.dashboard.sortAsc : t.dashboard.sortDesc}
           </button>
         </div>
       </div>
@@ -617,7 +617,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                       </span>
                     </div>
                     <div>
-                      <span className="text-slate-600 dark:text-slate-400 block text-[10px] font-bold mb-0.5">Arena ELO 랭킹</span>
+                      <span className="text-slate-600 dark:text-slate-400 block text-[10px] font-bold mb-0.5">{t.dashboard.arenaElo}</span>
                       <span className="font-black text-amber-600 dark:text-amber-300 text-sm flex items-center gap-1">
                         🏆 {model.benchmarks.arena_elo ? model.benchmarks.arena_elo.toFixed(0) : 'N/A'}
                       </span>
@@ -644,7 +644,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     className="flex-1 py-2 px-2.5 rounded-xl text-xs font-black bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white transition-all shadow-md flex items-center justify-center gap-1"
                     title="API 연동 코드 스니펫 보기"
                   >
-                    <span>⚡</span> API 코드
+                    <span>⚡</span> {t.dashboard.apiCode}
                   </button>
                   <a
                     href={model.source_docs_url || model.official_url}
@@ -761,7 +761,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                             className="px-2 py-1 bg-purple-50 hover:bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:hover:bg-purple-800 dark:text-purple-200 border border-purple-200 dark:border-purple-500/40 rounded-md text-xs font-bold transition-colors whitespace-nowrap"
                             title="API 연동 코드 스니펫 보기"
                           >
-                            ⚡ API 코드
+                            ⚡ {t.dashboard.apiCode}
                           </button>
                           <a
                             href={model.source_docs_url || model.official_url}
@@ -851,7 +851,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     className="px-2.5 py-1 rounded-lg text-xs font-bold bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 dark:bg-purple-950/60 dark:hover:bg-purple-900/80 dark:text-purple-300 dark:border-purple-800 transition-all flex items-center gap-1"
                     title="API 연동 코드 스니펫 보기"
                   >
-                    <span>⚡</span> API 코드
+                    <span>⚡</span> {t.dashboard.apiCode}
                   </button>
                   <a
                     href={model.source_docs_url || model.official_url}

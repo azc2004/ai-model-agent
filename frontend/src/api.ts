@@ -39,12 +39,15 @@ export async function fetchModels(params?: {
   tier?: string;
   is_open_weight?: boolean;
   search?: string;
+  lang?: string;
 }): Promise<ModelSpec[]> {
   const query = new URLSearchParams();
   if (params?.provider_id) query.append('provider_id', params.provider_id);
   if (params?.tier) query.append('tier', params.tier);
   if (params?.is_open_weight !== undefined) query.append('is_open_weight', String(params.is_open_weight));
   if (params?.search) query.append('search', params.search);
+  // 서버가 이 언어의 모델 설명을 골라 내려준다 (없으면 원문 폴백)
+  if (params?.lang) query.append('lang', params.lang);
 
   // Cloudflare D1 엣지 서빙 적용으로 sub-5ms 응답 보장
   try {

@@ -23,6 +23,9 @@ CREATE TABLE IF NOT EXISTS models (
   max_output_tokens INTEGER,
   modality TEXT, -- JSON array string
   description TEXT,
+  -- 언어별 설명. {"en": "...", "ja": "..."} 형태의 JSON 이며 없는 언어는 description 으로
+  -- 폴백한다. benchmarks/quota 와 같은 방식으로 컬럼 하나에 담는다.
+  description_i18n TEXT,
   official_url TEXT,
   source_docs_url TEXT,
   api_pricing TEXT, -- JSON object string
