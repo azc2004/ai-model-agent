@@ -1,0 +1,60 @@
+name: 🩺 Production Healthcheck
+
+# 2026-08-30, 2026-08-31 두 차례, fetch 핸들러도 바인딩도 없는 빈 워커가 100%
+# 트래픽을 받아 API 가 죽고 /admin 이 무인증으로 열렸다. 두 번 다 몇 시간 뒤에야
+# 발견했다. 이 워크플로는 그 상태를 몇 분 안에 실패로 알린다.
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: healthcheck
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      BASE: https://llmcompass.azclab.com
+    steps:
+      - name: 🔎 Worker 가 실제로 요청을 처리하는가
+        run: |
+          set -uo pipefail
+          fail=0
+
+          # 워커가 죽으면 정적 자산 레이어가 대신 응답한다. GET 은 SPA HTML 을,
+          # POST 는 405 를 돌려주므로 둘 다 본다. POST 는 캐시되지 않아 판정이 확실하다.
+          ct=$(curl -sS -o /dev/null -w '%{content_type}' "$BASE/api/v1/models")
+          case "$ct" in
+            application/json*) echo "✅ /api/v1/models → $ct" ;;
+            *) echo "❌ /api/v1/models 가 JSON 이 아니다 (→ $ct). 워커가 요청을 처리하지 않는다."; fail=1 ;;
+          esac
+
+          code=$(curl -sS -o /dev/null -w '%{http_code}' -X POST \
+            -H 'content-type: application/json' -d '{"bad":true}' "$BASE/api/v1/simulate/tco")
+          case "$code" in
+            400|404) echo "✅ POST /api/v1/simulate/tco → $code" ;;
+            405) echo "❌ POST 가 405 다. 정적 자산 레이어가 응답하고 있다 — 워커 미실행."; fail=1 ;;
+            *) echo "❌ POST /api/v1/simulate/tco → $code (400/404 기대)"; fail=1 ;;
+          esac
+
+          # 인증 게이트. 워커가 죽으면 어드민 셸이 200 으로 그대로 노출된다.
+          code=$(curl -sS -o /dev/null -w '%{http_code}' "$BASE/admin")
+          if [ "$code" = "401" ]; then
+            echo "✅ /admin 무인증 → 401"
+          else
+            echo "❌ /admin 무인증 → $code (401 기대). 인증 게이트가 우회되고 있다."; fail=1
+          fi
+
+          # 데이터가 실제로 실려 오는가 (빈 배열이면 D1 연결이 끊긴 것)
+          n=$(curl -sS "$BASE/api/v1/models" | python3 -c 'import sys,json; print(len(json.load(sys.stdin)))' 2>/dev/null || echo 0)
+          if [ "$n" -gt 100 ]; then
+            echo "✅ 모델 $n 개"
+          else
+            echo "❌ 모델 수 $n (100 초과 기대). D1 조회에 문제가 있다."; fail=1
+          fi
+
+          exit $fail

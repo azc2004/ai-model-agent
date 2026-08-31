@@ -242,19 +242,25 @@ export default Sentry.withSentry(
     
     if (url.pathname === '/api/v1/providers') {
       return new Response(JSON.stringify(PROVIDERS), {
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+        // 배포해야만 바뀌는 상수다. 엣지가 처리하게 두고, 대신 배포 후 최대 1시간은
+        // 옛 값이 나갈 수 있다.
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'public, max-age=300, s-maxage=3600' }
       });
     }
 
     if (url.pathname === '/api/v1/gpus') {
       return new Response(JSON.stringify(GPU_SPECS), {
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+        // 배포해야만 바뀌는 상수다. 엣지가 처리하게 두고, 대신 배포 후 최대 1시간은
+        // 옛 값이 나갈 수 있다.
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'public, max-age=300, s-maxage=3600' }
       });
     }
 
     if (url.pathname === '/api/v1/recommend/trending') {
       return new Response(JSON.stringify(TRENDING_TEMPLATES), {
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+        // 배포해야만 바뀌는 상수다. 엣지가 처리하게 두고, 대신 배포 후 최대 1시간은
+        // 옛 값이 나갈 수 있다.
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'public, max-age=300, s-maxage=3600' }
       });
     }
 
@@ -413,7 +419,7 @@ export default Sentry.withSentry(
           headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*',
-            'Cache-Control': 'public, max-age=60, s-maxage=300',
+            'Cache-Control': 'public, max-age=60, s-maxage=3600',
           },
         });
       } catch (err: any) {
@@ -450,7 +456,7 @@ export default Sentry.withSentry(
           headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*',
-            'Cache-Control': 'public, max-age=60',
+            'Cache-Control': 'public, max-age=60, s-maxage=3600',
           },
         });
       } catch (err: any) {
@@ -482,7 +488,7 @@ export default Sentry.withSentry(
           headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*',
-            'Cache-Control': 'public, max-age=60, s-maxage=300',
+            'Cache-Control': 'public, max-age=60, s-maxage=3600',
           },
         });
       } catch (err: any) {
@@ -507,7 +513,7 @@ export default Sentry.withSentry(
           headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*',
-            'Cache-Control': 'public, max-age=60',
+            'Cache-Control': 'public, max-age=60, s-maxage=3600',
           },
         });
       } catch (err: any) {
