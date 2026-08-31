@@ -267,7 +267,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             DeepSeek R1 / GPT-4o
           </h3>
           <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-semibold">
-            글로벌 LMSYS Chatbot Arena 복합 추론 & 지식 평가 1위 프론티어 모델
+            {t.dashboard.kpiEloDesc}
           </p>
         </div>
 
@@ -283,7 +283,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             Cerebras Llama 3.3 70B
           </h3>
           <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-semibold">
-            초당 2,100 토큰 초고속 서빙 및 TTFT 180ms 최저 지연시간 기록
+            {t.dashboard.kpiSpeedDesc}
           </p>
         </div>
 
@@ -299,7 +299,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             ByteDance Seed / Qwen 2.5
           </h3>
           <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-semibold">
-            1M 토큰당 $0.50 최저비용으로 프론티어급 코드 & 추론 성능 제공
+            {t.dashboard.kpiValueDesc}
           </p>
         </div>
       </div>

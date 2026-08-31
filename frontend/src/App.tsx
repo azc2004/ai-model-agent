@@ -28,7 +28,7 @@ export function matchesCatalog(term: string, models: ModelSpec[], providers: Pro
 }
 
 export const AppContent: React.FC = () => {
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   // URL query parameter ?tab= 및 ?article= 파싱으로 북마크/즐겨찾기 라우팅 초기화
   const getInitialTab = (): AppTab => {
     const params = new URLSearchParams(window.location.search);
@@ -103,7 +103,7 @@ export const AppContent: React.FC = () => {
         setModels(modelsData);
         setProviders(providersData);
       } catch (err: any) {
-        setError(err.message || '데이터를 로드하는 중 오류가 발생했습니다.');
+        setError(t.nav.errorCatalog);
       } finally {
         setLoading(false);
       }
@@ -136,11 +136,11 @@ export const AppContent: React.FC = () => {
             </div>
           ) : error ? (
             <div className="glass-card max-w-md mx-auto p-8 text-center rounded-2xl border border-red-500/30">
-              <h2 className="text-xl font-bold text-red-500 mb-2">Error Occurred</h2>
+              <h2 className="text-xl font-bold text-red-500 mb-2">{t.nav.errorTitle}</h2>
               <p className="text-slate-600 dark:text-slate-300 text-sm mb-4">{error}</p>
-              <button onClick={() => window.location.reload()} className="touch-target focus-ring px-4 py-2 bg-cyan-600 hover:bg-cyan-500 rounded-lg text-sm font-semibold text-white">Retry</button>
+              <button onClick={() => window.location.reload()} className="touch-target focus-ring px-4 py-2 bg-cyan-600 hover:bg-cyan-500 rounded-lg text-sm font-semibold text-white">{t.nav.retry}</button>
             </div>
-          ) : <Suspense fallback={<div role="status" className="grid grid-cols-1 sm:grid-cols-2 gap-4" aria-label="화면 불러오는 중"><div className="h-48 animate-pulse rounded-2xl bg-slate-200 dark:bg-slate-900" /><div className="h-48 animate-pulse rounded-2xl bg-slate-200 dark:bg-slate-900" /></div>}>
+          ) : <Suspense fallback={<div role="status" className="grid grid-cols-1 sm:grid-cols-2 gap-4" aria-label={t.nav.loadingView}><div className="h-48 animate-pulse rounded-2xl bg-slate-200 dark:bg-slate-900" /><div className="h-48 animate-pulse rounded-2xl bg-slate-200 dark:bg-slate-900" /></div>}>
           {activeTab === 'dashboard' && (
             <Dashboard
               models={models}

@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { stubCatalog } from './fixtures';
 
 const viewports = [
   { width: 360, height: 800 }, { width: 390, height: 844 }, { width: 430, height: 932 },
@@ -7,7 +8,7 @@ const viewports = [
 ];
 
 test('supported viewports avoid page-level horizontal overflow', async ({ page }) => {
-  await page.route('http://localhost:8000/**', (route) => route.fulfill({ json: [] }));
+  await stubCatalog(page);
   for (const viewport of viewports) {
     await page.setViewportSize(viewport);
     await page.goto('/?tab=dashboard');
@@ -20,7 +21,7 @@ test('supported viewports avoid page-level horizontal overflow', async ({ page }
 // body { overflow-x: hidden } hides clipped controls from the check above,
 // so assert the header's own controls actually fit inside the viewport.
 test('header controls stay reachable at every viewport', async ({ page }) => {
-  await page.route('http://localhost:8000/**', (route) => route.fulfill({ json: [] }));
+  await stubCatalog(page);
   for (const viewport of viewports) {
     await page.setViewportSize(viewport);
     await page.goto('/?tab=dashboard');
@@ -35,7 +36,7 @@ test('header controls stay reachable at every viewport', async ({ page }) => {
 });
 
 test('mobile bottom bar does not eat the viewport', async ({ page }) => {
-  await page.route('http://localhost:8000/**', (route) => route.fulfill({ json: [] }));
+  await stubCatalog(page);
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/?tab=dashboard');
   const bar = page.getByRole('navigation', { name: '모바일 주요 메뉴' });

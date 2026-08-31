@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
+import { stubCatalog } from './fixtures';
 
 // 예전에는 dashboard 한 탭만, 그것도 API 를 빈 배열로 스텁해 카드가 0개인 화면을
 // 검사해서 아무것도 잡히지 않았다. 실제로 렌더된 10개 탭을 전부 훑는다.
@@ -10,7 +11,8 @@ const TABS = [
 
 for (const tab of TABS) {
   test(`${tab} 탭에 serious/critical 접근성 위반이 없다`, async ({ page }) => {
-    test.setTimeout(180_000); // axe 가 600여 개 카드를 훑는 탭이 있어 기본 30s 로는 부족하다
+    test.setTimeout(180_000);
+    await stubCatalog(page);
     await page.goto(`/?tab=${tab}`);
     await page.locator('main, #root > div').first().waitFor();
     await page.waitForLoadState('networkidle');

@@ -1,5 +1,4 @@
 import type { ModelSpec, Provider, GPUSpec, TCOInput, TCOCalculationResult } from './types';
-import { FALLBACK_MODELS } from './data/fallbackModels';
 
 const rawBase = import.meta.env.VITE_API_BASE_URL || (import.meta.env.DEV ? 'http://localhost:8000' : '');
 export const API_BASE_URL = rawBase 
@@ -56,8 +55,10 @@ export async function fetchModels(params?: {
     const data: ModelSpec[] = await res.json();
     return data;
   } catch (err) {
-    console.warn("Using Fallback Model Catalog:", err);
-    return FALLBACK_MODELS;
+    // 예전에는 번들에 얼려둔 580개 카탈로그를 대신 보여줬다. 가격·스펙이 갱신되지 않아
+    // 장애 중에 낡은 값을 사실처럼 노출하게 되므로, 실패는 실패로 올린다.
+    console.warn('Model catalog fetch failed:', err);
+    throw err;
   }
 }
 

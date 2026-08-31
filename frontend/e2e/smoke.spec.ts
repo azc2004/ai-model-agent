@@ -1,8 +1,9 @@
 import { expect, test } from '@playwright/test';
+import { stubCatalog } from './fixtures';
 
 
 test('opens the catalog', async ({ page }) => {
-  await page.route('http://localhost:8000/**', (route) => route.abort());
+  await stubCatalog(page);
   await page.goto('/?tab=dashboard');
 
   await expect(page).toHaveTitle(/LLM COMPASS/i);
@@ -10,7 +11,7 @@ test('opens the catalog', async ({ page }) => {
 });
 
 test('model search to comparison works', async ({ page, isMobile }) => {
-  await page.route('http://localhost:8000/**', (route) => route.abort());
+  await stubCatalog(page);
   await page.goto('/?tab=dashboard');
   // 헤더 전역 검색은 데스크톱 전용, 모바일은 카탈로그 자체 검색을 쓴다
   if (isMobile) await page.getByRole('textbox', { name: '카탈로그 검색' }).fill('GPT');

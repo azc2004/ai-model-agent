@@ -18,6 +18,10 @@ export interface TranslationDictionary {
     groupInsights: string;
     compareBasket: string;
     collapseMenu: string;
+    errorTitle: string;
+    errorCatalog: string;
+    retry: string;
+    loadingView: string;
   };
   viewMode: {
     grid: string;
@@ -72,6 +76,9 @@ export interface TranslationDictionary {
     sortDesc: string;
     sortAscTitle: string;
     sortDescTitle: string;
+    kpiEloDesc: string;
+    kpiSpeedDesc: string;
+    kpiValueDesc: string;
   };
   tco: {
     title: string;
@@ -282,7 +289,11 @@ export const translations: Record<Language, TranslationDictionary> = {
       groupTools: "샌드박스 & 시뮬레이터",
       groupInsights: "AI 솔루션 & 리포트",
       compareBasket: "비교함",
-      collapseMenu: "메뉴 접기"
+      collapseMenu: "메뉴 접기",
+      errorTitle: "오류가 발생했습니다",
+      errorCatalog: "모델 카탈로그를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.",
+      retry: "다시 시도",
+      loadingView: "화면 불러오는 중"
     },
     viewMode: {
       grid: "카드 뷰",
@@ -336,7 +347,10 @@ export const translations: Record<Language, TranslationDictionary> = {
       sortAsc: "▲ 오름차순",
       sortDesc: "▼ 내림차순",
       sortAscTitle: "오름차순 정렬",
-      sortDescTitle: "내림차순 정렬"
+      sortDescTitle: "내림차순 정렬",
+      kpiEloDesc: "글로벌 LMSYS Chatbot Arena 복합 추론 & 지식 평가 1위 프론티어 모델",
+      kpiSpeedDesc: "초당 2,100 토큰 초고속 서빙 및 TTFT 180ms 최저 지연시간 기록",
+      kpiValueDesc: "1M 토큰당 /bin/zsh.50 최저비용으로 프론티어급 코드 & 추론 성능 제공"
     },
     tco: {
       title: "셀프호스팅 TCO 손익분기 시뮬레이터",
@@ -545,7 +559,11 @@ export const translations: Record<Language, TranslationDictionary> = {
       groupTools: "Sandbox & Simulators",
       groupInsights: "AI Solutions & Reports",
       compareBasket: "Compare",
-      collapseMenu: "Collapse menu"
+      collapseMenu: "Collapse menu",
+      errorTitle: "Something went wrong",
+      errorCatalog: "Could not load the model catalog. Please try again in a moment.",
+      retry: "Retry",
+      loadingView: "Loading view"
     },
     viewMode: {
       grid: "Card View",
@@ -599,7 +617,10 @@ export const translations: Record<Language, TranslationDictionary> = {
       sortAsc: "▲ Ascending",
       sortDesc: "▼ Descending",
       sortAscTitle: "Sort ascending",
-      sortDescTitle: "Sort descending"
+      sortDescTitle: "Sort descending",
+      kpiEloDesc: "Top-ranked frontier model on LMSYS Chatbot Arena for combined reasoning and knowledge",
+      kpiSpeedDesc: "2,100 tokens per second with a best-in-class 180 ms time to first token",
+      kpiValueDesc: "Frontier-class coding and reasoning at just /bin/zsh.50 per 1M tokens"
     },
     tco: {
       title: "Self-Hosting TCO Break-Even Simulator",
@@ -808,7 +829,11 @@ export const translations: Record<Language, TranslationDictionary> = {
       groupTools: "サンドボックス & シミュレーター",
       groupInsights: "AI ソリューション & レポート",
       compareBasket: "比較リスト",
-      collapseMenu: "メニューを折りたたむ"
+      collapseMenu: "メニューを折りたたむ",
+      errorTitle: "エラーが発生しました",
+      errorCatalog: "モデルカタログを読み込めませんでした。しばらくしてから再度お試しください。",
+      retry: "再試行",
+      loadingView: "画面を読み込み中"
     },
     viewMode: {
       grid: "カード表示",
@@ -862,7 +887,10 @@ export const translations: Record<Language, TranslationDictionary> = {
       sortAsc: "▲ 昇順",
       sortDesc: "▼ 降順",
       sortAscTitle: "昇順に並び替え",
-      sortDescTitle: "降順に並び替え"
+      sortDescTitle: "降順に並び替え",
+      kpiEloDesc: "LMSYS Chatbot Arena の総合推論・知識評価で1位のフロンティアモデル",
+      kpiSpeedDesc: "毎秒2,100トークンの超高速サービングと180msの最速TTFT",
+      kpiValueDesc: "100万トークンあたり/bin/zsh.50でフロンティア級のコーディングと推論を提供"
     },
     tco: {
       title: "セルフホスティングTCO損益分岐シミュレーター",
@@ -1071,7 +1099,11 @@ export const translations: Record<Language, TranslationDictionary> = {
       groupTools: "沙盒与模拟器",
       groupInsights: "AI 解决方案与报告",
       compareBasket: "对比栏",
-      collapseMenu: "收起菜单"
+      collapseMenu: "收起菜单",
+      errorTitle: "出错了",
+      errorCatalog: "无法加载模型目录，请稍后重试。",
+      retry: "重试",
+      loadingView: "正在加载页面"
     },
     viewMode: {
       grid: "卡片视图",
@@ -1125,7 +1157,10 @@ export const translations: Record<Language, TranslationDictionary> = {
       sortAsc: "▲ 升序",
       sortDesc: "▼ 降序",
       sortAscTitle: "按升序排序",
-      sortDescTitle: "按降序排序"
+      sortDescTitle: "按降序排序",
+      kpiEloDesc: "在 LMSYS Chatbot Arena 综合推理与知识评测中排名第一的前沿模型",
+      kpiSpeedDesc: "每秒 2,100 token 的超高速服务与 180ms 的最低首字延迟",
+      kpiValueDesc: "每百万 token 仅 /bin/zsh.50，提供前沿级编码与推理能力"
     },
     tco: {
       title: "自托管 TCO 盈亏平衡模拟器",
@@ -1334,7 +1369,11 @@ export const translations: Record<Language, TranslationDictionary> = {
       groupTools: "Sandbox y simuladores",
       groupInsights: "Soluciones e informes IA",
       compareBasket: "Comparador",
-      collapseMenu: "Contraer menú"
+      collapseMenu: "Contraer menú",
+      errorTitle: "Se ha producido un error",
+      errorCatalog: "No se pudo cargar el catálogo de modelos. Vuelve a intentarlo en un momento.",
+      retry: "Reintentar",
+      loadingView: "Cargando la vista"
     },
     viewMode: { grid: "Cuadrícula", table: "Tabla", compact: "Compacto" },
     quota: { title: "Límites de Tarifa", rpm: "RPM", tpm: "TPM", rpd: "RPD", concurrency: "Concurrencia" },
@@ -1378,7 +1417,10 @@ export const translations: Record<Language, TranslationDictionary> = {
       sortAsc: "▲ Ascendente",
       sortDesc: "▼ Descendente",
       sortAscTitle: "Ordenar de forma ascendente",
-      sortDescTitle: "Ordenar de forma descendente"
+      sortDescTitle: "Ordenar de forma descendente",
+      kpiEloDesc: "Modelo frontera nº 1 en LMSYS Chatbot Arena en razonamiento y conocimiento combinados",
+      kpiSpeedDesc: "2.100 tokens por segundo y un tiempo al primer token de 180 ms",
+      kpiValueDesc: "Rendimiento de código y razonamiento de primer nivel por solo 0,50 $ por millón de tokens"
     },
     tco: {
       title: "Simulador TCO: API SaaS vs GPU Autoalojada",
@@ -1587,7 +1629,11 @@ export const translations: Record<Language, TranslationDictionary> = {
       groupTools: "Sandbox & Simulatoren",
       groupInsights: "KI-Lösungen & Berichte",
       compareBasket: "Vergleich",
-      collapseMenu: "Menü einklappen"
+      collapseMenu: "Menü einklappen",
+      errorTitle: "Ein Fehler ist aufgetreten",
+      errorCatalog: "Der Modellkatalog konnte nicht geladen werden. Bitte versuchen Sie es gleich erneut.",
+      retry: "Erneut versuchen",
+      loadingView: "Ansicht wird geladen"
     },
     viewMode: { grid: "Raster", table: "Tabelle", compact: "Kompakt" },
     quota: { title: "Ratenlimits", rpm: "RPM", tpm: "TPM", rpd: "RPD", concurrency: "Nebenläufigkeit" },
@@ -1631,7 +1677,10 @@ export const translations: Record<Language, TranslationDictionary> = {
       sortAsc: "▲ Aufsteigend",
       sortDesc: "▼ Absteigend",
       sortAscTitle: "Aufsteigend sortieren",
-      sortDescTitle: "Absteigend sortieren"
+      sortDescTitle: "Absteigend sortieren",
+      kpiEloDesc: "Führendes Frontier-Modell in der LMSYS Chatbot Arena für kombiniertes Reasoning und Wissen",
+      kpiSpeedDesc: "2.100 Tokens pro Sekunde bei branchenführenden 180 ms bis zum ersten Token",
+      kpiValueDesc: "Frontier-Leistung bei Code und Reasoning für nur 0,50 $ pro 1 Mio. Tokens"
     },
     tco: {
       title: "TCO Simulator: SaaS API vs. Self-Hosted GPU",
@@ -1840,7 +1889,11 @@ export const translations: Record<Language, TranslationDictionary> = {
       groupTools: "Bac à sable & simulateurs",
       groupInsights: "Solutions & rapports IA",
       compareBasket: "Comparateur",
-      collapseMenu: "Réduire le menu"
+      collapseMenu: "Réduire le menu",
+      errorTitle: "Une erreur est survenue",
+      errorCatalog: "Impossible de charger le catalogue de modèles. Veuillez réessayer dans un instant.",
+      retry: "Réessayer",
+      loadingView: "Chargement de la vue"
     },
     viewMode: { grid: "Grille", table: "Tableau", compact: "Compact" },
     quota: { title: "Limites de Débit", rpm: "RPM", tpm: "TPM", rpd: "RPD", concurrency: "Concurrence" },
@@ -1884,7 +1937,10 @@ export const translations: Record<Language, TranslationDictionary> = {
       sortAsc: "▲ Croissant",
       sortDesc: "▼ Décroissant",
       sortAscTitle: "Trier par ordre croissant",
-      sortDescTitle: "Trier par ordre décroissant"
+      sortDescTitle: "Trier par ordre décroissant",
+      kpiEloDesc: "Modèle de pointe classé 1er sur LMSYS Chatbot Arena en raisonnement et connaissances",
+      kpiSpeedDesc: "2 100 tokens par seconde et un délai au premier token de 180 ms",
+      kpiValueDesc: "Performances de pointe en code et raisonnement pour seulement 0,50 $ par million de tokens"
     },
     tco: {
       title: "Simulateur TCO : API SaaS vs GPU Auto-hébergé",
