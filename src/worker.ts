@@ -3,6 +3,7 @@ import { PROVIDERS, GPU_SPECS, TRENDING_TEMPLATES } from './data';
 import { calculateTCO } from './tco';
 import { recommendArchitecture, generateMarkdown } from './llm';
 import { ClientError } from './errors';
+import * as seo from './seo';
 export interface Env {
   DB: D1Database;
   ASSETS: Fetcher;
@@ -240,6 +241,51 @@ export default Sentry.withSentry(
     const url = new URL(request.url);
 
     
+    // ─── 크롤러가 읽을 수 있는 HTML ────────────────────────────────────────
+    // SPA 는 JS 실행 후에만 본문이 생기는데 AI 크롤러는 JS 를 실행하지 않는다.
+    // 워커가 자산보다 먼저 실행되고 D1 을 쥐고 있으므로 여기서 바로 렌더한다.
+    const HTML = { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'public, max-age=300, s-maxage=3600' };
+
+    if (url.pathname.startsWith('/models/')) {
+      const id = decodeURIComponent(url.pathname.slice('/models/'.length));
+      const row: any = await env.DB.prepare('SELECT * FROM models WHERE id = ?').bind(id).first();
+      if (!row) return new Response('Not Found', { status: 404 });
+      return new Response(seo.modelPage(row, seo.pickLang(url.searchParams.get('lang'))), { headers: HTML });
+    }
+
+    if (url.pathname.startsWith('/news/')) {
+      const id = decodeURIComponent(url.pathname.slice('/news/'.length));
+      const row: any = await env.DB.prepare('SELECT * FROM trend_news WHERE id = ?').bind(id).first();
+      if (!row) return new Response('Not Found', { status: 404 });
+      return new Response(seo.newsPage(row, seo.pickLang(url.searchParams.get('lang'))), { headers: HTML });
+    }
+
+    if (url.pathname === '/sitemap.xml') {
+      const [m, n] = await Promise.all([
+        env.DB.prepare('SELECT id FROM models ORDER BY is_verified DESC, name ASC').all(),
+        env.DB.prepare('SELECT id FROM trend_news ORDER BY created_at DESC').all(),
+      ]);
+      const body = seo.sitemap(m.results.map((r: any) => r.id), n.results.map((r: any) => r.id));
+      return new Response(body, {
+        headers: { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'public, max-age=600, s-maxage=3600' },
+      });
+    }
+
+    if (url.pathname === '/robots.txt') {
+      return new Response(seo.robots(), {
+        headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'public, max-age=3600, s-maxage=86400' },
+      });
+    }
+
+    if (url.pathname === '/llms.txt') {
+      const c: any = await env.DB.prepare(
+        'SELECT (SELECT COUNT(*) FROM models) m, (SELECT COUNT(*) FROM trend_news) n, (SELECT COUNT(DISTINCT provider_name) FROM models) p'
+      ).first();
+      return new Response(seo.llmsTxt(c?.m ?? 0, c?.n ?? 0, c?.p ?? 0), {
+        headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'public, max-age=3600, s-maxage=86400' },
+      });
+    }
+
     if (url.pathname === '/api/v1/providers') {
       return new Response(JSON.stringify(PROVIDERS), {
         // 배포해야만 바뀌는 상수다. 엣지가 처리하게 두고, 대신 배포 후 최대 1시간은
