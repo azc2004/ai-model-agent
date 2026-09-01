@@ -12,7 +12,20 @@ routes = [
 [assets]
 directory = "frontend/dist"
 binding = "ASSETS"
-run_worker_first = true
+# 워커가 처리해야 하는 경로만 지정한다. true 로 두면 정적 자산 117개까지 전부
+# 워커를 깨워 과금 대상이 된다 — 자산은 워커를 거치지 않으면 무료다.
+# ⚠️ 워커에 새 경로를 추가하면 반드시 이 목록에도 넣어야 한다. 빠뜨리면 그 경로가
+#    조용히 정적 자산(SPA 셸)으로 떨어진다 — 2026-08-30·08-31 장애와 같은 증상이다.
+run_worker_first = [
+  "/api/*",
+  "/admin",
+  "/admin/*",
+  "/models/*",
+  "/news/*",
+  "/sitemap.xml",
+  "/robots.txt",
+  "/llms.txt",
+]
 
 [vars]
 # Sentry 에러 추적 (DSN은 공개 식별자 — 클라이언트 노출 전제 설계)
