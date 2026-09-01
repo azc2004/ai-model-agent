@@ -4,9 +4,12 @@ name: 🩺 Production Healthcheck
 # 트래픽을 받아 API 가 죽고 /admin 이 무인증으로 열렸다. 두 번 다 몇 시간 뒤에야
 # 발견했다. 이 워크플로는 그 상태를 몇 분 안에 실패로 알린다.
 
+# GitHub 은 스케줄 워크플로 실행을 보장하지 않는다. '*/10' 으로 걸어도 실측
+# 간격은 4~6시간이었다. 분 단위 감시는 UptimeRobot 이 /health 로 하고,
+# 여기는 그 백업이다.
 on:
   schedule:
-    - cron: '*/10 * * * *'
+    - cron: '0 */3 * * *'
   workflow_dispatch:
 
 concurrency:
@@ -48,6 +51,14 @@ jobs:
           else
             echo "❌ /admin 무인증 → $code (401 기대). 인증 게이트가 우회되고 있다."; fail=1
           fi
+
+          # 서비스 자체 진단. 데이터 정체(degraded)까지 여기서 드러난다.
+          h=$(curl -sS "$BASE/health")
+          echo "$h" | grep -q '\"ok\":true' \
+            && echo "✅ /health → ok" \
+            || { echo "❌ /health 가 ok 가 아니다: $h"; fail=1; }
+          echo "$h" | grep -q '\"degraded\":true' \
+            && { echo "⚠️  데이터가 상했다 (배치 정체): $h"; fail=1; } || true
 
           # 데이터가 실제로 실려 오는가 (빈 배열이면 D1 연결이 끊긴 것)
           n=$(curl -sS "$BASE/api/v1/models" | python3 -c 'import sys,json; print(len(json.load(sys.stdin)))' 2>/dev/null || echo 0)

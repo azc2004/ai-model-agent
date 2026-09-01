@@ -252,6 +252,54 @@ export default Sentry.withSentry(
       );
     }
 
+    // ─── 자체 진단 ────────────────────────────────────────────────────────
+    // 워커가 죽으면 정적 자산 레이어가 모든 경로에 SPA 셸을 200 으로 돌려준다.
+    // 상태 코드만 보는 외부 모니터에게는 완벽하게 건강해 보이므로(실제로 두 번의
+    // 장애 내내 그랬다) 서비스가 스스로 상태를 말하게 한다.
+    //
+    // 장애와 정체를 구분한다:
+    //   503 + ok:false        워커나 D1 이 실제로 고장 — "사이트 다운"
+    //   200 + degraded:true   서빙은 되지만 배치가 멈춰 데이터가 상함
+    if (url.pathname === '/health') {
+      const NEWS_STALE_HOURS = 48;   // 배치는 하루 1회. 스케줄 지연을 감안한 여유.
+      try {
+        const row: any = await env.DB.prepare(
+          `SELECT (SELECT COUNT(*) FROM models) AS models,
+                  (SELECT COUNT(*) FROM trend_news) AS news,
+                  (SELECT MAX(created_at) FROM trend_news) AS news_latest`
+        ).first();
+
+        const ageH = row?.news_latest
+          ? (Date.now() - Date.parse(String(row.news_latest).replace(' ', 'T') + 'Z')) / 3_600_000
+          : Infinity;
+
+        // 카탈로그가 비면 D1 은 붙었어도 서비스는 제 기능을 못 한다.
+        const ok = (row?.models ?? 0) > 100;
+        const stale = !Number.isFinite(ageH) || ageH > NEWS_STALE_HOURS;
+
+        return new Response(JSON.stringify({
+          ok,
+          degraded: ok && stale,
+          checks: {
+            models: row?.models ?? 0,
+            news: row?.news ?? 0,
+            news_age_hours: Number.isFinite(ageH) ? Math.round(ageH * 10) / 10 : null,
+            news_stale_after_hours: NEWS_STALE_HOURS,
+          },
+          checked_at: new Date().toISOString(),
+        }), {
+          status: ok ? 200 : 503,
+          headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
+        });
+      } catch (err) {
+        Sentry.captureException(err);
+        return new Response(JSON.stringify({ ok: false, error: 'database unreachable' }), {
+          status: 503,
+          headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
+        });
+      }
+    }
+
     // ─── 크롤러가 읽을 수 있는 HTML ────────────────────────────────────────
     // SPA 는 JS 실행 후에만 본문이 생기는데 AI 크롤러는 JS 를 실행하지 않는다.
     // 워커가 자산보다 먼저 실행되고 D1 을 쥐고 있으므로 여기서 바로 렌더한다.
