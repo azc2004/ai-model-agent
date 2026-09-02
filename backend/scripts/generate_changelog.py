@@ -107,16 +107,21 @@ def rewrite(commits: list[str], start: str, end: str) -> dict | None:
 
 def _ask(prompt: str, config, model: str) -> dict:
     """generate_trend_reports 의 스키마 강제를 피해 자유 형식 JSON 을 받는다."""
-    body = json.dumps({
+    payload = {
         "model": model,
         "messages": [
             {"role": "system", "content": "Return ONLY valid JSON. Write in formal Korean (합쇼체)."},
             {"role": "user", "content": prompt},
         ],
         "temperature": 0.4,
-        "max_tokens": 1200,
+        # 항목이 10개를 넘으면 1200 으로는 JSON 이 중간에 잘려 파싱에 실패한다.
+        "max_tokens": 2500,
         "response_format": {"type": "json_object"},
-    }).encode()
+    }
+    # qwen 계열은 추론 토큰을 끄지 않으면 400 을 돌려준다 (generate_trend_reports 와 동일).
+    if "qwen" in model.lower():
+        payload["reasoning_effort"] = "none"
+    body = json.dumps(payload).encode()
     req = urllib.request.Request(
         f"{config.litellm_url}/chat/completions", data=body, method="POST",
         headers={
