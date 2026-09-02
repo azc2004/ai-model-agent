@@ -319,12 +319,31 @@ export default Sentry.withSentry(
       return new Response(seo.newsPage(row, seo.pickLang(url.searchParams.get('lang'))), { headers: HTML });
     }
 
+    if (url.pathname === '/changelog' || url.pathname === '/changelog/') {
+      const { results } = await env.DB.prepare(
+        'SELECT id, title, period_end FROM changelog ORDER BY period_end DESC LIMIT 60'
+      ).all();
+      return new Response(seo.changelogIndex(results, seo.pickLang(url.searchParams.get('lang'))), { headers: HTML });
+    }
+
+    if (url.pathname.startsWith('/changelog/')) {
+      const id = decodeURIComponent(url.pathname.slice('/changelog/'.length));
+      const row: any = await env.DB.prepare('SELECT * FROM changelog WHERE id = ?').bind(id).first();
+      if (!row) return new Response('Not Found', { status: 404 });
+      return new Response(seo.changelogPage(row, seo.pickLang(url.searchParams.get('lang'))), { headers: HTML });
+    }
+
     if (url.pathname === '/sitemap.xml') {
-      const [m, n] = await Promise.all([
+      const [m, n, c] = await Promise.all([
         env.DB.prepare('SELECT id FROM models ORDER BY is_verified DESC, name ASC').all(),
         env.DB.prepare('SELECT id FROM trend_news ORDER BY created_at DESC').all(),
+        env.DB.prepare('SELECT id FROM changelog ORDER BY period_end DESC').all(),
       ]);
-      const body = seo.sitemap(m.results.map((r: any) => r.id), n.results.map((r: any) => r.id));
+      const body = seo.sitemap(
+        m.results.map((r: any) => r.id),
+        n.results.map((r: any) => r.id),
+        c.results.map((r: any) => r.id),
+      );
       return new Response(body, {
         headers: { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'public, max-age=600, s-maxage=3600' },
       });

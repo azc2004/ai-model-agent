@@ -33,31 +33,31 @@ const T: Record<Lang, Record<string, string>> = {
   ko: { provider: '프로바이더', tier: '등급', ctx: '컨텍스트 윈도우', out: '최대 출력', license: '라이선스',
         pricing: '' + 'API 가격 (100만 토큰당)', input: '입력', output: '출력', bench: '벤치마크',
         openApp: '전체 카탈로그에서 비교하기', updated: '갱신', tokens: '토큰', home: 'LLM COMPASS',
-        allModels: '전체 모델', news: 'AI 트렌드 뉴스', source: '출처', backHome: '카탈로그로' },
+        allModels: '전체 모델', news: 'AI 트렌드 뉴스', source: '출처', backHome: '카탈로그로', changelog: '업데이트 노트', changesIn: '이번 기간 변경', allUpdates: '전체 업데이트' },
   en: { provider: 'Provider', tier: 'Tier', ctx: 'Context window', out: 'Max output', license: 'License',
         pricing: 'API pricing (per 1M tokens)', input: 'Input', output: 'Output', bench: 'Benchmarks',
         openApp: 'Compare in the full catalog', updated: 'Updated', tokens: 'tokens', home: 'LLM COMPASS',
-        allModels: 'All models', news: 'AI trend news', source: 'Source', backHome: 'Back to catalog' },
+        allModels: 'All models', news: 'AI trend news', source: 'Source', backHome: 'Back to catalog', changelog: 'Update notes', changesIn: 'Changes in this period', allUpdates: 'All updates' },
   ja: { provider: 'プロバイダー', tier: 'ティア', ctx: 'コンテキスト長', out: '最大出力', license: 'ライセンス',
         pricing: 'API 料金 (100万トークンあたり)', input: '入力', output: '出力', bench: 'ベンチマーク',
         openApp: 'カタログ全体で比較する', updated: '更新', tokens: 'トークン', home: 'LLM COMPASS',
-        allModels: '全モデル', news: 'AIトレンドニュース', source: '出典', backHome: 'カタログへ' },
+        allModels: '全モデル', news: 'AIトレンドニュース', source: '出典', backHome: 'カタログへ', changelog: 'アップデートノート', changesIn: 'この期間の変更', allUpdates: 'すべての更新' },
   zh: { provider: '供应商', tier: '等级', ctx: '上下文窗口', out: '最大输出', license: '许可',
         pricing: 'API 价格（每百万 token）', input: '输入', output: '输出', bench: '基准测试',
         openApp: '在完整目录中比较', updated: '更新', tokens: 'token', home: 'LLM COMPASS',
-        allModels: '全部模型', news: 'AI 趋势新闻', source: '来源', backHome: '返回目录' },
+        allModels: '全部模型', news: 'AI 趋势新闻', source: '来源', backHome: '返回目录', changelog: '更新说明', changesIn: '本期变更', allUpdates: '全部更新' },
   es: { provider: 'Proveedor', tier: 'Nivel', ctx: 'Ventana de contexto', out: 'Salida máxima', license: 'Licencia',
         pricing: 'Precio de API (por 1M de tokens)', input: 'Entrada', output: 'Salida', bench: 'Benchmarks',
         openApp: 'Comparar en el catálogo completo', updated: 'Actualizado', tokens: 'tokens', home: 'LLM COMPASS',
-        allModels: 'Todos los modelos', news: 'Noticias de IA', source: 'Fuente', backHome: 'Volver al catálogo' },
+        allModels: 'Todos los modelos', news: 'Noticias de IA', source: 'Fuente', backHome: 'Volver al catálogo', changelog: 'Notas de actualización', changesIn: 'Cambios del periodo', allUpdates: 'Todas las actualizaciones' },
   de: { provider: 'Anbieter', tier: 'Stufe', ctx: 'Kontextfenster', out: 'Max. Ausgabe', license: 'Lizenz',
         pricing: 'API-Preis (pro 1 Mio. Tokens)', input: 'Eingabe', output: 'Ausgabe', bench: 'Benchmarks',
         openApp: 'Im vollständigen Katalog vergleichen', updated: 'Aktualisiert', tokens: 'Tokens', home: 'LLM COMPASS',
-        allModels: 'Alle Modelle', news: 'KI-Trendnachrichten', source: 'Quelle', backHome: 'Zurück zum Katalog' },
+        allModels: 'Alle Modelle', news: 'KI-Trendnachrichten', source: 'Quelle', backHome: 'Zurück zum Katalog', changelog: 'Update-Notizen', changesIn: 'Änderungen im Zeitraum', allUpdates: 'Alle Updates' },
   fr: { provider: 'Fournisseur', tier: 'Niveau', ctx: 'Fenêtre de contexte', out: 'Sortie max.', license: 'Licence',
         pricing: 'Tarif API (par million de tokens)', input: 'Entrée', output: 'Sortie', bench: 'Benchmarks',
         openApp: 'Comparer dans le catalogue complet', updated: 'Mis à jour', tokens: 'tokens', home: 'LLM COMPASS',
-        allModels: 'Tous les modèles', news: 'Actualités IA', source: 'Source', backHome: 'Retour au catalogue' },
+        allModels: 'Tous les modèles', news: 'Actualités IA', source: 'Source', backHome: 'Retour au catalogue', changelog: 'Notes de mise à jour', changesIn: 'Changements de la période', allUpdates: 'Toutes les mises à jour' },
 };
 
 const STYLE = `
@@ -230,7 +230,52 @@ export function newsPage(n: any, lang: Lang): string {
   });
 }
 
-export function sitemap(modelIds: string[], newsIds: string[]): string {
+export function changelogPage(c: any, lang: Lang): string {
+  const t = T[lang];
+  const items: Array<{ category?: string; text: string }> = json(c.items, []);
+  const body = `
+    <nav><a href="/?lang=${lang}">${t.home}</a> › <a href="/changelog?lang=${lang}">${t.changelog}</a></nav>
+    <h1>${esc(c.title)}</h1>
+    <p class="lede">${esc(c.summary)}</p>
+    <h2>${esc(t.changesIn)} · ${esc(c.period_start)} ~ ${esc(c.period_end)}</h2>
+    <ul>${items.map((i) =>
+      `<li>${i.category ? `<strong>${esc(i.category)}</strong> — ` : ''}${esc(i.text)}</li>`).join('\n      ')}</ul>
+    <a class="cta" href="/?lang=${lang}">${esc(t.openApp)}</a>
+    <footer>${esc(t.updated)}: ${esc((c.created_at || '').slice(0, 10))} · <a href="/changelog?lang=${lang}">${esc(t.allUpdates)}</a> · <a href="/sitemap.xml">sitemap</a></footer>`;
+
+  return shell({
+    lang, path: `/changelog/${c.id}`, body,
+    title: `${c.title} — ${t.changelog} | LLM COMPASS`,
+    description: String(c.summary).slice(0, 300),
+    jsonLd: {
+      '@context': 'https://schema.org', '@type': 'Article',
+      headline: c.title, description: String(c.summary).slice(0, 300),
+      datePublished: c.created_at, dateModified: c.created_at,
+      url: `${SITE}/changelog/${c.id}`,
+      publisher: { '@type': 'Organization', name: 'LLM COMPASS', url: SITE },
+    },
+  });
+}
+
+export function changelogIndex(rows: any[], lang: Lang): string {
+  const t = T[lang];
+  const body = `
+    <nav><a href="/?lang=${lang}">${t.home}</a> › ${esc(t.changelog)}</nav>
+    <h1>${esc(t.changelog)}</h1>
+    <p class="lede">${esc(t.allUpdates)}</p>
+    <ul>${rows.map((r) =>
+      `<li><a href="/changelog/${esc(r.id)}?lang=${lang}">${esc(r.title)}</a> <span style="color:var(--muted)">— ${esc(r.period_end)}</span></li>`
+    ).join('\n      ')}</ul>
+    <footer><a href="/sitemap.xml">sitemap</a></footer>`;
+
+  return shell({
+    lang, path: '/changelog', body,
+    title: `${t.changelog} | LLM COMPASS`,
+    description: `LLM COMPASS ${t.allUpdates}`,
+  });
+}
+
+export function sitemap(modelIds: string[], newsIds: string[], changelogIds: string[] = []): string {
   const urls: string[] = [];
   const push = (loc: string, priority: string, freq: string) => {
     const alts = LANGS.map((l) =>
@@ -243,6 +288,8 @@ export function sitemap(modelIds: string[], newsIds: string[]): string {
   }
   for (const id of modelIds) push(`/models/${id}`, '0.8', 'weekly');
   for (const id of newsIds) push(`/news/${id}`, '0.6', 'monthly');
+  if (changelogIds.length) push('/changelog', '0.7', 'weekly');
+  for (const id of changelogIds) push(`/changelog/${id}`, '0.5', 'monthly');
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${urls.join('\n')}

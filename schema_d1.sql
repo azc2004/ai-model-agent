@@ -83,6 +83,21 @@ CREATE TABLE IF NOT EXISTS analytics_events (
   created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
+-- 주간 제품 업데이트. 커밋 메시지를 그대로 싣지 않는다 — 개발자용 문장이고
+-- 과거 보안·장애 이력이 그대로 드러난다. LLM 이 사용자 관점 문장으로 다시 쓴다.
+CREATE TABLE IF NOT EXISTS changelog (
+  id TEXT PRIMARY KEY,            -- changelog-YYYY-MM-DD
+  period_start TEXT NOT NULL,
+  period_end TEXT NOT NULL,
+  title TEXT NOT NULL,
+  summary TEXT NOT NULL,
+  items TEXT NOT NULL,            -- JSON: [{category, text}]
+  commit_count INTEGER,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_changelog_end ON changelog(period_end);
+
 -- 카탈로그 주간 스냅샷. model_d1_batch 가 INSERT OR REPLACE 로 덮어쓰기 때문에
 -- 이전 가격·스펙이 소실된다. 동기화 직전에 현재 상태를 남겨 두 시점을 비교할 수
 -- 있게 한다 — "이번 주 GPT-4o 단가 인하" 같은 변경 리포트의 재료다.

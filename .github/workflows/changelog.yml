@@ -1,0 +1,46 @@
+name: 📝 Weekly Product Changelog
+
+# 사이트가 실제로 관리되고 있다는 것을 드러낸다. 만들어내는 게 아니라 드러내는
+# 것이라, 발행할 변경이 없으면 아무것도 내보내지 않는다 — "이번 주 변경 없음" 은
+# 관리되고 있다는 인상을 주기는커녕 정확히 그 반대다.
+
+on:
+  schedule:
+    # 매주 월요일 한국시간 오전 09:00 (UTC 일요일 00:00)
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+    inputs:
+      days:
+        description: '대상 기간 (일)'
+        default: '7'
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # git log 로 기간 전체를 봐야 한다
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📝 커밋을 이용자 관점 업데이트로 재작성
+        env:
+          LITELLM_API_KEY: ${{ secrets.LITELLM_API_KEY }}
+        run: |
+          python3 backend/scripts/generate_changelog.py --days "${{ inputs.days || 7 }}"
+
+      - name: ☁️ D1 적재
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -s seed_changelog.sql ]; then
+            npx wrangler d1 execute llm-compass-db --remote --file=seed_changelog.sql
+            echo "✅ 업데이트 노트 발행"
+          else
+            echo "ℹ️ 발행할 변경이 없어 건너뛴다"
+          fi

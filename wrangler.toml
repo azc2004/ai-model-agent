@@ -23,6 +23,8 @@ run_worker_first = [
   "/admin/*",
   "/models/*",
   "/news/*",
+  "/changelog",
+  "/changelog/*",
   "/sitemap.xml",
   "/robots.txt",
   "/llms.txt",
