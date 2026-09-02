@@ -83,3 +83,19 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      # 배포가 성공했다고 워커가 요청을 처리한다는 뜻이 아니다. 실제로 세 번,
+      # 핸들러도 바인딩도 없는 버전이 100% 트래픽을 받으면서 모든 경로가 SPA 셸을
+      # 200 으로 돌려줬다. 배포 직후 서비스가 살아 있는지 직접 확인한다.
+      - name: 🩺 배포 검증
+        run: |
+          set -uo pipefail
+          BASE=https://llmcompass.azclab.com
+          for i in $(seq 1 10); do
+            ct=$(curl -sS -o /dev/null -H 'Cache-Control: no-cache' -w '%{content_type}' "$BASE/health" || true)
+            case "$ct" in application/json*) echo "✅ /health → $ct"; exit 0 ;; esac
+            echo "  대기 ${i}/10 (현재: ${ct:-응답없음})"; sleep 10
+          done
+          echo "❌ 배포 후 /health 가 JSON 을 돌려주지 않는다. 워커가 요청을 처리하지 못한다."
+          echo "   npx wrangler versions list 로 핸들러 있는 버전을 찾아 rollback 하라."
+          exit 1
