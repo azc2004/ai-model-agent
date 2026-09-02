@@ -83,6 +83,24 @@ CREATE TABLE IF NOT EXISTS analytics_events (
   created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
+-- 카탈로그 주간 스냅샷. model_d1_batch 가 INSERT OR REPLACE 로 덮어쓰기 때문에
+-- 이전 가격·스펙이 소실된다. 동기화 직전에 현재 상태를 남겨 두 시점을 비교할 수
+-- 있게 한다 — "이번 주 GPT-4o 단가 인하" 같은 변경 리포트의 재료다.
+-- 631행 × 주 1회 = 연 33,000행. 180일 지난 것은 배치가 정리한다.
+CREATE TABLE IF NOT EXISTS model_snapshots (
+  captured_at TEXT NOT NULL,      -- date('now')
+  model_id TEXT NOT NULL,
+  name TEXT,
+  provider_name TEXT,
+  api_pricing TEXT,               -- JSON
+  context_window INTEGER,
+  benchmarks TEXT,                -- JSON
+  is_deprecated INTEGER,
+  PRIMARY KEY (captured_at, model_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_snapshot_captured ON model_snapshots(captured_at);
+
 -- 크롤러 방문 기록. analytics_events 에 섞으면 사람 세션 수가 오염되므로 분리한다.
 -- 워커가 자산보다 먼저 실행되므로 SPA 셸이 아니라 실제 요청 시점에 기록된다.
 CREATE TABLE IF NOT EXISTS crawler_hits (
