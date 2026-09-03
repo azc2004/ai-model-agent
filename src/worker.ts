@@ -335,7 +335,7 @@ export default Sentry.withSentry(
 
     if (url.pathname === '/sitemap.xml') {
       const [m, n, c] = await Promise.all([
-        env.DB.prepare('SELECT id FROM models ORDER BY is_verified DESC, name ASC').all(),
+        env.DB.prepare('SELECT id FROM models WHERE is_deprecated = 0 ORDER BY is_verified DESC, name ASC').all(),
         env.DB.prepare('SELECT id FROM trend_news ORDER BY created_at DESC').all(),
         env.DB.prepare('SELECT id FROM changelog ORDER BY period_end DESC').all(),
       ]);
@@ -542,9 +542,14 @@ export default Sentry.withSentry(
     if (url.pathname === '/api/v1/models') {
       try {
         const lang = url.searchParams.get('lang') || 'ko';
-        const { results } = await env.DB.prepare(`
-          SELECT * FROM models ORDER BY is_verified DESC, name ASC
-        `).all();
+        // 피드에서 사라진 모델은 가격이 갱신되지 않는다. 기본 목록에서 빼되
+        // 데이터는 남겨 두고, 필요하면 ?include_deprecated=1 로 볼 수 있게 한다.
+        const withDeprecated = url.searchParams.get('include_deprecated') === '1';
+        const { results } = await env.DB.prepare(
+          withDeprecated
+            ? 'SELECT * FROM models ORDER BY is_verified DESC, name ASC'
+            : 'SELECT * FROM models WHERE is_deprecated = 0 ORDER BY is_verified DESC, name ASC'
+        ).all();
 
         const models = results.map((m: any) => ({
           ...m,

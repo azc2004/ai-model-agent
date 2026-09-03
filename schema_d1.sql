@@ -38,6 +38,9 @@ CREATE TABLE IF NOT EXISTS models (
   is_deprecated INTEGER DEFAULT 0,
   is_new INTEGER DEFAULT 0,
   hardware_requirements TEXT,
+  -- 'feed' = OpenRouter 동기화가 넣은 행, 'seed' = 수기로 넣은 행.
+  -- 피드에서 사라진 모델을 지원 중단 처리할 때 수기 시드를 건드리지 않기 위해 필요하다.
+  source TEXT DEFAULT 'seed',
   updated_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 

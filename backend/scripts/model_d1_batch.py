@@ -172,7 +172,8 @@ def convert_model_to_sql(ext: Dict) -> Optional[str]:
   id, provider_id, provider_name, name, tier, is_open_weight, license_type,
   parameter_count_b, architecture, context_window, max_output_tokens, modality,
   description, official_url, source_docs_url, api_pricing, quota, benchmarks,
-  is_verified, litellm_id, supports_reasoning, supports_web_search, is_deprecated, is_new, hardware_requirements
+  is_verified, litellm_id, supports_reasoning, supports_web_search, is_deprecated, is_new, hardware_requirements,
+  source
 ) VALUES (
   '{escape_sql(sanitized_id)}',
   '{escape_sql(pid)}',
@@ -198,7 +199,8 @@ def convert_model_to_sql(ext: Dict) -> Optional[str]:
   0,
   0,
   0,
-  '{escape_sql(json.dumps({}, ensure_ascii=False))}'
+  '{escape_sql(json.dumps({}, ensure_ascii=False))}',
+  'feed'
 );"""
     return sql
 
