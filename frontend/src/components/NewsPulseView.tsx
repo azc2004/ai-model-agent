@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { Newspaper, Users, Lightbulb, Briefcase, Microscope, Activity, Hash, Clock, RefreshCw, Search, X, Sparkles } from 'lucide-react';
 import { API_BASE_URL } from '../api';
 import { useLanguage } from '../context/LanguageContext';
+import { fetchChangelog, type ChangelogEntry } from '../api';
 import { NewsDetailView } from './NewsDetailView';
 import { track } from '../analytics';
 
@@ -306,7 +307,7 @@ const LENSES = [
 ];
 
 export default function NewsPulseView() {
-  const { language } = useLanguage();
+  const { language, t: g } = useLanguage();
   const t = I18N_TEXTS[language as keyof typeof I18N_TEXTS] || I18N_TEXTS.en;
 
   // 📐 LaTeX 수식 표기 및 특수 문법 모던 웹 텍스트로 자동 정제
@@ -427,6 +428,8 @@ export default function NewsPulseView() {
   const [loading, setLoading] = useState(true);
   const [newsData, setNewsData] = useState<NewsResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // 최근 업데이트 노트. 없으면 배너를 그리지 않는다 — 빈 배너는 정확히 반대 인상을 준다.
+  const [latestUpdate, setLatestUpdate] = useState<ChangelogEntry | null>(null);
   const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
 
   // 서브 렌즈 탭 클릭 시 주소창 URL 자동 동기화 (북마크/즐겨찾기/공유 가능)
@@ -538,6 +541,16 @@ export default function NewsPulseView() {
   useEffect(() => {
     fetchNews(activeLens);
   }, [activeLens]);
+
+  useEffect(() => {
+    fetchChangelog().then((rows) => {
+      const recent = rows.find((r) => {
+        const days = (Date.now() - Date.parse(`${r.period_end}T00:00:00Z`)) / 86_400_000;
+        return Number.isFinite(days) && days <= 14;   // 2주 지난 소식은 '새로워진 점' 이 아니다
+      });
+      setLatestUpdate(recent ?? null);
+    });
+  }, []);
 
   // 키워드 및 렌즈 실시간 필터링 (3중 정밀 데두플리케이션 적용)
   const filteredArticles = useMemo(() => {
@@ -665,6 +678,23 @@ export default function NewsPulseView() {
             )}
           </div>
         </div>
+
+        {latestUpdate && (
+          <a
+            href={`/changelog/${latestUpdate.id}?lang=${language}`}
+            className="focus-ring mb-5 flex items-center gap-3 rounded-2xl border border-cyan-200 bg-cyan-50/70 px-4 py-3 text-sm transition hover:bg-cyan-50 dark:border-cyan-500/30 dark:bg-cyan-500/10 dark:hover:bg-cyan-500/15"
+          >
+            <span className="shrink-0 rounded-full bg-cyan-600 px-2.5 py-0.5 text-[11px] font-black text-white">
+              {g.nav.whatsNew}
+            </span>
+            <span className="min-w-0 flex-1 truncate font-bold text-slate-800 dark:text-slate-100">
+              {latestUpdate.title}
+            </span>
+            <span className="shrink-0 text-xs font-bold text-cyan-700 dark:text-cyan-300">
+              {g.nav.viewUpdate} →
+            </span>
+          </a>
+        )}
 
         {/* 🔍 실시간 키워드 검색바 (Real-time Article Search Bar) */}
         <div className="mb-5 relative">

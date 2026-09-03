@@ -343,3 +343,24 @@ export async function simulateTCO(input: TCOInput): Promise<TCOCalculationResult
     recommendation: apiTotal < selfHostedTotal ? "SaaS API Calling" : "Self-Hosted Cloud GPU"
   };
 }
+
+export interface ChangelogEntry {
+  id: string;
+  period_start: string;
+  period_end: string;
+  title: string;
+  summary: string;
+  items: Array<{ category?: string; text: string }>;
+  created_at: string;
+}
+
+/** 최신 업데이트 노트. 실패해도 화면을 막지 않도록 빈 배열을 돌려준다. */
+export async function fetchChangelog(): Promise<ChangelogEntry[]> {
+  try {
+    const res = await fetchWithTimeout(`${API_BASE_URL}/changelog`, 4000);
+    if (!res.ok) return [];
+    return await res.json();
+  } catch {
+    return [];
+  }
+}

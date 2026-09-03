@@ -22,6 +22,9 @@ export interface TranslationDictionary {
     errorCatalog: string;
     retry: string;
     loadingView: string;
+    updates: string;
+    whatsNew: string;
+    viewUpdate: string;
   };
   viewMode: {
     grid: string;
@@ -293,7 +296,10 @@ export const translations: Record<Language, TranslationDictionary> = {
       errorTitle: "오류가 발생했습니다",
       errorCatalog: "모델 카탈로그를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.",
       retry: "다시 시도",
-      loadingView: "화면 불러오는 중"
+      loadingView: "화면 불러오는 중",
+      updates: "업데이트 노트",
+      whatsNew: "새로워진 점",
+      viewUpdate: "자세히 보기"
     },
     viewMode: {
       grid: "카드 뷰",
@@ -563,7 +569,10 @@ export const translations: Record<Language, TranslationDictionary> = {
       errorTitle: "Something went wrong",
       errorCatalog: "Could not load the model catalog. Please try again in a moment.",
       retry: "Retry",
-      loadingView: "Loading view"
+      loadingView: "Loading view",
+      updates: "Update notes",
+      whatsNew: "What's new",
+      viewUpdate: "Read more"
     },
     viewMode: {
       grid: "Card View",
@@ -833,7 +842,10 @@ export const translations: Record<Language, TranslationDictionary> = {
       errorTitle: "エラーが発生しました",
       errorCatalog: "モデルカタログを読み込めませんでした。しばらくしてから再度お試しください。",
       retry: "再試行",
-      loadingView: "画面を読み込み中"
+      loadingView: "画面を読み込み中",
+      updates: "アップデートノート",
+      whatsNew: "新着情報",
+      viewUpdate: "詳細を見る"
     },
     viewMode: {
       grid: "カード表示",
@@ -1103,7 +1115,10 @@ export const translations: Record<Language, TranslationDictionary> = {
       errorTitle: "出错了",
       errorCatalog: "无法加载模型目录，请稍后重试。",
       retry: "重试",
-      loadingView: "正在加载页面"
+      loadingView: "正在加载页面",
+      updates: "更新说明",
+      whatsNew: "最新动态",
+      viewUpdate: "查看详情"
     },
     viewMode: {
       grid: "卡片视图",
@@ -1373,7 +1388,10 @@ export const translations: Record<Language, TranslationDictionary> = {
       errorTitle: "Se ha producido un error",
       errorCatalog: "No se pudo cargar el catálogo de modelos. Vuelve a intentarlo en un momento.",
       retry: "Reintentar",
-      loadingView: "Cargando la vista"
+      loadingView: "Cargando la vista",
+      updates: "Notas de actualización",
+      whatsNew: "Novedades",
+      viewUpdate: "Ver más"
     },
     viewMode: { grid: "Cuadrícula", table: "Tabla", compact: "Compacto" },
     quota: { title: "Límites de Tarifa", rpm: "RPM", tpm: "TPM", rpd: "RPD", concurrency: "Concurrencia" },
@@ -1633,7 +1651,10 @@ export const translations: Record<Language, TranslationDictionary> = {
       errorTitle: "Ein Fehler ist aufgetreten",
       errorCatalog: "Der Modellkatalog konnte nicht geladen werden. Bitte versuchen Sie es gleich erneut.",
       retry: "Erneut versuchen",
-      loadingView: "Ansicht wird geladen"
+      loadingView: "Ansicht wird geladen",
+      updates: "Update-Notizen",
+      whatsNew: "Neuigkeiten",
+      viewUpdate: "Mehr erfahren"
     },
     viewMode: { grid: "Raster", table: "Tabelle", compact: "Kompakt" },
     quota: { title: "Ratenlimits", rpm: "RPM", tpm: "TPM", rpd: "RPD", concurrency: "Nebenläufigkeit" },
@@ -1893,7 +1914,10 @@ export const translations: Record<Language, TranslationDictionary> = {
       errorTitle: "Une erreur est survenue",
       errorCatalog: "Impossible de charger le catalogue de modèles. Veuillez réessayer dans un instant.",
       retry: "Réessayer",
-      loadingView: "Chargement de la vue"
+      loadingView: "Chargement de la vue",
+      updates: "Notes de mise à jour",
+      whatsNew: "Nouveautés",
+      viewUpdate: "En savoir plus"
     },
     viewMode: { grid: "Grille", table: "Tableau", compact: "Compact" },
     quota: { title: "Limites de Débit", rpm: "RPM", tpm: "TPM", rpd: "RPD", concurrency: "Concurrence" },

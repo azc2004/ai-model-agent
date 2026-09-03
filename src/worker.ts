@@ -364,6 +364,25 @@ export default Sentry.withSentry(
       });
     }
 
+    // SPA 가 최신 업데이트 노트를 배너로 띄우기 위해 쓴다. 크롤러용 /changelog 는
+    // 별도로 HTML 을 렌더한다.
+    if (url.pathname === '/api/v1/changelog') {
+      try {
+        const { results } = await env.DB.prepare(
+          'SELECT id, period_start, period_end, title, summary, items, created_at FROM changelog ORDER BY period_end DESC LIMIT 10'
+        ).all();
+        return new Response(JSON.stringify(results.map((r: any) => ({
+          ...r,
+          items: (() => { try { return JSON.parse(r.items || '[]'); } catch { return []; } })(),
+        }))), {
+          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*',
+                     'Cache-Control': 'public, max-age=300, s-maxage=3600' },
+        });
+      } catch (err) {
+        return fail(err);
+      }
+    }
+
     if (url.pathname === '/api/v1/providers') {
       return new Response(JSON.stringify(PROVIDERS), {
         // 배포해야만 바뀌는 상수다. 엣지가 처리하게 두고, 대신 배포 후 최대 1시간은

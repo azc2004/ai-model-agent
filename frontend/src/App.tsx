@@ -188,7 +188,13 @@ export const AppContent: React.FC = () => {
 
         <footer className="mobile-safe-bottom border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/60 py-6 text-center text-xs text-slate-500">
           <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p>© 2026 LLM COMPASS - Global AI Model Spec & TCO Analytics Platform</p>
+            <p>
+              © 2026 LLM COMPASS - Global AI Model Spec &amp; TCO Analytics Platform
+              <span className="mx-2 text-slate-300 dark:text-slate-700">·</span>
+              <a href={`/changelog?lang=${language}`} className="focus-ring font-semibold text-cyan-700 hover:underline dark:text-cyan-400">
+                {t.nav.updates}
+              </a>
+            </p>
             <p className="text-slate-600">Supported Languages: 🇰🇷 한국어 | 🇺🇸 English | 🇯🇵 日本語 | 🇨🇳 中文</p>
           </div>
         </footer>
