@@ -33,31 +33,31 @@ const T: Record<Lang, Record<string, string>> = {
   ko: { provider: '프로바이더', tier: '등급', ctx: '컨텍스트 윈도우', out: '최대 출력', license: '라이선스',
         pricing: '' + 'API 가격 (100만 토큰당)', input: '입력', output: '출력', bench: '벤치마크',
         openApp: '전체 카탈로그에서 비교하기', updated: '갱신', tokens: '토큰', home: 'LLM COMPASS',
-        allModels: '전체 모델', news: 'AI 트렌드 뉴스', source: '출처', backHome: '카탈로그로', changelog: '업데이트 노트', changesIn: '이번 기간 변경', allUpdates: '전체 업데이트', deprecated: '지원 중단', deprecatedNote: '이 모델은 더 이상 제공되지 않습니다. 아래 정보는 마지막으로 확인된 시점의 값입니다.' },
+        allModels: '전체 모델', news: 'AI 트렌드 뉴스', source: '출처', backHome: '카탈로그로', figures: '확인된 수치', ourTake: '우리 관점', openQ: '아직 확인되지 않은 것', changelog: '업데이트 노트', changesIn: '이번 기간 변경', allUpdates: '전체 업데이트', deprecated: '지원 중단', deprecatedNote: '이 모델은 더 이상 제공되지 않습니다. 아래 정보는 마지막으로 확인된 시점의 값입니다.' },
   en: { provider: 'Provider', tier: 'Tier', ctx: 'Context window', out: 'Max output', license: 'License',
         pricing: 'API pricing (per 1M tokens)', input: 'Input', output: 'Output', bench: 'Benchmarks',
         openApp: 'Compare in the full catalog', updated: 'Updated', tokens: 'tokens', home: 'LLM COMPASS',
-        allModels: 'All models', news: 'AI trend news', source: 'Source', backHome: 'Back to catalog', changelog: 'Update notes', changesIn: 'Changes in this period', allUpdates: 'All updates', deprecated: 'Discontinued', deprecatedNote: 'This model is no longer offered. The figures below are from the last time it was confirmed.' },
+        allModels: 'All models', news: 'AI trend news', source: 'Source', backHome: 'Back to catalog', figures: 'Verified figures', ourTake: 'Our take', openQ: 'Open questions', changelog: 'Update notes', changesIn: 'Changes in this period', allUpdates: 'All updates', deprecated: 'Discontinued', deprecatedNote: 'This model is no longer offered. The figures below are from the last time it was confirmed.' },
   ja: { provider: 'プロバイダー', tier: 'ティア', ctx: 'コンテキスト長', out: '最大出力', license: 'ライセンス',
         pricing: 'API 料金 (100万トークンあたり)', input: '入力', output: '出力', bench: 'ベンチマーク',
         openApp: 'カタログ全体で比較する', updated: '更新', tokens: 'トークン', home: 'LLM COMPASS',
-        allModels: '全モデル', news: 'AIトレンドニュース', source: '出典', backHome: 'カタログへ', changelog: 'アップデートノート', changesIn: 'この期間の変更', allUpdates: 'すべての更新', deprecated: '提供終了', deprecatedNote: 'このモデルは現在提供されていません。以下は最後に確認された時点の値です。' },
+        allModels: '全モデル', news: 'AIトレンドニュース', source: '出典', backHome: 'カタログへ', figures: '確認された数値', ourTake: '編集部の見解', openQ: '未確認の点', changelog: 'アップデートノート', changesIn: 'この期間の変更', allUpdates: 'すべての更新', deprecated: '提供終了', deprecatedNote: 'このモデルは現在提供されていません。以下は最後に確認された時点の値です。' },
   zh: { provider: '供应商', tier: '等级', ctx: '上下文窗口', out: '最大输出', license: '许可',
         pricing: 'API 价格（每百万 token）', input: '输入', output: '输出', bench: '基准测试',
         openApp: '在完整目录中比较', updated: '更新', tokens: 'token', home: 'LLM COMPASS',
-        allModels: '全部模型', news: 'AI 趋势新闻', source: '来源', backHome: '返回目录', changelog: '更新说明', changesIn: '本期变更', allUpdates: '全部更新', deprecated: '已停止提供', deprecatedNote: '该模型已不再提供。以下为最后一次确认时的数据。' },
+        allModels: '全部模型', news: 'AI 趋势新闻', source: '来源', backHome: '返回目录', figures: '已核实数据', ourTake: '我们的观点', openQ: '尚未确认', changelog: '更新说明', changesIn: '本期变更', allUpdates: '全部更新', deprecated: '已停止提供', deprecatedNote: '该模型已不再提供。以下为最后一次确认时的数据。' },
   es: { provider: 'Proveedor', tier: 'Nivel', ctx: 'Ventana de contexto', out: 'Salida máxima', license: 'Licencia',
         pricing: 'Precio de API (por 1M de tokens)', input: 'Entrada', output: 'Salida', bench: 'Benchmarks',
         openApp: 'Comparar en el catálogo completo', updated: 'Actualizado', tokens: 'tokens', home: 'LLM COMPASS',
-        allModels: 'Todos los modelos', news: 'Noticias de IA', source: 'Fuente', backHome: 'Volver al catálogo', changelog: 'Notas de actualización', changesIn: 'Cambios del periodo', allUpdates: 'Todas las actualizaciones', deprecated: 'Descontinuado', deprecatedNote: 'Este modelo ya no se ofrece. Los datos siguientes corresponden a la última confirmación.' },
+        allModels: 'Todos los modelos', news: 'Noticias de IA', source: 'Fuente', backHome: 'Volver al catálogo', figures: 'Cifras verificadas', ourTake: 'Nuestra opinión', openQ: 'Preguntas abiertas', changelog: 'Notas de actualización', changesIn: 'Cambios del periodo', allUpdates: 'Todas las actualizaciones', deprecated: 'Descontinuado', deprecatedNote: 'Este modelo ya no se ofrece. Los datos siguientes corresponden a la última confirmación.' },
   de: { provider: 'Anbieter', tier: 'Stufe', ctx: 'Kontextfenster', out: 'Max. Ausgabe', license: 'Lizenz',
         pricing: 'API-Preis (pro 1 Mio. Tokens)', input: 'Eingabe', output: 'Ausgabe', bench: 'Benchmarks',
         openApp: 'Im vollständigen Katalog vergleichen', updated: 'Aktualisiert', tokens: 'Tokens', home: 'LLM COMPASS',
-        allModels: 'Alle Modelle', news: 'KI-Trendnachrichten', source: 'Quelle', backHome: 'Zurück zum Katalog', changelog: 'Update-Notizen', changesIn: 'Änderungen im Zeitraum', allUpdates: 'Alle Updates', deprecated: 'Eingestellt', deprecatedNote: 'Dieses Modell wird nicht mehr angeboten. Die Angaben stammen von der letzten Bestätigung.' },
+        allModels: 'Alle Modelle', news: 'KI-Trendnachrichten', source: 'Quelle', backHome: 'Zurück zum Katalog', figures: 'Belegte Zahlen', ourTake: 'Unsere Einschätzung', openQ: 'Offene Fragen', changelog: 'Update-Notizen', changesIn: 'Änderungen im Zeitraum', allUpdates: 'Alle Updates', deprecated: 'Eingestellt', deprecatedNote: 'Dieses Modell wird nicht mehr angeboten. Die Angaben stammen von der letzten Bestätigung.' },
   fr: { provider: 'Fournisseur', tier: 'Niveau', ctx: 'Fenêtre de contexte', out: 'Sortie max.', license: 'Licence',
         pricing: 'Tarif API (par million de tokens)', input: 'Entrée', output: 'Sortie', bench: 'Benchmarks',
         openApp: 'Comparer dans le catalogue complet', updated: 'Mis à jour', tokens: 'tokens', home: 'LLM COMPASS',
-        allModels: 'Tous les modèles', news: 'Actualités IA', source: 'Source', backHome: 'Retour au catalogue', changelog: 'Notes de mise à jour', changesIn: 'Changements de la période', allUpdates: 'Toutes les mises à jour', deprecated: 'Abandonné', deprecatedNote: 'Ce modèle n’est plus proposé. Les données ci-dessous datent de la dernière vérification.' },
+        allModels: 'Tous les modèles', news: 'Actualités IA', source: 'Source', backHome: 'Retour au catalogue', figures: 'Chiffres vérifiés', ourTake: 'Notre avis', openQ: 'Questions ouvertes', changelog: 'Notes de mise à jour', changesIn: 'Changements de la période', allUpdates: 'Toutes les mises à jour', deprecated: 'Abandonné', deprecatedNote: 'Ce modèle n’est plus proposé. Les données ci-dessous datent de la dernière vérification.' },
 };
 
 const STYLE = `
@@ -76,6 +76,14 @@ th,td{text-align:left;padding:.6rem .85rem;border-bottom:1px solid var(--rule)}
 th{width:38%;font-weight:600;color:var(--muted)}
 tr:last-child th,tr:last-child td{border-bottom:none}
 .tbl-scroll{overflow-x:auto}
+.numbers{margin:1.25rem 0;border:1px solid var(--rule);background:var(--card)}
+.numbers li{list-style:none;padding:.55rem .9rem;border-bottom:1px solid var(--rule);font-size:.92rem}
+.numbers li:last-child{border-bottom:none}
+.numbers ul{margin:0;padding:0}
+.numbers b{font-variant-numeric:tabular-nums}
+.take{margin:1.5rem 0;padding:1rem 1.15rem;border-left:3px solid var(--accent);background:var(--card)}
+.take h2{margin-top:0}
+.openq{margin:1.25rem 0;color:var(--muted);font-size:.92rem}
 .cta{display:inline-block;margin-top:2.25rem;padding:.65rem 1.1rem;background:var(--accent);color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:.95rem}
 article p{max-width:38rem}
 footer{margin-top:3rem;padding-top:1.25rem;border-top:1px solid var(--rule);font-size:.8rem;color:var(--muted)}
@@ -203,6 +211,8 @@ export function newsPage(n: any, lang: Lang): string {
   const sources: any[] = json(n.original_sources, []);
   const summary = (Array.isArray(takeaways) && takeaways[0]) || n.executive_summary || n.title;
   const bodyText = (n.analytical_deep_dive || n.executive_summary || '').trim();
+  const numbers = json(n.key_numbers, []);
+  const openQ = json(n.open_questions, []);
 
   const paragraphs = bodyText
     .split(/\n{2,}/).map((p: string) => p.trim()).filter(Boolean).slice(0, 12)
@@ -213,6 +223,11 @@ export function newsPage(n: any, lang: Lang): string {
     <h1>${esc(n.title)}</h1>
     <p class="lede">${esc(summary)}</p>
     <article>${paragraphs}</article>
+    ${numbers.length ? `<h2>${esc(t.figures)}</h2><div class="numbers"><ul>${numbers.map((k: any) =>
+      `<li>${esc(k.label)} — <b>${esc(k.value)}</b> <a href="${esc(k.source_url)}" rel="nofollow noopener">출처</a></li>`).join('')}</ul></div>` : ''}
+    ${n.our_take ? `<div class="take"><h2>${esc(t.ourTake)}</h2><p>${esc(n.our_take)}</p></div>` : ''}
+    ${openQ.length ? `<div class="openq"><h2>${esc(t.openQ)}</h2><ul>${openQ.map((q: string) =>
+      `<li>${esc(q)}</li>`).join('')}</ul></div>` : ''}
     ${sources.length ? `<h2>${esc(t.source)}</h2><ul>${sources.slice(0, 8).map((s: any) =>
       `<li><a href="${esc(s.url || '#')}" rel="nofollow noopener">${esc(s.title || s.name || s.url)}</a></li>`).join('')}</ul>` : ''}
     <a class="cta" href="/?tab=news&amp;article=${esc(n.id)}&amp;lang=${lang}">${esc(t.backHome)}</a>

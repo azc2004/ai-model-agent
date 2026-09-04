@@ -171,6 +171,11 @@ function classifyLenses(title: string, summary: string, sourceName: string, cate
 // key_takeaways/original_sources/created_at/tags/matched_lenses/image_url 뿐이다.
 // source_name·multi_sources·primary_topic·is_synthesized 를 읽던 분기는 항상 undefined
 // 였으므로 제거했다.
+function safeJson<T>(v: unknown, fallback: T): T {
+  if (typeof v !== 'string') return (v as T) ?? fallback;
+  try { return JSON.parse(v || 'null') ?? fallback; } catch { return fallback; }
+}
+
 export function buildArticle(n: any) {
   let takeaways: any[] = [];
   let sources: any[] = [];
@@ -200,6 +205,10 @@ export function buildArticle(n: any) {
     summary_bullets: resolveSummary(takeaways, n.executive_summary),
     blog_summary: n.analytical_deep_dive,
     actionable_insight: resolveInsight(takeaways),
+    // 사실과 의견을 분리해 내려준다. 화면이 둘을 다르게 그릴 수 있어야 한다.
+    key_numbers: safeJson(n.key_numbers, []),
+    our_take: n.our_take || '',
+    open_questions: safeJson(n.open_questions, []),
     impact_score: impactScore(n, sources),
     tags,
     matched_lenses,

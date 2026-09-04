@@ -67,7 +67,12 @@ CREATE TABLE IF NOT EXISTS trend_news (
   -- 뉴스 배치가 채우는 컬럼. 원격 DB에는 ALTER TABLE 로 뒤늦게 붙어 이 파일과 어긋나
   -- 있었고, 이 스키마로 DB를 새로 만들면 배치가 깨졌다.
   tags TEXT,
-  matched_lenses TEXT
+  matched_lenses TEXT,
+  -- 사실과 의견을 분리해 저장한다. 한 덩어리 본문에 섞여 있으면 독자가 어디까지가
+  -- 원문 근거이고 어디부터가 모델 추론인지 구분할 수 없다.
+  key_numbers TEXT,      -- JSON: [{label, value, source_url}] — 출처 없는 수치는 넣지 않는다
+  our_take TEXT,         -- 편집 의견. UI 에서 사실과 시각적으로 구분한다
+  open_questions TEXT    -- JSON: 아직 확인되지 않은 것. 추측을 사실처럼 쓰지 않게 하는 자리다
 );
 
 CREATE INDEX IF NOT EXISTS idx_models_provider ON models(provider_id);

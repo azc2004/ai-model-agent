@@ -9,6 +9,7 @@ from dataclasses import dataclass, field
 from typing import Mapping
 
 from trend_report_validation import (
+    REQUIRED_REPORT_FIELDS,
     deduplicate_sources,
     is_duplicate_report,
     validate_report,
@@ -58,6 +59,24 @@ TREND_REPORT_SCHEMA = {
         "business_tip": {"type": "string"},
         "tags": {"type": "array", "items": {"type": "string"}},
         "impact_score": {"type": "integer"},
+        # 원문에서 확인한 수치만. source_url 을 못 대면 넣지 못한다.
+        "key_numbers": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "label": {"type": "string"},
+                    "value": {"type": "string"},
+                    "source_url": {"type": "string"},
+                },
+                "required": ["label", "value", "source_url"],
+                "additionalProperties": False,
+            },
+        },
+        # 편집 의견. 사실이 아니라는 것을 UI 가 표시한다.
+        "our_take": {"type": "string"},
+        # 모르는 것을 모른다고 쓰는 자리. 없으면 추측이 사실처럼 본문에 섞인다.
+        "open_questions": {"type": "array", "items": {"type": "string"}},
     },
     "required": [
         "title",
@@ -69,6 +88,9 @@ TREND_REPORT_SCHEMA = {
         "business_tip",
         "tags",
         "impact_score",
+        "key_numbers",
+        "our_take",
+        "open_questions",
     ],
     "additionalProperties": False,
 }
@@ -292,7 +314,10 @@ def _is_transient_llm_error(error):
 
 
 def _has_required_report_fields(report):
-    return all(report.get(field) not in (None, "", []) for field in TREND_REPORT_SCHEMA["required"])
+    # JSON 스키마의 required 는 "키가 있어야 한다" 는 뜻이고, 여기는 "값이 비면
+    # 재시도한다" 는 뜻이라 기준이 다르다. 둘을 같이 쓰면 key_numbers: [] —
+    # 원문에 수치가 없어 올바르게 비운 경우 — 가 실패로 판정돼 재시도를 유발한다.
+    return all(report.get(field) not in (None, "", []) for field in REQUIRED_REPORT_FIELDS)
 
 
 def call_llm(prompt, config):
@@ -320,7 +345,20 @@ def build_prompt(cluster):
 2. 글의 흐름에 맞게 동적으로 섹션(##)을 구성하세요. 고정 템플릿 금지.
 3. 말투는 반드시 한국 기술 미디어 표준인 합쇼체(~습니다, ~입니다)를 사용하세요.
 4. "So What?" — 이 내용이 개발자·기업·산업에 미치는 구체적 의미를 반드시 분석하세요.
-5. 실제 수치, 기술 용어, 비교 분석을 포함하여 전문성을 높이세요.
+5. 본문에는 원문에서 확인한 내용만 쓰세요.
+
+[사실과 의견의 분리 — 가장 중요]
+독자가 "이건 원문에 있던 사실", "이건 매체 의견"을 구분할 수 있어야 합니다.
+
+- blog_body: 원문 근거가 있는 내용만. 추측·전망·평가를 섞지 마세요.
+- key_numbers: 원문에 실제로 나온 수치만. 각 항목에 그 수치가 실린 원문 URL 을
+  source_url 로 반드시 다세요. URL 을 댈 수 없는 수치는 **넣지 마세요**.
+  원문에 수치가 없으면 빈 배열로 두세요. 지어내면 안 됩니다.
+- our_take: 여기에만 의견·전망·평가를 쓰세요. 2~3문장.
+- open_questions: 원문으로는 아직 알 수 없는 것을 적으세요. 2~3개.
+  "모른다"고 쓰는 것이 추측을 사실처럼 쓰는 것보다 낫습니다.
+
+원문에 없는 수치를 만들어내는 것이 이 작업에서 가장 큰 실패입니다.
 
 [원문 정보]
 {combined}
@@ -330,7 +368,10 @@ JSON으로만 응답하세요:
   "title": "종합 리포트 한국어 제목 (30자 이내, 키워드 포함)",
   "primary_topic": "대표 핵심 테마 (10자 이내)",
   "tldr": "TL;DR 3~4문장 핵심 요약 (합쇼체)",
-  "blog_body": "마크다운 본문 전문 (1000자 이상, 섹션 제목 ## 자유 구성, 표/인용구 포함 가능, 합쇼체)",
+  "blog_body": "마크다운 본문 전문 (원문 근거가 있는 내용만, 섹션 제목 ## 자유 구성, 합쇼체)",
+  "key_numbers": [{{"label": "지표명", "value": "값", "source_url": "그 수치가 실린 원문 URL"}}],
+  "our_take": "편집 의견·전망 2~3문장 (합쇼체)",
+  "open_questions": ["원문으로 확인되지 않은 것 2~3개"],
   "developer_tip": "개발자 대상 실무 활용 팁 1문장",
   "pm_tip": "기획자/PM 대상 실전 팁 1문장",
   "business_tip": "비즈니스 리더 대상 TCO/보안/ROI 팁 1문장",
@@ -359,11 +400,30 @@ def build_insert_sql(report, cluster, report_id):
     image = pick_image(cluster)
     image_sql = f"'{esc(image)}'" if image else "NULL"
 
+    # 프롬프트로 "출처를 대라" 고 지시하는 것만으로는 지켜지지 않는다. 코드에서도
+    # 거른다 — source_url 이 없거나 이 클러스터의 원문이 아니면 버린다.
+    cluster_urls = {a.get("link", "") for a in cluster}
+    numbers = []
+    for n in (report.get("key_numbers") or []):
+        if not isinstance(n, dict):
+            continue
+        url = str(n.get("source_url") or "").strip()
+        if url and url in cluster_urls and n.get("label") and n.get("value"):
+            numbers.append({"label": n["label"], "value": n["value"], "source_url": url})
+
+    key_numbers = json.dumps(numbers, ensure_ascii=False)
+    our_take = report.get("our_take", "")
+    open_q = json.dumps(
+        [q for q in (report.get("open_questions") or []) if isinstance(q, str) and q.strip()],
+        ensure_ascii=False,
+    )
+
     return (f"INSERT OR REPLACE INTO trend_news "
-           f"(id, title, report_type, executive_summary, analytical_deep_dive, key_takeaways, original_sources, tags, matched_lenses, image_url) VALUES ("
+           f"(id, title, report_type, executive_summary, analytical_deep_dive, key_takeaways, original_sources, tags, matched_lenses, image_url, key_numbers, our_take, open_questions) VALUES ("
            f"'{esc(report_id)}', '{esc(report.get('title','종합 AI 트렌드 리포트'))}', "
            f"'🔮 종합 트렌드 리포트', '{esc(tldr)}', '{esc(report.get('blog_body',''))}', "
-           f"'{esc(key_takeaways)}', '{esc(sources)}', '{esc(tags)}', '{esc(matched_lenses)}', {image_sql})")
+           f"'{esc(key_takeaways)}', '{esc(sources)}', '{esc(tags)}', '{esc(matched_lenses)}', {image_sql}, "
+           f"'{esc(key_numbers)}', '{esc(our_take)}', '{esc(open_q)}')")
 
 
 def write_report(sql, runner=subprocess.run):

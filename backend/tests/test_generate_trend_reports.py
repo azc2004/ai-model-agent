@@ -112,6 +112,9 @@ class LlmClientTests(unittest.TestCase):
                 "business_tip",
                 "tags",
                 "impact_score",
+                "key_numbers",
+                "our_take",
+                "open_questions",
             },
         )
         self.assertFalse(schema["additionalProperties"])
@@ -365,7 +368,28 @@ class OrchestratorTests(unittest.TestCase):
         self.assertIn("'https://a.test/p.jpg'", build_insert_sql(report, cluster, "id-1"))
         self.assertIn("image_url", build_insert_sql(report, cluster, "id-1"))
         bare = [{"source": "a.test", "link": "https://a.test/1"}]
-        self.assertTrue(build_insert_sql(report, bare, "id-2").rstrip().endswith("NULL)"))
+        # 이미지가 없으면 NULL 이 들어가고, 그 뒤로 사실/의견 컬럼이 이어진다
+        self.assertIn("NULL,", build_insert_sql(report, bare, "id-2"))
+
+    def test_insert_sql_drops_numbers_without_a_source_in_this_cluster(self):
+        """출처 URL 을 못 대는 수치는 저장하지 않는다 — 프롬프트 지시만으로는 안 지켜진다."""
+        cluster = [{"source": "a.test", "link": "https://a.test/1"}]
+        report = {
+            "title": "t", "tldr": "s", "blog_body": "b",
+            "key_numbers": [
+                {"label": "정상", "value": "57점", "source_url": "https://a.test/1"},
+                {"label": "출처없음", "value": "80%", "source_url": ""},
+                {"label": "남의출처", "value": "3배", "source_url": "https://other.test/9"},
+            ],
+            "our_take": "의견",
+            "open_questions": ["확인되지 않은 것", ""],
+        }
+        sql = build_insert_sql(report, cluster, "id-3")
+        self.assertIn("정상", sql)
+        self.assertNotIn("출처없음", sql)
+        self.assertNotIn("남의출처", sql)
+        self.assertIn("의견", sql)
+        self.assertIn("확인되지 않은 것", sql)
 
     def test_exit_code_is_nonzero_when_nothing_saved(self):
         self.assertEqual(exit_code_for(BatchSummary(saved=0, failed=1)), 1)
