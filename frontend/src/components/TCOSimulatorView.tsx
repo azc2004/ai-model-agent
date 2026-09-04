@@ -119,7 +119,7 @@ export const TCOSimulatorView: React.FC<TCOSimulatorViewProps> = ({ models }) =>
               <label htmlFor="tco-model" className="block text-xs font-black text-slate-700 dark:text-slate-300">
                 {t.tco.step2Model}
               </label>
-              <span className="text-[11px] text-accent font-extrabold">
+              <span className="text-2xs text-accent font-extrabold">
                 {filteredModels.length} {t.tco.modelsFound}
               </span>
             </div>
@@ -199,7 +199,7 @@ export const TCOSimulatorView: React.FC<TCOSimulatorViewProps> = ({ models }) =>
           <div className="surface-tint bg-slate-900/90 p-5 rounded-2xl border border-slate-800 space-y-3 text-xs">
             <h4 className="font-bold text-slate-200 flex items-center justify-between">
               <span>💾 VRAM Footprint & Hardware Estimator</span>
-              <span className="text-[10px] text-cyan-400 bg-cyan-950/50 px-2 py-0.5 rounded border border-cyan-800">vLLM / Ollama</span>
+              <span className="text-2xs text-cyan-400 bg-cyan-950/50 px-2 py-0.5 rounded border border-cyan-800">vLLM / Ollama</span>
             </h4>
             <div className="space-y-2 text-slate-300">
               <div className="flex justify-between">
@@ -208,11 +208,11 @@ export const TCOSimulatorView: React.FC<TCOSimulatorViewProps> = ({ models }) =>
                   {((result?.self_hosted.total_vram_gb ?? 32)).toFixed(1)} GB
                 </span>
               </div>
-              <div className="flex justify-between text-muted text-[11px]">
+              <div className="flex justify-between text-muted text-2xs">
                 <span>{t.tco.modelWeights}</span>
                 <span>{(((result?.self_hosted.total_vram_gb ?? 32) * 0.75)).toFixed(1)} GB</span>
               </div>
-              <div className="flex justify-between text-muted text-[11px]">
+              <div className="flex justify-between text-muted text-2xs">
                 <span>- KV Cache & Context:</span>
                 <span>{(((result?.self_hosted.total_vram_gb ?? 32) * 0.25)).toFixed(1)} GB</span>
               </div>
@@ -239,7 +239,7 @@ export const TCOSimulatorView: React.FC<TCOSimulatorViewProps> = ({ models }) =>
                   <div className="text-2xl font-black text-slate-900 dark:text-white font-mono">
                     ${apiCost.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                   </div>
-                  <div className="text-[11px] text-muted font-semibold mt-1">
+                  <div className="text-2xs text-muted font-semibold mt-1">
                     SaaS API Pay-as-you-go
                   </div>
                 </div>
@@ -253,7 +253,7 @@ export const TCOSimulatorView: React.FC<TCOSimulatorViewProps> = ({ models }) =>
                   <div className="text-2xl font-black text-purple-900 dark:text-purple-200 font-mono">
                     ${cloudGpuCost.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                   </div>
-                  <div className="text-[11px] text-purple-600 dark:text-purple-400 font-semibold mt-1">
+                  <div className="text-2xs text-purple-600 dark:text-purple-400 font-semibold mt-1">
                     {result.self_hosted.recommended_gpu} x {result.self_hosted.gpu_count}
                   </div>
                 </div>
@@ -267,7 +267,7 @@ export const TCOSimulatorView: React.FC<TCOSimulatorViewProps> = ({ models }) =>
                   <div className="text-2xl font-black text-emerald-900 dark:text-emerald-200 font-mono">
                     ${onPremCost.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                   </div>
-                  <div className="text-[11px] text-success font-semibold mt-1">
+                  <div className="text-2xs text-success font-semibold mt-1">
                     {t.tco.powerCostEst}: ${result.self_hosted.on_prem_monthly_power.toFixed(0)}
                   </div>
                 </div>

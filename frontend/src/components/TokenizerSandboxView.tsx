@@ -178,7 +178,7 @@ export const TokenizerSandboxView: React.FC<TokenizerSandboxViewProps> = ({
                 onChange={(e) => setOutputTokenEstimate(Number(e.target.value))}
                 className="w-full accent-indigo-600 dark:accent-cyan-500 bg-slate-200 dark:bg-slate-800 rounded-lg cursor-pointer"
               />
-              <div className="flex justify-between text-[10px] text-muted font-bold">
+              <div className="flex justify-between text-2xs text-muted font-bold">
                 <span>{t.sandbox.outShort}</span>
                 <span>{t.sandbox.outTypical}</span>
                 <span>{t.sandbox.outLong}</span>
@@ -290,15 +290,15 @@ export const TokenizerSandboxView: React.FC<TokenizerSandboxViewProps> = ({
                     <td className="p-3.5 font-bold">
                       <div className="flex flex-col">
                         <span className="text-slate-900 dark:text-white font-black">{m.name}</span>
-                        <span className="text-[11px] text-muted font-semibold">{m.provider_name}</span>
+                        <span className="text-2xs text-muted font-semibold">{m.provider_name}</span>
                       </div>
                     </td>
                     <td className="p-3.5">
                       <div className="flex items-center gap-1.5">
-                        <span className="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-300 text-[10px] font-black">
+                        <span className="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-300 text-2xs font-black">
                           {m.tier}
                         </span>
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-black ${m.is_open_weight ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/30' : 'bg-purple-100 dark:bg-purple-700/20 text-purple-800 dark:text-purple-300 border border-purple-300 dark:border-purple-500/30'}`}>
+                        <span className={`px-2 py-0.5 rounded text-2xs font-black ${m.is_open_weight ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/30' : 'bg-purple-100 dark:bg-purple-700/20 text-purple-800 dark:text-purple-300 border border-purple-300 dark:border-purple-500/30'}`}>
                           {m.is_open_weight ? t.sandbox.openWeight : t.sandbox.proprietary}
                         </span>
                       </div>
@@ -319,7 +319,7 @@ export const TokenizerSandboxView: React.FC<TokenizerSandboxViewProps> = ({
                       {onToggleCompare && (
                         <button
                           onClick={() => onToggleCompare(m.id)}
-                          className={`px-3 py-1 rounded-xl text-[11px] font-black transition shadow-sm ${
+                          className={`px-3 py-1 rounded-xl text-2xs font-black transition shadow-sm ${
                             isCompared
                               ? 'bg-indigo-600 text-white'
                               : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700'

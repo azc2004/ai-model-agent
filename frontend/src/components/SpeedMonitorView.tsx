@@ -175,15 +175,15 @@ export const SpeedMonitorView: React.FC = () => {
                   <div>
                     <div className="font-black text-slate-900 dark:text-white text-sm flex items-center gap-2">
                       {p.provider}
-                      {idx === 0 && <span className="text-[10px] bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300 px-1.5 py-0.5 rounded font-black border border-amber-300">FASTEST</span>}
+                      {idx === 0 && <span className="text-2xs bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300 px-1.5 py-0.5 rounded font-black border border-amber-300">FASTEST</span>}
                     </div>
-                    <div className="text-[11px] text-muted font-bold">{p.hardware}</div>
+                    <div className="text-2xs text-muted font-bold">{p.hardware}</div>
                   </div>
                 </div>
 
                 <div className="text-right">
                   <div className="text-sm font-black text-indigo-600 dark:text-cyan-400 font-mono">
-                    {p.tps} <span className="text-[10px] text-muted font-bold">TPS</span>
+                    {p.tps} <span className="text-2xs text-muted font-bold">TPS</span>
                   </div>
                   <div className="text-xs text-muted font-bold font-mono">
                     TTFT {p.ttft_ms}ms

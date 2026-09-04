@@ -787,7 +787,7 @@ export const ArchitectureAdvisor: React.FC = () => {
                   >
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className={`text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase ${
+                        <span className={`text-2xs font-black px-2.5 py-0.5 rounded-full uppercase ${
                           combo.tag === 'RECOMMENDED' ? 'bg-indigo-500 text-white' :
                           combo.tag === 'FRONTIER' ? 'bg-purple-700 text-white' : 'bg-emerald-700 text-white'
                         }`}>
@@ -806,7 +806,7 @@ export const ArchitectureAdvisor: React.FC = () => {
                       </div>
                       <div className="space-y-1">
                         {combo.key_advantages.map((adv, idx) => (
-                          <div key={idx} className="text-[11px] flex items-center gap-1.5 opacity-90">
+                          <div key={idx} className="text-2xs flex items-center gap-1.5 opacity-90">
                             <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> {L(adv)}
                           </div>
                         ))}
@@ -907,7 +907,7 @@ export const ArchitectureAdvisor: React.FC = () => {
                 onChange={(e) => setMonthlyRequests(Number(e.target.value))}
                 className="w-full accent-indigo-600 rounded-lg cursor-pointer h-2.5 mt-2"
               />
-              <div className="flex justify-between text-[10px] text-muted font-semibold mt-1">
+              <div className="flex justify-between text-2xs text-muted font-semibold mt-1">
                 <span>{t.req10k}</span>
                 <span>{t.req500k}</span>
                 <span>{t.req1m}</span>
@@ -1127,14 +1127,14 @@ const SpecBundleModal: React.FC<{
                 }`}
               >
                 <span>{tab.name}</span>
-                <span className={`text-[10px] ${isActive ? 'text-indigo-600 dark:text-indigo-400 font-bold' : 'text-muted'}`}>{tab.desc}</span>
+                <span className={`text-2xs ${isActive ? 'text-indigo-600 dark:text-indigo-400 font-bold' : 'text-muted'}`}>{tab.desc}</span>
               </button>
             );
           })}
         </div>
 
         <div className="p-6 overflow-y-auto bg-slate-50 dark:bg-slate-950 font-mono text-xs text-slate-900 dark:text-slate-200 space-y-4 flex-1">
-          <div className="flex items-center justify-between text-[11px] text-muted border-b border-slate-200 dark:border-slate-800 pb-2">
+          <div className="flex items-center justify-between text-2xs text-muted border-b border-slate-200 dark:border-slate-800 pb-2">
             <span className="font-black text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
               <Code className="w-4 h-4 text-indigo-600 dark:text-indigo-400" /> {activeData.filename}
             </span>

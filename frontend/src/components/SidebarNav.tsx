@@ -72,7 +72,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
             </div>
             <div>
               <span className="font-black text-sm text-slate-900 dark:text-white tracking-wide block">LLM COMPASS</span>
-              <span className="text-[10px] text-indigo-600 dark:text-cyan-400 font-extrabold font-mono">2026 BRIGHT V3</span>
+              <span className="text-2xs text-indigo-600 dark:text-cyan-400 font-extrabold font-mono">2026 BRIGHT V3</span>
             </div>
           </div>
         ) : (
@@ -98,7 +98,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
         {NAV_GROUPS.map((group) => (
           <div key={group.id} className="space-y-1">
             {!isCollapsed && (
-              <h3 className="px-3 text-[10px] font-extrabold text-muted uppercase tracking-widest mb-2 flex items-center gap-1.5">
+              <h3 className="px-3 text-2xs font-extrabold text-muted uppercase tracking-widest mb-2 flex items-center gap-1.5">
                 <span>{t.nav[group.labelKey]}</span>
               </h3>
             )}
@@ -133,14 +133,14 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
 
                     {/* Badges */}
                     {!isCollapsed && item.badge === 'compare' && compareCount > 0 && (
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
+                      <span className={`px-2 py-0.5 rounded-full text-2xs font-black ${
                         isActive ? 'bg-indigo-600 text-white shadow-sm' : 'bg-indigo-100 text-indigo-700 dark:bg-cyan-500/20 dark:text-cyan-400 border border-indigo-200 dark:border-cyan-500/30'
                       }`}>
                         {compareCount}
                       </span>
                     )}
                     {!isCollapsed && item.badge === 'new' && (
-                      <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white shadow-sm">
+                      <span className="px-1.5 py-0.5 rounded text-2xs font-black bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white shadow-sm">
                         NEW
                       </span>
                     )}

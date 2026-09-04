@@ -145,7 +145,7 @@ export const AdminApp: React.FC = () => {
 
               <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <h3 className="mb-1 text-sm font-black text-slate-900">🤖 크롤러 방문</h3>
-                <p className="mb-3 text-[11px] text-muted">
+                <p className="mb-3 text-2xs text-muted">
                   AI 크롤러가 실제로 콘텐츠를 읽어 가는지 본다. User-Agent 는 위조 가능하므로 추세 지표로만 쓴다.
                 </p>
                 {(data.crawlers ?? []).length === 0 ? (
@@ -157,7 +157,7 @@ export const AdminApp: React.FC = () => {
                         <span className="font-semibold text-slate-700">{row.label}</span>
                         <span className="flex items-center gap-2 text-muted">
                           <span className="tabular-nums font-bold text-slate-900">{row.count.toLocaleString()}</span>
-                          <span className="text-[10px]">{(row.last_seen || '').slice(0, 16)}</span>
+                          <span className="text-2xs">{(row.last_seen || '').slice(0, 16)}</span>
                         </span>
                       </li>
                     ))}

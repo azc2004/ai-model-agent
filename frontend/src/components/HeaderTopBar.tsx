@@ -123,7 +123,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({
                   <X className="w-3.5 h-3.5" />
                 </button>
               ) : (
-                <div className="hidden sm:flex items-center gap-0.5 bg-slate-200/80 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 rounded px-1.5 py-0.5 text-[9px] font-mono text-muted font-bold pointer-events-none">
+                <div className="hidden sm:flex items-center gap-0.5 bg-slate-200/80 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 rounded px-1.5 py-0.5 text-2xs font-mono text-muted font-bold pointer-events-none">
                   <span>⌘</span>
                   <span>K</span>
                 </div>
@@ -147,7 +147,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({
             <ArrowLeftRight className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">{t.nav.compareBasket}</span>
             {compareCount > 0 && (
-              <span className="px-1.5 py-0.2 rounded-full bg-indigo-600 dark:bg-cyan-400 text-white dark:text-slate-950 font-black text-[10px] shadow-sm">
+              <span className="px-1.5 py-0.2 rounded-full bg-indigo-600 dark:bg-cyan-400 text-white dark:text-slate-950 font-black text-2xs shadow-sm">
                 {compareCount}
               </span>
             )}

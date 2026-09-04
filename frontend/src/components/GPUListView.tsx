@@ -75,7 +75,7 @@ const PerfBar: React.FC<{ value: number; max: number; color: string; label: stri
   const pct = Math.min(100, (value / max) * 100);
   return (
     <div>
-      <div className="flex justify-between text-[10px] font-bold mb-0.5 text-muted">
+      <div className="flex justify-between text-2xs font-bold mb-0.5 text-muted">
         <span>{label}</span>
         <span className="font-mono text-slate-800 dark:text-slate-200">{value > 0 ? `${value.toLocaleString()} ${unit}` : 'N/A'}</span>
       </div>
@@ -98,11 +98,11 @@ const GPUCard: React.FC<{ gpu: GPUSpec; maxBw: number; maxFp16: number; maxInt8:
     <article className={`bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col space-y-4 p-4 sm:p-5 transition-all duration-200 shadow-sm hover:shadow-lg ${s.glow}`}>
       {/* 헤더 */}
       <div className="flex flex-col gap-1.5">
-        <span className={`text-[10px] font-black px-2 py-0.5 rounded-full border w-fit ${s.badge}`}>
+        <span className={`text-2xs font-black px-2 py-0.5 rounded-full border w-fit ${s.badge}`}>
           {t.gpu[TIER_LABEL_KEY[gpu.tier]]}
         </span>
         <h3 className="text-base font-black text-slate-900 dark:text-white leading-tight">{localize(t, gpu.name)}</h3>
-        <div className="flex items-center gap-2 text-[10px] text-muted font-semibold flex-wrap">
+        <div className="flex items-center gap-2 text-2xs text-muted font-semibold flex-wrap">
           <span className="flex items-center gap-0.5">
             <Layers className="w-3 h-3" />{localize(t, gpu.form_factor)}
           </span>
@@ -120,7 +120,7 @@ const GPUCard: React.FC<{ gpu: GPUSpec; maxBw: number; maxFp16: number; maxInt8:
       {/* VRAM + 대역폭 */}
       <div className="grid grid-cols-2 gap-2.5">
         <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-          <div className="text-[10px] font-extrabold text-muted flex items-center gap-1 mb-1">
+          <div className="text-2xs font-extrabold text-muted flex items-center gap-1 mb-1">
             <HardDrive className="w-3 h-3 text-cyan-500" />VRAM
           </div>
           <div className="text-lg font-black text-slate-900 dark:text-white font-mono leading-none">
@@ -128,7 +128,7 @@ const GPUCard: React.FC<{ gpu: GPUSpec; maxBw: number; maxFp16: number; maxInt8:
           </div>
         </div>
         <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-          <div className="text-[10px] font-extrabold text-muted flex items-center gap-1 mb-1">
+          <div className="text-2xs font-extrabold text-muted flex items-center gap-1 mb-1">
             <Zap className="w-3 h-3 text-blue-500" />{t.gpu.bandwidth}
           </div>
           <div className="text-lg font-black text-slate-900 dark:text-white font-mono leading-none">
@@ -149,13 +149,13 @@ const GPUCard: React.FC<{ gpu: GPUSpec; maxBw: number; maxFp16: number; maxInt8:
         <div className="grid grid-cols-2 gap-2.5">
           {gpu.cuda_cores > 0 && (
             <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-center">
-              <div className="text-[10px] font-bold text-muted mb-0.5">{t.gpu.cudaCores}</div>
+              <div className="text-2xs font-bold text-muted mb-0.5">{t.gpu.cudaCores}</div>
               <div className="text-sm font-black text-slate-800 dark:text-slate-100 font-mono">{gpu.cuda_cores.toLocaleString()}</div>
             </div>
           )}
           {gpu.tensor_cores > 0 && (
             <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-center">
-              <div className="text-[10px] font-bold text-muted mb-0.5">{t.gpu.tensorCores}</div>
+              <div className="text-2xs font-bold text-muted mb-0.5">{t.gpu.tensorCores}</div>
               <div className="text-sm font-black text-slate-800 dark:text-slate-100 font-mono">{gpu.tensor_cores.toLocaleString()}</div>
             </div>
           )}
@@ -184,21 +184,21 @@ const GPUCard: React.FC<{ gpu: GPUSpec; maxBw: number; maxFp16: number; maxInt8:
             )}
           </>
         ) : (
-          <div className="text-muted text-[10px] font-semibold text-center py-0.5">
+          <div className="text-muted text-2xs font-semibold text-center py-0.5">
             {t.gpu.noCloud}
           </div>
         )}
       </div>
 
       {/* 추천 용도 */}
-      <div className={`rounded-xl px-3 py-2.5 border ${s.badge} text-[10px] font-semibold leading-relaxed`}>
+      <div className={`rounded-xl px-3 py-2.5 border ${s.badge} text-2xs font-semibold leading-relaxed`}>
         <div className="font-black mb-0.5 flex items-center gap-1">
           <ChevronRight className="w-3 h-3" /> {t.gpu.recommendedUse}
         </div>
         {localize(t, gpu.recommended_use)}
       </div>
 
-      <div className="pt-2 border-t border-slate-200 dark:border-slate-800 text-[10px] text-muted font-semibold text-center">
+      <div className="pt-2 border-t border-slate-200 dark:border-slate-800 text-2xs text-muted font-semibold text-center">
         Self-Hosting Hardware Reference Index
       </div>
     </article>
@@ -268,7 +268,7 @@ export const GPUListView: React.FC = () => {
             >
               {tier.icon}
               {t.gpu[TAB_LABEL_KEY[tier.key]]}
-              <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-black ${isActive ? 'bg-white/40 dark:bg-black/20' : 'bg-slate-100 dark:bg-slate-800'}`}>
+              <span className={`px-1.5 py-0.5 rounded-full text-2xs font-black ${isActive ? 'bg-white/40 dark:bg-black/20' : 'bg-slate-100 dark:bg-slate-800'}`}>
                 {counts[tier.key] ?? 0}
               </span>
             </button>
@@ -287,7 +287,7 @@ export const GPUListView: React.FC = () => {
             <div key={i} className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-3 flex items-center gap-3">
               <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-950">{stat.icon}</div>
               <div>
-                <div className="text-[10px] font-bold text-muted">{stat.label}</div>
+                <div className="text-2xs font-bold text-muted">{stat.label}</div>
                 <div className="text-sm font-black text-slate-800 dark:text-slate-100 font-mono">{stat.value}</div>
               </div>
             </div>

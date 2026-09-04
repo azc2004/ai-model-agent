@@ -74,7 +74,7 @@ export const CompareView: React.FC<CompareViewProps> = ({
                   </button>
                   <div className="text-xs text-muted font-extrabold mb-1">{model.provider_name}</div>
                   <div className="text-lg font-black text-slate-900 dark:text-white mb-2">{model.name}</div>
-                  <span className="text-[10px] px-2 py-0.5 rounded font-black bg-indigo-100 dark:bg-indigo-950 text-indigo-800 dark:text-indigo-300 border border-indigo-300 dark:border-indigo-800">
+                  <span className="text-2xs px-2 py-0.5 rounded font-black bg-indigo-100 dark:bg-indigo-950 text-indigo-800 dark:text-indigo-300 border border-indigo-300 dark:border-indigo-800">
                     {model.tier}
                   </span>
                 </th>

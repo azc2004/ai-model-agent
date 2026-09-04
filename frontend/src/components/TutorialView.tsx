@@ -739,7 +739,7 @@ export const TutorialView: React.FC = () => {
                 {isActive && <Sparkles className="w-3.5 h-3.5 text-amber-300" />}
                 {tab.title}
               </span>
-              <span className={`text-[11px] font-semibold ${isActive ? 'text-indigo-100' : 'text-muted'}`}>{tab.desc}</span>
+              <span className={`text-2xs font-semibold ${isActive ? 'text-indigo-100' : 'text-muted'}`}>{tab.desc}</span>
             </button>
           );
         })}
@@ -767,22 +767,22 @@ export const TutorialView: React.FC = () => {
             <div className="surface-tint p-6 rounded-2xl bg-slate-950 text-white space-y-4 border border-slate-800">
               <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                 <span className="text-xs font-mono text-indigo-400 font-bold">claude-agent-team-architecture.diag</span>
-                <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                <span className="text-2xs font-extrabold uppercase px-2.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
                   Orchestration Pattern
                 </span>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-center text-xs font-bold">
                 <div className="p-3.5 rounded-xl bg-indigo-900/80 border border-indigo-700 text-indigo-200">
-                  1. Leader Agent<br /><span className="text-[10px] text-muted font-normal">{t.flow1}</span>
+                  1. Leader Agent<br /><span className="text-2xs text-muted font-normal">{t.flow1}</span>
                 </div>
                 <div className="p-3.5 rounded-xl bg-purple-900/80 border border-purple-700 text-purple-200">
-                  2. {t.flow2}<br /><span className="text-[10px] text-muted font-normal">bug_hunter, reviewer</span>
+                  2. {t.flow2}<br /><span className="text-2xs text-muted font-normal">bug_hunter, reviewer</span>
                 </div>
                 <div className="surface-tint p-3.5 rounded-xl bg-cyan-900/80 border border-cyan-700 text-cyan-200">
-                  3. {t.flow3}<br /><span className="text-[10px] text-muted font-normal">{t.flow3Sub}</span>
+                  3. {t.flow3}<br /><span className="text-2xs text-muted font-normal">{t.flow3Sub}</span>
                 </div>
                 <div className="p-3.5 rounded-xl bg-emerald-700 text-white">
-                  4. {t.flow4}<br /><span className="text-[10px] text-emerald-100 font-normal">{t.flow4Sub}</span>
+                  4. {t.flow4}<br /><span className="text-2xs text-emerald-100 font-normal">{t.flow4Sub}</span>
                 </div>
               </div>
             </div>
@@ -805,7 +805,7 @@ export const TutorialView: React.FC = () => {
                   {copiedId === 'cmd_tree' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                   {t.copyTree}
                 </button>
-                <pre className="text-[11px] leading-relaxed pt-6">
+                <pre className="text-2xs leading-relaxed pt-6">
 {`my-project/
 ├── .claude/
 │   ├── skills/                       # ${t.cmtSkills}
@@ -840,7 +840,7 @@ export const TutorialView: React.FC = () => {
                   {copiedId === 'code_skill_deploy' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                   {copiedId === 'code_skill_deploy' ? t.copyDone : t.copySkill}
                 </button>
-                <pre tabIndex={0} className="text-[11px] leading-relaxed text-emerald-400 pt-6 overflow-x-auto">
+                <pre tabIndex={0} className="text-2xs leading-relaxed text-emerald-400 pt-6 overflow-x-auto">
 {`---
 name: deploy_production
 description: ${t.skillDescription}
@@ -908,7 +908,7 @@ description: ${t.skillDescription}
                 {copiedId === 'code_antigravity' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                 {t.copyDirectives}
               </button>
-              <pre tabIndex={0} className="text-[11px] leading-relaxed text-indigo-300 pt-6 overflow-x-auto">
+              <pre tabIndex={0} className="text-2xs leading-relaxed text-indigo-300 pt-6 overflow-x-auto">
 {`agent_pipeline:
   mode: autonomous
   guardrails:
@@ -952,7 +952,7 @@ skills:
                 {copiedId === 'code_cursorrules' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                 {t.copyCursor}
               </button>
-              <pre tabIndex={0} className="text-[11px] leading-relaxed text-cyan-300 pt-6 overflow-x-auto">
+              <pre tabIndex={0} className="text-2xs leading-relaxed text-cyan-300 pt-6 overflow-x-auto">
 {`# [Rule: No Superfluous Dependencies]
 1. Never install external libraries for date/string formatting.
 2. Ensure PEP 8 for Python & strict TypeScript types.
@@ -992,7 +992,7 @@ skills:
                 {copiedId === 'code_autogen' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                 {t.copyPython}
               </button>
-              <pre tabIndex={0} className="text-[11px] leading-relaxed text-emerald-400 pt-6 overflow-x-auto">
+              <pre tabIndex={0} className="text-2xs leading-relaxed text-emerald-400 pt-6 overflow-x-auto">
 {`from autogen_agentchat.agents import AssistantAgent
 from autogen_agentchat.teams import SelectorGroupChat
 

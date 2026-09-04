@@ -258,7 +258,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
         {/* Bento 1: Top Elo Leader */}
         <div className="bento-card-2026 p-6 relative overflow-hidden group border border-purple-200 dark:border-purple-500/30 bg-gradient-to-br from-indigo-50/90 via-purple-50/50 to-white dark:from-purple-950/40 dark:to-slate-950/80 shadow-sm">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-[10px] font-black tracking-widest uppercase text-purple-700 dark:text-purple-300 bg-purple-100 dark:bg-purple-700/20 border border-purple-200 dark:border-purple-500/30 px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+            <span className="text-2xs font-black tracking-widest uppercase text-purple-700 dark:text-purple-300 bg-purple-100 dark:bg-purple-700/20 border border-purple-200 dark:border-purple-500/30 px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
               <span>👑 TOP ELO LEADER</span>
             </span>
             <span className="text-xs font-mono font-black text-purple-700 dark:text-amber-400">1360 Elo</span>
@@ -274,7 +274,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
         {/* Bento 2: Speed Champion */}
         <div className="bento-card-2026 p-6 relative overflow-hidden group border border-cyan-200 dark:border-cyan-500/30 bg-gradient-to-br from-sky-50/90 via-cyan-50/50 to-white dark:from-cyan-950/40 dark:to-slate-950/80 shadow-sm">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-[10px] font-black tracking-widest uppercase text-cyan-800 dark:text-cyan-300 bg-cyan-100 dark:bg-cyan-500/20 border border-cyan-200 dark:border-cyan-500/30 px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+            <span className="text-2xs font-black tracking-widest uppercase text-cyan-800 dark:text-cyan-300 bg-cyan-100 dark:bg-cyan-500/20 border border-cyan-200 dark:border-cyan-500/30 px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
               <span>⚡ SPEED CHAMPION</span>
             </span>
             <span className="text-xs font-mono font-black text-accent">2,100 TPS</span>
@@ -290,7 +290,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
         {/* Bento 3: Best Value Champion */}
         <div className="bento-card-2026 p-6 relative overflow-hidden group border border-emerald-200 dark:border-emerald-500/30 bg-gradient-to-br from-emerald-50/90 via-teal-50/50 to-white dark:from-emerald-950/40 dark:to-slate-950/80 shadow-sm">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-[10px] font-black tracking-widest uppercase text-emerald-800 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/30 px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+            <span className="text-2xs font-black tracking-widest uppercase text-emerald-800 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/30 px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
               <span>💎 BEST EFFICIENCY</span>
             </span>
             <span className="text-xs font-mono font-black text-emerald-700 dark:text-emerald-300">$0.50 / 1M</span>
@@ -546,29 +546,29 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     </span>
                     <div className="flex items-center gap-1.5 flex-wrap justify-end">
                       {checkIsNew(model) && (
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600 text-white font-black shadow-sm tracking-wider animate-pulse" title="2025/2026 신규 출시 모델">
+                        <span className="text-2xs px-2 py-0.5 rounded-full bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600 text-white font-black shadow-sm tracking-wider animate-pulse" title="2025/2026 신규 출시 모델">
                           ✨ NEW
                         </span>
                       )}
                       {checkSupportsReasoning(model) && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-500/40 font-bold" title="Reasoning / CoT 지원">
+                        <span className="text-2xs px-1.5 py-0.5 rounded-full bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-500/40 font-bold" title="Reasoning / CoT 지원">
                           🧠 Reasoning
                         </span>
                       )}
                       {checkSupportsWebSearch(model) && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-500/40 font-bold" title="실시간 웹 검색 통합">
+                        <span className="text-2xs px-1.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-500/40 font-bold" title="실시간 웹 검색 통합">
                           🌐 Web Search
                         </span>
                       )}
                       <span
-                        className={`text-[10px] px-2 py-0.5 rounded-full font-bold border ${getTierBadge(
+                        className={`text-2xs px-2 py-0.5 rounded-full font-bold border ${getTierBadge(
                           model.tier
                         )}`}
                       >
                         {model.tier}
                       </span>
                       <span
-                        className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                        className={`text-2xs px-2 py-0.5 rounded-full font-bold ${
                           model.is_open_weight
                             ? 'bg-emerald-100 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-500/30'
                             : 'bg-indigo-100 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border border-indigo-300 dark:border-indigo-500/30'
@@ -591,13 +591,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   {/* Quota Information Box */}
                   {model.quota && (model.quota.rpm !== undefined || model.quota.tpm !== undefined) && (
                     <div className="bg-cyan-50 dark:bg-cyan-950/80 border border-cyan-200 dark:border-cyan-500/40 rounded-xl p-3 mb-4 text-xs shadow-inner">
-                      <div className="text-[11px] font-black text-cyan-800 dark:text-cyan-300 mb-1 flex items-center gap-1">
+                      <div className="text-2xs font-black text-cyan-800 dark:text-cyan-300 mb-1 flex items-center gap-1">
                         <svg className="w-3.5 h-3.5 text-cyan-500 dark:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
                         API Rate Limits & Quotas
                       </div>
-                      <div className="grid grid-cols-2 gap-1 text-[11px] text-slate-900 dark:text-slate-100 font-extrabold">
+                      <div className="grid grid-cols-2 gap-1 text-2xs text-slate-900 dark:text-slate-100 font-extrabold">
                         <div>
                           <span className="text-muted font-bold">RPM:</span> <span className="text-slate-900 dark:text-white font-black">{model.quota.rpm ? model.quota.rpm.toLocaleString() : '-'}</span>
                         </div>
@@ -611,13 +611,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   {/* Key Metrics Grid */}
                   <div className="grid grid-cols-2 gap-2.5 bg-slate-100 dark:bg-slate-900/90 p-3 rounded-xl border border-slate-200 dark:border-slate-700/80 mb-4 text-xs shadow-inner">
                     <div>
-                      <span className="text-muted block text-[10px] font-bold mb-0.5">{t.dashboard.contextWindow}</span>
+                      <span className="text-muted block text-2xs font-bold mb-0.5">{t.dashboard.contextWindow}</span>
                       <span className="font-black text-slate-900 dark:text-white text-sm">
                         {(model.context_window / 1000).toLocaleString()}k tokens
                       </span>
                     </div>
                     <div>
-                      <span className="text-muted block text-[10px] font-bold mb-0.5">{t.dashboard.arenaElo}</span>
+                      <span className="text-muted block text-2xs font-bold mb-0.5">{t.dashboard.arenaElo}</span>
                       <span className="font-black text-warn text-sm flex items-center gap-1">
                         🏆 {model.benchmarks.arena_elo ? model.benchmarks.arena_elo.toFixed(0) : 'N/A'}
                       </span>
@@ -627,11 +627,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   {/* Pricing Info */}
                   <div className="flex items-center justify-between text-xs pt-3 border-t border-slate-200 dark:border-slate-800 mb-4">
                     <div>
-                      <span className="text-muted text-[10px] block font-bold">{t.dashboard.inputPrice}</span>
+                      <span className="text-muted text-2xs block font-bold">{t.dashboard.inputPrice}</span>
                       <span className="font-black text-slate-900 dark:text-slate-100">${model.api_pricing.input_price_per_1m.toFixed(2)}</span>
                     </div>
                     <div className="text-right">
-                      <span className="text-muted text-[10px] block font-bold">{t.dashboard.outputPrice}</span>
+                      <span className="text-muted text-2xs block font-bold">{t.dashboard.outputPrice}</span>
                       <span className="font-black text-slate-900 dark:text-slate-100">${model.api_pricing.output_price_per_1m.toFixed(2)}</span>
                     </div>
                   </div>
@@ -681,7 +681,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs sm:text-sm">
               <thead>
-                <tr className="bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800 text-[11px] font-black uppercase tracking-wider">
+                <tr className="bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800 text-2xs font-black uppercase tracking-wider">
                   <th
                     className="py-3.5 px-4 cursor-pointer hover:text-blue-600 dark:hover:text-cyan-400 select-none transition-colors"
                     onClick={() => handleSort('name')}
@@ -727,7 +727,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                         <div className="flex items-center gap-2">
                           <span>{model.name}</span>
                           {checkIsNew(model) && (
-                            <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-gradient-to-r from-rose-500 to-pink-500 text-white font-black shrink-0 animate-pulse">
+                            <span className="text-2xs px-1.5 py-0.5 rounded-full bg-gradient-to-r from-rose-500 to-pink-500 text-white font-black shrink-0 animate-pulse">
                               ✨ NEW
                             </span>
                           )}
@@ -735,7 +735,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                       </td>
                       <td className="py-3 px-4 text-slate-700 dark:text-slate-300 font-semibold">{model.provider_name}</td>
                       <td className="py-3 px-4">
-                        <span className={`text-[10px] px-2 py-0.5 rounded border font-bold ${getTierBadge(model.tier)}`}>
+                        <span className={`text-2xs px-2 py-0.5 rounded border font-bold ${getTierBadge(model.tier)}`}>
                           {model.tier}
                         </span>
                       </td>
@@ -814,20 +814,20 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     {model.name}
                   </span>
                   {checkIsNew(model) && (
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-gradient-to-r from-rose-500 to-pink-500 text-white font-black shadow-sm shrink-0 animate-pulse">
+                    <span className="text-2xs px-2 py-0.5 rounded-full bg-gradient-to-r from-rose-500 to-pink-500 text-white font-black shadow-sm shrink-0 animate-pulse">
                       ✨ NEW
                     </span>
                   )}
-                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold border shrink-0 ${getTierBadge(model.tier)}`}>
+                  <span className={`text-2xs px-2 py-0.5 rounded-full font-bold border shrink-0 ${getTierBadge(model.tier)}`}>
                     {model.tier}
                   </span>
                   {checkSupportsReasoning(model) && (
-                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-500/40 font-bold shrink-0">
+                    <span className="text-2xs px-1.5 py-0.5 rounded-full bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-500/40 font-bold shrink-0">
                       🧠 Reasoning
                     </span>
                   )}
                   {checkSupportsWebSearch(model) && (
-                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-500/40 font-bold shrink-0">
+                    <span className="text-2xs px-1.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-500/40 font-bold shrink-0">
                       🌐 Web Search
                     </span>
                   )}

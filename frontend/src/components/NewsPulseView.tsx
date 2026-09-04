@@ -684,7 +684,7 @@ export default function NewsPulseView() {
             href={`/changelog/${latestUpdate.id}?lang=${language}`}
             className="focus-ring mb-5 flex items-center gap-3 rounded-2xl border border-cyan-200 bg-cyan-50/70 px-4 py-3 text-sm transition hover:bg-cyan-50 dark:border-cyan-500/30 dark:bg-cyan-500/10 dark:hover:bg-cyan-500/15"
           >
-            <span className="shrink-0 rounded-full bg-accent px-2.5 py-0.5 text-[11px] font-black text-white">
+            <span className="shrink-0 rounded-full bg-accent px-2.5 py-0.5 text-2xs font-black text-white">
               {g.nav.whatsNew}
             </span>
             <span className="min-w-0 flex-1 truncate font-bold text-slate-800 dark:text-slate-100">
@@ -783,7 +783,7 @@ export default function NewsPulseView() {
                           if (wrapper) wrapper.style.display = 'none';
                         }}
                       />
-                      <span className="absolute bottom-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded bg-black/60 text-white backdrop-blur-md">
+                      <span className="absolute bottom-2 left-2 text-2xs font-bold px-2 py-0.5 rounded bg-black/60 text-white backdrop-blur-md">
                         {article.category}
                       </span>
                     </div>
@@ -811,7 +811,7 @@ export default function NewsPulseView() {
                           target="_blank" 
                           rel="noreferrer"
                           onClick={(e) => e.stopPropagation()}
-                          className="px-2 py-0.5 text-[11px] font-bold rounded-md bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 hover:underline flex items-center gap-1 border border-purple-200 dark:border-purple-800"
+                          className="px-2 py-0.5 text-2xs font-bold rounded-md bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 hover:underline flex items-center gap-1 border border-purple-200 dark:border-purple-800"
                         >
                           🔗 {src.name}
                         </a>

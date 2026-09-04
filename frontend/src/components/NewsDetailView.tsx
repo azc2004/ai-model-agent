@@ -345,7 +345,7 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
         elements.push(
           <div key={nextKey()} className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-900 dark:to-slate-800/90 border-l-4 border-blue-600 p-4 sm:p-5 rounded-r-2xl text-xs sm:text-sm text-slate-700 dark:text-slate-300 shadow-sm flex items-center justify-between flex-wrap gap-2 my-4">
             <div className="font-medium">{parseInlineMarkdown(formatTranslatedText(content))}</div>
-            <span className="text-[11px] font-black px-3 py-1 rounded-full bg-blue-600 text-white shadow flex items-center gap-1">
+            <span className="text-2xs font-black px-3 py-1 rounded-full bg-blue-600 text-white shadow flex items-center gap-1">
               <ShieldCheck className="w-3.5 h-3.5" /> Multi-Source Cross-Validated
             </span>
           </div>
@@ -382,7 +382,7 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
               {steps.map((step, si) => (
                 <div key={si} className="flex flex-col items-center gap-1 relative">
                   <div className={`w-full text-center text-xs font-bold py-3.5 px-3 rounded-2xl text-white shadow-lg ${colors[si % colors.length]}`}>
-                    <div className="text-[10px] opacity-75 mb-1 tracking-wider uppercase">STEP 0{si + 1}</div>
+                    <div className="text-2xs opacity-75 mb-1 tracking-wider uppercase">STEP 0{si + 1}</div>
                     {formatTranslatedText(step)}
                   </div>
                   {si < steps.length - 1 && <div className="hidden sm:block absolute right-[-14px] top-1/2 -translate-y-1/2 z-10 text-muted font-bold text-base">›</div>}
@@ -404,7 +404,7 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
         const barColors = ['bg-violet-500','bg-blue-500','bg-cyan-500','bg-emerald-500','bg-amber-500'];
         elements.push(
           <div key={nextKey()} className="my-6 p-5 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-xl">
-            <div className="text-[11px] font-mono text-muted uppercase mb-4">{chartType} performance chart</div>
+            <div className="text-2xs font-mono text-muted uppercase mb-4">{chartType} performance chart</div>
             <div className="space-y-3">
               {dataPairs.map((d, di) => (
                 <div key={di} className="flex items-center gap-3">
@@ -665,7 +665,7 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
           </button>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <span className="px-2.5 py-1 text-[11px] sm:text-xs font-black rounded-lg bg-blue-600 text-white shadow">
+            <span className="px-2.5 py-1 text-2xs sm:text-xs font-black rounded-lg bg-blue-600 text-white shadow">
               {article.category}
             </span>
             <button
@@ -725,25 +725,25 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
           {/* 🌟 벤치마킹 개편: Quick Specs & Key Metrics Bar (HuggingFace & Pragmatic Engineer 스타일) */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200/80 dark:border-slate-800/80 text-xs shadow-inner">
             <div className="flex flex-col gap-0.5 p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
-              <span className="text-[10px] font-bold text-muted uppercase tracking-wider">Source</span>
+              <span className="text-2xs font-bold text-muted uppercase tracking-wider">Source</span>
               <span className="font-black text-slate-800 dark:text-slate-200 truncate flex items-center gap-1">
                 🏢 {article.source_name}
               </span>
             </div>
             <div className="flex flex-col gap-0.5 p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
-              <span className="text-[10px] font-bold text-muted uppercase tracking-wider">Read Time</span>
+              <span className="text-2xs font-bold text-muted uppercase tracking-wider">Read Time</span>
               <span className="font-black text-blue-600 dark:text-blue-400 flex items-center gap-1">
                 ⏱️ 약 3분 읽기
               </span>
             </div>
             <div className="flex flex-col gap-0.5 p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
-              <span className="text-[10px] font-bold text-muted uppercase tracking-wider">Impact Score</span>
+              <span className="text-2xs font-bold text-muted uppercase tracking-wider">Impact Score</span>
               <span className="font-black text-accent flex items-center gap-1">
                 ⚡ {article.impact_score || 95} / 100
               </span>
             </div>
             <div className="flex flex-col gap-0.5 p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
-              <span className="text-[10px] font-bold text-muted uppercase tracking-wider">Verification</span>
+              <span className="text-2xs font-bold text-muted uppercase tracking-wider">Verification</span>
               <span className="font-black text-success flex items-center gap-1 truncate">
                 ✅ Multi-Validated
               </span>
