@@ -256,7 +256,9 @@ def _request_llm(prompt, config, model):
             {"role": "user", "content": prompt}
         ],
         "temperature": 0.3,
-        "max_tokens": 3500,
+        # 본문에 더해 key_numbers(URL 포함)·our_take·open_questions 가 붙었다.
+        # 3500 으로는 JSON 이 중간에 잘려 파싱에 실패한다.
+        "max_tokens": 6000,
     }
     if _is_qwen_model(model):
         request_body.update({
@@ -481,7 +483,9 @@ def run_batch(
         try:
             report = generator(build_prompt(cluster), config)
             summary.generated += 1
-        except Exception:
+        except Exception as error:
+            # 원인을 삼키면 실패가 늘어도 왜인지 알 수 없다.
+            print(f"  [LLM 실패] {type(error).__name__}: {str(error)[:200]}")
             summary.failed += 1
             summary.reasons["llm_failure"] += 1
             continue
