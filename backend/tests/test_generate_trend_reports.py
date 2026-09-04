@@ -10,7 +10,7 @@ from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).parents[1] / "scripts"))
 
-from generate_trend_reports import load_catalog_names
+from generate_trend_reports import build_prompt, cluster_articles, load_catalog_names
 from generate_trend_reports import find_mentioned_models
 from generate_trend_reports import (
     build_insert_sql,
@@ -433,6 +433,54 @@ class CatalogAliasTest(unittest.TestCase):
     def test_bare_generic_word_is_not_a_model_mention(self):
         catalog = self._load(["Fusion", "Uncensored"])
         self.assertEqual(catalog, [])
+
+
+class ClusteringTest(unittest.TestCase):
+    """고정 키워드 버킷 대신 어휘 겹침으로 사건 단위를 묶는다."""
+
+    @staticmethod
+    def _art(title, summary=""):
+        return {"title": title, "summary": summary, "source": "s", "link": "l"}
+
+    def _titles(self, clusters):
+        return [sorted(a["title"] for a in c) for c in clusters]
+
+    def test_same_event_from_different_outlets_groups_together(self):
+        articles = [
+            self._art("Nvidia buys Hugging Face, the GitHub of AI, for $13 billion"),
+            self._art("NVIDIA to Acquire Hugging Face"),
+            self._art("Making sourdough bread at home with a cast iron pot"),
+        ]
+        clusters = cluster_articles(articles)
+        biggest = max(clusters, key=len)
+        self.assertEqual(len(biggest), 2)
+        self.assertTrue(all("Hugging Face" in a["title"] for a in biggest))
+
+    def test_unrelated_articles_stay_apart(self):
+        articles = [
+            self._art("Nvidia buys Hugging Face for $13 billion"),
+            self._art("Making sourdough bread at home with a cast iron pot"),
+        ]
+        self.assertEqual([len(c) for c in cluster_articles(articles)], [1, 1])
+
+    def test_newsletter_issues_do_not_merge_on_shared_boilerplate(self):
+        # 회차마다 내용은 다르지만 접두어와 상용구가 같다. 이걸 걷어내지 않으면
+        # 무관한 회차들이 한 "종합 리포트" 로 묶인다.
+        boilerplate = "Welcome to Import AI, a newsletter about AI research. Import AI runs on arXiv."
+        articles = [
+            self._art("Import AI 471: Why Hugging Face worries me", boilerplate),
+            self._art("Import AI 470: No rights for machines", boilerplate),
+            self._art("Import AI 469: Science AI and RSI simulator", boilerplate),
+        ]
+        self.assertEqual([len(c) for c in cluster_articles(articles)], [1, 1, 1])
+
+    def test_empty_input_yields_no_clusters(self):
+        self.assertEqual(cluster_articles([]), [])
+
+    def test_single_article_prompt_does_not_ask_for_a_synthesis(self):
+        prompt = build_prompt([self._art("Nvidia buys Hugging Face")])
+        self.assertNotIn("종합 분석", prompt)
+        self.assertIn("1건", prompt)
 
 
 if __name__ == "__main__":

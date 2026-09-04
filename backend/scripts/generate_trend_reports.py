@@ -3,7 +3,7 @@
 종합 트렌드 리포트 생성 스크립트
 RSS 수집 → 클러스터링 → LiteLLM(gpt-4o-mini) → Cloudflare D1 저장
 """
-import json, os, re, time, uuid, subprocess, urllib.error, urllib.request, urllib.parse
+import json, math, os, re, time, uuid, subprocess, urllib.error, urllib.request, urllib.parse
 from collections import Counter
 from dataclasses import dataclass, field
 from typing import Mapping
@@ -38,15 +38,6 @@ RSS_FEEDS = [
     "https://magazine.sebastianraschka.com/feed",
     "https://simonwillison.net/atom/everything/",
 ]
-TOPIC_PATTERNS = {
-    "agent": ["agent","agentic","computer use","automation","autogen","workflow","multi-agent"],
-    "reasoning": ["reasoning","r1","deepseek","mcts","chain-of-thought","thinking","o3","o4"],
-    "multimodal": ["vision","multimodal","image","video","audio","gemini"],
-    "security": ["security","safety","guardrail","jailbreak","alignment","red team"],
-    "enterprise": ["enterprise","cost","tco","bedrock","on-prem","sagemaker","azure","aws"],
-    "finetuning": ["fine-tuning","finetune","lora","rlhf","instruction tuning","training"],
-    "research": ["arxiv","paper","benchmark","sota","evaluation","dataset","model release"],
-}
 TREND_REPORT_SCHEMA = {
     "type": "object",
     "properties": {
@@ -233,16 +224,127 @@ def attach_bodies(articles):
     return kept
 
 
-def cluster_articles(raw):
-    groups = {}
-    for art in raw:
-        text = (art["title"] + " " + art["summary"]).lower()
-        topic = "general"
-        for t, kws in TOPIC_PATTERNS.items():
-            if any(kw in text for kw in kws):
-                topic = t; break
-        groups.setdefault(topic, []).append(art)
-    return [arts[:5] for arts in groups.values() if len(arts) >= 1][:8]
+# ─── 클러스터링 ──────────────────────────────────────────────────────────────
+# 고정 키워드 버킷은 같은 사건을 다룬 기사를 흩어 놓고(제목에 "gemini" 한 단어만
+# 있어도 multimodal 행), 아무 패턴에도 안 걸린 기사를 general 한 덩어리에 몰아
+# 넣었다. 서로 무관한 기사가 한 "종합 리포트" 로 묶이던 원인이다.
+#
+# 제목·요약의 어휘 겹침(TF-IDF 코사인)으로 바꾼다. 같은 사건을 다룬 기사는
+# 모델명·회사명 같은 고유명사를 공유하므로 어휘 겹침만으로 충분히 갈린다.
+# 임베딩 API 는 기사당 호출·비용·실패 지점을 늘리는 데 비해, 사건 단위 묶기라는
+# 이 용도에서는 이득이 없었다.
+STOPWORDS = {
+    "the", "and", "for", "with", "that", "this", "from", "have", "has", "was", "were",
+    "are", "its", "but", "not", "you", "all", "can", "will", "new", "now", "how", "why",
+    "what", "who", "when", "more", "than", "into", "out", "about", "over", "after",
+    "says", "said", "one", "two", "his", "her", "their", "our", "they", "them", "been",
+    "also", "such", "which", "would", "could", "may", "make", "made", "get", "using",
+    "use", "used", "via", "per", "inc", "ltd", "com", "https", "http", "www",
+}
+MIN_TOKEN_LEN = 3
+CLUSTER_SIM = 0.16      # 실측 튜닝값. 낮추면 무관한 기사가 섞이고 높이면 전부 단일이 된다
+MAX_CLUSTER_SIZE = 6
+MAX_CLUSTERS = 8
+
+
+# "Import AI 471:", "The Download:" 같은 연재물은 회차마다 내용이 전혀 다른데
+# 접두어를 공유한다. 그대로 두면 무관한 회차 6건이 한 "종합 리포트" 로 묶인다.
+SERIES_PREFIX = re.compile(r"^([^:]{3,40}):\s")
+MIN_SERIES_REPEATS = 3
+
+
+def _strip_series_prefixes(titles):
+    """여러 번 반복되는 연재물 접두어를 제목에서 떼어낸다. 회차 번호는 무시한다."""
+    matches, counts = [], Counter()
+    for title in titles:
+        match = SERIES_PREFIX.match(title)
+        key = re.sub(r"\d+", "", match.group(1)).strip().lower() if match else ""
+        matches.append((match, key))
+        if key:
+            counts[key] += 1
+    return [title[match.end():] if key and counts[key] >= MIN_SERIES_REPEATS else title
+            for title, (match, key) in zip(titles, matches)]
+
+
+def _strip_boilerplate(summaries):
+    """여러 기사에 토씨까지 똑같이 반복되는 문장을 걷어낸다.
+
+    뉴스레터 요약문은 "Welcome to Import AI, a newsletter about..." 같은 상용구를
+    회차마다 그대로 달고 온다. 접두어만 떼서는 이 상용구가 남아, 내용이 전혀 다른
+    회차들이 여전히 한 덩어리로 묶인다.
+    """
+    sentences = [re.split(r"(?<=[.!?])\s+", summary or "") for summary in summaries]
+    repeats = Counter()
+    for sents in sentences:
+        repeats.update({s.strip() for s in sents if len(s.strip()) > 20})
+    return [
+        " ".join(s for s in sents if repeats[s.strip()] < MIN_SERIES_REPEATS)
+        for sents in sentences
+    ]
+
+
+def _tokenize(text):
+    words = re.findall(r"[a-z0-9][a-z0-9.+-]*", text.lower())
+    return [w for w in words if len(w) >= MIN_TOKEN_LEN and w not in STOPWORDS]
+
+
+def _tfidf_vectors(docs):
+    """문서마다 단위길이 TF-IDF 벡터를 만든다. 코사인 = 그냥 내적이 된다."""
+    term_freqs = [Counter(_tokenize(d)) for d in docs]
+    doc_freq = Counter()
+    for tf in term_freqs:
+        doc_freq.update(tf)
+
+    total = len(docs)
+    vectors = []
+    for tf in term_freqs:
+        # idf 에 +1 을 둬서 모든 문서에 나오는 단어도 음수 가중치가 되지 않게 한다.
+        vec = {t: (1 + math.log(c)) * (1 + math.log(total / (1 + doc_freq[t])))
+               for t, c in tf.items()}
+        norm = math.sqrt(sum(w * w for w in vec.values()))
+        vectors.append({t: w / norm for t, w in vec.items()} if norm else {})
+    return vectors
+
+
+def _cosine(a, b):
+    if len(b) < len(a):
+        a, b = b, a
+    return sum(w * b[t] for t, w in a.items() if t in b)
+
+
+def cluster_articles(raw, threshold=CLUSTER_SIM):
+    """어휘가 겹치는 기사끼리 묶는다. 이웃이 없는 기사는 단독 클러스터가 된다."""
+    if not raw:
+        return []
+
+    titles = _strip_series_prefixes([a["title"] for a in raw])
+    summaries = _strip_boilerplate([a.get("summary", "") for a in raw])
+    vectors = _tfidf_vectors([f"{t} {s}" for t, s in zip(titles, summaries)])
+    # ponytail: O(n^2) 유사도 행렬. 하루 수집량이 수백 건이라 문제 없다.
+    # 수천 건이 되면 역색인으로 후보를 좁혀라.
+    sims = [[0.0] * len(raw) for _ in raw]
+    for i in range(len(raw)):
+        for j in range(i + 1, len(raw)):
+            sims[i][j] = sims[j][i] = _cosine(vectors[i], vectors[j])
+
+    remaining = set(range(len(raw)))
+    clusters = []
+    while remaining:
+        # 임계값 넘는 이웃이 가장 많은 기사를 씨앗으로 삼는다. 가장 큰 덩어리부터
+        # 떼어내야 남은 기사들이 억지로 섞이지 않는다.
+        best_seed, best_group = None, []
+        for i in sorted(remaining):
+            near = sorted((sims[i][j], j) for j in remaining if j != i and sims[i][j] >= threshold)
+            group = [j for _, j in near[::-1][:MAX_CLUSTER_SIZE - 1]]
+            if best_seed is None or len(group) > len(best_group):
+                best_seed, best_group = i, group
+        chosen = [best_seed] + best_group
+        remaining -= set(chosen)
+        clusters.append([raw[k] for k in chosen])
+
+    clusters.sort(key=len, reverse=True)
+    return clusters[:MAX_CLUSTERS]
+
 
 def _is_qwen_model(model):
     return "qwen" in model.lower()
@@ -340,7 +442,18 @@ def build_prompt(cluster):
         f"Full text:\n{a.get('body') or a['summary']}"
         for a in cluster
     )
-    return f"""다음 {len(cluster)}개의 AI 관련 최신 기사를 종합 분석하여 깊이 있는 '종합 트렌드 리포트'를 작성하세요.
+    # 이웃이 없는 기사도 단독 클러스터로 온다. 1건짜리에 "종합 분석" 을 시키면
+    # 있지도 않은 다른 기사를 지어내 엮는다.
+    if len(cluster) == 1:
+        lead = "다음 AI 관련 최신 기사 1건을 깊이 있게 파고들어 심층 리포트를 작성하세요."
+        title_kind = "리포트"
+    else:
+        lead = (f"다음 {len(cluster)}개의 AI 관련 최신 기사를 종합 분석하여 "
+                "깊이 있는 '종합 트렌드 리포트'를 작성하세요. "
+                "기사들을 나열하지 말고, 이들을 관통하는 하나의 흐름으로 엮으세요.")
+        title_kind = "종합 리포트"
+
+    return f"""{lead}
 
 [요구사항]
 1. 단순 요약이 아닌 맥락(Context) 기반 심층 조사보도 형태여야 합니다.
@@ -367,7 +480,7 @@ def build_prompt(cluster):
 
 JSON으로만 응답하세요:
 {{
-  "title": "종합 리포트 한국어 제목 (30자 이내, 키워드 포함)",
+  "title": "{title_kind} 한국어 제목 (30자 이내, 키워드 포함)",
   "primary_topic": "대표 핵심 테마 (10자 이내)",
   "tldr": "TL;DR 3~4문장 핵심 요약 (합쇼체)",
   "blog_body": "마크다운 본문 전문 (원문 근거가 있는 내용만, 섹션 제목 ## 자유 구성, 합쇼체)",
