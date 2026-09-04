@@ -474,6 +474,14 @@ class ClusteringTest(unittest.TestCase):
         ]
         self.assertEqual([len(c) for c in cluster_articles(articles)], [1, 1, 1])
 
+    def test_label_matches_cluster_size(self):
+        report = {"tldr": "요약", "blog_body": "본문", "title": "제목"}
+        one = build_insert_sql(report, [self._art("A")], "id-1")
+        two = build_insert_sql(report, [self._art("A"), self._art("B")], "id-2")
+        self.assertIn("심층 리포트", one)
+        self.assertNotIn("종합 트렌드 리포트", one)
+        self.assertIn("종합 트렌드 리포트", two)
+
     def test_empty_input_yields_no_clusters(self):
         self.assertEqual(cluster_articles([]), [])
 

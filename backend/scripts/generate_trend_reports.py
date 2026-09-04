@@ -604,6 +604,8 @@ def build_insert_sql(report, cluster, report_id, catalog=()):
     def esc(s):
         return (s or "").replace("'", "''")
 
+    # 원문이 1건뿐인데 "종합 트렌드 리포트" 라고 붙이면 독자를 속이는 라벨이 된다.
+    report_type = "🔮 종합 트렌드 리포트" if len(cluster) > 1 else "🔎 심층 리포트"
     image = pick_image(cluster)
     image_sql = f"'{esc(image)}'" if image else "NULL"
 
@@ -635,7 +637,7 @@ def build_insert_sql(report, cluster, report_id, catalog=()):
     return (f"INSERT OR REPLACE INTO trend_news "
            f"(id, title, report_type, executive_summary, analytical_deep_dive, key_takeaways, original_sources, tags, matched_lenses, image_url, key_numbers, our_take, open_questions, mentioned_models) VALUES ("
            f"'{esc(report_id)}', '{esc(report.get('title','종합 AI 트렌드 리포트'))}', "
-           f"'🔮 종합 트렌드 리포트', '{esc(tldr)}', '{esc(report.get('blog_body',''))}', "
+           f"'{report_type}', '{esc(tldr)}', '{esc(report.get('blog_body',''))}', "
            f"'{esc(key_takeaways)}', '{esc(sources)}', '{esc(tags)}', '{esc(matched_lenses)}', {image_sql}, "
            f"'{esc(key_numbers)}', '{esc(our_take)}', '{esc(open_q)}', '{esc(mentioned)}')")
 
