@@ -281,9 +281,16 @@ export default Sentry.withSentry(
         // 알게 된다. 값은 노출하지 않고 설정 여부만 보고한다.
         const adminConfigured = Boolean(env.ADMIN_PASSWORD);
 
+        // UptimeRobot 무료 플랜은 HEAD 요청만 보낼 수 있어 본문 키워드 검사가
+        // 불가능하다. 정체(degraded)도 상태 코드로 알려야 감시가 되므로,
+        // ?strict=1 이면 degraded 를 실패로 취급한다. 기본 동작은 그대로 둔다 —
+        // 배치가 하루 밀렸다고 '사이트 다운' 으로 호출되면 안 된다.
+        const strict = url.searchParams.get('strict') === '1';
+        const degraded = ok && (stale || !adminConfigured);
+
         return new Response(JSON.stringify({
           ok,
-          degraded: ok && (stale || !adminConfigured),
+          degraded,
           checks: {
             models: row?.models ?? 0,
             news: row?.news ?? 0,
@@ -293,7 +300,7 @@ export default Sentry.withSentry(
           },
           checked_at: new Date().toISOString(),
         }), {
-          status: ok ? 200 : 503,
+          status: ok && !(strict && degraded) ? 200 : 503,
           headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
         });
       } catch (err) {

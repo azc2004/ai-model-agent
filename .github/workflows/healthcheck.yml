@@ -53,7 +53,7 @@ jobs:
           fi
 
           # 서비스 자체 진단. 데이터 정체(degraded)까지 여기서 드러난다.
-          h=$(curl -sS "$BASE/health")
+          h=$(curl -sS "$BASE/health?strict=1")
           echo "$h" | grep -q '\"ok\":true' \
             && echo "✅ /health → ok" \
             || { echo "❌ /health 가 ok 가 아니다: $h"; fail=1; }
