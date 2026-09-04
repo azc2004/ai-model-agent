@@ -4,11 +4,14 @@ import sys
 import unittest
 from contextlib import redirect_stdout
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import patch
 
 
 sys.path.insert(0, str(Path(__file__).parents[1] / "scripts"))
 
+from generate_trend_reports import load_catalog_names
+from generate_trend_reports import find_mentioned_models
 from generate_trend_reports import (
     build_insert_sql,
     call_llm,
@@ -396,6 +399,40 @@ class OrchestratorTests(unittest.TestCase):
     def test_exit_code_is_nonzero_when_nothing_saved(self):
         self.assertEqual(exit_code_for(BatchSummary(saved=0, failed=1)), 1)
         self.assertEqual(exit_code_for(BatchSummary(saved=1, failed=3)), 0)
+
+
+class CatalogAliasTest(unittest.TestCase):
+    """카탈로그 이름은 접두어·접미사를 달고 있지만 기사는 맨이름만 쓴다."""
+
+    def _load(self, names):
+        rows = [{"id": f"id-{i}", "name": n} for i, n in enumerate(names)]
+        payload = json.dumps([{"results": rows}])
+
+        def runner(*_a, **_k):
+            return SimpleNamespace(stdout=f"prefix noise {payload}")
+
+        return load_catalog_names(runner=runner)
+
+    def test_strips_provider_prefix_and_paren_suffix(self):
+        catalog = self._load(["Google: Gemini 3.5 Flash (batch)"])
+        names = {n for _, n in catalog}
+        self.assertIn("Gemini 3.5 Flash", names)
+
+    def test_article_wording_matches_decorated_catalog_name(self):
+        catalog = self._load(["Google: Gemini 3.5 Flash (batch)", "Anthropic: Claude Opus 4.5"])
+        found = find_mentioned_models(
+            "Gemini 3.5 Flash 와 Claude Opus 4.5 를 비교했다", catalog
+        )
+        self.assertEqual(len(found), 2)
+
+    def test_alias_defers_to_existing_canonical_row(self):
+        catalog = self._load(["Gemini 2.5 Pro", "Google: Gemini 2.5 Pro (batch)"])
+        found = find_mentioned_models("Gemini 2.5 Pro 성능", catalog)
+        self.assertEqual(found, ["id-0"])
+
+    def test_bare_generic_word_is_not_a_model_mention(self):
+        catalog = self._load(["Fusion", "Uncensored"])
+        self.assertEqual(catalog, [])
 
 
 if __name__ == "__main__":

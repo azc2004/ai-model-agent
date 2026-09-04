@@ -399,6 +399,28 @@ MIN_MODEL_NAME = 6
 MAX_MENTIONS = 6
 
 
+# 카탈로그 이름은 "Google: Gemini 3.5 Flash (batch)" 처럼 공급사 접두어와 괄호
+# 접미사를 달고 있는데, 기사는 "Gemini 3.5 Flash" 라고만 쓴다. 둘 다 벗긴 별칭을
+# 만들어 두지 않으면 카탈로그에 있는 모델도 전부 빗나간다.
+PROVIDER_PREFIX = re.compile(r"^[A-Za-z][\w .-]{0,20}:\s*")
+PAREN_SUFFIX = re.compile(r"\s*\([^)]*\)\s*$")
+
+# "Fusion", "Weaver", "Uncensored" 같은 한 단어짜리 이름은 산문에서 그대로
+# 오탐한다. 숫자도 공백도 하이픈도 없는 이름은 모델 지칭으로 보지 않는다.
+SPECIFIC_NAME = re.compile(r"[\d\s-]")
+
+
+def model_aliases(name):
+    """공급사 접두어와 괄호 접미사를 벗긴 변형들. 원본 이름은 포함하지 않는다."""
+    found = set()
+    for candidate in (name, PROVIDER_PREFIX.sub("", name)):
+        for variant in (candidate, PAREN_SUFFIX.sub("", candidate)):
+            variant = variant.strip()
+            if variant != name and len(variant) >= MIN_MODEL_NAME:
+                found.add(variant)
+    return found
+
+
 def load_catalog_names(runner=subprocess.run):
     """D1 에서 (id, name) 을 읽는다. 실패하면 빈 목록 — 매칭을 건너뛴다."""
     try:
@@ -411,21 +433,23 @@ def load_catalog_names(runner=subprocess.run):
         data = json.loads(out[out.index("["):])
         rows = [r for blk in data for r in blk.get("results", []) if isinstance(r, dict) and r.get("name")]
 
-        # 카탈로그는 "GPT-4o (Latest)" 처럼 버전 접미사를 달고 있는데 기사는 "GPT-4o"
-        # 라고만 쓴다. 괄호와 날짜를 벗긴 별칭도 후보에 넣는다. 같은 별칭이 여러 행에
-        # 걸리면(GPT-4o 의 날짜별 변형들) 가장 짧은 정식명을 대표로 삼는다.
-        out, alias_owner = [], {}
+        catalog = [(r["id"], r["name"]) for r in rows if len(r["name"]) >= MIN_MODEL_NAME]
+        canonical = {name.lower() for _, name in catalog}
+
+        # 같은 별칭이 여러 행에 걸리면(날짜·batch 변형들) 가장 짧은 정식명을 대표로
+        # 삼는다. 이미 정식명으로 존재하는 별칭은 그쪽에 맡기고 건너뛴다.
+        alias_owner = {}
         for r in rows:
             name = r["name"]
-            if len(name) >= MIN_MODEL_NAME:
-                out.append((r["id"], name))
-            alias = re.sub(r"\s*\((?:latest|\d{4}-\d{2}-\d{2}|[^)]*preview[^)]*)\)\s*$", "", name, flags=re.I).strip()
-            if alias != name and len(alias) >= MIN_MODEL_NAME:
-                prev = alias_owner.get(alias.lower())
+            for alias in model_aliases(name):
+                key = alias.lower()
+                if key in canonical:
+                    continue
+                prev = alias_owner.get(key)
                 if prev is None or len(name) < prev[1]:
-                    alias_owner[alias.lower()] = (r["id"], len(name), alias)
-        out += [(mid, alias) for mid, _, alias in alias_owner.values()]
-        return out
+                    alias_owner[key] = (r["id"], len(name), alias)
+        merged = catalog + [(mid, alias) for mid, _, alias in alias_owner.values()]
+        return [(mid, name) for mid, name in merged if SPECIFIC_NAME.search(name)]
     except Exception as e:
         print(f"  [카탈로그 조회 실패] {e} — 모델 연결을 건너뜁니다")
         return []
