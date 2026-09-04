@@ -97,7 +97,7 @@ class LlmClientTests(unittest.TestCase):
         payload = captured["payload"]
         response_format = payload["response_format"]
         schema = response_format["json_schema"]["schema"]
-        self.assertEqual(payload["max_tokens"], 3500)
+        self.assertEqual(payload["max_tokens"], 6000)
         self.assertEqual(response_format["type"], "json_schema")
         self.assertTrue(response_format["json_schema"]["strict"])
         self.assertEqual(
