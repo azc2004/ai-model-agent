@@ -3,7 +3,7 @@
 종합 트렌드 리포트 생성 스크립트
 RSS 수집 → 클러스터링 → LiteLLM(gpt-4o-mini) → Cloudflare D1 저장
 """
-import json, os, re, uuid, subprocess, urllib.error, urllib.request, urllib.parse
+import json, os, re, time, uuid, subprocess, urllib.error, urllib.request, urllib.parse
 from collections import Counter
 from dataclasses import dataclass, field
 from typing import Mapping
@@ -14,6 +14,12 @@ from trend_report_validation import (
     validate_report,
 )
 
+# 원문 본문을 읽을 수 있는 피드만 남긴다. 스크래핑을 거부하는 곳(429/403)은
+# 기사를 버리게 되므로 목록에 있어도 결과에 기여하지 못한다.
+#   제거: blogs.microsoft.com  → 410 Gone. 피드 자체가 없어졌고 매일 0건이었다
+#   유지: venturebeat(429) · openai.com(403) → 본문을 못 읽어 실제 기여는 없지만,
+#         차단이 풀리면 자동으로 다시 잡히므로 남겨 둔다
+# 신규는 RSS 파싱과 본문 추출이 모두 성공하는 것만 실측 후 추가했다.
 RSS_FEEDS = [
     "https://feeds.feedburner.com/venturebeat/SZYF",
     "https://techcrunch.com/feed/",
@@ -22,8 +28,14 @@ RSS_FEEDS = [
     "https://www.deepmind.com/blog/rss.xml",
     "https://huggingface.co/blog/feed.xml",
     "https://aws.amazon.com/blogs/machine-learning/feed/",
-    "https://blogs.microsoft.com/ai/feed/",
     "https://blog.google/technology/ai/rss/",
+    # 실측 추가 (본문 평균 3,400~6,000자)
+    "https://arstechnica.com/ai/feed/",
+    "https://blogs.nvidia.com/feed/",
+    "https://www.microsoft.com/en-us/research/feed/",
+    "https://jack-clark.net/feed/",
+    "https://magazine.sebastianraschka.com/feed",
+    "https://simonwillison.net/atom/everything/",
 ]
 TOPIC_PATTERNS = {
     "agent": ["agent","agentic","computer use","automation","autogen","workflow","multi-agent"],
@@ -123,11 +135,16 @@ def fetch_rss(feed_url):
         with urllib.request.urlopen(req, timeout=8) as resp:
             text = resp.read().decode("utf-8", errors="ignore")
         arts = []
-        for item in re.finditer(r"<item[\s\S]*?</item>", text):
+        # RSS 2.0 은 <item>, Atom 은 <entry> 를 쓴다. <item> 만 보면 Atom 피드가
+        # 조용히 0건으로 잡혀 좋은 출처를 놓친다.
+        for item in re.finditer(r"<(?:item|entry)[\s\S]*?</(?:item|entry)>", text):
             t = item.group()
             title = (re.search(r"<title><!\[CDATA\[([\s\S]*?)\]\]></title>", t) or re.search(r"<title>([^<]*)</title>", t))
             link = (re.search(r"<link>([^<]*)</link>", t) or re.search(r'<link[^>]*href="([^"]+)"', t))
-            desc = (re.search(r"<description><!\[CDATA\[([\s\S]*?)\]\]></description>", t) or re.search(r"<description>([^<]*)</description>", t))
+            desc = (re.search(r"<description><!\[CDATA\[([\s\S]*?)\]\]></description>", t)
+                    or re.search(r"<description>([^<]*)</description>", t)
+                    or re.search(r"<summary[^>]*>([\s\S]*?)</summary>", t)
+                    or re.search(r"<content[^>]*>([\s\S]*?)</content>", t))
             if title and link:
                 clean = re.sub(r"<[^>]+>", "", desc.group(1) if desc else "").strip()[:500]
                 arts.append({"title": title.group(1).strip(), "link": link.group(1).strip(), "summary": clean, "source": urllib.parse.urlparse(feed_url).hostname, "image": extract_image(t)})
@@ -135,6 +152,64 @@ def fetch_rss(feed_url):
     except Exception as e:
         print(f"  [RSS Skip] {feed_url}: {e}")
         return []
+
+# 원문을 읽지 않고 RSS 요약 500자만 보고 쓰면, 모델이 빈칸을 채우는 것이 곧 환각이
+# 된다. "개발 생산성 80% 향상" 같은 문장이 그렇게 나왔다. 링크를 따라가 본문을
+# 가져오고, 못 가져온 기사는 아예 쓰지 않는다.
+MIN_BODY_CHARS = 600      # 이보다 짧으면 추출 실패로 본다
+MAX_BODY_CHARS = 6000     # LLM 입력 상한
+
+_SKIP_EXT = (".pdf", ".zip", ".mp3", ".mp4")
+
+
+def fetch_article_body(url):
+    """원문 본문을 추출한다. 실패하면 빈 문자열 — 호출부가 그 기사를 버린다."""
+    if not url or not url.startswith("http") or url.lower().endswith(_SKIP_EXT):
+        return ""
+    try:
+        from bs4 import BeautifulSoup
+    except ImportError:
+        print("  [본문추출] beautifulsoup4 없음 — 원문 없이 진행하지 않는다")
+        return ""
+    try:
+        res = subprocess.run(
+            ["curl", "-sL", "--max-time", "10", "-A",
+             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36", url],
+            capture_output=True, timeout=13,
+        )
+        html = res.stdout.decode("utf-8", errors="ignore")
+        if len(html) < 200:
+            return ""
+        soup = BeautifulSoup(html, "html.parser")
+        for tag in soup(["script", "style", "nav", "footer", "header", "aside", "form", "svg", "button", "noscript"]):
+            tag.extract()
+        main = (soup.find("article") or soup.find("main")
+                or soup.find(class_=re.compile(r"content|post|entry|article|body", re.I)))
+        target = main or soup
+        parts = [el.get_text(separator=" ", strip=True)
+                 for el in target.find_all(["p", "h2", "h3", "li"])
+                 if len(el.get_text(strip=True)) > 20]
+        text = " ".join(parts).strip()
+        return text[:MAX_BODY_CHARS] if len(text) >= MIN_BODY_CHARS else ""
+    except Exception as e:
+        print(f"  [본문추출 실패] {url[:60]}: {e}")
+        return ""
+
+
+def attach_bodies(articles):
+    """각 기사에 body 를 채우고, 실패한 것은 버린다."""
+    kept, dropped = [], 0
+    for a in articles:
+        body = fetch_article_body(a.get("link", ""))
+        if body:
+            a["body"] = body
+            kept.append(a)
+        else:
+            dropped += 1
+        time.sleep(0.4)   # 같은 도메인을 연달아 때리지 않는다
+    print(f"  본문 확보 {len(kept)}건 / 제외 {dropped}건")
+    return kept
+
 
 def cluster_articles(raw):
     groups = {}
@@ -233,7 +308,11 @@ def call_llm(prompt, config):
     return report
 
 def build_prompt(cluster):
-    combined = "\n\n---\n\n".join(f"Source: {a['source']}\nTitle: {a['title']}\nSummary: {a['summary']}" for a in cluster)
+    combined = "\n\n---\n\n".join(
+        f"Source: {a['source']}\nURL: {a.get('link', '')}\nTitle: {a['title']}\n"
+        f"Full text:\n{a.get('body') or a['summary']}"
+        for a in cluster
+    )
     return f"""다음 {len(cluster)}개의 AI 관련 최신 기사를 종합 분석하여 깊이 있는 '종합 트렌드 리포트'를 작성하세요.
 
 [요구사항]
@@ -307,6 +386,7 @@ def run_batch(
     generator=call_llm,
     writer=write_report,
     feeds=RSS_FEEDS,
+    body_attacher=attach_bodies,
 ):
     summary = BatchSummary()
     raw_articles = []
@@ -324,6 +404,13 @@ def run_batch(
     accepted_articles, source_reasons = deduplicate_sources(raw_articles)
     summary.reasons.update(source_reasons)
     summary.source_rejected = sum(source_reasons.values())
+
+    # 원문 본문을 확보하고 실패한 기사는 버린다. 요약만으로 쓰면 환각이 된다.
+    before_body = len(accepted_articles)
+    accepted_articles = body_attacher(accepted_articles)
+    dropped_no_body = before_body - len(accepted_articles)
+    if dropped_no_body:
+        summary.reasons["no_body"] += dropped_no_body
 
     clusters = cluster_articles(accepted_articles)
     summary.clusters = len(clusters)

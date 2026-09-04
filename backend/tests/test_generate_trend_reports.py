@@ -302,6 +302,8 @@ class OrchestratorTests(unittest.TestCase):
             generator=generator,
             writer=lambda sql: written_sql.append(sql) is None,
             feeds=("agent-feed", "research-feed"),
+            # 원문 스크래핑이 테스트에서 실제 네트워크를 타지 않게 한다
+            body_attacher=lambda arts: [dict(a, body="본문 " * 200) for a in arts],
         )
 
         self.assertEqual(summary.saved, 1)
@@ -325,6 +327,7 @@ class OrchestratorTests(unittest.TestCase):
             generator=lambda prompt, config: generator_calls.append((prompt, config)),
             writer=lambda _sql: True,
             feeds=("one-feed",),
+            body_attacher=lambda arts: [dict(a, body="본문 " * 200) for a in arts],
         )
 
         self.assertEqual(summary.saved, 0)
