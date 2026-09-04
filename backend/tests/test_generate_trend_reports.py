@@ -307,6 +307,7 @@ class OrchestratorTests(unittest.TestCase):
             feeds=("agent-feed", "research-feed"),
             # 원문 스크래핑이 테스트에서 실제 네트워크를 타지 않게 한다
             body_attacher=lambda arts: [dict(a, body="본문 " * 200) for a in arts],
+            catalog_loader=lambda: [("gpt-4o", "GPT-4o")],
         )
 
         self.assertEqual(summary.saved, 1)
@@ -331,6 +332,7 @@ class OrchestratorTests(unittest.TestCase):
             writer=lambda _sql: True,
             feeds=("one-feed",),
             body_attacher=lambda arts: [dict(a, body="본문 " * 200) for a in arts],
+            catalog_loader=lambda: [("gpt-4o", "GPT-4o")],
         )
 
         self.assertEqual(summary.saved, 0)

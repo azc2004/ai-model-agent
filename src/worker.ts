@@ -337,6 +337,16 @@ export default Sentry.withSentry(
       const id = decodeURIComponent(url.pathname.slice('/news/'.length));
       const row: any = await env.DB.prepare('SELECT * FROM trend_news WHERE id = ?').bind(id).first();
       if (!row) return new Response('Not Found', { status: 404 });
+      const mids: string[] = safeJson(row.mentioned_models, []);
+      if (mids.length) {
+        const { results } = await env.DB.prepare(
+          `SELECT id, name, provider_name, context_window, api_pricing FROM models
+           WHERE id IN (${mids.map(() => '?').join(',')}) AND is_deprecated = 0`
+        ).bind(...mids).all();
+        row.mentioned_models = results.map((m: any) => ({ ...m, api_pricing: safeJson(m.api_pricing, {}) }));
+      } else {
+        row.mentioned_models = [];
+      }
       return new Response(seo.newsPage(row, seo.pickLang(url.searchParams.get('lang'))), { headers: HTML });
     }
 
@@ -681,7 +691,25 @@ export default Sentry.withSentry(
           });
         }
 
-        const article = buildArticle(n);
+        const article: any = buildArticle(n);
+
+        // 기사에 언급된 모델의 가격·벤치마크를 조회 시점에 붙인다. 기사 작성 시점에
+        // 얼려두면 주간 동기화 뒤 틀린 값이 된다. 생성이 아니라 조회이므로 환각이 없다.
+        const ids: string[] = safeJson(n.mentioned_models, []);
+        if (ids.length) {
+          const ph = ids.map(() => '?').join(',');
+          const { results } = await env.DB.prepare(
+            `SELECT id, name, provider_name, tier, context_window, api_pricing, benchmarks
+             FROM models WHERE id IN (${ph}) AND is_deprecated = 0`
+          ).bind(...ids).all();
+          article.mentioned_models = results.map((m: any) => ({
+            ...m,
+            api_pricing: safeJson(m.api_pricing, {}),
+            benchmarks: safeJson(m.benchmarks, {}),
+          }));
+        } else {
+          article.mentioned_models = [];
+        }
 
         return new Response(JSON.stringify(article), {
           headers: {

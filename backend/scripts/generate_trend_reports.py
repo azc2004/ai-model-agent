@@ -389,7 +389,75 @@ def pick_image(cluster):
     return None
 
 
-def build_insert_sql(report, cluster, report_id):
+# ─── 기사 ↔ 카탈로그 연결 ────────────────────────────────────────────────────
+# 기사에 나온 모델을 자사 카탈로그와 잇는다. LLM 에게 모델 id 를 물어보면 지어낼
+# 수 있으므로, 실제 카탈로그의 이름으로 본문을 훑는 결정론적 매칭만 쓴다.
+#
+# 짧은 이름은 오탐 지뢰다. "o3" 는 본문의 아무 곳에나 걸리고 "GPT-4" 는
+# "GPT-4o" 안에도 들어 있다. 최소 길이와 단어 경계, 긴 이름 우선으로 막는다.
+MIN_MODEL_NAME = 6
+MAX_MENTIONS = 6
+
+
+def load_catalog_names(runner=subprocess.run):
+    """D1 에서 (id, name) 을 읽는다. 실패하면 빈 목록 — 매칭을 건너뛴다."""
+    try:
+        res = runner(
+            ["npx", "wrangler", "d1", "execute", "llm-compass-db", "--remote", "--json",
+             "--command", "SELECT id, name FROM models WHERE is_deprecated = 0"],
+            capture_output=True, text=True,
+        )
+        out = res.stdout
+        data = json.loads(out[out.index("["):])
+        rows = [r for blk in data for r in blk.get("results", []) if isinstance(r, dict) and r.get("name")]
+
+        # 카탈로그는 "GPT-4o (Latest)" 처럼 버전 접미사를 달고 있는데 기사는 "GPT-4o"
+        # 라고만 쓴다. 괄호와 날짜를 벗긴 별칭도 후보에 넣는다. 같은 별칭이 여러 행에
+        # 걸리면(GPT-4o 의 날짜별 변형들) 가장 짧은 정식명을 대표로 삼는다.
+        out, alias_owner = [], {}
+        for r in rows:
+            name = r["name"]
+            if len(name) >= MIN_MODEL_NAME:
+                out.append((r["id"], name))
+            alias = re.sub(r"\s*\((?:latest|\d{4}-\d{2}-\d{2}|[^)]*preview[^)]*)\)\s*$", "", name, flags=re.I).strip()
+            if alias != name and len(alias) >= MIN_MODEL_NAME:
+                prev = alias_owner.get(alias.lower())
+                if prev is None or len(name) < prev[1]:
+                    alias_owner[alias.lower()] = (r["id"], len(name), alias)
+        out += [(mid, alias) for mid, _, alias in alias_owner.values()]
+        return out
+    except Exception as e:
+        print(f"  [카탈로그 조회 실패] {e} — 모델 연결을 건너뜁니다")
+        return []
+
+
+def find_mentioned_models(text, catalog):
+    """본문에 실제로 등장한 모델 id. 긴 이름을 먼저 잡아 부분 일치를 막는다."""
+    if not text or not catalog:
+        return []
+    low = text.lower()
+    hits, taken = [], []
+    for mid, name in sorted(catalog, key=lambda x: -len(x[1])):
+        n = name.lower()
+        idx = low.find(n)
+        if idx < 0:
+            continue
+        # 이미 더 긴 이름이 차지한 구간이면 건너뛴다 (GPT-4 vs GPT-4o)
+        if any(a <= idx < b for a, b in taken):
+            continue
+        # 단어 경계 — 영숫자 한가운데 박힌 것은 우연이다
+        before = low[idx - 1] if idx else " "
+        after = low[idx + len(n)] if idx + len(n) < len(low) else " "
+        if before.isalnum() or after.isalnum():
+            continue
+        hits.append(mid)
+        taken.append((idx, idx + len(n)))
+        if len(hits) >= MAX_MENTIONS:
+            break
+    return hits
+
+
+def build_insert_sql(report, cluster, report_id, catalog=()):
     sources = json.dumps([{"title": a["source"], "url": a["link"]} for a in cluster])
     tags = json.dumps(report.get("tags", ["#AI트렌드", "#종합리포트"]))
     tldr = report.get("tldr", "")
@@ -413,6 +481,13 @@ def build_insert_sql(report, cluster, report_id):
         if url and url in cluster_urls and n.get("label") and n.get("value"):
             numbers.append({"label": n["label"], "value": n["value"], "source_url": url})
 
+    # 가격·벤치마크는 저장하지 않는다. 주간 동기화로 값이 바뀌므로 기사 작성 시점에
+    # 얼려두면 곧 틀린 값이 된다. id 만 남기고 Worker 가 조회 시점에 조인한다.
+    mentioned = json.dumps(
+        find_mentioned_models(f"{report.get('title','')} {report.get('blog_body','')}", catalog),
+        ensure_ascii=False,
+    )
+
     key_numbers = json.dumps(numbers, ensure_ascii=False)
     our_take = report.get("our_take", "")
     open_q = json.dumps(
@@ -421,11 +496,11 @@ def build_insert_sql(report, cluster, report_id):
     )
 
     return (f"INSERT OR REPLACE INTO trend_news "
-           f"(id, title, report_type, executive_summary, analytical_deep_dive, key_takeaways, original_sources, tags, matched_lenses, image_url, key_numbers, our_take, open_questions) VALUES ("
+           f"(id, title, report_type, executive_summary, analytical_deep_dive, key_takeaways, original_sources, tags, matched_lenses, image_url, key_numbers, our_take, open_questions, mentioned_models) VALUES ("
            f"'{esc(report_id)}', '{esc(report.get('title','종합 AI 트렌드 리포트'))}', "
            f"'🔮 종합 트렌드 리포트', '{esc(tldr)}', '{esc(report.get('blog_body',''))}', "
            f"'{esc(key_takeaways)}', '{esc(sources)}', '{esc(tags)}', '{esc(matched_lenses)}', {image_sql}, "
-           f"'{esc(key_numbers)}', '{esc(our_take)}', '{esc(open_q)}')")
+           f"'{esc(key_numbers)}', '{esc(our_take)}', '{esc(open_q)}', '{esc(mentioned)}')")
 
 
 def write_report(sql, runner=subprocess.run):
@@ -449,6 +524,7 @@ def run_batch(
     writer=write_report,
     feeds=RSS_FEEDS,
     body_attacher=attach_bodies,
+    catalog_loader=load_catalog_names,
 ):
     summary = BatchSummary()
     raw_articles = []
@@ -478,6 +554,7 @@ def run_batch(
     summary.clusters = len(clusters)
     seen_titles: set[str] = set()
     seen_sources: set[str] = set()
+    catalog = catalog_loader()   # 회차당 1회만 조회한다
 
     for cluster in clusters:
         try:
@@ -501,7 +578,7 @@ def run_batch(
             continue
 
         report_id = f"synth-{uuid.uuid4().hex[:12]}"
-        if writer(build_insert_sql(report, cluster, report_id)):
+        if writer(build_insert_sql(report, cluster, report_id, catalog)):
             summary.saved += 1
         else:
             summary.failed += 1

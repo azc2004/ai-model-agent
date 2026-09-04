@@ -72,7 +72,11 @@ CREATE TABLE IF NOT EXISTS trend_news (
   -- 원문 근거이고 어디부터가 모델 추론인지 구분할 수 없다.
   key_numbers TEXT,      -- JSON: [{label, value, source_url}] — 출처 없는 수치는 넣지 않는다
   our_take TEXT,         -- 편집 의견. UI 에서 사실과 시각적으로 구분한다
-  open_questions TEXT    -- JSON: 아직 확인되지 않은 것. 추측을 사실처럼 쓰지 않게 하는 자리다
+  open_questions TEXT,   -- JSON: 아직 확인되지 않은 것. 추측을 사실처럼 쓰지 않게 하는 자리다
+  -- 기사에 등장한 모델의 id. 가격·벤치마크는 저장하지 않는다 — 주간 동기화로
+  -- 값이 바뀌므로 기사 작성 시점에 얼려두면 곧 틀린 값이 된다. Worker 가 조회
+  -- 시점에 models 와 조인해 항상 현재 값을 보여준다.
+  mentioned_models TEXT  -- JSON: ["gpt-4o", ...]
 );
 
 CREATE INDEX IF NOT EXISTS idx_models_provider ON models(provider_id);
