@@ -62,3 +62,77 @@ html.dark-mode {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ─── 시맨틱 색 토큰 ────────────────────────────────────────────────────────
+   의미역 하나가 여러 배경 위에 놓인다. 예전에는 유틸리티 클래스를 직접 썼는데,
+   같은 --text-muted 역할이 흰 배경·슬레이트 카드·다크 본문·보라 틴트 카드 등
+   서로 다른 7개 배경에서 렌더되어 클래스 하나로는 대비를 만족시킬 수 없었다.
+
+   값은 눈대중이 아니라 WCAG 대비를 계산해 정했다. 각 값 옆 숫자는 그 역할이
+   실제로 놓이는 모든 배경 중 "최악"의 대비다 (본문 기준 4.5:1).
+   토큰을 바꿀 때는 반드시 최악 배경 기준으로 다시 계산할 것. */
+:root {
+  --text-muted:  #45556c;  /* slate-600  최악 6.85 */
+  --text-accent: #007595;  /* cyan-700   최악 4.77 */
+  --text-success:#007a55;  /* emerald-700 최악 4.84 */
+  --text-warn:   #bb4d00;  /* amber-700  최악 4.54 */
+  --text-danger: #c10007;  /* red-700    최악 5.80 */
+  --accent-bg:   #007595;  /* 흰 글씨 기준 5.28 */
+}
+
+html.dark,
+html.dark-mode {
+  --text-muted:  #90a1b9;  /* slate-400   최악 6.78 */
+  --text-accent: #00d3f2;  /* cyan-400    최악 7.16 */
+  --text-success:#00d492;  /* emerald-400 최악 6.68 */
+  --text-warn:   #ffb900;  /* amber-400   최악 7.52 */
+  --text-danger: #ffa2a2;  /* red-300     최악 6.75 */
+}
+
+/* 어두운 틴트 카드(보라·인디고·에메랄드 그라데이션)는 라이트 모드에서도 배경이
+   어둡다. 그 안에서는 다크 모드와 같은 값을 쓴다. */
+.surface-tint {
+  --text-muted:  #cad5e2;  /* slate-300, 틴트 배경군 최악 7.55 */
+  --text-accent: #00d3f2;
+  --text-success:#00d492;
+  --text-warn:   #ffb900;
+  --text-danger: #ffa2a2;
+}
+
+/* 유틸리티. tokens.css 가 tailwind 뒤에 임포트되므로 동일 특이도에서 이긴다. */
+.text-muted   { color: var(--text-muted); }
+.text-accent  { color: var(--text-accent); }
+.text-success { color: var(--text-success); }
+.text-warn    { color: var(--text-warn); }
+.text-danger  { color: var(--text-danger); }
+.bg-accent    { background-color: var(--accent-bg); }
+
+/* ─── 차트 카테고리 팔레트 ──────────────────────────────────────────────────
+   막대 채우기와 범례 텍스트에 같은 색을 쓴다. 텍스트는 4.5:1 이 필요하므로
+   채우기 기준(3:1)으로 고를 수 없다.
+
+   흰 배경과 검은 배경 양쪽에서 4.5 를 넘기려면 색이 중간 명도여야 하는데 그
+   구간이 너무 좁아 6색을 배치할 수 없다. 그래서 테마별로 두 세트를 둔다.
+
+   6색을 배경 대비 4.5 이상으로 묶으면 명도가 좁은 띠에 몰려 인접 색 명도차가
+   최대 1.07:1 이다. 즉 색상(hue)으로만 구분된다 — 범례의 텍스트 라벨이 색에만
+   의존하지 않게 해주므로 이 한계는 수용한다. */
+:root {
+  --chart-1: #9a3412;  /* 주황   배경대비 6.60 */
+  --chart-2: #854d0e;  /* 호박   6.19 */
+  --chart-3: #047857;  /* 에메랄드 4.95 */
+  --chart-4: #0369a1;  /* 하늘   5.36 */
+  --chart-5: #5b21b6;  /* 보라   8.11 */
+  --chart-6: #9f1239;  /* 분홍   7.24 */
+}
+
+html.dark,
+html.dark-mode,
+.surface-tint {
+  --chart-1: #fb923c;  /* 7.24 */
+  --chart-2: #fde68a;  /* 13.15 */
+  --chart-3: #34d399;  /* 8.52 */
+  --chart-4: #7dd3fc;  /* 9.82 */
+  --chart-5: #ddd6fe;  /* 11.79 */
+  --chart-6: #f472b6;  /* 6.18 */
+}

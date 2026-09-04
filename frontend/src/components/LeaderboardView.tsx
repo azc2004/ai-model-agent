@@ -52,7 +52,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ models }) => {
     { key: 'model', header: t.leaderboard.model, priority: 'primary', render: (row) => <strong>{row.model.name}</strong> },
     { key: 'provider', header: t.leaderboard.provider, priority: 'secondary', render: (row) => row.model.provider_name },
     { key: 'tier', header: t.leaderboard.tier, priority: 'secondary', render: (row) => row.model.tier },
-    { key: 'score', header: t.leaderboard.score, priority: 'primary', numeric: true, render: (row) => <strong className="text-cyan-600 dark:text-cyan-400">{row.score}</strong> },
+    { key: 'score', header: t.leaderboard.score, priority: 'primary', numeric: true, render: (row) => <strong className="text-accent">{row.score}</strong> },
   ];
 
   return (
@@ -60,10 +60,10 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ models }) => {
       {/* Title */}
       <div className="bg-white dark:bg-slate-900 p-6 md:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-md">
         <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white mb-2 flex items-center gap-3 tracking-tight">
-          <Trophy className="w-8 h-8 text-amber-500 shrink-0" />
+          <Trophy className="w-8 h-8 text-warn shrink-0" />
           {t.leaderboard.title}
         </h2>
-        <p className="text-slate-600 dark:text-slate-300 text-sm max-w-3xl font-semibold">
+        <p className="text-muted text-sm max-w-3xl font-semibold">
           {t.leaderboard.subtitle}
         </p>
       </div>
@@ -78,7 +78,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ models }) => {
               : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-300 dark:border-slate-700'
           }`}
         >
-          <Award className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+          <Award className="w-4 h-4 text-warn" />
           {t.leaderboard.tabArenaElo}
         </button>
 
@@ -90,7 +90,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ models }) => {
               : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-300 dark:border-slate-700'
           }`}
         >
-          <Code className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
+          <Code className="w-4 h-4 text-accent" />
           {t.leaderboard.tabSweBench}
         </button>
 

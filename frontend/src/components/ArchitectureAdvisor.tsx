@@ -586,7 +586,7 @@ export const ArchitectureAdvisor: React.FC = () => {
   return (
     <div className="space-y-8 pb-24 lg:pb-16">
       {/* Header Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-950 via-purple-950 to-slate-900 border border-indigo-500/30 p-8 shadow-2xl">
+      <div className="surface-tint relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-950 via-purple-950 to-slate-900 border border-indigo-500/30 p-8 shadow-2xl">
         <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div className="relative z-10 max-w-3xl">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/20 border border-indigo-400/30 text-indigo-300 text-xs font-semibold uppercase tracking-wider mb-4">
@@ -606,7 +606,7 @@ export const ArchitectureAdvisor: React.FC = () => {
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-3">
             <h2 className="text-xl font-black text-slate-900 dark:text-white flex items-center gap-2 tracking-tight">
-              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-500 text-sm font-black">🏆</span>
+              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/30 text-warn text-sm font-black">🏆</span>
               {t.topRankingTitle}
             </h2>
             <button
@@ -617,7 +617,7 @@ export const ArchitectureAdvisor: React.FC = () => {
               <span>ℹ️</span> {t.rankingInfoBtn}
             </button>
           </div>
-          <span className="text-xs text-slate-500 dark:text-slate-400 font-extrabold">{t.instantResultNotice}</span>
+          <span className="text-xs text-muted font-extrabold">{t.instantResultNotice}</span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
@@ -637,7 +637,7 @@ export const ArchitectureAdvisor: React.FC = () => {
                   <div className="flex items-center justify-between mb-2">
                     <span className={`text-xs font-black px-2 py-0.5 rounded-full ${
                       isSelected
-                        ? 'bg-white/20 text-white border border-white/30'
+                        ? 'bg-white/90 text-slate-900 border border-white'
                         : tpl.rank === 1 ? 'bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700' :
                           tpl.rank === 2 ? 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700' :
                           'bg-amber-100/80 dark:bg-amber-950/40 text-amber-800 dark:text-amber-400 border border-amber-300 dark:border-amber-800'
@@ -652,7 +652,7 @@ export const ArchitectureAdvisor: React.FC = () => {
                     {L(tpl.title).split('(')[0]}
                   </h3>
                   <p className={`text-xs mt-1.5 line-clamp-2 leading-relaxed font-semibold ${
-                    isSelected ? 'text-indigo-100' : 'text-slate-600 dark:text-slate-300'
+                    isSelected ? 'text-indigo-100' : 'text-muted'
                   }`}>
                     {L(tpl.description)}
                   </p>
@@ -707,7 +707,7 @@ export const ArchitectureAdvisor: React.FC = () => {
 
             <div className="w-full bg-slate-200 dark:bg-slate-950 rounded-full h-3 overflow-hidden border border-slate-300 dark:border-slate-800 p-0.5 shadow-inner">
               <div 
-                className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-full rounded-full transition-all duration-500 shadow-md shadow-indigo-500/50"
+                className="bg-gradient-to-r from-indigo-500 via-purple-700 to-pink-500 h-full rounded-full transition-all duration-500 shadow-md shadow-indigo-500/50"
                 style={{ width: `${researchProgress}%` }}
               ></div>
             </div>
@@ -730,12 +730,12 @@ export const ArchitectureAdvisor: React.FC = () => {
                         ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-500/40 text-emerald-950 dark:text-emerald-200 font-extrabold shadow-sm' 
                         : isCurrent 
                         ? 'bg-indigo-50 dark:bg-indigo-950/60 border-indigo-400 dark:border-indigo-500/50 text-indigo-950 dark:text-indigo-100 ring-2 ring-indigo-400/50 dark:ring-indigo-500/40 animate-pulse font-black shadow-md'
-                        : 'bg-slate-50 dark:bg-slate-950/50 border-slate-200 dark:border-slate-800/60 text-slate-500 dark:text-slate-400 font-bold'
+                        : 'bg-slate-50 dark:bg-slate-950/50 border-slate-200 dark:border-slate-800/60 text-muted font-bold'
                     }`}
                   >
                     <div className="shrink-0">
                       {isDone ? (
-                        <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                        <CheckCircle2 className="w-5 h-5 text-success" />
                       ) : isCurrent ? (
                         <Loader2 className="w-5 h-5 text-indigo-600 dark:text-indigo-400 animate-spin" />
                       ) : (
@@ -762,12 +762,12 @@ export const ArchitectureAdvisor: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="text-right">
-                    <div className="text-xs text-slate-500 font-bold">{t.monthlyRequestsShort}</div>
+                    <div className="text-xs text-muted font-bold">{t.monthlyRequestsShort}</div>
                     <div className="text-base font-black text-indigo-600 dark:text-indigo-400">{result.monthly_requests.toLocaleString()} {g.advisorModal.callsSuffix}</div>
                   </div>
                   <button
                     onClick={() => setShowSpecBundleModal(true)}
-                    className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-extrabold text-xs shadow-lg shadow-indigo-600/30 transition-all flex items-center gap-2"
+                    className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-500 hover:to-purple-700 text-white font-extrabold text-xs shadow-lg shadow-indigo-600/30 transition-all flex items-center gap-2"
                   >
                     <Layers className="w-4 h-4" />
                     {g.advisorModal.artifactBtn}
@@ -789,7 +789,7 @@ export const ArchitectureAdvisor: React.FC = () => {
                       <div className="flex items-center justify-between">
                         <span className={`text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase ${
                           combo.tag === 'RECOMMENDED' ? 'bg-indigo-500 text-white' :
-                          combo.tag === 'FRONTIER' ? 'bg-purple-500 text-white' : 'bg-emerald-500 text-white'
+                          combo.tag === 'FRONTIER' ? 'bg-purple-700 text-white' : 'bg-emerald-700 text-white'
                         }`}>
                           {combo.tag}
                         </span>
@@ -802,7 +802,7 @@ export const ArchitectureAdvisor: React.FC = () => {
                     <div className="pt-3 border-t border-slate-700/40 space-y-2">
                       <div className="flex justify-between items-center text-xs font-bold">
                         <span>{g.advisorModal.monthlyApiCost}</span>
-                        <span className="text-base font-black text-cyan-400">${combo.total_monthly_cost.toFixed(2)}/mo</span>
+                        <span className="text-base font-black text-accent">${combo.total_monthly_cost.toFixed(2)}/mo</span>
                       </div>
                       <div className="space-y-1">
                         {combo.key_advantages.map((adv, idx) => (
@@ -907,7 +907,7 @@ export const ArchitectureAdvisor: React.FC = () => {
                 onChange={(e) => setMonthlyRequests(Number(e.target.value))}
                 className="w-full accent-indigo-600 rounded-lg cursor-pointer h-2.5 mt-2"
               />
-              <div className="flex justify-between text-[10px] text-slate-500 font-semibold mt-1">
+              <div className="flex justify-between text-[10px] text-muted font-semibold mt-1">
                 <span>{t.req10k}</span>
                 <span>{t.req500k}</span>
                 <span>{t.req1m}</span>
@@ -942,7 +942,7 @@ export const ArchitectureAdvisor: React.FC = () => {
           <button
             onClick={() => { setSelectedTemplateId(null); fetchRecommendation(); }}
             disabled={loading}
-            className="w-full mt-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 hover:from-indigo-500 hover:to-purple-500 text-white font-black py-4 rounded-2xl shadow-xl shadow-indigo-600/30 transition-all flex items-center justify-center gap-2 active:scale-98 text-base"
+            className="w-full mt-4 bg-gradient-to-r from-indigo-600 via-purple-700 to-indigo-700 hover:from-indigo-500 hover:to-purple-700 text-white font-black py-4 rounded-2xl shadow-xl shadow-indigo-600/30 transition-all flex items-center justify-center gap-2 active:scale-98 text-base"
           >
             {loading ? <Sparkles className="w-6 h-6 animate-spin" /> : <Zap className="w-6 h-6" />}
             {t.recalcBtn}
@@ -1094,13 +1094,13 @@ const SpecBundleModal: React.FC<{
             <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
               <span>🚀 BigTech Standard AI Coding Agent Spec Package</span>
             </h3>
-            <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold mt-0.5">
+            <p className="text-xs text-muted font-semibold mt-0.5">
               실리콘밸리 AI 파이프라인 규격 5대 Markdown 설계 아티팩트 명세서
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
+            className="p-2 rounded-xl text-muted hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -1123,22 +1123,22 @@ const SpecBundleModal: React.FC<{
                 className={`px-3.5 py-2.5 rounded-t-2xl text-xs font-black transition-all whitespace-nowrap flex flex-col items-start gap-0.5 ${
                   isActive 
                     ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-300 border-t-2 border-x border-indigo-500 border-x-slate-200 dark:border-x-slate-800 shadow-sm' 
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-900/50'
+                    : 'text-muted hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-900/50'
                 }`}
               >
                 <span>{tab.name}</span>
-                <span className={`text-[10px] ${isActive ? 'text-indigo-600 dark:text-indigo-400 font-bold' : 'text-slate-500'}`}>{tab.desc}</span>
+                <span className={`text-[10px] ${isActive ? 'text-indigo-600 dark:text-indigo-400 font-bold' : 'text-muted'}`}>{tab.desc}</span>
               </button>
             );
           })}
         </div>
 
         <div className="p-6 overflow-y-auto bg-slate-50 dark:bg-slate-950 font-mono text-xs text-slate-900 dark:text-slate-200 space-y-4 flex-1">
-          <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 pb-2">
+          <div className="flex items-center justify-between text-[11px] text-muted border-b border-slate-200 dark:border-slate-800 pb-2">
             <span className="font-black text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
               <Code className="w-4 h-4 text-indigo-600 dark:text-indigo-400" /> {activeData.filename}
             </span>
-            <span className="text-slate-500 font-bold">Lines: {activeData.content.split('\n').length} | Chars: {activeData.content.length.toLocaleString()}</span>
+            <span className="text-muted font-bold">Lines: {activeData.content.split('\n').length} | Chars: {activeData.content.length.toLocaleString()}</span>
           </div>
           <pre className="whitespace-pre-wrap leading-relaxed select-all font-semibold">
             {activeData.content}
@@ -1146,28 +1146,28 @@ const SpecBundleModal: React.FC<{
         </div>
 
         <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="text-xs text-slate-600 dark:text-slate-400 font-bold hidden sm:block">
+          <div className="text-xs text-muted font-bold hidden sm:block">
             💡 <strong className="text-slate-900 dark:text-white">Cursor / Claude Code 활용법</strong>: <span>`AGENTS.md`와 `TASKS.md`를 프로젝트 루트에 복사하면 AI가 자동 개발합니다.</span>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-end">
             <button
               onClick={handleShareLink}
-              className="px-3 py-2.5 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition-all flex items-center gap-1"
+              className="surface-tint px-3 py-2.5 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition-all flex items-center gap-1"
             >
               🔗 공유 링크 복사
             </button>
 
             <button
               onClick={handlePrintPdf}
-              className="px-3 py-2.5 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition-all flex items-center gap-1"
+              className="surface-tint px-3 py-2.5 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition-all flex items-center gap-1"
             >
               📄 PDF/프린트
             </button>
 
             <button
               onClick={handleCopy}
-              className="px-3.5 py-2.5 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition-all flex items-center gap-1.5"
+              className="surface-tint px-3.5 py-2.5 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition-all flex items-center gap-1.5"
             >
               {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4 text-slate-300" />}
               {copied ? '복사 완료!' : `${activeData.filename} 복사`}
@@ -1175,7 +1175,7 @@ const SpecBundleModal: React.FC<{
 
             <button
               onClick={handleDownloadSingle}
-              className="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 shadow-md transition-all flex items-center gap-1.5"
+              className="surface-tint px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 shadow-md transition-all flex items-center gap-1.5"
             >
               <Download className="w-4 h-4 text-indigo-400" />
               {activeData.filename} 저장
@@ -1183,7 +1183,7 @@ const SpecBundleModal: React.FC<{
 
             <button
               onClick={handleDownloadAllBundle}
-              className="px-4.5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-extrabold text-xs shadow-lg shadow-indigo-600/30 transition-all flex items-center gap-2"
+              className="px-4.5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-500 hover:to-purple-700 text-white font-extrabold text-xs shadow-lg shadow-indigo-600/30 transition-all flex items-center gap-2"
             >
               <Download className="w-4 h-4 text-white" />
               📦 5개 아티팩트 전체 저장
@@ -1286,11 +1286,11 @@ const MoreRankingModal: React.FC<{
             <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
               <span>{g.advisorModal.moreTitle}</span>
             </h3>
-            <p className="text-xs text-slate-600 dark:text-slate-400 font-bold mt-0.5">
+            <p className="text-xs text-muted font-bold mt-0.5">
               {g.advisorModal.moreNotice}
             </p>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+          <button onClick={onClose} className="p-1.5 rounded-xl text-muted hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -1307,12 +1307,12 @@ const MoreRankingModal: React.FC<{
                   <span className="text-xs font-black px-2.5 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-800 dark:text-indigo-300 border border-indigo-300 dark:border-indigo-800">
                     #{sc.rank}{g.advisorModal.rankSuffix}
                   </span>
-                  <span className="text-xs font-bold text-slate-500 dark:text-slate-400">{sc.category}</span>
+                  <span className="text-xs font-bold text-muted">{sc.category}</span>
                 </div>
                 <h4 className="text-sm font-black text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                   {sc.title}
                 </h4>
-                <p className="text-xs text-slate-600 dark:text-slate-300 font-semibold">
+                <p className="text-xs text-muted font-semibold">
                   {sc.desc}
                 </p>
               </div>
@@ -1337,7 +1337,7 @@ const RankingCriteriaModal: React.FC<{ onClose: () => void }> = ({ onClose }) =>
           <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
             <span>🏆 인기 서비스 TOP 랭킹 산출 근거 & 갱신 주기</span>
           </h3>
-          <button onClick={onClose} className="p-1.5 rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+          <button onClick={onClose} className="p-1.5 rounded-xl text-muted hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -1357,7 +1357,7 @@ const RankingCriteriaModal: React.FC<{ onClose: () => void }> = ({ onClose }) =>
               <span>🔄</span> 2. 데이터 갱신 주기 (Update Schedule)
             </h4>
             <p>
-              <strong className="text-emerald-600 dark:text-emerald-400 font-extrabold">매월 1일</strong> 글로벌 신규 출시 모델 및 LMSYS Arena 벤치마크 점수, API 단가 변동 내역을 자동으로 수집하여 실시간 인기 순위를 갱신합니다.
+              <strong className="text-success font-extrabold">매월 1일</strong> 글로벌 신규 출시 모델 및 LMSYS Arena 벤치마크 점수, API 단가 변동 내역을 자동으로 수집하여 실시간 인기 순위를 갱신합니다.
             </p>
           </div>
         </div>

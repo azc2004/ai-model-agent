@@ -23,9 +23,9 @@ export const CompareView: React.FC<CompareViewProps> = ({
   if (comparedModels.length === 0) {
     return (
       <div className="bg-white dark:bg-slate-900 p-12 rounded-2xl border border-slate-200 dark:border-slate-800 text-center space-y-4 shadow-md">
-        <ArrowLeftRight className="w-12 h-12 text-slate-400 dark:text-slate-500 mx-auto" />
+        <ArrowLeftRight className="w-12 h-12 text-muted mx-auto" />
         <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">{t.compare.emptyTitle}</h3>
-        <p className="text-slate-600 dark:text-slate-400 text-sm max-w-md mx-auto font-semibold">
+        <p className="text-muted text-sm max-w-md mx-auto font-semibold">
           {t.compare.emptyDesc}
         </p>
       </div>
@@ -38,10 +38,10 @@ export const CompareView: React.FC<CompareViewProps> = ({
       <div className="bg-white dark:bg-slate-900 p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md flex items-center justify-between">
         <div>
           <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white mb-2 flex items-center gap-3 tracking-tight">
-            <ArrowLeftRight className="w-7 h-7 text-cyan-600 dark:text-cyan-400" />
+            <ArrowLeftRight className="w-7 h-7 text-accent" />
             {t.nav.compare} ({comparedModels.length})
           </h2>
-          <p className="text-slate-600 dark:text-slate-300 text-sm font-semibold">
+          <p className="text-muted text-sm font-semibold">
             선택한 {comparedModels.length}개 모델의 상세 스펙, API 비용, Quota 및 벤치마크 나란히 대조
           </p>
         </div>
@@ -51,9 +51,9 @@ export const CompareView: React.FC<CompareViewProps> = ({
       <ModelRadarChart models={comparedModels} />
 
       {/* Mobile Swipe Hint */}
-      <div className="md:hidden flex items-center justify-between text-xs font-extrabold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/60 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700">
+      <div className="md:hidden flex items-center justify-between text-xs font-extrabold text-muted bg-slate-100 dark:bg-slate-800/60 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700">
         <span>👈 손가락으로 좌우 스크롤하여 대조</span>
-        <span className="text-cyan-600 dark:text-cyan-400">총 {comparedModels.length}개 모델 비교 중</span>
+        <span className="text-accent">총 {comparedModels.length}개 모델 비교 중</span>
       </div>
 
       {/* Comparison Grid Table */}
@@ -68,11 +68,11 @@ export const CompareView: React.FC<CompareViewProps> = ({
                 <th key={model.id} className="p-4 min-w-[240px] text-center border-l border-slate-200 dark:border-slate-800 relative">
                   <button
                     onClick={() => onToggleCompare(model.id)}
-                    className="absolute top-2 right-2 p-1 rounded-lg text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
+                    className="absolute top-2 right-2 p-1 rounded-lg text-muted hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
                   >
                     <X className="w-4 h-4" />
                   </button>
-                  <div className="text-xs text-slate-500 dark:text-slate-400 font-extrabold mb-1">{model.provider_name}</div>
+                  <div className="text-xs text-muted font-extrabold mb-1">{model.provider_name}</div>
                   <div className="text-lg font-black text-slate-900 dark:text-white mb-2">{model.name}</div>
                   <span className="text-[10px] px-2 py-0.5 rounded font-black bg-indigo-100 dark:bg-indigo-950 text-indigo-800 dark:text-indigo-300 border border-indigo-300 dark:border-indigo-800">
                     {model.tier}
@@ -88,7 +88,7 @@ export const CompareView: React.FC<CompareViewProps> = ({
                 {t.dashboard.inputPrice}
               </td>
               {comparedModels.map((m) => (
-                <td key={m.id} className="numeric p-4 text-center font-mono font-black text-emerald-600 dark:text-emerald-400 border-l border-slate-200 dark:border-slate-800">
+                <td key={m.id} className="numeric p-4 text-center font-mono font-black text-success border-l border-slate-200 dark:border-slate-800">
                   {m.api_pricing ? `$${m.api_pricing.input_price_per_1m.toFixed(2)}` : '-'}
                 </td>
               ))}
@@ -100,7 +100,7 @@ export const CompareView: React.FC<CompareViewProps> = ({
                 {t.dashboard.outputPrice}
               </td>
               {comparedModels.map((m) => (
-                <td key={m.id} className="p-4 text-center font-mono font-black text-cyan-600 dark:text-cyan-400 border-l border-slate-200 dark:border-slate-800">
+                <td key={m.id} className="p-4 text-center font-mono font-black text-accent border-l border-slate-200 dark:border-slate-800">
                   {m.api_pricing ? `$${m.api_pricing.output_price_per_1m.toFixed(2)}` : '-'}
                 </td>
               ))}
@@ -108,8 +108,8 @@ export const CompareView: React.FC<CompareViewProps> = ({
 
             {/* API Quota Rate Limits */}
             <tr className="bg-cyan-50/50 dark:bg-cyan-950/20">
-              <td className="p-4 font-black text-cyan-700 dark:text-cyan-400 sticky left-0 bg-slate-50 dark:bg-slate-900 z-10 flex items-center gap-1.5">
-                <Gauge className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
+              <td className="p-4 font-black text-accent sticky left-0 bg-slate-50 dark:bg-slate-900 z-10 flex items-center gap-1.5">
+                <Gauge className="w-4 h-4 text-accent" />
                 {t.quota.title}
               </td>
               {comparedModels.map((m) => (
@@ -117,7 +117,7 @@ export const CompareView: React.FC<CompareViewProps> = ({
                   {m.quota && (m.quota.rpm !== undefined || m.quota.tpm !== undefined) ? (
                     <div className="space-y-1">
                       <div className="text-slate-900 dark:text-cyan-300 font-black">{m.quota.rpm ? `${m.quota.rpm.toLocaleString()} RPM` : '-'}</div>
-                      <div className="text-slate-600 dark:text-slate-400 font-bold">{m.quota.tpm ? `${(m.quota.tpm / 1000).toFixed(0)}k TPM` : '-'}</div>
+                      <div className="text-muted font-bold">{m.quota.tpm ? `${(m.quota.tpm / 1000).toFixed(0)}k TPM` : '-'}</div>
                     </div>
                   ) : (
                     '-'
@@ -164,7 +164,7 @@ export const CompareView: React.FC<CompareViewProps> = ({
                 LMSYS Arena Elo
               </td>
               {comparedModels.map((m) => (
-                <td key={m.id} className="p-4 text-center font-mono font-black text-amber-600 dark:text-amber-400 text-base border-l border-slate-200 dark:border-slate-800">
+                <td key={m.id} className="p-4 text-center font-mono font-black text-warn text-base border-l border-slate-200 dark:border-slate-800">
                   {m.benchmarks.arena_elo || '-'}
                 </td>
               ))}
@@ -176,7 +176,7 @@ export const CompareView: React.FC<CompareViewProps> = ({
                 SWE-bench (Coding)
               </td>
               {comparedModels.map((m) => (
-                <td key={m.id} className="p-4 text-center font-mono text-cyan-600 dark:text-cyan-400 font-black border-l border-slate-200 dark:border-slate-800">
+                <td key={m.id} className="p-4 text-center font-mono text-accent font-black border-l border-slate-200 dark:border-slate-800">
                   {m.benchmarks.swe_bench ? `${m.benchmarks.swe_bench}%` : '-'}
                 </td>
               ))}

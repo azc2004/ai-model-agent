@@ -703,7 +703,7 @@ export const TutorialView: React.FC = () => {
   return (
     <div className="space-y-8 pb-16">
       {/* Premium Hero Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-950 via-slate-900 to-purple-950 border border-indigo-500/30 p-8 sm:p-10 shadow-2xl">
+      <div className="surface-tint relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-950 via-slate-900 to-purple-950 border border-indigo-500/30 p-8 sm:p-10 shadow-2xl">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div className="relative z-10 max-w-4xl space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/20 border border-indigo-400/30 text-indigo-300 text-xs font-bold uppercase tracking-wider">
@@ -732,14 +732,14 @@ export const TutorialView: React.FC = () => {
               className={`flex-1 min-w-[210px] text-left px-4 py-3 rounded-xl transition-all font-black text-xs flex flex-col gap-1 ${
                 isActive
                   ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-800/40'
+                  : 'text-muted hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-800/40'
               }`}
             >
               <span className="text-sm font-black tracking-tight flex items-center gap-1.5">
                 {isActive && <Sparkles className="w-3.5 h-3.5 text-amber-300" />}
                 {tab.title}
               </span>
-              <span className={`text-[11px] font-semibold ${isActive ? 'text-indigo-100' : 'text-slate-500'}`}>{tab.desc}</span>
+              <span className={`text-[11px] font-semibold ${isActive ? 'text-indigo-100' : 'text-muted'}`}>{tab.desc}</span>
             </button>
           );
         })}
@@ -758,13 +758,13 @@ export const TutorialView: React.FC = () => {
                 <Users className="w-6 h-6 text-indigo-500" />
                 {t.t1Title}
               </h2>
-              <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+              <p className="text-sm text-muted mt-2 leading-relaxed">
                 {t.t1Desc}
               </p>
             </div>
 
             {/* Visual Architecture Flowchart */}
-            <div className="p-6 rounded-2xl bg-slate-950 text-white space-y-4 border border-slate-800">
+            <div className="surface-tint p-6 rounded-2xl bg-slate-950 text-white space-y-4 border border-slate-800">
               <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                 <span className="text-xs font-mono text-indigo-400 font-bold">claude-agent-team-architecture.diag</span>
                 <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
@@ -773,15 +773,15 @@ export const TutorialView: React.FC = () => {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-center text-xs font-bold">
                 <div className="p-3.5 rounded-xl bg-indigo-900/80 border border-indigo-700 text-indigo-200">
-                  1. Leader Agent<br /><span className="text-[10px] text-slate-400 font-normal">{t.flow1}</span>
+                  1. Leader Agent<br /><span className="text-[10px] text-muted font-normal">{t.flow1}</span>
                 </div>
                 <div className="p-3.5 rounded-xl bg-purple-900/80 border border-purple-700 text-purple-200">
-                  2. {t.flow2}<br /><span className="text-[10px] text-slate-400 font-normal">bug_hunter, reviewer</span>
+                  2. {t.flow2}<br /><span className="text-[10px] text-muted font-normal">bug_hunter, reviewer</span>
                 </div>
-                <div className="p-3.5 rounded-xl bg-cyan-900/80 border border-cyan-700 text-cyan-200">
-                  3. {t.flow3}<br /><span className="text-[10px] text-slate-400 font-normal">{t.flow3Sub}</span>
+                <div className="surface-tint p-3.5 rounded-xl bg-cyan-900/80 border border-cyan-700 text-cyan-200">
+                  3. {t.flow3}<br /><span className="text-[10px] text-muted font-normal">{t.flow3Sub}</span>
                 </div>
-                <div className="p-3.5 rounded-xl bg-emerald-600 text-white">
+                <div className="p-3.5 rounded-xl bg-emerald-700 text-white">
                   4. {t.flow4}<br /><span className="text-[10px] text-emerald-100 font-normal">{t.flow4Sub}</span>
                 </div>
               </div>
@@ -793,10 +793,10 @@ export const TutorialView: React.FC = () => {
                 <GitBranch className="w-5 h-5 text-purple-500" />
                 {t.step1Title}
               </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400">
+              <p className="text-xs text-muted">
                 {t.step1Desc}
               </p>
-              <div className="bg-slate-950 p-4 rounded-2xl font-mono text-xs text-emerald-400 border border-slate-800 relative">
+              <div className="surface-tint bg-slate-950 p-4 rounded-2xl font-mono text-xs text-emerald-400 border border-slate-800 relative">
                 <button
                   aria-label={t.copyLabel}
                   onClick={() => handleCopy(`mkdir -p .claude/skills/deploy_production .claude/skills/security_review .claude/subagents`, 'cmd_tree')}
@@ -828,10 +828,10 @@ export const TutorialView: React.FC = () => {
                 <Puzzle className="w-5 h-5 text-indigo-500" />
                 {t.step2Title}
               </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400">
+              <p className="text-xs text-muted">
                 {t.step2Desc}
               </p>
-              <div className="bg-slate-950 p-5 rounded-2xl font-mono text-xs text-slate-200 border border-slate-800 relative">
+              <div className="surface-tint bg-slate-950 p-5 rounded-2xl font-mono text-xs text-slate-200 border border-slate-800 relative">
                 <button
                   aria-label={t.copyLabel}
                   onClick={() => handleCopy(`---\nname: deploy_production\ndescription: ${t.skillDescription}\n---\n\n# Deploy Production Skill Directive\n1. Run \`npm run build\` or \`pytest\` to verify zero build errors.\n2. ${t.skillStep2}\n3. Stage all files with \`git add -A\`.\n4. Commit and push to remote \`main\` branch.`, 'code_skill_deploy')}
@@ -861,10 +861,10 @@ description: ${t.skillDescription}
                 <Server className="w-5 h-5 text-cyan-500" />
                 {t.step3Title}
               </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400">
+              <p className="text-xs text-muted">
                 {t.step3Desc}
               </p>
-              <div className="bg-slate-900 text-indigo-300 p-4 rounded-xl font-mono text-xs flex items-center justify-between border border-slate-800">
+              <div className="surface-tint bg-slate-900 text-indigo-300 p-4 rounded-xl font-mono text-xs flex items-center justify-between border border-slate-800">
                 <span>claude mcp add codebase-memory npx -y @modelcontextprotocol/server-codebase-memory</span>
                 <button
                   aria-label={t.copyLabel}
@@ -890,7 +890,7 @@ description: ${t.skillDescription}
               <Cpu className="w-6 h-6 text-purple-500" />
               {t.t2Title}
             </h2>
-            <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+            <p className="text-sm text-muted mt-2 leading-relaxed">
               {t.t2Desc}
             </p>
           </div>
@@ -899,11 +899,11 @@ description: ${t.skillDescription}
             <h3 className="text-base font-black text-slate-900 dark:text-white">
               {t.t2Step}
             </h3>
-            <div className="bg-slate-950 p-5 rounded-2xl font-mono text-xs text-slate-200 border border-slate-800 relative">
+            <div className="surface-tint bg-slate-950 p-5 rounded-2xl font-mono text-xs text-slate-200 border border-slate-800 relative">
               <button
                 aria-label={t.copyLabel}
                 onClick={() => handleCopy(`agent_pipeline:\n  mode: autonomous\n  guardrails:\n    strict_types: true\n    prevent_oom: true\nskills:\n  - name: deploy_production\n    path: .claude/skills/deploy_production/SKILL.md`, 'code_antigravity')}
-                className="absolute top-4 right-4 px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs transition-all flex items-center gap-1.5"
+                className="absolute top-4 right-4 px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs transition-all flex items-center gap-1.5"
               >
                 {copiedId === 'code_antigravity' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                 {t.copyDirectives}
@@ -927,14 +927,14 @@ skills:
       {activeCategory === 'cursor' && (
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-md space-y-6">
           <div className="border-b border-slate-200 dark:border-slate-800 pb-4">
-            <span className="px-3 py-1 rounded-full bg-cyan-100 dark:bg-cyan-950 text-cyan-700 dark:text-cyan-300 text-xs font-extrabold">
+            <span className="px-3 py-1 rounded-full bg-cyan-100 dark:bg-cyan-950 text-accent text-xs font-extrabold">
               {t.t3Badge}
             </span>
             <h2 className="text-2xl font-black text-slate-900 dark:text-white mt-2 flex items-center gap-2">
               <Terminal className="w-6 h-6 text-cyan-500" />
               {t.t3Title}
             </h2>
-            <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+            <p className="text-sm text-muted mt-2 leading-relaxed">
               {t.t3Desc}
             </p>
           </div>
@@ -943,11 +943,11 @@ skills:
             <h3 className="text-base font-black text-slate-900 dark:text-white">
               {t.t3Step}
             </h3>
-            <div className="bg-slate-950 p-5 rounded-2xl font-mono text-xs text-slate-200 border border-slate-800 relative">
+            <div className="surface-tint bg-slate-950 p-5 rounded-2xl font-mono text-xs text-slate-200 border border-slate-800 relative">
               <button
                 aria-label={t.copyLabel}
                 onClick={() => handleCopy(`# [Rule: No Superfluous Dependencies]\n1. Never install external libraries for date/string formatting.\n2. Ensure PEP 8 for Python & strict TypeScript types.\n3. Include Retry with exponential backoff on DB deadlock.`, 'code_cursorrules')}
-                className="absolute top-4 right-4 px-3.5 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs transition-all flex items-center gap-1.5"
+                className="absolute top-4 right-4 px-3.5 py-2 rounded-xl bg-accent hover:bg-cyan-500 text-white font-bold text-xs transition-all flex items-center gap-1.5"
               >
                 {copiedId === 'code_cursorrules' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                 {t.copyCursor}
@@ -974,7 +974,7 @@ skills:
               <Zap className="w-6 h-6 text-emerald-500" />
               {t.t4Title}
             </h2>
-            <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+            <p className="text-sm text-muted mt-2 leading-relaxed">
               {t.t4Desc}
             </p>
           </div>
@@ -983,11 +983,11 @@ skills:
             <h3 className="text-base font-black text-slate-900 dark:text-white">
               {t.t4Step}
             </h3>
-            <div className="bg-slate-950 p-5 rounded-2xl font-mono text-xs text-slate-200 border border-slate-800 relative">
+            <div className="surface-tint bg-slate-950 p-5 rounded-2xl font-mono text-xs text-slate-200 border border-slate-800 relative">
               <button
                 aria-label={t.copyLabel}
                 onClick={() => handleCopy(`from autogen_agentchat.agents import AssistantAgent\nfrom autogen_agentchat.teams import SelectorGroupChat\n\nplanner = AssistantAgent("planner", model_client=model_client, description="오케스트레이터 기획 에이전트")\ncoder = AssistantAgent("coder", model_client=model_client, description="코드 구현 서브 에이전트")\nreviewer = AssistantAgent("reviewer", model_client=model_client, description="보안 및 품질 검사 서브 에이전트")\n\nteam = SelectorGroupChat([planner, coder, reviewer], model_client=model_client)`, 'code_autogen')}
-                className="absolute top-4 right-4 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-all flex items-center gap-1.5"
+                className="absolute top-4 right-4 px-3.5 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-500 text-white font-bold text-xs transition-all flex items-center gap-1.5"
               >
                 {copiedId === 'code_autogen' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                 {t.copyPython}
@@ -1018,7 +1018,7 @@ team = SelectorGroupChat([planner, coder, reviewer], model_client=model_client)`
               <Layers className="w-6 h-6 text-blue-500" />
               {t.cmpTitle}
             </h2>
-            <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+            <p className="text-sm text-muted mt-2 leading-relaxed">
               {t.cmpDesc}
             </p>
           </div>
@@ -1026,7 +1026,7 @@ team = SelectorGroupChat([planner, coder, reviewer], model_client=model_client)`
           <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
             <table className="w-full text-xs text-left">
               <thead>
-                <tr className="bg-gradient-to-r from-indigo-900 to-purple-900 text-white">
+                <tr className="surface-tint bg-gradient-to-r from-indigo-900 to-purple-900 text-white">
                   <th className="p-3.5 font-extrabold">{t.colTool}</th>
                   <th className="p-3.5 font-extrabold">{t.colTeams}</th>
                   <th className="p-3.5 font-extrabold">{t.colSub}</th>
@@ -1038,41 +1038,41 @@ team = SelectorGroupChat([planner, coder, reviewer], model_client=model_client)`
               <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
                 <tr className="bg-indigo-50/50 dark:bg-indigo-950/30">
                   <td className="p-3.5 font-black text-indigo-600 dark:text-indigo-400">🤖 Claude Code CLI</td>
-                  <td className="p-3.5 font-bold text-emerald-600 dark:text-emerald-400">{t.valFullLeader}</td>
-                  <td className="p-3.5 font-bold text-emerald-600 dark:text-emerald-400">{t.valSubagents}</td>
-                  <td className="p-3.5 font-bold text-emerald-600 dark:text-emerald-400">✅ Native MCP & Skills</td>
+                  <td className="p-3.5 font-bold text-success">{t.valFullLeader}</td>
+                  <td className="p-3.5 font-bold text-success">{t.valSubagents}</td>
+                  <td className="p-3.5 font-bold text-success">✅ Native MCP & Skills</td>
                   <td className="p-3.5">{t.valHitl}</td>
                   <td className="p-3.5 font-semibold">{t.valTokenBased}</td>
                 </tr>
                 <tr>
                   <td className="p-3.5 font-black text-purple-600 dark:text-purple-400">🌌 Google Antigravity</td>
-                  <td className="p-3.5 font-bold text-emerald-600 dark:text-emerald-400">{t.valFullDeepmind}</td>
-                  <td className="p-3.5 font-bold text-emerald-600 dark:text-emerald-400">{t.valDirectives}</td>
-                  <td className="p-3.5 font-bold text-emerald-600 dark:text-emerald-400">✅ Agentic Directives & Skill</td>
+                  <td className="p-3.5 font-bold text-success">{t.valFullDeepmind}</td>
+                  <td className="p-3.5 font-bold text-success">{t.valDirectives}</td>
+                  <td className="p-3.5 font-bold text-success">✅ Agentic Directives & Skill</td>
                   <td className="p-3.5">Strict Types & OOM Guard</td>
                   <td className="p-3.5 font-semibold">{t.valFreeGcp}</td>
                 </tr>
                 <tr className="bg-slate-50 dark:bg-slate-950/40">
-                  <td className="p-3.5 font-black text-cyan-600 dark:text-cyan-400">💻 Cursor IDE</td>
-                  <td className="p-3.5 font-bold text-amber-600 dark:text-amber-400">{t.valComposerOnly}</td>
-                  <td className="p-3.5 font-bold text-amber-600 dark:text-amber-400">{t.valNeedsPlugin}</td>
-                  <td className="p-3.5 font-bold text-emerald-600 dark:text-emerald-400">✅ .cursorrules & MCP</td>
+                  <td className="p-3.5 font-black text-accent">💻 Cursor IDE</td>
+                  <td className="p-3.5 font-bold text-warn">{t.valComposerOnly}</td>
+                  <td className="p-3.5 font-bold text-warn">{t.valNeedsPlugin}</td>
+                  <td className="p-3.5 font-bold text-success">✅ .cursorrules & MCP</td>
                   <td className="p-3.5">Linter & Rule Enforcement</td>
                   <td className="p-3.5 font-semibold">{t.valPro20}</td>
                 </tr>
                 <tr>
-                  <td className="p-3.5 font-black text-emerald-600 dark:text-emerald-400">⚙️ AutoGen 0.4</td>
-                  <td className="p-3.5 font-bold text-emerald-600 dark:text-emerald-400">{t.valFullPySdk}</td>
-                  <td className="p-3.5 font-bold text-emerald-600 dark:text-emerald-400">{t.valSelector}</td>
-                  <td className="p-3.5 font-bold text-amber-600 dark:text-amber-400">{t.valPyFuncCall}</td>
+                  <td className="p-3.5 font-black text-success">⚙️ AutoGen 0.4</td>
+                  <td className="p-3.5 font-bold text-success">{t.valFullPySdk}</td>
+                  <td className="p-3.5 font-bold text-success">{t.valSelector}</td>
+                  <td className="p-3.5 font-bold text-warn">{t.valPyFuncCall}</td>
                   <td className="p-3.5">{t.valCustomGuard}</td>
                   <td className="p-3.5 font-semibold">{t.valOssFree}</td>
                 </tr>
                 <tr className="bg-slate-50 dark:bg-slate-950/40">
                   <td className="p-3.5 font-black text-pink-600 dark:text-pink-400">🤖 Devin / Roo Code</td>
-                  <td className="p-3.5 font-bold text-emerald-600 dark:text-emerald-400">{t.valAutonomous}</td>
-                  <td className="p-3.5 font-bold text-emerald-600 dark:text-emerald-400">{t.valSandbox}</td>
-                  <td className="p-3.5 font-bold text-emerald-600 dark:text-emerald-400">{t.valRooMcp}</td>
+                  <td className="p-3.5 font-bold text-success">{t.valAutonomous}</td>
+                  <td className="p-3.5 font-bold text-success">{t.valSandbox}</td>
+                  <td className="p-3.5 font-bold text-success">{t.valRooMcp}</td>
                   <td className="p-3.5">Sandbox Isolation</td>
                   <td className="p-3.5 font-semibold">{t.valAcu}</td>
                 </tr>
@@ -1093,7 +1093,7 @@ team = SelectorGroupChat([planner, coder, reviewer], model_client=model_client)`
               <ShieldCheck className="w-6 h-6 text-rose-500" />
               {t.secTitle}
             </h2>
-            <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+            <p className="text-sm text-muted mt-2 leading-relaxed">
               {t.secDesc}
             </p>
           </div>
@@ -1112,7 +1112,7 @@ team = SelectorGroupChat([planner, coder, reviewer], model_client=model_client)`
 
             <div className="p-5 rounded-2xl bg-amber-50/80 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 space-y-3">
               <h3 className="font-black text-sm text-amber-950 dark:text-amber-200 flex items-center gap-2">
-                <HelpCircle className="w-4 h-4 text-amber-500" /> {t.sec2Title}
+                <HelpCircle className="w-4 h-4 text-warn" /> {t.sec2Title}
               </h3>
               <ul className="text-xs text-amber-900 dark:text-amber-300 space-y-1.5 list-disc list-inside font-medium">
                 <li>{t.sec2a}</li>

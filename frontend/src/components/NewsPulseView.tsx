@@ -630,8 +630,8 @@ export default function NewsPulseView() {
   };
 
   const getImpactColor = (score: number) => {
-    if (score >= 90) return 'text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-900/30';
-    if (score >= 70) return 'text-orange-600 bg-orange-100 dark:text-orange-400 dark:bg-orange-900/30';
+    if (score >= 90) return 'text-danger bg-red-100 dark:text-red-400 dark:bg-red-900/30';
+    if (score >= 70) return 'text-warn bg-orange-100 dark:text-orange-400 dark:bg-orange-900/30';
     return 'text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-900/30';
   };
 
@@ -684,13 +684,13 @@ export default function NewsPulseView() {
             href={`/changelog/${latestUpdate.id}?lang=${language}`}
             className="focus-ring mb-5 flex items-center gap-3 rounded-2xl border border-cyan-200 bg-cyan-50/70 px-4 py-3 text-sm transition hover:bg-cyan-50 dark:border-cyan-500/30 dark:bg-cyan-500/10 dark:hover:bg-cyan-500/15"
           >
-            <span className="shrink-0 rounded-full bg-cyan-600 px-2.5 py-0.5 text-[11px] font-black text-white">
+            <span className="shrink-0 rounded-full bg-accent px-2.5 py-0.5 text-[11px] font-black text-white">
               {g.nav.whatsNew}
             </span>
             <span className="min-w-0 flex-1 truncate font-bold text-slate-800 dark:text-slate-100">
               {latestUpdate.title}
             </span>
-            <span className="shrink-0 text-xs font-bold text-cyan-700 dark:text-cyan-300">
+            <span className="shrink-0 text-xs font-bold text-accent">
               {g.nav.viewUpdate} →
             </span>
           </a>
@@ -756,7 +756,7 @@ export default function NewsPulseView() {
           <p className="text-xs mt-1 text-gray-400">Fetching latest RSS feeds & background cache.</p>
         </div>
       ) : error ? (
-        <div className="bg-red-50 text-red-600 p-4 rounded-xl text-center border border-red-200">
+        <div className="bg-red-50 dark:bg-red-950/40 text-danger p-4 rounded-xl text-center border border-red-200 dark:border-red-900">
           <p>{error}</p>
         </div>
       ) : filteredArticles.length === 0 ? (

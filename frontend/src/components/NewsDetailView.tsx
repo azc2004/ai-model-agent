@@ -269,8 +269,8 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
         }
         const codeText = codeLines.join('\n');
         elements.push(
-          <div key={nextKey()} className="my-6 rounded-2xl bg-slate-950 border border-slate-800 shadow-2xl overflow-hidden">
-            <div className="flex items-center justify-between px-4 py-2.5 bg-slate-900 border-b border-slate-800 text-xs font-mono text-slate-400">
+          <div key={nextKey()} className="surface-tint my-6 rounded-2xl bg-slate-950 border border-slate-800 shadow-2xl overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-2.5 bg-slate-900 border-b border-slate-800 text-xs font-mono text-muted">
               <div className="flex items-center gap-2">
                 <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
                 <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
@@ -287,7 +287,7 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
                 📋 코드 복사
               </button>
             </div>
-            <pre className="p-4 overflow-x-auto text-xs sm:text-sm font-mono text-cyan-200 leading-relaxed bg-slate-950">
+            <pre className="surface-tint p-4 overflow-x-auto text-xs sm:text-sm font-mono text-cyan-200 leading-relaxed bg-slate-950">
               <code>{codeText}</code>
             </pre>
           </div>
@@ -307,7 +307,7 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
           const headers = parseRow(tableLines[0]);
           const contentRows = tableLines.slice(2).map(parseRow);
           elements.push(
-            <div key={nextKey()} className="my-4 sm:my-6 overflow-x-auto rounded-xl sm:rounded-2xl border border-slate-700/80 shadow-xl bg-slate-950 -mx-1 sm:mx-0">
+            <div key={nextKey()} className="surface-tint my-4 sm:my-6 overflow-x-auto rounded-xl sm:rounded-2xl border border-slate-700/80 shadow-xl bg-slate-950 -mx-1 sm:mx-0">
               <table className="w-full text-xs sm:text-sm text-left border-collapse">
                 <thead className="bg-slate-900 text-cyan-300 border-b border-slate-800">
                   <tr>
@@ -364,7 +364,7 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
         const inner = trimmed.slice(6, trimmed.length - 1);
         const [flowType, ...steps] = inner.split('|');
         const colorMap: Record<string, string[]> = {
-          sota:  ['bg-violet-600','bg-indigo-600','bg-blue-600','bg-cyan-600','bg-emerald-600'],
+          sota:  ['bg-violet-700','bg-indigo-600','bg-blue-600','bg-accent','bg-emerald-700'],
           agent: ['bg-amber-500','bg-orange-500','bg-rose-500','bg-purple-600','bg-green-600'],
           infra: ['bg-slate-600','bg-blue-700','bg-teal-600','bg-cyan-700','bg-emerald-700','bg-green-600'],
         };
@@ -373,10 +373,10 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
         const gridColsMap: Record<number, string> = { 1: 'grid-cols-1', 2: 'grid-cols-1 sm:grid-cols-2', 3: 'grid-cols-1 sm:grid-cols-3', 4: 'grid-cols-2 sm:grid-cols-4' };
         const gridCols = gridColsMap[steps.length] ?? 'grid-cols-2 sm:grid-cols-5';
         elements.push(
-          <div key={nextKey()} className="my-8 p-5 sm:p-6 rounded-3xl bg-slate-950 border border-slate-800 shadow-2xl">
+          <div key={nextKey()} className="surface-tint my-8 p-5 sm:p-6 rounded-3xl bg-slate-950 border border-slate-800 shadow-2xl">
             <div className="flex items-center gap-2 mb-5 pb-3 border-b border-slate-800">
               <div className="w-3 h-3 rounded-full bg-red-500" /><div className="w-3 h-3 rounded-full bg-yellow-500" /><div className="w-3 h-3 rounded-full bg-green-500" />
-              <span className="text-xs font-mono text-slate-400 ml-2">architecture-pipeline.flow</span>
+              <span className="text-xs font-mono text-muted ml-2">architecture-pipeline.flow</span>
             </div>
             <div className={`grid ${gridCols} gap-3 items-center`}>
               {steps.map((step, si) => (
@@ -385,7 +385,7 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
                     <div className="text-[10px] opacity-75 mb-1 tracking-wider uppercase">STEP 0{si + 1}</div>
                     {formatTranslatedText(step)}
                   </div>
-                  {si < steps.length - 1 && <div className="hidden sm:block absolute right-[-14px] top-1/2 -translate-y-1/2 z-10 text-slate-400 font-bold text-base">›</div>}
+                  {si < steps.length - 1 && <div className="hidden sm:block absolute right-[-14px] top-1/2 -translate-y-1/2 z-10 text-muted font-bold text-base">›</div>}
                 </div>
               ))}
             </div>
@@ -404,7 +404,7 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
         const barColors = ['bg-violet-500','bg-blue-500','bg-cyan-500','bg-emerald-500','bg-amber-500'];
         elements.push(
           <div key={nextKey()} className="my-6 p-5 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-xl">
-            <div className="text-[11px] font-mono text-slate-400 uppercase mb-4">{chartType} performance chart</div>
+            <div className="text-[11px] font-mono text-muted uppercase mb-4">{chartType} performance chart</div>
             <div className="space-y-3">
               {dataPairs.map((d, di) => (
                 <div key={di} className="flex items-center gap-3">
@@ -432,7 +432,7 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
         const rows: string[][] = [];
         for (let ri = colCount; ri < cells.length; ri += colCount) { rows.push(cells.slice(ri, ri + colCount)); }
         elements.push(
-          <div key={nextKey()} className="my-6 overflow-x-auto rounded-2xl border border-slate-700/80 shadow-2xl bg-slate-950">
+          <div key={nextKey()} className="surface-tint my-6 overflow-x-auto rounded-2xl border border-slate-700/80 shadow-2xl bg-slate-950">
             <table className="w-full text-xs sm:text-sm text-left border-collapse">
               <thead className="bg-slate-900 text-cyan-300 border-b border-slate-800">
                 <tr>
@@ -616,7 +616,7 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
                   className={`flex items-start gap-3 leading-relaxed pb-3 border-b border-slate-100 dark:border-slate-800/60 last:border-b-0 last:pb-0 ${
                     isHeaderLine
                       ? "text-sm sm:text-base font-medium text-slate-800 dark:text-slate-100"
-                      : "text-xs sm:text-sm font-normal text-slate-600 dark:text-slate-300 pl-4"
+                      : "text-xs sm:text-sm font-normal text-muted pl-4"
                   }`}
                 >
                   <span
@@ -677,7 +677,7 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
                   alert("링크가 클립보드에 복사되었습니다!");
                 }
               }}
-              className="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-blue-600 transition-colors"
+              className="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-muted hover:text-blue-600 transition-colors"
               title="공유하기"
             >
               <Share2 className="w-4 h-4" />
@@ -690,7 +690,7 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
           
           {/* Header Image */}
           {!imgError && article.image_url ? (
-            <div className="w-full h-48 sm:h-96 rounded-xl sm:rounded-2xl overflow-hidden shadow-md border border-slate-100 dark:border-slate-800 relative bg-slate-950">
+            <div className="surface-tint w-full h-48 sm:h-96 rounded-xl sm:rounded-2xl overflow-hidden shadow-md border border-slate-100 dark:border-slate-800 relative bg-slate-950">
               <img 
                 src={article.image_url} 
                 alt={article.title} 
@@ -725,26 +725,26 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
           {/* 🌟 벤치마킹 개편: Quick Specs & Key Metrics Bar (HuggingFace & Pragmatic Engineer 스타일) */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200/80 dark:border-slate-800/80 text-xs shadow-inner">
             <div className="flex flex-col gap-0.5 p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Source</span>
+              <span className="text-[10px] font-bold text-muted uppercase tracking-wider">Source</span>
               <span className="font-black text-slate-800 dark:text-slate-200 truncate flex items-center gap-1">
                 🏢 {article.source_name}
               </span>
             </div>
             <div className="flex flex-col gap-0.5 p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Read Time</span>
+              <span className="text-[10px] font-bold text-muted uppercase tracking-wider">Read Time</span>
               <span className="font-black text-blue-600 dark:text-blue-400 flex items-center gap-1">
                 ⏱️ 약 3분 읽기
               </span>
             </div>
             <div className="flex flex-col gap-0.5 p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Impact Score</span>
-              <span className="font-black text-cyan-600 dark:text-cyan-400 flex items-center gap-1">
+              <span className="text-[10px] font-bold text-muted uppercase tracking-wider">Impact Score</span>
+              <span className="font-black text-accent flex items-center gap-1">
                 ⚡ {article.impact_score || 95} / 100
               </span>
             </div>
             <div className="flex flex-col gap-0.5 p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Verification</span>
-              <span className="font-black text-emerald-600 dark:text-emerald-400 flex items-center gap-1 truncate">
+              <span className="text-[10px] font-bold text-muted uppercase tracking-wider">Verification</span>
+              <span className="font-black text-success flex items-center gap-1 truncate">
                 ✅ Multi-Validated
               </span>
             </div>
@@ -752,7 +752,7 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
 
           {/* Title & Metadata */}
           <div className="space-y-4">
-            <div className="flex items-center gap-4 text-xs font-semibold text-slate-500 dark:text-slate-400">
+            <div className="flex items-center gap-4 text-xs font-semibold text-muted">
               <span className="flex items-center gap-1"><Building2 className="w-3.5 h-3.5" /> {article.source_name}</span>
               <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" /> 최신 피드 리포트</span>
             </div>

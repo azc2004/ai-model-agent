@@ -25,7 +25,7 @@ const RANGE_OPTIONS = [7, 14, 30] as const;
 function KpiCard({ label, value }: { label: string; value: string | number }) {
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <div className="text-xs font-bold text-slate-500">{label}</div>
+      <div className="text-xs font-bold text-muted">{label}</div>
       <div className="mt-1 text-2xl font-black text-slate-900 numeric">{value}</div>
     </div>
   );
@@ -36,7 +36,7 @@ function RankedList({ title, rows, emptyLabel = '데이터 없음' }: { title: s
     <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <h3 className="mb-3 text-sm font-black text-slate-900">{title}</h3>
       {rows.length === 0 ? (
-        <p className="text-xs text-slate-400">{emptyLabel}</p>
+        <p className="text-xs text-muted">{emptyLabel}</p>
       ) : (
         <ul className="space-y-2">
           {rows.map((row) => (
@@ -79,7 +79,7 @@ export const AdminApp: React.FC = () => {
         <header className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="text-xl font-black">📊 이용현황 & 고객행동 모니터링</h1>
-            <p className="text-xs text-slate-500">LLM COMPASS 내부 어드민 · 개인정보 없이 세션 단위로만 집계</p>
+            <p className="text-xs text-muted">LLM COMPASS 내부 어드민 · 개인정보 없이 세션 단위로만 집계</p>
           </div>
           <div className="flex gap-1.5 rounded-xl border border-slate-200 bg-white p-1">
             {RANGE_OPTIONS.map((option) => (
@@ -87,7 +87,7 @@ export const AdminApp: React.FC = () => {
                 key={option}
                 onClick={() => setDays(option)}
                 className={`touch-target focus-ring rounded-lg px-3 py-1.5 text-xs font-black transition ${
-                  days === option ? 'bg-indigo-600 text-white' : 'text-slate-600 hover:bg-slate-100'
+                  days === option ? 'bg-indigo-600 text-white' : 'text-muted hover:bg-slate-100'
                 }`}
               >
                 최근 {option}일
@@ -96,8 +96,8 @@ export const AdminApp: React.FC = () => {
           </div>
         </header>
 
-        {loading && <p className="text-sm text-slate-500">불러오는 중…</p>}
-        {error && <p className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-600">{error}</p>}
+        {loading && <p className="text-sm text-muted">불러오는 중…</p>}
+        {error && <p className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-danger">{error}</p>}
 
         {data && (
           <>
@@ -145,17 +145,17 @@ export const AdminApp: React.FC = () => {
 
               <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <h3 className="mb-1 text-sm font-black text-slate-900">🤖 크롤러 방문</h3>
-                <p className="mb-3 text-[11px] text-slate-500">
+                <p className="mb-3 text-[11px] text-muted">
                   AI 크롤러가 실제로 콘텐츠를 읽어 가는지 본다. User-Agent 는 위조 가능하므로 추세 지표로만 쓴다.
                 </p>
                 {(data.crawlers ?? []).length === 0 ? (
-                  <p className="text-xs text-slate-500">아직 방문 기록이 없다. 색인에는 보통 며칠이 걸린다.</p>
+                  <p className="text-xs text-muted">아직 방문 기록이 없다. 색인에는 보통 며칠이 걸린다.</p>
                 ) : (
                   <ul className="space-y-2">
                     {(data.crawlers ?? []).map((row) => (
                       <li key={row.label} className="flex items-center justify-between gap-3 text-xs">
                         <span className="font-semibold text-slate-700">{row.label}</span>
-                        <span className="flex items-center gap-2 text-slate-500">
+                        <span className="flex items-center gap-2 text-muted">
                           <span className="tabular-nums font-bold text-slate-900">{row.count.toLocaleString()}</span>
                           <span className="text-[10px]">{(row.last_seen || '').slice(0, 16)}</span>
                         </span>

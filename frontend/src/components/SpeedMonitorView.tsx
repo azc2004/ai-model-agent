@@ -23,24 +23,24 @@ interface ProviderSpeedData {
 
 const BENCHMARK_PROVIDERS: Record<string, ProviderSpeedData[]> = {
   "llama-3.3-70b": [
-    { provider: "Cerebras", hardware: "CS-3 Wafer-Scale Engine", ttft_ms: 120, tps: 2100, price_per_1m: 0.60, uptime_percent: 99.9, color: "#ea580c" },
-    { provider: "Groq", hardware: "LPU Inference Engine", ttft_ms: 180, tps: 1250, price_per_1m: 0.59, uptime_percent: 99.8, color: "#d97706" },
-    { provider: "SambaNova", hardware: "SN40L Reconfigurable Dataflow", ttft_ms: 210, tps: 980, price_per_1m: 0.60, uptime_percent: 99.7, color: "#059669" },
-    { provider: "Together AI", hardware: "NVIDIA H100 80GB Cluster", ttft_ms: 320, tps: 340, price_per_1m: 0.88, uptime_percent: 99.9, color: "#0284c7" },
-    { provider: "Fireworks AI", hardware: "NVIDIA H100 SXM5", ttft_ms: 310, tps: 310, price_per_1m: 0.90, uptime_percent: 99.9, color: "#7c3aed" },
-    { provider: "DeepInfra", hardware: "NVIDIA A100 80GB", ttft_ms: 450, tps: 180, price_per_1m: 0.70, uptime_percent: 99.5, color: "#db2777" }
+    { provider: "Cerebras", hardware: "CS-3 Wafer-Scale Engine", ttft_ms: 120, tps: 2100, price_per_1m: 0.60, uptime_percent: 99.9, color: "var(--chart-1)" },
+    { provider: "Groq", hardware: "LPU Inference Engine", ttft_ms: 180, tps: 1250, price_per_1m: 0.59, uptime_percent: 99.8, color: "var(--chart-2)" },
+    { provider: "SambaNova", hardware: "SN40L Reconfigurable Dataflow", ttft_ms: 210, tps: 980, price_per_1m: 0.60, uptime_percent: 99.7, color: "var(--chart-3)" },
+    { provider: "Together AI", hardware: "NVIDIA H100 80GB Cluster", ttft_ms: 320, tps: 340, price_per_1m: 0.88, uptime_percent: 99.9, color: "var(--chart-4)" },
+    { provider: "Fireworks AI", hardware: "NVIDIA H100 SXM5", ttft_ms: 310, tps: 310, price_per_1m: 0.90, uptime_percent: 99.9, color: "var(--chart-5)" },
+    { provider: "DeepInfra", hardware: "NVIDIA A100 80GB", ttft_ms: 450, tps: 180, price_per_1m: 0.70, uptime_percent: 99.5, color: "var(--chart-6)" }
   ],
   "deepseek-r1": [
-    { provider: "Groq", hardware: "LPU Inference Engine", ttft_ms: 280, tps: 620, price_per_1m: 0.75, uptime_percent: 99.8, color: "#d97706" },
-    { provider: "Together AI", hardware: "NVIDIA H100 SXM5", ttft_ms: 450, tps: 240, price_per_1m: 0.90, uptime_percent: 99.9, color: "#0284c7" },
-    { provider: "DeepInfra", hardware: "NVIDIA H100 80GB", ttft_ms: 510, tps: 190, price_per_1m: 0.80, uptime_percent: 99.6, color: "#db2777" },
+    { provider: "Groq", hardware: "LPU Inference Engine", ttft_ms: 280, tps: 620, price_per_1m: 0.75, uptime_percent: 99.8, color: "var(--chart-2)" },
+    { provider: "Together AI", hardware: "NVIDIA H100 SXM5", ttft_ms: 450, tps: 240, price_per_1m: 0.90, uptime_percent: 99.9, color: "var(--chart-4)" },
+    { provider: "DeepInfra", hardware: "NVIDIA H100 80GB", ttft_ms: 510, tps: 190, price_per_1m: 0.80, uptime_percent: 99.6, color: "var(--chart-6)" },
     { provider: "DeepSeek Official", hardware: "H800 Hybrid Cluster", ttft_ms: 850, tps: 110, price_per_1m: 0.55, uptime_percent: 99.1, color: "#2563eb" }
   ],
   "gpt-4o-mini": [
-    { provider: "OpenAI Official", hardware: "Custom Azure Accelerator", ttft_ms: 220, tps: 140, price_per_1m: 0.15, uptime_percent: 99.95, color: "#059669" }
+    { provider: "OpenAI Official", hardware: "Custom Azure Accelerator", ttft_ms: 220, tps: 140, price_per_1m: 0.15, uptime_percent: 99.95, color: "var(--chart-3)" }
   ],
   "claude-3-5-sonnet": [
-    { provider: "Anthropic Official", hardware: "AWS Trainium2 / TPU Cluster", ttft_ms: 340, tps: 85, price_per_1m: 3.00, uptime_percent: 99.9, color: "#d97706" }
+    { provider: "Anthropic Official", hardware: "AWS Trainium2 / TPU Cluster", ttft_ms: 340, tps: 85, price_per_1m: 3.00, uptime_percent: 99.9, color: "var(--chart-2)" }
   ]
 };
 
@@ -65,7 +65,7 @@ export const SpeedMonitorView: React.FC = () => {
         <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
           {t.speed.subtitle}
         </h1>
-        <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base font-semibold max-w-3xl mx-auto leading-relaxed">
+        <p className="text-muted text-sm sm:text-base font-semibold max-w-3xl mx-auto leading-relaxed">
           {t.speed.description}
         </p>
       </div>
@@ -101,8 +101,8 @@ export const SpeedMonitorView: React.FC = () => {
             onClick={() => setMetricMode("tps")}
             className={`px-4 py-1.5 rounded-lg text-xs font-black transition ${
               metricMode === "tps"
-                ? "bg-emerald-600 text-white shadow-sm"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-900"
+                ? "bg-emerald-700 text-white shadow-sm"
+                : "text-muted hover:text-slate-900"
             }`}
           >
             {t.speed.tabTps}
@@ -112,7 +112,7 @@ export const SpeedMonitorView: React.FC = () => {
             className={`px-4 py-1.5 rounded-lg text-xs font-black transition ${
               metricMode === "ttft"
                 ? "bg-indigo-600 text-white shadow-sm"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-900"
+                : "text-muted hover:text-slate-900"
             }`}
           >
             {t.speed.tabTtft}
@@ -128,7 +128,7 @@ export const SpeedMonitorView: React.FC = () => {
             <span>
               {t.speed.chartByProvider} {metricMode === "tps" ? t.speed.metricTps : t.speed.metricTtft}
             </span>
-            <span className="text-xs font-bold text-slate-500">{t.speed.refreshed}</span>
+            <span className="text-xs font-bold text-muted">{t.speed.refreshed}</span>
           </h3>
 
           <div className="h-72 w-full pt-4">
@@ -177,15 +177,15 @@ export const SpeedMonitorView: React.FC = () => {
                       {p.provider}
                       {idx === 0 && <span className="text-[10px] bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300 px-1.5 py-0.5 rounded font-black border border-amber-300">FASTEST</span>}
                     </div>
-                    <div className="text-[11px] text-slate-500 font-bold">{p.hardware}</div>
+                    <div className="text-[11px] text-muted font-bold">{p.hardware}</div>
                   </div>
                 </div>
 
                 <div className="text-right">
                   <div className="text-sm font-black text-indigo-600 dark:text-cyan-400 font-mono">
-                    {p.tps} <span className="text-[10px] text-slate-500 font-bold">TPS</span>
+                    {p.tps} <span className="text-[10px] text-muted font-bold">TPS</span>
                   </div>
-                  <div className="text-xs text-slate-500 font-bold font-mono">
+                  <div className="text-xs text-muted font-bold font-mono">
                     TTFT {p.ttft_ms}ms
                   </div>
                 </div>

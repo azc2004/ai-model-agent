@@ -110,7 +110,7 @@ export const TokenizerSandboxView: React.FC<TokenizerSandboxViewProps> = ({
         <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
           {t.sandbox.subtitle}
         </h1>
-        <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base font-semibold max-w-3xl mx-auto leading-relaxed">
+        <p className="text-muted text-sm sm:text-base font-semibold max-w-3xl mx-auto leading-relaxed">
           {t.sandbox.description}
         </p>
       </div>
@@ -123,7 +123,7 @@ export const TokenizerSandboxView: React.FC<TokenizerSandboxViewProps> = ({
             <span className="text-sm font-black text-slate-900 dark:text-slate-100 flex items-center gap-2">
               {t.sandbox.promptInput}
             </span>
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400">
+            <div className="flex items-center gap-2 text-xs font-bold text-muted">
               <span>{tokenStats.totalChars.toLocaleString()} {t.sandbox.chars}</span>
               <span>•</span>
               <span className="text-indigo-600 dark:text-cyan-400 font-extrabold">{t.sandbox.approx} {tokenStats.inputTokens.toLocaleString()} {t.sandbox.approxInputTokens}</span>
@@ -140,7 +140,7 @@ export const TokenizerSandboxView: React.FC<TokenizerSandboxViewProps> = ({
 
           {/* Sample Prompts */}
           <div className="space-y-2">
-            <span className="text-xs text-slate-600 dark:text-slate-400 font-bold">{t.sandbox.loadSample}</span>
+            <span className="text-xs text-muted font-bold">{t.sandbox.loadSample}</span>
             <div className="flex flex-wrap gap-2">
               {SAMPLE_PROMPTS.map((sp, idx) => (
                 <button
@@ -178,7 +178,7 @@ export const TokenizerSandboxView: React.FC<TokenizerSandboxViewProps> = ({
                 onChange={(e) => setOutputTokenEstimate(Number(e.target.value))}
                 className="w-full accent-indigo-600 dark:accent-cyan-500 bg-slate-200 dark:bg-slate-800 rounded-lg cursor-pointer"
               />
-              <div className="flex justify-between text-[10px] text-slate-500 font-bold">
+              <div className="flex justify-between text-[10px] text-muted font-bold">
                 <span>{t.sandbox.outShort}</span>
                 <span>{t.sandbox.outTypical}</span>
                 <span>{t.sandbox.outLong}</span>
@@ -212,11 +212,11 @@ export const TokenizerSandboxView: React.FC<TokenizerSandboxViewProps> = ({
               <span>{t.sandbox.totalTokensPerCall}</span>
               <span className="font-extrabold text-indigo-600 dark:text-cyan-300">{tokenStats.totalTokensPerCall.toLocaleString()} tokens</span>
             </div>
-            <div className="flex justify-between text-slate-600 dark:text-slate-400 font-semibold">
+            <div className="flex justify-between text-muted font-semibold">
               <span>{t.sandbox.inputLabel}</span>
               <span>{tokenStats.inputTokens.toLocaleString()} tokens</span>
             </div>
-            <div className="flex justify-between text-slate-600 dark:text-slate-400 font-semibold">
+            <div className="flex justify-between text-muted font-semibold">
               <span>{t.sandbox.outputLabel}</span>
               <span>{tokenStats.outputTokens.toLocaleString()} tokens</span>
             </div>
@@ -237,7 +237,7 @@ export const TokenizerSandboxView: React.FC<TokenizerSandboxViewProps> = ({
             <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
               {t.sandbox.tableTitle}
             </h3>
-            <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold mt-0.5">
+            <p className="text-xs text-muted font-semibold mt-0.5">
               {t.sandbox.tableDesc}
             </p>
           </div>
@@ -290,7 +290,7 @@ export const TokenizerSandboxView: React.FC<TokenizerSandboxViewProps> = ({
                     <td className="p-3.5 font-bold">
                       <div className="flex flex-col">
                         <span className="text-slate-900 dark:text-white font-black">{m.name}</span>
-                        <span className="text-[11px] text-slate-500 font-semibold">{m.provider_name}</span>
+                        <span className="text-[11px] text-muted font-semibold">{m.provider_name}</span>
                       </div>
                     </td>
                     <td className="p-3.5">
@@ -298,7 +298,7 @@ export const TokenizerSandboxView: React.FC<TokenizerSandboxViewProps> = ({
                         <span className="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-300 text-[10px] font-black">
                           {m.tier}
                         </span>
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-black ${m.is_open_weight ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/30' : 'bg-purple-100 dark:bg-purple-500/20 text-purple-800 dark:text-purple-300 border border-purple-300 dark:border-purple-500/30'}`}>
+                        <span className={`px-2 py-0.5 rounded text-[10px] font-black ${m.is_open_weight ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/30' : 'bg-purple-100 dark:bg-purple-700/20 text-purple-800 dark:text-purple-300 border border-purple-300 dark:border-purple-500/30'}`}>
                           {m.is_open_weight ? t.sandbox.openWeight : t.sandbox.proprietary}
                         </span>
                       </div>
@@ -312,7 +312,7 @@ export const TokenizerSandboxView: React.FC<TokenizerSandboxViewProps> = ({
                     <td className="p-3.5 text-right font-mono text-indigo-600 dark:text-cyan-400 font-black">
                       ${costs.singleTotalCost < 0.0001 ? '<$0.0001' : costs.singleTotalCost.toFixed(5)}
                     </td>
-                    <td className="p-3.5 text-right font-mono text-emerald-600 dark:text-emerald-400 font-black">
+                    <td className="p-3.5 text-right font-mono text-success font-black">
                       ${costs.batchTotalCost < 0.01 ? '<$0.01' : costs.batchTotalCost.toFixed(2)}
                     </td>
                     <td className="p-3.5 text-center">

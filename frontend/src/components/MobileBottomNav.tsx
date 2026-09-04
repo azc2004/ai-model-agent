@@ -28,7 +28,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ activeTab, onN
             href={`?tab=${item.id}`}
             aria-current={active ? 'page' : undefined}
             onClick={(event) => { event.preventDefault(); onNavigate(item.id); }}
-            className={`touch-target focus-ring relative flex flex-col items-center justify-center gap-1 px-1 py-2 text-[11px] font-bold ${active ? 'text-indigo-600 dark:text-cyan-400' : 'text-slate-500 dark:text-slate-400'}`}
+            className={`touch-target focus-ring relative flex flex-col items-center justify-center gap-1 px-1 py-2 text-[11px] font-bold ${active ? 'text-indigo-600 dark:text-cyan-400' : 'text-muted'}`}
           >
             <Icon className="h-5 w-5" />
             <span className="w-full truncate px-0.5 text-center leading-tight">{label}</span>

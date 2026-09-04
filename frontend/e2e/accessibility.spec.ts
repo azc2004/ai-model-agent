@@ -9,17 +9,20 @@ const TABS = [
   'leaderboard', 'gpus', 'news', 'sandbox', 'speed',
 ];
 
-for (const tab of TABS) {
-  test(`${tab} 탭에 serious/critical 접근성 위반이 없다`, async ({ page }) => {
+// 대비는 테마마다 다르게 깨진다 — 같은 의미역이 흰 배경과 어두운 배경 양쪽에
+// 놓이기 때문이다. 한 테마만 검사하면 절반을 놓친다.
+const THEMES = ['light', 'dark'] as const;
+
+for (const theme of THEMES) for (const tab of TABS) {
+  test(`${theme} · ${tab} 탭에 serious/critical 접근성 위반이 없다`, async ({ page }) => {
     test.setTimeout(180_000);
+    await page.addInitScript((t) => localStorage.setItem('llm_compass_theme', t), theme);
     await stubCatalog(page);
     await page.goto(`/?tab=${tab}`);
     await page.locator('main, #root > div').first().waitFor();
     await page.waitForLoadState('networkidle');
 
-    // ponytail: color-contrast 제외 — 팔레트 전반의 대비 미달(예: text-slate-400 on
-    // white = 2.63:1)은 별도 과제다. 팔레트를 고치면 이 줄을 지운다.
-    const results = await new AxeBuilder({ page }).disableRules(['color-contrast']).analyze();
+    const results = await new AxeBuilder({ page }).analyze();
     const blocking = results.violations.filter((v) => ['serious', 'critical'].includes(v.impact ?? ''));
     expect(blocking.map((v) => `${v.id}(${v.impact}) ${v.nodes.map((n) => n.target).join(', ')}`)).toEqual([]);
   });

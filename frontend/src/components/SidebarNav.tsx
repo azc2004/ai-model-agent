@@ -87,7 +87,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
         <button
           onClick={() => setMobileOpen(false)}
           aria-label="메뉴 닫기"
-          className="md:hidden p-1.5 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+          className="md:hidden p-1.5 rounded-xl text-muted hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
         >
           <X className="w-5 h-5" />
         </button>
@@ -98,7 +98,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
         {NAV_GROUPS.map((group) => (
           <div key={group.id} className="space-y-1">
             {!isCollapsed && (
-              <h3 className="px-3 text-[10px] font-extrabold text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+              <h3 className="px-3 text-[10px] font-extrabold text-muted uppercase tracking-widest mb-2 flex items-center gap-1.5">
                 <span>{t.nav[group.labelKey]}</span>
               </h3>
             )}
@@ -116,7 +116,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
                     className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 relative group ${
                       isActive
                         ? 'bg-indigo-50 dark:bg-cyan-500/20 text-indigo-600 dark:text-cyan-300 border border-indigo-200 dark:border-cyan-500/40 shadow-sm font-black'
-                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/80 dark:hover:bg-slate-900/60 border border-transparent'
+                        : 'text-muted hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/80 dark:hover:bg-slate-900/60 border border-transparent'
                     } ${isCollapsed ? 'justify-center px-0' : ''}`}
                   >
                     {/* Active Left Indicator Bar */}
@@ -124,7 +124,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
                       <span className="absolute left-0 top-2 bottom-2 w-1 bg-indigo-600 dark:bg-cyan-400 rounded-r-full shadow-sm" />
                     )}
 
-                    <span className={`shrink-0 transition-transform group-hover:scale-110 ${isActive ? 'text-indigo-600 dark:text-cyan-400' : 'text-slate-500 dark:text-slate-400'}`}>
+                    <span className={`shrink-0 transition-transform group-hover:scale-110 ${isActive ? 'text-indigo-600 dark:text-cyan-400' : 'text-muted'}`}>
                       <Icon className="w-4 h-4" />
                     </span>
                     {!isCollapsed && (
@@ -156,7 +156,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
       <div className="hidden md:block p-3 border-t border-slate-200/80 dark:border-white/10">
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="w-full flex items-center justify-center gap-2 p-2 rounded-xl text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-900/80 border border-transparent hover:border-slate-200 dark:hover:border-slate-800 transition-all font-bold"
+          className="w-full flex items-center justify-center gap-2 p-2 rounded-xl text-xs text-muted hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-900/80 border border-transparent hover:border-slate-200 dark:hover:border-slate-800 transition-all font-bold"
         >
           {isCollapsed ? (
             <ChevronRight className="w-4 h-4 text-indigo-600 dark:text-cyan-400" />

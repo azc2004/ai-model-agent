@@ -67,7 +67,7 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({
           <button
             onClick={onOpenMobileMenu}
             aria-label="메뉴 열기"
-            className="touch-target focus-ring md:hidden grid place-items-center rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+            className="touch-target focus-ring md:hidden grid place-items-center rounded-xl text-muted hover:bg-slate-100 dark:hover:bg-slate-800 transition"
             title="메뉴 열기"
           >
             <Menu className="w-5 h-5" />
@@ -117,13 +117,13 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({
               {searchQuery ? (
                 <button
                   onClick={() => handleSearchChange('')}
-                  className="p-1 rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition"
+                  className="p-1 rounded-full text-muted hover:text-slate-700 dark:hover:text-slate-200 transition"
                   title="검색어 지우기"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
               ) : (
-                <div className="hidden sm:flex items-center gap-0.5 bg-slate-200/80 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 rounded px-1.5 py-0.5 text-[9px] font-mono text-slate-600 dark:text-slate-400 font-bold pointer-events-none">
+                <div className="hidden sm:flex items-center gap-0.5 bg-slate-200/80 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 rounded px-1.5 py-0.5 text-[9px] font-mono text-muted font-bold pointer-events-none">
                   <span>⌘</span>
                   <span>K</span>
                 </div>

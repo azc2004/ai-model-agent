@@ -104,7 +104,7 @@ export const ModelRadarChart: React.FC<ModelRadarChartProps> = ({ models }) => {
         <h3 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
           🕸️ 모델 육각형 다차원 역량 비교 (Multi-Dimensional Radar Chart)
         </h3>
-        <span className="text-xs text-slate-500 font-bold">정규화 100점 만점 기준</span>
+        <span className="text-xs text-muted font-bold">정규화 100점 만점 기준</span>
       </div>
 
       <div className="h-80 w-full pt-2">

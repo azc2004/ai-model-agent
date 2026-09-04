@@ -276,13 +276,18 @@ export default Sentry.withSentry(
         // 카탈로그가 비면 D1 은 붙었어도 서비스는 제 기능을 못 한다.
         const ok = (row?.models ?? 0) > 100;
         const stale = !Number.isFinite(ageH) || ageH > NEWS_STALE_HOURS;
+        // 시크릿이 사라지면 requireAdmin 이 fail-closed 로 항상 401 을 던져 아무도
+        // 어드민에 못 들어간다. 밖에서는 '오답 401' 과 구분되지 않아 접속을 시도해야만
+        // 알게 된다. 값은 노출하지 않고 설정 여부만 보고한다.
+        const adminConfigured = Boolean(env.ADMIN_PASSWORD);
 
         return new Response(JSON.stringify({
           ok,
-          degraded: ok && stale,
+          degraded: ok && (stale || !adminConfigured),
           checks: {
             models: row?.models ?? 0,
             news: row?.news ?? 0,
+            admin_password_set: adminConfigured,
             news_age_hours: Number.isFinite(ageH) ? Math.round(ageH * 10) / 10 : null,
             news_stale_after_hours: NEWS_STALE_HOURS,
           },

@@ -39,7 +39,7 @@ export function ResponsiveDataTable<T>({ rows, columns, getRowId, caption }: Res
       const id = getRowId(row); const open = expanded.has(id);
       return <article key={id} className="p-4">
         <div className="flex items-center justify-between gap-3"><div className="min-w-0 space-y-0.5">{primary.map((column) => <div key={column.key}>{column.render(row, index)}</div>)}</div><button className="touch-target focus-ring flex shrink-0 items-center justify-end gap-1 whitespace-nowrap text-xs font-bold" aria-expanded={open} onClick={() => toggle(id)}>{open ? '상세 지표 닫기' : '상세 지표 보기'}{open ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}</button></div>
-        {open && <dl className="mt-3 grid grid-cols-2 gap-3 rounded-xl bg-slate-50 p-3 dark:bg-slate-950">{secondary.map((column) => <div key={column.key}><dt className="text-xs text-slate-500">{column.header}</dt><dd className={column.numeric ? 'numeric text-right font-bold' : 'font-bold'}>{column.render(row, index)}</dd></div>)}</dl>}
+        {open && <dl className="mt-3 grid grid-cols-2 gap-3 rounded-xl bg-slate-50 p-3 dark:bg-slate-950">{secondary.map((column) => <div key={column.key}><dt className="text-xs text-muted">{column.header}</dt><dd className={column.numeric ? 'numeric text-right font-bold' : 'font-bold'}>{column.render(row, index)}</dd></div>)}</dl>}
       </article>;
     })}</div>}
   </div>;

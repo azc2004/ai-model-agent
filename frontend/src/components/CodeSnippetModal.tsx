@@ -62,12 +62,12 @@ export const CodeSnippetModal = ({ model, onClose }: CodeSnippetModalProps) => {
                 </span>
                 <h2 className="text-lg font-bold text-white">{model.name}</h2>
               </div>
-              <p className="text-xs text-slate-400 font-mono mt-0.5">Model ID: {model.id}</p>
+              <p className="text-xs text-muted font-mono mt-0.5">Model ID: {model.id}</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors"
+            className="p-2 text-muted hover:text-white rounded-lg hover:bg-slate-800 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -89,7 +89,7 @@ export const CodeSnippetModal = ({ model, onClose }: CodeSnippetModalProps) => {
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-slate-400">Context: <strong className="text-white">{model.context_window.toLocaleString()}</strong> tokens</span>
+            <span className="text-muted">Context: <strong className="text-white">{model.context_window.toLocaleString()}</strong> tokens</span>
           </div>
         </div>
 
@@ -103,7 +103,7 @@ export const CodeSnippetModal = ({ model, onClose }: CodeSnippetModalProps) => {
                 className={`px-3 py-2 rounded-t-xl text-xs font-bold transition-all flex items-center gap-1.5 border-t border-x shrink-0 whitespace-nowrap min-h-[38px] ${
                   activeTab === tab.id
                     ? 'bg-slate-950 text-cyan-400 border-cyan-500/50 border-b-slate-950 shadow-sm'
-                    : 'bg-slate-800/40 text-slate-400 border-transparent hover:text-slate-200 hover:bg-slate-800'
+                    : 'bg-slate-800/40 text-muted border-transparent hover:text-slate-200 hover:bg-slate-800'
                 }`}
               >
                 <span>{tab.icon}</span>

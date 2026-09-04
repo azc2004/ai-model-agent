@@ -224,20 +224,20 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
   // Sort indicator icon
   const SortIcon = ({ col }: { col: SortKey }) => {
-    if (sortKey !== col) return <span className="ml-1 text-slate-600">⇅</span>;
+    if (sortKey !== col) return <span className="ml-1 text-muted">⇅</span>;
     return <span className="ml-1 text-cyan-400">{sortDir === 'asc' ? '↑' : '↓'}</span>;
   };
 
   const getTierBadge = (tier: string) => {
     switch (tier) {
       case 'Frontier':
-        return 'bg-purple-500/20 text-purple-300 border-purple-500/40';
+        return 'bg-purple-700/20 text-purple-700 dark:text-purple-300 border-purple-500/40';
       case 'Mid':
-        return 'bg-blue-500/20 text-blue-300 border-blue-500/40';
+        return 'bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-500/40';
       case 'Small':
-        return 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40';
+        return 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/40';
       case 'Micro':
-        return 'bg-amber-500/20 text-amber-300 border-amber-500/40';
+        return 'bg-amber-500/20 text-amber-800 dark:text-amber-300 border-amber-500/40';
       default:
         return 'bg-slate-500/20 text-slate-300 border-slate-500/40';
     }
@@ -258,7 +258,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
         {/* Bento 1: Top Elo Leader */}
         <div className="bento-card-2026 p-6 relative overflow-hidden group border border-purple-200 dark:border-purple-500/30 bg-gradient-to-br from-indigo-50/90 via-purple-50/50 to-white dark:from-purple-950/40 dark:to-slate-950/80 shadow-sm">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-[10px] font-black tracking-widest uppercase text-purple-700 dark:text-purple-300 bg-purple-100 dark:bg-purple-500/20 border border-purple-200 dark:border-purple-500/30 px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+            <span className="text-[10px] font-black tracking-widest uppercase text-purple-700 dark:text-purple-300 bg-purple-100 dark:bg-purple-700/20 border border-purple-200 dark:border-purple-500/30 px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
               <span>👑 TOP ELO LEADER</span>
             </span>
             <span className="text-xs font-mono font-black text-purple-700 dark:text-amber-400">1360 Elo</span>
@@ -266,7 +266,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           <h3 className="text-lg font-black text-slate-900 dark:text-white mb-1 group-hover:text-indigo-600 dark:group-hover:text-cyan-300 transition-colors">
             DeepSeek R1 / GPT-4o
           </h3>
-          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-semibold">
+          <p className="text-xs text-muted leading-relaxed font-semibold">
             {t.dashboard.kpiEloDesc}
           </p>
         </div>
@@ -277,12 +277,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <span className="text-[10px] font-black tracking-widest uppercase text-cyan-800 dark:text-cyan-300 bg-cyan-100 dark:bg-cyan-500/20 border border-cyan-200 dark:border-cyan-500/30 px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
               <span>⚡ SPEED CHAMPION</span>
             </span>
-            <span className="text-xs font-mono font-black text-cyan-700 dark:text-cyan-300">2,100 TPS</span>
+            <span className="text-xs font-mono font-black text-accent">2,100 TPS</span>
           </div>
           <h3 className="text-lg font-black text-slate-900 dark:text-white mb-1 group-hover:text-cyan-600 transition-colors">
             Cerebras Llama 3.3 70B
           </h3>
-          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-semibold">
+          <p className="text-xs text-muted leading-relaxed font-semibold">
             {t.dashboard.kpiSpeedDesc}
           </p>
         </div>
@@ -298,7 +298,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           <h3 className="text-lg font-black text-slate-900 dark:text-white mb-1 group-hover:text-emerald-600 transition-colors">
             ByteDance Seed / Qwen 2.5
           </h3>
-          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-semibold">
+          <p className="text-xs text-muted leading-relaxed font-semibold">
             {t.dashboard.kpiValueDesc}
           </p>
         </div>
@@ -308,7 +308,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
       <div className="glass-card p-4 sm:p-5 space-y-4">
         <div className="flex items-center justify-between gap-3 md:hidden">
           <button className="touch-target focus-ring flex-1 rounded-xl border border-slate-300 dark:border-slate-700 font-black" onClick={() => setFilterSheetOpen(true)}>필터 열기</button>
-          <span className="text-xs font-bold text-slate-500">{[selectedProvider !== 'all', selectedTier !== 'all', selectedLicense !== 'all', reasoningOnly, webSearchOnly, verifiedOnly, onlyNew].filter(Boolean).length}개 적용</span>
+          <span className="text-xs font-bold text-muted">{[selectedProvider !== 'all', selectedTier !== 'all', selectedLicense !== 'all', reasoningOnly, webSearchOnly, verifiedOnly, onlyNew].filter(Boolean).length}개 적용</span>
         </div>
         {/* Row 1: Search Input & Primary Dropdowns */}
         <div className="flex flex-col lg:flex-row items-center gap-3">
@@ -323,7 +323,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-xl text-sm font-bold placeholder-slate-400 dark:placeholder-slate-500 shadow-sm transition-all"
             />
             <svg
-              className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"
+              className="w-4 h-4 text-muted absolute left-3.5 top-3.5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -383,7 +383,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
         <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           {/* Feature Filter Chips */}
           <div className="w-full sm:w-auto flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden text-xs font-medium">
-            <span className="text-slate-500 dark:text-slate-400 font-extrabold shrink-0 mr-1 whitespace-nowrap">{t.dashboard.specialFilters}</span>
+            <span className="text-muted font-extrabold shrink-0 mr-1 whitespace-nowrap">{t.dashboard.specialFilters}</span>
 
             <button
               onClick={() => setOnlyNew(!onlyNew)}
@@ -423,7 +423,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               onClick={() => setVerifiedOnly(!verifiedOnly)}
               className={`px-3 py-2 rounded-xl border transition-all flex items-center gap-1.5 font-bold shadow-sm text-xs shrink-0 whitespace-nowrap min-h-[38px] ${
                 verifiedOnly
-                  ? 'bg-emerald-600 text-white border-emerald-500 shadow-emerald-500/20 ring-2 ring-emerald-500/30'
+                  ? 'bg-emerald-700 text-white border-emerald-500 shadow-emerald-500/20 ring-2 ring-emerald-500/30'
                   : 'bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-emerald-400'
               }`}
             >
@@ -442,7 +442,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   setSelectedLicense('all');
                   setSearchTerm('');
                 }}
-                className="text-red-500 hover:text-red-600 dark:text-red-400 underline text-xs font-bold ml-1 shrink-0 whitespace-nowrap"
+                className="text-red-500 hover:text-danger underline text-xs font-bold ml-1 shrink-0 whitespace-nowrap"
               >
                 필터 초기화
               </button>
@@ -458,7 +458,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               className={`px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1.5 transition-all ${
                 viewMode === 'grid'
                   ? 'bg-cyan-500 text-slate-950 shadow-md font-black'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  : 'text-muted hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -471,7 +471,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               className={`px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1.5 transition-all ${
                 viewMode === 'table'
                   ? 'bg-cyan-500 text-slate-950 shadow-md font-black'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  : 'text-muted hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -484,7 +484,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               className={`px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1.5 transition-all ${
                 viewMode === 'compact'
                   ? 'bg-cyan-500 text-slate-950 shadow-md font-black'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  : 'text-muted hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -497,12 +497,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
       </div>
 
       {/* Model Count Info & Clean Integrated Sort Selector */}
-      <div className="flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm text-slate-600 dark:text-slate-400 px-1 font-bold">
+      <div className="flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm text-muted px-1 font-bold">
         <div className="flex items-center gap-2">
-          <span className="font-black text-cyan-600 dark:text-cyan-400 text-base">{sortedModels.length}</span> {t.dashboard.modelsFound}
+          <span className="font-black text-accent text-base">{sortedModels.length}</span> {t.dashboard.modelsFound}
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-slate-600 dark:text-slate-400 text-xs font-extrabold">{t.dashboard.sortBy}</span>
+          <span className="text-muted text-xs font-extrabold">{t.dashboard.sortBy}</span>
           <select
             aria-label="정렬 기준"
             value={sortKey}
@@ -541,7 +541,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 <div>
                   {/* Top Bar: Provider & Badges */}
                   <div className="flex items-center justify-between gap-2 mb-3">
-                    <span className="text-xs font-black text-slate-400 uppercase tracking-wider font-mono">
+                    <span className="text-xs font-black text-muted uppercase tracking-wider font-mono">
                       {model.provider_name}
                     </span>
                     <div className="flex items-center gap-1.5 flex-wrap justify-end">
@@ -599,10 +599,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
                       </div>
                       <div className="grid grid-cols-2 gap-1 text-[11px] text-slate-900 dark:text-slate-100 font-extrabold">
                         <div>
-                          <span className="text-slate-600 dark:text-slate-400 font-bold">RPM:</span> <span className="text-slate-900 dark:text-white font-black">{model.quota.rpm ? model.quota.rpm.toLocaleString() : '-'}</span>
+                          <span className="text-muted font-bold">RPM:</span> <span className="text-slate-900 dark:text-white font-black">{model.quota.rpm ? model.quota.rpm.toLocaleString() : '-'}</span>
                         </div>
                         <div>
-                          <span className="text-slate-600 dark:text-slate-400 font-bold">TPM:</span> <span className="text-slate-900 dark:text-white font-black">{model.quota.tpm ? `${(model.quota.tpm / 1000).toLocaleString()}k` : '-'}</span>
+                          <span className="text-muted font-bold">TPM:</span> <span className="text-slate-900 dark:text-white font-black">{model.quota.tpm ? `${(model.quota.tpm / 1000).toLocaleString()}k` : '-'}</span>
                         </div>
                       </div>
                     </div>
@@ -611,14 +611,14 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   {/* Key Metrics Grid */}
                   <div className="grid grid-cols-2 gap-2.5 bg-slate-100 dark:bg-slate-900/90 p-3 rounded-xl border border-slate-200 dark:border-slate-700/80 mb-4 text-xs shadow-inner">
                     <div>
-                      <span className="text-slate-600 dark:text-slate-400 block text-[10px] font-bold mb-0.5">{t.dashboard.contextWindow}</span>
+                      <span className="text-muted block text-[10px] font-bold mb-0.5">{t.dashboard.contextWindow}</span>
                       <span className="font-black text-slate-900 dark:text-white text-sm">
                         {(model.context_window / 1000).toLocaleString()}k tokens
                       </span>
                     </div>
                     <div>
-                      <span className="text-slate-600 dark:text-slate-400 block text-[10px] font-bold mb-0.5">{t.dashboard.arenaElo}</span>
-                      <span className="font-black text-amber-600 dark:text-amber-300 text-sm flex items-center gap-1">
+                      <span className="text-muted block text-[10px] font-bold mb-0.5">{t.dashboard.arenaElo}</span>
+                      <span className="font-black text-warn text-sm flex items-center gap-1">
                         🏆 {model.benchmarks.arena_elo ? model.benchmarks.arena_elo.toFixed(0) : 'N/A'}
                       </span>
                     </div>
@@ -627,11 +627,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   {/* Pricing Info */}
                   <div className="flex items-center justify-between text-xs pt-3 border-t border-slate-200 dark:border-slate-800 mb-4">
                     <div>
-                      <span className="text-slate-600 dark:text-slate-400 text-[10px] block font-bold">{t.dashboard.inputPrice}</span>
+                      <span className="text-muted text-[10px] block font-bold">{t.dashboard.inputPrice}</span>
                       <span className="font-black text-slate-900 dark:text-slate-100">${model.api_pricing.input_price_per_1m.toFixed(2)}</span>
                     </div>
                     <div className="text-right">
-                      <span className="text-slate-600 dark:text-slate-400 text-[10px] block font-bold">{t.dashboard.outputPrice}</span>
+                      <span className="text-muted text-[10px] block font-bold">{t.dashboard.outputPrice}</span>
                       <span className="font-black text-slate-900 dark:text-slate-100">${model.api_pricing.output_price_per_1m.toFixed(2)}</span>
                     </div>
                   </div>
@@ -659,8 +659,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     onClick={() => handleToggle(model.id)}
                     className={`flex-1 py-2 px-2.5 rounded-xl text-xs font-black transition-all shadow-md ${
                       isSelected
-                        ? 'bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-400 shadow-emerald-600/30'
-                        : 'bg-cyan-600 hover:bg-cyan-500 text-white shadow-cyan-600/30'
+                        ? 'bg-emerald-700 hover:bg-emerald-500 text-white border border-emerald-400 shadow-emerald-600/30'
+                        : 'bg-accent hover:bg-cyan-500 text-white shadow-cyan-600/30'
                     }`}
                   >
                     {isSelected ? t.dashboard.compared : t.dashboard.compareButton}
@@ -742,16 +742,16 @@ export const Dashboard: React.FC<DashboardProps> = ({
                       <td className="py-3 px-4 font-mono font-bold text-slate-700 dark:text-slate-300">
                         {model.context_window > 0 ? `${(model.context_window / 1000).toLocaleString()}k` : '-'}
                       </td>
-                      <td className="py-3 px-4 font-mono font-extrabold text-emerald-600 dark:text-emerald-400">
+                      <td className="py-3 px-4 font-mono font-extrabold text-success">
                         ${model.api_pricing.input_price_per_1m.toFixed(3)}
                       </td>
-                      <td className="py-3 px-4 font-mono font-extrabold text-emerald-600 dark:text-emerald-400">
+                      <td className="py-3 px-4 font-mono font-extrabold text-success">
                         ${model.api_pricing.output_price_per_1m.toFixed(3)}
                       </td>
                       <td className="py-3 px-4 font-mono font-bold text-blue-600 dark:text-cyan-300 text-xs">
                         {model.quota?.rpm ? `${model.quota.rpm.toLocaleString()}` : '-'}
                       </td>
-                      <td className="py-3 px-4 font-mono font-extrabold text-amber-600 dark:text-amber-400 text-xs">
+                      <td className="py-3 px-4 font-mono font-extrabold text-warn text-xs">
                         {model.benchmarks.arena_elo ?? '-'}
                       </td>
                       <td className="py-3 px-4">
@@ -768,7 +768,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                             target="_blank"
                             rel="noreferrer"
                             onClick={() => track('external_link_click', { label: model.name })}
-                            className="text-xs font-bold text-slate-600 hover:text-blue-600 dark:text-slate-400 dark:hover:text-cyan-400 transition-colors whitespace-nowrap"
+                            className="text-xs font-bold text-muted hover:text-blue-600 dark:text-slate-400 dark:hover:text-cyan-400 transition-colors whitespace-nowrap"
                           >
                             Docs ↗
                           </a>
@@ -779,7 +779,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                           onClick={() => handleToggle(model.id)}
                           className={`px-3 py-1.5 rounded-lg text-xs font-extrabold transition-all shadow-sm ${
                             isSelected
-                              ? 'bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-400 shadow-emerald-600/30'
+                              ? 'bg-emerald-700 hover:bg-emerald-500 text-white border border-emerald-400 shadow-emerald-600/30'
                               : 'bg-blue-600 hover:bg-blue-500 text-white shadow-blue-600/30'
                           }`}
                         >
@@ -831,11 +831,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
                       🌐 Web Search
                     </span>
                   )}
-                  <span className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/80 px-2 py-0.5 rounded-md shrink-0">
+                  <span className="text-xs font-mono font-bold text-muted bg-slate-100 dark:bg-slate-800/80 px-2 py-0.5 rounded-md shrink-0">
                     Ctx: {model.context_window > 0 ? `${(model.context_window / 1000).toLocaleString()}k` : '-'}
                   </span>
                   {model.benchmarks.arena_elo && (
-                    <span className="text-xs font-mono font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 rounded-md shrink-0 flex items-center gap-1">
+                    <span className="text-xs font-mono font-bold text-warn bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 rounded-md shrink-0 flex items-center gap-1">
                       🏆 {model.benchmarks.arena_elo.toFixed(0)}
                     </span>
                   )}
@@ -844,7 +844,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 {/* Right Section: Pricing & Action Buttons */}
                 <div className="flex items-center gap-2.5 shrink-0 w-full sm:w-auto justify-end pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100 dark:border-slate-800">
                   <span className="font-mono text-xs font-black text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 px-2.5 py-1 rounded-lg">
-                    ${model.api_pricing.input_price_per_1m.toFixed(2)} <span className="text-slate-500 dark:text-slate-400 font-normal">/ 1M</span>
+                    ${model.api_pricing.input_price_per_1m.toFixed(2)} <span className="text-muted font-normal">/ 1M</span>
                   </span>
                   <button
                     onClick={() => setCodeModalModel(model)}
@@ -858,7 +858,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     target="_blank"
                     rel="noreferrer"
                     onClick={() => track('external_link_click', { label: model.name })}
-                    className="text-xs font-bold text-slate-600 hover:text-blue-600 dark:text-slate-400 dark:hover:text-cyan-400 transition-colors px-1"
+                    className="text-xs font-bold text-muted hover:text-blue-600 dark:text-slate-400 dark:hover:text-cyan-400 transition-colors px-1"
                   >
                     Docs ↗
                   </a>
@@ -866,7 +866,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     onClick={() => handleToggle(model.id)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-extrabold transition-all shadow-sm ${
                       isSelected
-                        ? 'bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-400 shadow-emerald-600/30'
+                        ? 'bg-emerald-700 hover:bg-emerald-500 text-white border border-emerald-400 shadow-emerald-600/30'
                         : 'bg-blue-600 hover:bg-blue-500 text-white shadow-blue-600/30'
                     }`}
                   >

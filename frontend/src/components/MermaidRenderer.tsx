@@ -42,7 +42,7 @@ export const MermaidRenderer: React.FC<MermaidRendererProps> = ({ chart }) => {
 
   if (error) {
     return (
-      <div className="my-6 p-4 rounded-xl bg-slate-900 border border-slate-800 text-xs font-mono text-slate-400 overflow-x-auto">
+      <div className="my-6 p-4 rounded-xl bg-slate-900 border border-slate-800 text-xs font-mono text-muted overflow-x-auto">
         <pre>{chart}</pre>
       </div>
     );
