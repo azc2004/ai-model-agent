@@ -358,9 +358,9 @@ def _request_llm(prompt, config, model):
             {"role": "user", "content": prompt}
         ],
         "temperature": 0.3,
-        # 본문에 더해 key_numbers(URL 포함)·our_take·open_questions 가 붙었다.
-        # 3500 으로는 JSON 이 중간에 잘려 파싱에 실패한다.
-        "max_tokens": 6000,
+        # 본문 3,500~5,000자를 지시하므로 본문만 ~7,000 토큰이다. key_numbers(URL
+        # 포함)·our_take·open_questions·팁까지 더하면 6000 으로는 지시를 따를 수 없다.
+        "max_tokens": 12000,
     }
     if _is_qwen_model(model):
         request_body.update({
@@ -410,11 +410,14 @@ def _normalize_qwen_report(report):
 
 
 def _is_transient_llm_error(error):
-    if isinstance(error, (TimeoutError, urllib.error.URLError)):
-        return True
-    return isinstance(error, urllib.error.HTTPError) and (
-        error.code == 429 or error.code >= 500
-    )
+    """폴백을 시도할 값어치가 있는 실패인가.
+
+    응답이 비었거나 JSON 이 아닌 경우(JSONDecodeError)도 포함한다. 폴백은 바로
+    이런 때 쓰라고 둔 것인데, 이걸 빼 두면 주 모델이 빈 응답 하나만 줘도 클러스터를
+    통째로 버린다 — 매 회차 실패 1건이 전부 이 경로였다.
+    HTTPError 는 URLError 의 하위 클래스라 첫 줄에서 함께 걸린다.
+    """
+    return isinstance(error, (TimeoutError, urllib.error.URLError, json.JSONDecodeError))
 
 
 def _has_required_report_fields(report):
@@ -458,6 +461,9 @@ def build_prompt(cluster):
 [요구사항]
 1. 단순 요약이 아닌 맥락(Context) 기반 심층 조사보도 형태여야 합니다.
 2. 글의 흐름에 맞게 동적으로 섹션(##)을 구성하세요. 고정 템플릿 금지.
+   blog_body 는 **3,500~5,000자**, 섹션 **4~6개**로 쓰세요. 짧게 끝내지 마세요.
+   원문마다 최소 한 가지씩 구체적 사실(수치·인용·기능명)을 본문에 녹이세요.
+   독자가 원문을 읽지 않아도 무슨 일이 있었는지 알 수 있어야 합니다.
 3. 말투는 반드시 한국 기술 미디어 표준인 합쇼체(~습니다, ~입니다)를 사용하세요.
 4. "So What?" — 이 내용이 개발자·기업·산업에 미치는 구체적 의미를 반드시 분석하세요.
 5. 본문에는 원문에서 확인한 내용만 쓰세요.

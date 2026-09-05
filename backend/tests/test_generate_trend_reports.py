@@ -100,7 +100,7 @@ class LlmClientTests(unittest.TestCase):
         payload = captured["payload"]
         response_format = payload["response_format"]
         schema = response_format["json_schema"]["schema"]
-        self.assertEqual(payload["max_tokens"], 6000)
+        self.assertEqual(payload["max_tokens"], 12000)
         self.assertEqual(response_format["type"], "json_schema")
         self.assertTrue(response_format["json_schema"]["strict"])
         self.assertEqual(
@@ -481,6 +481,24 @@ class ClusteringTest(unittest.TestCase):
         self.assertIn("심층 리포트", one)
         self.assertNotIn("종합 트렌드 리포트", one)
         self.assertIn("종합 트렌드 리포트", two)
+
+    def test_empty_primary_response_falls_back(self):
+        # 주 모델이 빈 응답을 주면 JSON 파싱이 깨진다. 폴백은 바로 이때 쓰라고 있다.
+        import generate_trend_reports as gtr
+        from trend_report_validation import REQUIRED_REPORT_FIELDS
+        calls = []
+
+        def fake(prompt, config, model):
+            calls.append(model)
+            if model == config.model:
+                raise json.JSONDecodeError("Expecting value", "", 0)
+            return {f: "값" for f in REQUIRED_REPORT_FIELDS}
+
+        config = gtr.BatchConfig(litellm_url="u", litellm_key="k",
+                                 model="primary", fallback_model="backup")
+        with patch.object(gtr, "_request_llm", fake):
+            gtr.call_llm("prompt", config)
+        self.assertEqual(calls, ["primary", "backup"])
 
     def test_empty_input_yields_no_clusters(self):
         self.assertEqual(cluster_articles([]), [])
