@@ -500,6 +500,28 @@ class ClusteringTest(unittest.TestCase):
             gtr.call_llm("prompt", config)
         self.assertEqual(calls, ["primary", "backup"])
 
+    def test_content_filter_raises_a_named_error(self):
+        import generate_trend_reports as gtr
+        blocked = {"choices": [{"finish_reason": "content_filter",
+                                "message": {"content": "Content blocked: execution request detected"}}]}
+
+        class FakeResponse(io.BytesIO):
+            def __enter__(self): return self
+            def __exit__(self, *a): return False
+
+        config = gtr.BatchConfig(litellm_url="https://gw.test/v1", litellm_key="k", model="m")
+        with patch.object(gtr.urllib.request, "urlopen",
+                          lambda *a, **k: FakeResponse(json.dumps(blocked).encode())):
+            with self.assertRaises(gtr.ContentFiltered):
+                gtr._request_llm("p", config, "m")
+
+    def test_only_the_blocked_article_is_dropped(self):
+        import generate_trend_reports as gtr
+        cluster = [self._art("Nvidia buys Hugging Face"), self._art("NVIDIA to Acquire Hugging Face")]
+        kept = gtr.drop_filtered_articles(
+            cluster, None, checker=lambda a, _c: a["title"].startswith("Nvidia buys"))
+        self.assertEqual([a["title"] for a in kept], ["NVIDIA to Acquire Hugging Face"])
+
     def test_empty_input_yields_no_clusters(self):
         self.assertEqual(cluster_articles([]), [])
 

@@ -346,11 +346,20 @@ def cluster_articles(raw, threshold=CLUSTER_SIM):
     return clusters[:MAX_CLUSTERS]
 
 
+class ContentFiltered(Exception):
+    """게이트웨이 콘텐츠 필터가 요청을 막았다.
+
+    "users can download, customize and run them on their own hardware" 같은
+    평범한 뉴스 문장도 "execution request detected" 로 막힌다. 오탐이지만
+    게이트웨이 설정이라 여기서 끌 수 없다.
+    """
+
+
 def _is_qwen_model(model):
     return "qwen" in model.lower()
 
 
-def _request_llm(prompt, config, model):
+def _request_llm(prompt, config, model, max_tokens=12000):
     request_body = {
         "model": model,
         "messages": [
@@ -360,7 +369,7 @@ def _request_llm(prompt, config, model):
         "temperature": 0.3,
         # 본문 3,500~5,000자를 지시하므로 본문만 ~7,000 토큰이다. key_numbers(URL
         # 포함)·our_take·open_questions·팁까지 더하면 6000 으로는 지시를 따를 수 없다.
-        "max_tokens": 12000,
+        "max_tokens": max_tokens,
     }
     if _is_qwen_model(model):
         request_body.update({
@@ -382,7 +391,10 @@ def _request_llm(prompt, config, model):
         headers={"Authorization": f"Bearer {config.litellm_key}", "Content-Type": "application/json", "User-Agent": "curl/8.7.1"}, method="POST")
     with urllib.request.urlopen(req, timeout=60) as resp:
         data = json.loads(resp.read())
-        raw = data["choices"][0]["message"]["content"]
+        choice = data["choices"][0]
+        if choice.get("finish_reason") == "content_filter":
+            raise ContentFiltered(choice["message"].get("content") or "blocked")
+        raw = choice["message"]["content"]
         raw = re.sub(r"^```json\s*", "", raw).strip()
         raw = re.sub(r"```$", "", raw).strip()
         report = json.loads(raw)
@@ -438,6 +450,22 @@ def call_llm(prompt, config):
     if not _has_required_report_fields(report):
         report = _request_llm(prompt, config, config.fallback_model)
     return report
+
+def _is_filtered(article, config):
+    """생성 없이 필터에 걸리는지만 확인한다 (출력 16토큰)."""
+    try:
+        _request_llm(build_prompt([article]), config, config.model, max_tokens=16)
+    except ContentFiltered:
+        return True
+    except Exception:
+        return False   # 필터 외의 실패는 여기서 판단하지 않는다
+    return False
+
+
+def drop_filtered_articles(cluster, config, checker=_is_filtered):
+    """필터에 걸리는 기사만 빼고 남긴다. 클러스터를 통째로 버리지 않기 위해서다."""
+    return [a for a in cluster if not checker(a, config)]
+
 
 def build_prompt(cluster):
     combined = "\n\n---\n\n".join(
@@ -703,7 +731,16 @@ def run_batch(
 
     for cluster in clusters:
         try:
-            report = generator(build_prompt(cluster), config)
+            try:
+                report = generator(build_prompt(cluster), config)
+            except ContentFiltered:
+                # 오탐으로 막힌 기사 하나 때문에 클러스터 전체를 버리지 않는다.
+                kept = drop_filtered_articles(cluster, config)
+                if not kept:
+                    raise
+                print(f"  [필터 회피] 차단된 원문 {len(cluster) - len(kept)}건 제외 후 재생성")
+                cluster = kept
+                report = generator(build_prompt(cluster), config)
             summary.generated += 1
         except Exception as error:
             # 원인을 삼키면 실패가 늘어도 왜인지 알 수 없다.
