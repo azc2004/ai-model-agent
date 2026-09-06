@@ -304,9 +304,14 @@ export function changelogIndex(rows: any[], lang: Lang): string {
 export function sitemap(modelIds: string[], newsIds: string[], changelogIds: string[] = []): string {
   const urls: string[] = [];
   const push = (loc: string, priority: string, freq: string) => {
+    // 탭 URL 은 이미 ?tab=... 을 달고 있다. 무조건 '?' 를 붙이면
+    // "?tab=dashboard?lang=ko" 같은 무효 URL 이 나와 GSC 가 hreflang 오류로 잡는다.
+    const sep = loc.includes('?') ? '&amp;' : '?';
     const alts = LANGS.map((l) =>
-      `<xhtml:link rel="alternate" hreflang="${l}" href="${SITE}${loc}?lang=${l}"/>`).join('');
-    urls.push(`<url><loc>${SITE}${loc}</loc><changefreq>${freq}</changefreq><priority>${priority}</priority>${alts}</url>`);
+      `<xhtml:link rel="alternate" hreflang="${l}" href="${SITE}${loc}${sep}lang=${l}"/>`).join('');
+    // 언어를 지정하지 않은 방문자가 어디로 가야 하는지 검색엔진에 알린다.
+    const xDefault = `<xhtml:link rel="alternate" hreflang="x-default" href="${SITE}${loc}"/>`;
+    urls.push(`<url><loc>${SITE}${loc}</loc><changefreq>${freq}</changefreq><priority>${priority}</priority>${alts}${xDefault}</url>`);
   };
   push('/', '1.0', 'daily');
   for (const tab of ['dashboard', 'compare', 'tco', 'advisor', 'leaderboard', 'gpus', 'news', 'sandbox', 'speed', 'tutorial']) {

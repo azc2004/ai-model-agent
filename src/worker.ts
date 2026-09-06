@@ -380,6 +380,22 @@ export default Sentry.withSentry(
       });
     }
 
+    // Google Search Console 소유권 확인.
+    // 구글이 지정한 파일명(googleXXXX.html)을 그대로 서빙해야 한다. 토큰은
+    // 시크릿(GSC_VERIFICATION)에 두어 재배포 없이 교체할 수 있게 한다.
+    // ⚠️ wrangler.toml 의 run_worker_first 에 "/google*" 이 있어야 여기까지 온다.
+    //    없으면 정적 에셋이 먼저 잡아 404 가 난다.
+    if (url.pathname.startsWith('/google') && url.pathname.endsWith('.html')) {
+      const token = (env as any).GSC_VERIFICATION || '';
+      const expected = `/${token}`;
+      if (!token || url.pathname !== expected) {
+        return new Response('Not Found', { status: 404 });
+      }
+      return new Response(`google-site-verification: ${token}`, {
+        headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'public, max-age=300' },
+      });
+    }
+
     if (url.pathname === '/robots.txt') {
       return new Response(seo.robots(), {
         headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'public, max-age=3600, s-maxage=86400' },
