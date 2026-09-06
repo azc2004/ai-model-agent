@@ -35,8 +35,14 @@ jobs:
         with:
           python-version: '3.11'
 
+      # 번역 스크립트는 내부에서 npx wrangler 로 D1 을 조회해 대상 모델을 고른다.
+      # wrangler 와 CF 인증이 이 단계에도 있어야 한다.
       - name: 🌐 번역 생성
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
+          npm install -g wrangler
           LIMIT_ARG=""
           if [ -n "${{ inputs.limit }}" ]; then
             LIMIT_ARG="--limit ${{ inputs.limit }}"
@@ -50,7 +56,6 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           if [ -s seed_model_i18n.sql ]; then
-            npm install -g wrangler
             npx wrangler d1 execute llm-compass-db --remote --file=seed_model_i18n.sql
             echo "✅ 다국어 설명 갱신 완료"
           else
