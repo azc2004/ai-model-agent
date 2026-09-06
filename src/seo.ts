@@ -352,9 +352,11 @@ export function sitemap(modelIds: string[], newsIds: string[], changelogIds: str
     urls.push(`<url><loc>${SITE}${loc}</loc><changefreq>${freq}</changefreq><priority>${priority}</priority>${alts}${xDefault}</url>`);
   };
   push('/', '1.0', 'daily');
-  for (const tab of ['dashboard', 'compare', 'tco', 'advisor', 'leaderboard', 'gpus', 'news', 'sandbox', 'speed', 'tutorial']) {
-    push(`/?tab=${tab}`, '0.7', 'weekly');
-  }
+  // 탭 URL(?tab=...)은 사이트맵에 넣지 않는다. SPA 의 클라이언트 뷰라 서버가
+  // 홈과 똑같은 HTML 을 돌려주고 canonical 도 '/' 를 가리킨다. 사이트맵은
+  // "색인해라", canonical 은 "얘는 홈이다" 라고 말하는 모순이라 GSC 가
+  // "중복 페이지, Google이 다른 표준 페이지 선택" 으로 잡는다. 크롤링 예산도
+  // 낭비된다. 홈의 <nav> 링크로 발견되고 canonical 로 홈에 합쳐지면 충분하다.
   for (const id of modelIds) push(`/models/${id}`, '0.8', 'weekly');
   for (const id of newsIds) push(`/news/${id}`, '0.6', 'monthly');
   if (changelogIds.length) push('/changelog', '0.7', 'weekly');
