@@ -575,7 +575,7 @@ export default Sentry.withSentry(
         const since = `-${days} days`;
         const db = env.DB;
 
-        const [totals, daily, topTabs, topSearches, topCompared, deviceBreakdown, countryBreakdown, topLinks, topNews, crawlers, crawlerPaths] = await Promise.all([
+        const [totals, daily, topTabs, topSearches, topCompared, deviceBreakdown, countryBreakdown, topLinks, topNews, crawlers, crawlerPaths, gscTotals, gscQueries, gscPages] = await Promise.all([
           db.prepare(`SELECT COUNT(*) AS events, COUNT(DISTINCT session_id) AS sessions FROM analytics_events WHERE created_at >= datetime('now', ?)`).bind(since).first(),
           db.prepare(`SELECT date(created_at) AS day, COUNT(*) AS events, COUNT(DISTINCT session_id) AS sessions FROM analytics_events WHERE created_at >= datetime('now', ?) GROUP BY day ORDER BY day ASC`).bind(since).all(),
           db.prepare(`SELECT tab AS label, COUNT(*) AS count FROM analytics_events WHERE event_type = 'page_view' AND created_at >= datetime('now', ?) AND tab IS NOT NULL GROUP BY tab ORDER BY count DESC LIMIT 10`).bind(since).all(),
@@ -588,6 +588,19 @@ export default Sentry.withSentry(
           // 크롤러는 analytics_events 와 분리된 테이블에 쌓인다 — 사람 세션 수를 오염시키지 않는다.
           db.prepare(`SELECT bot AS label, COUNT(*) AS count, MAX(created_at) AS last_seen FROM crawler_hits WHERE created_at >= datetime('now', ?) GROUP BY bot ORDER BY count DESC`).bind(since).all(),
           db.prepare(`SELECT path AS label, COUNT(*) AS count FROM crawler_hits WHERE created_at >= datetime('now', ?) GROUP BY path ORDER BY count DESC LIMIT 10`).bind(since).all(),
+          // Search Console 실적. crawler_hits 가 '누가 왔나' 라면 이건 '검색에서
+          // 어떻게 보이나' 다. 배치가 매일 최근 5일을 덮어쓴다.
+          db.prepare(`SELECT SUM(clicks) AS clicks, SUM(impressions) AS impressions,
+                             AVG(position) AS position, MAX(date) AS latest
+                      FROM gsc_metrics WHERE dimension = 'query' AND date >= date('now', ?)`).bind(since).first(),
+          db.prepare(`SELECT value AS label, SUM(clicks) AS clicks, SUM(impressions) AS impressions,
+                             ROUND(AVG(position), 1) AS position
+                      FROM gsc_metrics WHERE dimension = 'query' AND date >= date('now', ?)
+                      GROUP BY value ORDER BY impressions DESC LIMIT 15`).bind(since).all(),
+          db.prepare(`SELECT value AS label, SUM(clicks) AS clicks, SUM(impressions) AS impressions,
+                             ROUND(AVG(position), 1) AS position
+                      FROM gsc_metrics WHERE dimension = 'page' AND date >= date('now', ?)
+                      GROUP BY value ORDER BY impressions DESC LIMIT 15`).bind(since).all(),
         ]);
 
         return new Response(JSON.stringify({
@@ -603,6 +616,9 @@ export default Sentry.withSentry(
           top_news: topNews.results,
           crawlers: crawlers.results,
           crawler_paths: crawlerPaths.results,
+          gsc_totals: gscTotals || { clicks: 0, impressions: 0, position: null, latest: null },
+          gsc_queries: gscQueries.results,
+          gsc_pages: gscPages.results,
         }), { headers: { 'Content-Type': 'application/json' } });
       } catch (err: any) {
         return fail(err);

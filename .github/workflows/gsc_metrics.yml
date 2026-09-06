@@ -1,0 +1,44 @@
+name: 🔎 Google Search Console Metrics
+
+# GSC 데이터는 2~3일 지연돼 확정된다. 매일 최근 5일을 다시 받아 덮어쓴다
+# (gsc_metrics 의 PK 가 (date, dimension, value) 라 재수집이 안전하다).
+
+on:
+  schedule:
+    # 매일 한국시간 오전 09:00 (UTC 00:00)
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📥 실적 수집
+        env:
+          GSC_SERVICE_ACCOUNT: ${{ secrets.GSC_SERVICE_ACCOUNT }}
+        run: |
+          pip install "PyJWT[crypto]"
+          python3 backend/scripts/fetch_gsc_metrics.py
+
+      - name: ☁️ D1 적재
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -s seed_gsc.sql ]; then
+            npm install -g wrangler
+            npx wrangler d1 execute llm-compass-db --remote --file=seed_gsc.sql
+            npx wrangler d1 execute llm-compass-db --remote --command "
+              SELECT dimension, COUNT(*) rows, MAX(date) latest
+              FROM gsc_metrics GROUP BY dimension;
+            "
+          else
+            # 색인 초기에는 정상적으로 0행이다. 실패로 보지 않는다.
+            echo "ℹ️ 이번 회차 데이터 없음"
+          fi

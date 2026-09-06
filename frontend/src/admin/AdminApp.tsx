@@ -18,9 +18,48 @@ interface Summary {
   top_news: CountRow[];
   crawlers: CrawlerRow[];
   crawler_paths: CountRow[];
+  gsc_totals: { clicks: number; impressions: number; position: number | null; latest: string | null };
+  gsc_queries: SearchRow[];
+  gsc_pages: SearchRow[];
 }
 
+// Search Console 실적. crawler_hits 가 "누가 왔나" 라면 이건 "검색에서 어떻게 보이나" 다.
+type SearchRow = { label: string; clicks: number; impressions: number; position: number };
+
 const RANGE_OPTIONS = [7, 14, 30] as const;
+
+function SearchTable({ title, rows }: { title: string; rows: SearchRow[] }) {
+  if (!rows.length) return null;
+  return (
+    <div className="mt-3">
+      <div className="mb-1 text-2xs font-bold text-muted">{title}</div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-xs">
+          <thead>
+            <tr className="text-2xs text-muted">
+              <th className="py-1 text-left font-bold">&nbsp;</th>
+              <th className="py-1 text-right font-bold">클릭</th>
+              <th className="py-1 text-right font-bold">노출</th>
+              <th className="py-1 text-right font-bold">순위</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr key={r.label} className="border-t border-slate-100">
+                <td className="max-w-[16rem] truncate py-1 pr-2 font-semibold text-slate-700" title={r.label}>
+                  {r.label}
+                </td>
+                <td className="py-1 text-right numeric font-bold text-slate-900">{r.clicks.toLocaleString()}</td>
+                <td className="py-1 text-right numeric text-muted">{r.impressions.toLocaleString()}</td>
+                <td className="py-1 text-right numeric text-muted">{r.position?.toFixed?.(1) ?? '-'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
 
 function KpiCard({ label, value }: { label: string; value: string | number }) {
   return (
@@ -166,6 +205,44 @@ export const AdminApp: React.FC = () => {
               </div>
 
               <RankedList title="🕸️ 크롤러가 많이 읽은 경로" rows={data.crawler_paths ?? []} />
+
+              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <h3 className="mb-1 text-sm font-black text-slate-900">🔎 검색 유입 (Search Console)</h3>
+                <p className="mb-3 text-2xs text-muted">
+                  구글이 2~3일 뒤에 확정하는 값이라 최근 이틀은 비어 있을 수 있다.
+                  {data.gsc_totals?.latest ? ` 최신 데이터 ${data.gsc_totals.latest}.` : ''}
+                </p>
+                {(data.gsc_queries ?? []).length === 0 ? (
+                  <p className="text-xs text-muted">
+                    아직 검색 실적이 없다. 사이트맵 제출 후 색인·노출까지 보통 1~2주가 걸린다.
+                  </p>
+                ) : (
+                  <>
+                    <div className="mb-4 grid grid-cols-3 gap-3">
+                      <div>
+                        <div className="text-2xs font-bold text-muted">클릭</div>
+                        <div className="text-lg font-black text-slate-900 numeric">
+                          {(data.gsc_totals?.clicks ?? 0).toLocaleString()}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-2xs font-bold text-muted">노출</div>
+                        <div className="text-lg font-black text-slate-900 numeric">
+                          {(data.gsc_totals?.impressions ?? 0).toLocaleString()}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-2xs font-bold text-muted">평균 순위</div>
+                        <div className="text-lg font-black text-slate-900 numeric">
+                          {data.gsc_totals?.position ? data.gsc_totals.position.toFixed(1) : '-'}
+                        </div>
+                      </div>
+                    </div>
+                    <SearchTable title="검색어" rows={data.gsc_queries ?? []} />
+                    <SearchTable title="유입 페이지" rows={data.gsc_pages ?? []} />
+                  </>
+                )}
+              </div>
 
 
               <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">

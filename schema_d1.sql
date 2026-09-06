@@ -143,3 +143,18 @@ CREATE INDEX IF NOT EXISTS idx_crawler_bot ON crawler_hits(bot);
 CREATE INDEX IF NOT EXISTS idx_analytics_created ON analytics_events(created_at);
 CREATE INDEX IF NOT EXISTS idx_analytics_type ON analytics_events(event_type);
 CREATE INDEX IF NOT EXISTS idx_analytics_session ON analytics_events(session_id);
+
+-- Google Search Console 검색 실적.
+-- GSC 데이터는 2~3일 지연돼 확정되므로 배치는 매번 최근 며칠을 다시 받아
+-- 덮어쓴다. PRIMARY KEY 가 (date, dimension, value) 라 재수집이 안전하다.
+CREATE TABLE IF NOT EXISTS gsc_metrics (
+  date        TEXT NOT NULL,      -- YYYY-MM-DD
+  dimension   TEXT NOT NULL,      -- query | page | country | device
+  value       TEXT NOT NULL,      -- 검색어 / URL / 국가 / 기기
+  clicks      INTEGER NOT NULL DEFAULT 0,
+  impressions INTEGER NOT NULL DEFAULT 0,
+  ctr         REAL    NOT NULL DEFAULT 0,
+  position    REAL    NOT NULL DEFAULT 0,
+  PRIMARY KEY (date, dimension, value)
+);
+CREATE INDEX IF NOT EXISTS idx_gsc_dim_date ON gsc_metrics(dimension, date DESC);
