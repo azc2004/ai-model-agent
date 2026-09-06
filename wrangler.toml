@@ -19,6 +19,7 @@ binding = "ASSETS"
 run_worker_first = [
   "/api/*",
   "/google*",          # Google Search Console 소유권 확인 파일
+  "/",                 # 홈: 봇에게만 SEO HTML, 사람은 SPA 로 통과
   "/health",
   "/admin",
   "/admin/*",

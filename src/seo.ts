@@ -283,6 +283,44 @@ export function changelogPage(c: any, lang: Lang): string {
   });
 }
 
+// 홈과 탭 URL 은 SPA 껍데기라 크롤러에게 텍스트 50자만 보였다. 사이트맵에서
+// 우선순위 1.0 인 홈이 여기 포함돼, 색인 가치가 가장 큰 URL 이 비어 있었다.
+// 여기서는 카탈로그 규모·주요 모델·최신 기사를 실제 텍스트로 내려준다.
+// 기존 T 라벨만 조합해 쓴다 — 7개 언어에 새 문구를 추가하면 번역 누락이 생긴다.
+export function homePage(
+  stats: { models: number; providers: number; news: number },
+  topModels: any[],
+  latestNews: any[],
+  lang: Lang,
+): string {
+  const t = T[lang];
+  const tabs = ['dashboard', 'compare', 'tco', 'advisor', 'leaderboard', 'gpus', 'news', 'sandbox', 'speed', 'tutorial'];
+  const body = `
+    <h1>LLM COMPASS</h1>
+    <p class="lede">${stats.models} ${esc(t.allModels)} · ${stats.providers} ${esc(t.provider)} · ${stats.news} ${esc(t.news)}</p>
+
+    <h2>${esc(t.allModels)}</h2>
+    <table><tr><th>${esc(t.home)}</th><th>${esc(t.provider)}</th><th>${esc(t.ctx)}</th></tr>
+    ${topModels.map((m: any) =>
+      `<tr><td><a href="/models/${esc(m.id)}?lang=${lang}">${esc(m.name)}</a></td>` +
+      `<td>${esc(m.provider_name || '')}</td><td>${m.context_window ? Number(m.context_window).toLocaleString('en-US') : '-'}</td></tr>`
+    ).join('\n    ')}</table>
+
+    <h2>${esc(t.news)}</h2>
+    <ul>${latestNews.map((n: any) =>
+      `<li><a href="/news/${esc(n.id)}?lang=${lang}">${esc(n.title)}</a></li>`
+    ).join('\n      ')}</ul>
+
+    <nav>${tabs.map((tab) => `<a href="/?tab=${tab}&amp;lang=${lang}">${esc(tab)}</a>`).join(' · ')}</nav>
+    <footer><a href="/changelog?lang=${lang}">${esc(t.changelog)}</a> · <a href="/sitemap.xml">sitemap</a> · <a href="/llms.txt">llms.txt</a></footer>`;
+
+  return shell({
+    lang, path: '/', body,
+    title: 'LLM COMPASS - Global AI Model Spec & TCO Analytics',
+    description: `${stats.models} ${t.allModels} · ${stats.providers} ${t.provider} · ${t.pricing}`,
+  });
+}
+
 export function changelogIndex(rows: any[], lang: Lang): string {
   const t = T[lang];
   const body = `

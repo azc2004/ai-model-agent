@@ -380,6 +380,40 @@ export default Sentry.withSentry(
       });
     }
 
+    // 홈과 탭 URL 은 SPA 껍데기라 크롤러에게 텍스트 50자만 보였다. 사이트맵에서
+    // 우선순위 1.0 인 홈이 여기 포함돼, 색인 가치가 가장 큰 URL 이 비어 있었다.
+    //
+    // 사람에게는 반드시 SPA 를 그대로 준다. 봇으로 확인된 요청에만 SEO HTML 을
+    // 내려주고, 조회가 실패하면 조용히 정적 에셋으로 떨어진다 — 홈은 사이트에서
+    // 가장 중요한 경로라 여기서 500 을 내면 안 된다.
+    if (bot && request.method === 'GET' && url.pathname === '/') {
+      try {
+        const lang = seo.pickLang(url.searchParams.get('lang'));
+        const stats: any = await env.DB.prepare(
+          `SELECT (SELECT COUNT(*) FROM models WHERE is_deprecated = 0) models,
+                  (SELECT COUNT(DISTINCT provider_name) FROM models WHERE is_deprecated = 0) providers,
+                  (SELECT COUNT(*) FROM trend_news) news`
+        ).first();
+        const { results: topModels } = await env.DB.prepare(
+          `SELECT id, name, provider_name, context_window FROM models
+           WHERE is_deprecated = 0 ORDER BY COALESCE(context_window, 0) DESC LIMIT 30`
+        ).all();
+        const { results: latestNews } = await env.DB.prepare(
+          'SELECT id, title FROM trend_news ORDER BY created_at DESC LIMIT 20'
+        ).all();
+        return new Response(
+          seo.homePage(
+            { models: stats?.models ?? 0, providers: stats?.providers ?? 0, news: stats?.news ?? 0 },
+            topModels, latestNews, lang,
+          ),
+          { headers: HTML },
+        );
+      } catch (err) {
+        Sentry.captureException(err);
+        return env.ASSETS.fetch(request);   // 크롤러에게도 최소한 껍데기는 준다
+      }
+    }
+
     // Google Search Console 소유권 확인.
     // 구글이 지정한 파일명(googleXXXX.html)을 그대로 서빙해야 한다. 토큰은
     // 시크릿(GSC_VERIFICATION)에 두어 재배포 없이 교체할 수 있게 한다.
