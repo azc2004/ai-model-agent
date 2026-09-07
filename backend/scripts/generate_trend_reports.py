@@ -37,6 +37,25 @@ RSS_FEEDS = [
     "https://jack-clark.net/feed/",
     "https://magazine.sebastianraschka.com/feed",
     "https://simonwillison.net/atom/everything/",
+    # 2026-09-07 추가. RSS 파싱과 본문 추출이 모두 되는 것만 실측 후 넣었다.
+    # 발행량(하루 8건)은 MAX_CLUSTERS 가 정하므로 늘지 않는다. 노리는 것은
+    # 같은 사건을 여러 매체가 다루는 클러스터다 — 09-06 발행분 8건 중 5건이
+    # 단일 매체였고, 그러면 "종합 리포트" 가 이름값을 못 한다.
+    #
+    # 심층 분석 (본문 1만자 내외)
+    "https://www.aisnakeoil.com/feed",
+    "https://lilianweng.github.io/index.xml",
+    "https://www.interconnects.ai/feed",
+    "https://research.google/blog/rss/",
+    # 기업 공식
+    "https://www.together.ai/blog/rss.xml",
+    "https://mistral.ai/rss.xml",
+    # 미디어
+    "https://news.mit.edu/rss/topic/artificial-intelligence2",
+    "https://www.wired.com/feed/tag/ai/latest/rss",
+    "https://www.theregister.com/software/ai_ml/headlines.atom",
+    # 제외: blog.cloudflare.com — RSS·본문 모두 정상이지만 AI 외 인프라 글이
+    #       많아 노이즈가 된다. 필요해지면 그때 넣는다.
 ]
 TREND_REPORT_SCHEMA = {
     "type": "object",
@@ -496,6 +515,33 @@ def build_prompt(cluster):
    원문마다 최소 한 가지씩 구체적 사실(수치·인용·기능명)을 본문에 녹이세요.
    독자가 원문을 읽지 않아도 무슨 일이 있었는지 알 수 있어야 합니다.
 3. 말투는 반드시 한국 기술 미디어 표준인 합쇼체(~습니다, ~입니다)를 사용하세요.
+
+[읽는 글이 아니라 훑는 글로 — 가장 자주 놓치는 부분]
+지금까지 생성된 기사는 문단만 15개씩 이어져 독자가 어디를 봐야 할지 알 수 없었습니다.
+아래 문법은 화면에서 실제로 표·차트·목록으로 렌더링됩니다. 내용에 맞을 때 쓰세요.
+
+- 표 — 수치를 나란히 비교할 때. 가격·스펙·전후 비교는 문장이 아니라 표로.
+  | 모델 | 입력 $/1M | 출력 $/1M |
+  |---|---|---|
+  | Gemini 3.8 Flash | 0.75 | 3.75 |
+
+- 막대 차트 — **같은 단위**의 수치 3~5개를 비교할 때만. 한 줄로 씁니다.
+  [CHART: benchmark|GPT-5:88|Claude Opus 4.5:86|Gemini 3.8:84]
+  단위가 다른 값을 한 차트에 넣지 마세요. "180개국 / 300개사 / 5개 파트너" 처럼
+  세는 대상이 다르면 막대 길이 비교가 아무 의미도 없습니다. 그런 경우는 표나
+  불릿을 쓰세요. 비교할 축이 하나로 정해지지 않으면 차트를 쓰지 않는 편이 낫습니다.
+
+- 흐름도 — 단계가 있는 과정을 설명할 때. 한 줄로 씁니다.
+  [FLOW: agent|데이터 수집|합성 라벨링|정책 학습|실기 배포]
+
+- 목록 — 나열되는 사실 3개 이상은 문단이 아니라 불릿으로.
+- 인용 — 원문의 핵심 발언은 "> " 로 시작하는 인용 블록으로.
+- **굵게** — 처음 등장하는 핵심 용어와 결정적 수치에만. 남발하면 효과가 사라집니다.
+- 소제목 — ## 아래 흐름이 갈리면 ### 를 씁니다. 제목에 번호를 붙이지 마세요.
+
+원칙: 장식이 아니라 정보 구조입니다. 비교할 게 없는데 표를 만들거나, 단계가
+아닌 것을 흐름도로 만들지 마세요. 좋은 기술 블로그는 이 요소들을 아껴 씁니다.
+표는 1~2개, 차트나 흐름도는 있으면 1개면 충분합니다.
 4. "So What?" — 이 내용이 개발자·기업·산업에 미치는 구체적 의미를 반드시 분석하세요.
 5. 본문에는 원문에서 확인한 내용만 쓰세요.
 
@@ -520,7 +566,7 @@ JSON으로만 응답하세요:
   "title": "{title_kind} 한국어 제목 (30자 이내, 키워드 포함)",
   "primary_topic": "대표 핵심 테마 (10자 이내)",
   "tldr": "TL;DR 3~4문장 핵심 요약 (합쇼체)",
-  "blog_body": "마크다운 본문 전문 (원문 근거가 있는 내용만, 섹션 제목 ## 자유 구성, 합쇼체)",
+  "blog_body": "마크다운 본문 전문 (원문 근거가 있는 내용만, ## 섹션 자유 구성, 표·차트·불릿·인용을 내용에 맞게 사용, 합쇼체)",
   "key_numbers": [{{"label": "지표명", "value": "값", "source_url": "그 수치가 실린 원문 URL"}}],
   "our_take": "편집 의견·전망 2~3문장 (합쇼체)",
   "open_questions": ["원문으로 확인되지 않은 것 2~3개"],
