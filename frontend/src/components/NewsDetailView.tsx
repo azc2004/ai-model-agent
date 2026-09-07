@@ -461,6 +461,21 @@ export function NewsDetailView({ article, t, onBack }: NewsDetailViewProps) {
       }
 
       // 7. ### H3 섹션 헤더
+      // ## H2 섹션 제목. 이 핸들러가 없어서 "## 제목" 이 그대로 본문에 노출되고
+      // 있었다 — 프롬프트는 줄곧 ## 로 섹션을 나누라고 지시해 왔으므로 모든 기사의
+      // 모든 섹션 제목이 날것이었다. ### 보다 먼저 검사한다(### 도 '## ' 로 시작).
+      if (trimmed.startsWith('## ') && !trimmed.startsWith('### ')) {
+        const headerText = trimmed.replace(/^##\s*/, '');
+        elements.push(
+          <div key={nextKey()} className="mt-12 mb-5 border-b-2 border-slate-200 pb-3 dark:border-slate-700">
+            <h2 className="text-2xl font-black tracking-tight text-slate-900 sm:text-3xl dark:text-white">
+              {parseInlineMarkdown(formatTranslatedText(headerText))}
+            </h2>
+          </div>
+        );
+        i++; continue;
+      }
+
       if (trimmed.startsWith('### ')) {
         const headerText = trimmed.replace(/^###\s*/, '');
         elements.push(
