@@ -73,6 +73,12 @@ export const AppContent: React.FC = () => {
     setActiveTabState(tab);
     const url = new URL(window.location.href);
     url.searchParams.set('tab', tab);
+    // ?article= 은 뉴스 탭에서만 의미가 있다. 남겨 두면 다른 탭에 갔다가 돌아왔을 때
+    // NewsPulseView 가 URL 을 읽어 보던 기사를 다시 열어 버린다 — 목록을 기대한
+    // 독자에게는 화면이 멈춘 것처럼 보인다.
+    if (tab !== 'news') {
+      url.searchParams.delete('article');
+    }
     window.history.pushState({}, '', url.toString());
   };
 
