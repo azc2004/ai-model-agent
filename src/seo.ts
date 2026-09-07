@@ -205,6 +205,115 @@ export function modelPage(m: any, lang: Lang): string {
   });
 }
 
+// 기사 본문의 마크다운을 크롤러가 읽을 HTML 로 바꾼다.
+//
+// 예전에는 빈 줄로 잘라 전부 <p> 로 감싸고 12블록만 내보냈다. 본문이 문단뿐일
+// 때는 그럭저럭이었지만, 표·불릿·인용을 쓰기 시작하자 파이프 문자와
+// [CHART:...] 가 날것으로 노출됐다. 화면(SPA)과 크롤러가 같은 본문을 서로 다르게
+// 보면 안 된다.
+//
+// 프론트(NewsDetailView.tsx)가 파싱하는 문법과 같은 것을 다룬다. 다만 차트·흐름도는
+// 크롤러에게 막대 그래프가 의미 없으므로 목록과 표로 평평하게 편다.
+function inline(text: string): string {
+  // esc 를 먼저 걸고, 그 위에서 **굵게** 만 태그로 되돌린다. 순서를 바꾸면
+  // 사용자 입력이 그대로 HTML 이 된다.
+  return esc(text).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+}
+
+function renderBody(md: string): string {
+  const lines = (md || '').split('\n');
+  const out: string[] = [];
+  let i = 0;
+
+  while (i < lines.length) {
+    const line = lines[i];
+    const t = line.trim();
+    if (!t) { i++; continue; }
+
+    // 표: | 로 시작하는 연속 줄. |---| 구분줄은 버린다.
+    if (t.startsWith('|')) {
+      const rows: string[][] = [];
+      while (i < lines.length && lines[i].trim().startsWith('|')) {
+        const raw = lines[i].trim();
+        if (!/^\|[\s:|-]+\|$/.test(raw)) {
+          rows.push(raw.replace(/^\||\|$/g, '').split('|').map((c) => c.trim()));
+        }
+        i++;
+      }
+      if (rows.length) {
+        const [head, ...body] = rows;
+        out.push(
+          `<div class="tbl-scroll"><table><thead><tr>${head.map((c) => `<th>${inline(c)}</th>`).join('')}</tr></thead>` +
+          `<tbody>${body.map((r) => `<tr>${r.map((c) => `<td>${inline(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`
+        );
+      }
+      continue;
+    }
+
+    // 차트: [CHART: 유형|라벨:값|...] — 막대 대신 표로 편다.
+    if (t.startsWith('[CHART:')) {
+      const parts = t.slice(7, -1).split('|').map((x) => x.trim());
+      const pairs = parts.slice(1).map((x) => {
+        const idx = x.lastIndexOf(':');
+        return idx < 0 ? [x, ''] : [x.slice(0, idx).trim(), x.slice(idx + 1).trim()];
+      });
+      out.push(`<div class="tbl-scroll"><table><tbody>${pairs.map(
+        ([k, v]) => `<tr><td>${inline(k)}</td><td>${inline(v)}</td></tr>`).join('')}</tbody></table></div>`);
+      i++; continue;
+    }
+
+    // 흐름도: [FLOW: 유형|단계|단계] — 순서 있는 목록으로 편다.
+    if (t.startsWith('[FLOW:')) {
+      const steps = t.slice(6, -1).split('|').map((x) => x.trim()).slice(1);
+      out.push(`<ol>${steps.map((x) => `<li>${inline(x)}</li>`).join('')}</ol>`);
+      i++; continue;
+    }
+
+    // 불릿
+    if (/^[-*]\s/.test(t)) {
+      const items: string[] = [];
+      while (i < lines.length && /^[-*]\s/.test(lines[i].trim())) {
+        items.push(lines[i].trim().replace(/^[-*]\s+/, ''));
+        i++;
+      }
+      out.push(`<ul>${items.map((x) => `<li>${inline(x)}</li>`).join('')}</ul>`);
+      continue;
+    }
+
+    // 인용
+    if (t.startsWith('> ')) {
+      const quote: string[] = [];
+      while (i < lines.length && lines[i].trim().startsWith('> ')) {
+        quote.push(lines[i].trim().slice(2));
+        i++;
+      }
+      out.push(`<blockquote><p>${inline(quote.join(' '))}</p></blockquote>`);
+      continue;
+    }
+
+    // 제목
+    const h = t.match(/^(#{2,4})\s+(.*)$/);
+    if (h) {
+      const level = Math.min(h[1].length + 1, 4);   // ## → h3, 본문 h2 와 겹치지 않게
+      out.push(`<h${level}>${inline(h[2])}</h${level}>`);
+      i++; continue;
+    }
+
+    // 문단: 빈 줄이나 블록 문법을 만날 때까지 이어 붙인다.
+    const para: string[] = [];
+    while (i < lines.length) {
+      const cur = lines[i].trim();
+      if (!cur || cur.startsWith('|') || cur.startsWith('> ') || /^[-*]\s/.test(cur)
+          || cur.startsWith('[CHART:') || cur.startsWith('[FLOW:') || /^#{2,4}\s/.test(cur)) break;
+      para.push(cur);
+      i++;
+    }
+    if (para.length) out.push(`<p>${inline(para.join(' '))}</p>`);
+  }
+
+  return out.join('\n    ');
+}
+
 export function newsPage(n: any, lang: Lang): string {
   const t = T[lang];
   const takeaways: string[] = json(n.key_takeaways, []);
@@ -215,9 +324,7 @@ export function newsPage(n: any, lang: Lang): string {
   const openQ = json(n.open_questions, []);
   const mentioned = Array.isArray(n.mentioned_models) ? n.mentioned_models : [];
 
-  const paragraphs = bodyText
-    .split(/\n{2,}/).map((p: string) => p.trim()).filter(Boolean).slice(0, 12)
-    .map((p: string) => `<p>${esc(p.replace(/^#+\s*/, ''))}</p>`).join('\n    ');
+  const paragraphs = renderBody(bodyText);
 
   const body = `
     <nav><a href="/?lang=${lang}">${t.home}</a> › <a href="/?tab=news&amp;lang=${lang}">${t.news}</a></nav>
